@@ -1,0 +1,131 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>searls</groupId>
+	<artifactId>jasmine-maven-plugin</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>maven-plugin</packaging>
+
+	<name>jasmine</name>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-plugin-api</artifactId>
+			<version>2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-project</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-artifact</artifactId>
+			<version>2.2.1</version>
+		</dependency>
+
+		<!-- Runtime Dependencies -->
+		<dependency>
+			<groupId>rhino</groupId>
+			<artifactId>js</artifactId>
+			<version>1.7R2</version>
+		</dependency>
+		<dependency>
+			<groupId>com.envjs</groupId>
+			<artifactId>env-rhino</artifactId>
+			<version>1.2</version>
+			<type>js</type>
+		</dependency>
+
+
+		<!-- Jasmine Dependencies -->
+		<dependency>
+			<groupId>com.pivotallabs</groupId>
+			<artifactId>jasmine</artifactId>
+			<version>0.11.1</version>
+			<type>js</type>
+		</dependency>
+		<dependency>
+			<groupId>com.pivotallabs</groupId>
+			<artifactId>jasmine-css</artifactId>
+			<version>0.11.1</version>
+			<type>css</type>
+		</dependency>
+		<dependency>
+			<groupId>com.pivotallabs</groupId>
+			<artifactId>jasmine-html</artifactId>
+			<version>0.11.1</version>
+			<type>js</type>
+		</dependency>
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json2</artifactId>
+			<version>2010-03-20</version>
+			<type>js</type>
+		</dependency>
+		<dependency>
+			<groupId>com.jaredgrippe</groupId>
+			<artifactId>consolex</artifactId>
+			<version>2010-02-03</version>
+			<type>js</type>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-plugin-plugin</artifactId>
+				<version>2.5.1</version>
+				<configuration>
+					<goalPrefix>jasmine</goalPrefix>
+				</configuration>
+				<executions>
+					<execution>
+						<id>generated-helpmojo</id>
+						<goals>
+							<goal>helpmojo</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.0.2</version>
+				<configuration>
+					<source>1.5</source>
+					<target>1.5</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>searls-maven-repository</id>
+			<name>Searls' Maven Repository</name>
+			<url>http://searls-maven-repository.googlecode.com/svn/trunk/repository</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>searls-maven-repository</id>
+			<name>Searls' Maven Repository</name>
+			<url>http://searls-maven-repository.googlecode.com/svn/trunk/repository</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>
