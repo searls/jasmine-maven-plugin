@@ -5,48 +5,49 @@ jasmine-maven-plugin
 Put this in your POM
 --------------------
 
-<project>
-  <build>
-    ...
-    <plugins>
+    <project>
+      <build>
+        ...
+        <plugins>
+          ...
+          <plugin>
+            <groupId>searls</groupId>
+            <artifactId>jasmine-maven-plugin</artifactId>
+            <version>0.11.1-SNAPSHOT</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>resources</goal>
+                  <goal>testResources</goal>
+                  <goal>test</goal>
+                  <goal>preparePackage</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          ...
+        </plugins>
+      </build>
       ...
-      <plugin>
-        <groupId>searls</groupId>
-        <artifactId>jasmine-maven-plugin</artifactId>
-        <version>0.11.1-SNAPSHOT</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>resources</goal>
-              <goal>testResources</goal>
-              <goal>test</goal>
-              <goal>preparePackage</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
+      <repositories>
+        <repository>
+          <id>searls-maven-thirdparty</id>
+          <url>http://searls-maven-repository.googlecode.com/svn/trunk/thirdparty</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <id>searls-maven-releases</id>
+          <url>http://searls-maven-repository.googlecode.com/svn/trunk/releases</url>
+        </pluginRepository>
+        <pluginRepository>
+          <id>searls-maven-snapshots</id>
+          <url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
+        </pluginRepository>
+      </pluginRepositories>
       ...
-    </plugins>
-  </build>
-  ...
-  <repositories>
-    <repository>
-      <id>searls-maven-thirdparty</id>
-      <url>http://searls-maven-repository.googlecode.com/svn/trunk/thirdparty</url>
-    </repository>
-  </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>searls-maven-releases</id>
-      <url>http://searls-maven-repository.googlecode.com/svn/trunk/releases</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>searls-maven-snapshots</id>
-      <url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
-    </pluginRepository>
-  </pluginRepositories>
-  ...
-</project>
+    </project>
+    
 And Smoke It
 ------------
 
