@@ -37,7 +37,7 @@ public class JasmineResultLoggerTest {
 		
 		resultLogger.log(result);
 		
-		verify(log).info("Results:\n\n"+description+"");
+		verify(log).info("\nResults:\n\n"+description+"");
 	}
 	
 	@Test
@@ -51,7 +51,7 @@ public class JasmineResultLoggerTest {
 
 		resultLogger.log(result);
 		
-		verify(log).info("Spec "+spec.getDescription()+"\n");		
+		verify(log).info("Spec "+spec.getDescription());		
 	}
 
 	@Test
@@ -66,7 +66,7 @@ public class JasmineResultLoggerTest {
 
 		resultLogger.log(result);
 		
-		verify(log).info("Spec "+spec.getDescription()+JasmineResultLogger.FAIL_APPENDAGE+"\n");		
+		verify(log).info("Spec "+spec.getDescription()+JasmineResultLogger.FAIL_APPENDAGE);		
 	}
 	
 	@Test
@@ -88,9 +88,9 @@ public class JasmineResultLoggerTest {
 		
 		resultLogger.log(result);
 		
-		verify(log).info("Suite "+suite1.getDescription()+"\n");
-		verify(log).info("  Suite "+suite2.getDescription()+"\n");
-		verify(log).info("    Spec "+spec.getDescription()+"\n");
+		verify(log).info("Suite "+suite1.getDescription());
+		verify(log).info("  Suite "+suite2.getDescription());
+		verify(log).info("    Spec "+spec.getDescription());
 	}
 	
 	@Test
@@ -107,9 +107,9 @@ public class JasmineResultLoggerTest {
 
 		resultLogger.log(result);
 		
-		verify(log).info("Spec "+spec.getDescription()+JasmineResultLogger.FAIL_APPENDAGE+"\n");
-		verify(log).info("  * "+spec.getMessages().get(0)+"\n");
-		verify(log).info("  * "+spec.getMessages().get(1)+"\n");		
+		verify(log).info("Spec "+spec.getDescription()+JasmineResultLogger.FAIL_APPENDAGE);
+		verify(log).info("  * "+spec.getMessages().get(0));
+		verify(log).info("  * "+spec.getMessages().get(1));		
 	}
 	
 }

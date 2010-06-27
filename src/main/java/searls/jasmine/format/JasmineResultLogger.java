@@ -27,7 +27,7 @@ public class JasmineResultLogger {
 		
 		logChildren(result,0);			
 				
-		log.info("Results:\n\n"+result.getDescription());		
+		log.info("\nResults:\n\n"+result.getDescription());		
 	}
 	
 	private void logChildren(ResultItemParent parent, int indentationLevel) {
@@ -40,7 +40,6 @@ public class JasmineResultLogger {
 			if(!item.didPass()) {
 				sb.append(FAIL_APPENDAGE);
 			}
-			sb.append("\n");
 			log.info(sb.toString());
 			if(!item.didPass() && item instanceof Spec) {
 				logMessages((Spec)item,indentationLevel+1);
@@ -55,7 +54,7 @@ public class JasmineResultLogger {
 		for (String message : spec.getMessages()) {
 			StringBuilder sb = new StringBuilder();
 			appendIndent(sb, indentationLevel);
-			sb.append("* ").append(message).append("\n");
+			sb.append("* ").append(message);
 			log.info(sb.toString());
 		}
 	}
