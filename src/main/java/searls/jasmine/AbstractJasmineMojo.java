@@ -36,6 +36,12 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected boolean skipTests;
 	
 	/**
+	 * @parameter expression="${haltOnFailure}" default-value="true"
+	 */
+	protected boolean haltOnFailure;
+	
+	
+	/**
 	 * @parameter default-value="${project.build.directory}/${project.build.finalName}"
 	 */
 	protected String packageDir;
