@@ -61,6 +61,7 @@ public class SpecRunnerHtmlGenerator {
 			String directory, String attribute, StringTemplate template)
 			throws IOException {
 		if(directory != null) {
+			FileUtils.mkdir(directory);
 			List<String> sourceFileNames = FileUtils.getFileNames(new File(directory), "**/*.js", null, true);
 			template.setAttribute(attribute,buildScriptTagsForFileNames(sourceFileNames)); 
 		}

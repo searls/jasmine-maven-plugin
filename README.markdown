@@ -2,8 +2,8 @@ jasmine-maven-plugin
 ====================
 **A Maven Plugin for processing JavaScript sources, specs, and executing Jasmine**
 
-Put this in your POM
---------------------
+Put this in your POM...
+-----------------------
 
     <project>
       <build>
