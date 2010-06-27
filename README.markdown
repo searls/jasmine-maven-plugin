@@ -108,13 +108,13 @@ As seen above, production JavaScript is placed in `src/main/javascript`, while t
 ### Goals
 At the moment, the plugin is only tested to work if all of its goals are configured to be executed.
 
-* processResources     - This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. It can be changed by configuring a parameter named `srcDir` in the plugin execution section of the POM.
-* processTestResources - This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. It can be changed by configuring a parameter named `testSrcDir` in the plugin execution section of the POM.
-* test                 - This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
-* preparePackage       - This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or overridden by setting the `packageJavaScriptPath` property
+* resources      - This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. It can be changed by configuring a parameter named `srcDir` in the plugin execution section of the POM.
+* testResources  - This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. It can be changed by configuring a parameter named `testSrcDir` in the plugin execution section of the POM.
+* test           - This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
+* preparePackage - This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or overridden by setting the `packageJavaScriptPath` property
 
 ## Maintainers
-* [Justin Searls](mailto:searls@gmail.com), Pillar Technology
+* [Justin Searls](http://twitter.com/Searls), Pillar Technology
 
 ## Contributions
 Pull requests are, of course, welcome! A few todos as of 6/27, if anyone is interested in tackling them:
