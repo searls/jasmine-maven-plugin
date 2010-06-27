@@ -7,9 +7,9 @@ Put this in your POM
 
 <project>
   <build>
-    É
+    ...
     <plugins>
-      É
+      ...
       <plugin>
         <groupId>searls</groupId>
         <artifactId>jasmine-maven-plugin</artifactId>
@@ -25,10 +25,10 @@ Put this in your POM
           </execution>
         </executions>
       </plugin>
-      É
+      ...
     </plugins>
   </build>
-  É
+  ...
   <repositories>
     <repository>
       <id>searls-maven-thirdparty</id>
@@ -45,9 +45,8 @@ Put this in your POM
       <url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
     </pluginRepository>
   </pluginRepositories>
-  É
+  ...
 </project>
-
 And Smoke It
 ------------
 
