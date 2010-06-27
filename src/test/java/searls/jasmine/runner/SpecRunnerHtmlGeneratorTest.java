@@ -12,14 +12,10 @@ import java.util.List;
 import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.util.FileUtils;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.runners.MockitoJUnitRunner;
 
-@RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerHtmlGeneratorTest {
 
-	@InjectMocks private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator();
+	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null,null);
 	
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
@@ -65,12 +61,6 @@ public class SpecRunnerHtmlGeneratorTest {
 		
 		assertThat(html,containsString("<style type=\"text/css\">"+css+"</style>"));
 	}
-	
-//	@Test
-//	public void shouldIncludeSourceTagsForEachJavaScriptSourceInDirectory() {
-//		String html = specRunnerHtmlGenerator.generate(new ArrayList<Artifact>());
-//		
-//	}
 	
 	private Artifact mockDependency(String groupId, String artifactId, String version, String type,String fileContents) throws Exception {
 		Artifact dep = mock(Artifact.class);

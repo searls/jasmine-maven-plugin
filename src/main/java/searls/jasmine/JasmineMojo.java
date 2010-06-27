@@ -23,7 +23,7 @@ public class JasmineMojo extends AbstractJasmineMojo {
 	}
 
 	private void writeSpecRunnerToOutputDirectory() {
-		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator();
+		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(jasmineTargetDir+File.separatorChar+srcDirectoryName,jasmineTargetDir+File.separatorChar+specDirectoryName);
 		String html = htmlGenerator.generate(pluginArtifacts);
 		try {
 			getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);
