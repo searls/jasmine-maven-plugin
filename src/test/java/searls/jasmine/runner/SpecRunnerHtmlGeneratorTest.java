@@ -9,13 +9,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.Artifact;
+import org.codehaus.plexus.util.FileUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.runners.MockitoJUnitRunner;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerHtmlGeneratorTest {
 
-	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator();
+	@InjectMocks private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator();
 	
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
@@ -62,6 +66,12 @@ public class SpecRunnerHtmlGeneratorTest {
 		assertThat(html,containsString("<style type=\"text/css\">"+css+"</style>"));
 	}
 	
+//	@Test
+//	public void shouldIncludeSourceTagsForEachJavaScriptSourceInDirectory() {
+//		String html = specRunnerHtmlGenerator.generate(new ArrayList<Artifact>());
+//		
+//	}
+	
 	private Artifact mockDependency(String groupId, String artifactId, String version, String type,String fileContents) throws Exception {
 		Artifact dep = mock(Artifact.class);
 		when(dep.getGroupId()).thenReturn(groupId);
@@ -70,7 +80,7 @@ public class SpecRunnerHtmlGeneratorTest {
 		when(dep.getType()).thenReturn(type);
 		
 		File f = File.createTempFile("test", ".js");
-		FileUtils.writeStringToFile(f, fileContents);
+		FileUtils.fileWrite(f.getAbsolutePath(), fileContents);
 		when(dep.getFile()).thenReturn(f);
 		
 		return dep;

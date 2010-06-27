@@ -1,6 +1,5 @@
 package searls.jasmine;
 
-import java.io.File;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
@@ -14,17 +13,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter default-value="${project.basedir}/src/main/javascript"
 	 */
-	protected File srcDir;
+	protected String srcDir;
 	
 	/**
 	 * @parameter default-value="${project.basedir}/src/test/javascript"
 	 */
-	protected File testSrcDir;
+	protected String testSrcDir;
 	
 	/**
 	 * @parameter default-value="${project.build.directory}/jasmine"
 	 */
-	protected File jasmineTargetDir;
+	protected String jasmineTargetDir;
 	
 	/**
 	 * @parameter default-value="js"
@@ -34,7 +33,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter default-value="${project.build.directory}/${project.build.finalName}"
 	 */
-	protected File packageDir;
+	protected String packageDir;
 	
 	/**
 	 * @parameter default-value="SpecRunner.html"

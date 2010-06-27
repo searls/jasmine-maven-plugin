@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.Artifact;
+import org.codehaus.plexus.util.FileUtils;
 
 public class SpecRunnerHtmlGenerator {
 	
@@ -15,8 +15,6 @@ public class SpecRunnerHtmlGenerator {
 	
 	private static String CSS_TYPE = "css";
 	private static String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
-	
-	private static final String TEMPLATE_FILE = "SpecRunner.html.template";
 
 	public String generate(List<Artifact> dependencies) {
 		try {
@@ -28,9 +26,9 @@ public class SpecRunnerHtmlGenerator {
 			StringBuilder cssDependencies = new StringBuilder();
 			for(Artifact dep : dependencies) {
 				if(JAVASCRIPT_TYPE.equals(dep.getType())) {
-					javaScriptDependencies.append("<script type=\"text/javascript\">").append(FileUtils.readFileToString(dep.getFile())).append("</script>");
+					javaScriptDependencies.append("<script type=\"text/javascript\">").append(FileUtils.fileRead(dep.getFile())).append("</script>");
 				} else if(CSS_TYPE.equals(dep.getType())) {
-					cssDependencies.append("<style type=\"text/css\">").append(FileUtils.readFileToString(dep.getFile())).append("</style>");
+					cssDependencies.append("<style type=\"text/css\">").append(FileUtils.fileRead(dep.getFile())).append("</style>");
 				}
 			}
 			template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, javaScriptDependencies.toString());

@@ -3,9 +3,9 @@ package searls.jasmine;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.FileUtils;
 
 import searls.jasmine.runner.SpecRunnerHtmlGenerator;
 
@@ -26,8 +26,8 @@ public class JasmineMojo extends AbstractJasmineMojo {
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator();
 		String html = htmlGenerator.generate(pluginArtifacts);
 		try {
-			getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir.getAbsolutePath());
-			FileUtils.writeStringToFile(new File(jasmineTargetDir,specRunnerHtmlFileName), html);
+			getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);
+			FileUtils.fileWrite(FileUtils.catPath(jasmineTargetDir+File.separatorChar,specRunnerHtmlFileName), html);
 		} catch (IOException e) {
 			new RuntimeException("Failed to write Spec Runner to target directory", e);
 		}
