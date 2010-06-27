@@ -17,7 +17,7 @@ public class ProcessResourcesMojo extends AbstractJasmineMojo {
 		try {
 			getLog().info("Processing JavaScript Sources");
 			if(org.codehaus.plexus.util.FileUtils.fileExists(srcDir)) {
-				FileUtils.copyDirectory(new File(srcDir), new File(jasmineTargetDir+File.separatorChar+srcDirectoryName));
+				FileUtils.copyDirectoryStructure(new File(srcDir), new File(jasmineTargetDir+File.separatorChar+srcDirectoryName));
 			} else {
 				getLog().warn("JavaScript source folder was expected but was not found. Set configuration property `srcDir` to the directory containing your JavaScript sources. Skipping jasmine:resources processing.");
 			}

@@ -17,7 +17,7 @@ public class ProcessTestResourcesMojo extends AbstractJasmineMojo {
 		try {
 			getLog().info("Processing JavaScript Specs");
 			if(FileUtils.fileExists(testSrcDir)) {
-				FileUtils.copyDirectory(new File(testSrcDir), new File(jasmineTargetDir+File.separatorChar+specDirectoryName));
+				FileUtils.copyDirectoryStructure(new File(testSrcDir), new File(jasmineTargetDir+File.separatorChar+specDirectoryName));
 			} else {
 				getLog().warn("JavaScript test source folder was expected but was not found. Set configuration property `testSrcDir` to the directory containing your specs. Skipping jasmine:testResources processing.");
 			}

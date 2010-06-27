@@ -18,7 +18,7 @@ public class PreparePackageMojo extends AbstractJasmineMojo {
 		if(FileUtils.fileExists(targetSrcDir)) {
 			getLog().info("Copying processed JavaScript sources into package");
 			try {
-				FileUtils.copyDirectory(new File(targetSrcDir), new File(packageDir+File.separatorChar+packageJavaScriptPath));
+				FileUtils.copyDirectoryStructure(new File(targetSrcDir), new File(packageDir+File.separatorChar+packageJavaScriptPath));
 			} catch (IOException e) {
 				throw new MojoFailureException("Failed to copy processed JavaScript sources into package directory");
 			}
