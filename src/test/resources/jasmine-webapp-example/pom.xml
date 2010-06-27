@@ -6,7 +6,6 @@
 	<packaging>war</packaging>
 	<version>0.11.1-SNAPSHOT</version>
 	<name>Example Webapp using Jasmine Maven Plugin</name>
-	<url>http://maven.apache.org</url>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -28,6 +27,7 @@
 							<goal>resources</goal>
 							<goal>testResources</goal>
 							<goal>test</goal>
+							<goal>preparePackage</goal>
 						</goals>
 					</execution>
 				</executions>

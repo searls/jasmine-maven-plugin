@@ -9,6 +9,8 @@ import org.apache.maven.project.MavenProject;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo {
 
+	/** Properties in order of most-to-least interesting for client projects to override **/
+	
 	/**
 	 * @parameter default-value="${project.basedir}/src/main/javascript"
 	 */
@@ -23,6 +25,16 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="${project.build.directory}/jasmine"
 	 */
 	protected File jasmineTargetDir;
+	
+	/**
+	 * @parameter default-value="js"
+	 */
+	protected String packageJavaScriptPath;
+	
+	/**
+	 * @parameter default-value="${project.build.directory}/${project.build.finalName}"
+	 */
+	protected File packageDir;
 	
 	/**
 	 * @parameter default-value="SpecRunner.html"
