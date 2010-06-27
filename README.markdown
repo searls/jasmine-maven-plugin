@@ -50,13 +50,43 @@ Put this in your POM
     
 And Smoke It
 ------------
+Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to give:
 
     mvn package
+
+But the results will only be useful once you've added your JavaScript source to `src/main/javascript` and your specs to `src/test/javascript`!
     
+Example Output
+--------------
+jasmine-maven-plugin halts on spec failures (unless haltOnFailure is set to false). An example of some failure output follows:
+
+    -------------------------------------------------------
+     J A S M I N E   T E S T S
+    -------------------------------------------------------
+    [INFO] Suite FailSpec <<< FAILURE!
+    [INFO]   Suite NestedFail <<< FAILURE!
+    [INFO]     Spec FailSpec NestedFail should fail deeply. <<< FAILURE!
+    [INFO]       * Expected true to be false.
+    [INFO]   Spec FailSpec should fail. <<< FAILURE!
+    [INFO]     * Expected true to be false.
+    [INFO] Suite HelloWorld <<< FAILURE!
+    [INFO]   Spec HelloWorld should say hello.
+    [INFO]   Spec HelloWorld should say goodbye. <<< FAILURE!
+    [INFO]     * Expected 'Hello, World' to be 'Goodbye, World'.
+    [INFO]   Spec HelloWorld should fail. <<< FAILURE!
+    [INFO]     * Expected 5 to be 6.
+    [INFO] 
+    Results:
+    
+    5 specs, 4 failures in 0.103s
+    [INFO] ------------------------------------------------------------------------
+    [ERROR] BUILD FAILURE
+    [INFO] ------------------------------------------------------------------------
+    [INFO] There were test failures.
+    [INFO] ------------------------------------------------------------------------
 
 Usage Notes
 -----------
-
 ### Project layout
 The jasmine-maven-plugin sports a default project directory layout that should be convenient for most green field projects. The included example project (which is in [src/test/resources/jasmine-webapp-example](http://github.com/searls/jasmine-maven-plugin/tree/master/src/test/resources/jasmine-webapp-example/) demonstrates this convention and looks something like this:
 
@@ -111,17 +141,18 @@ At the moment, the plugin is only tested to work if all of its goals are configu
 * resources      - This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. It can be changed by configuring a parameter named `srcDir` in the plugin execution section of the POM.
 * testResources  - This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. It can be changed by configuring a parameter named `testSrcDir` in the plugin execution section of the POM.
 * test           - This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
-* preparePackage - This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or overridden by setting the `packageJavaScriptPath` property
+* preparePackage - This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
 
 ## Maintainers
 * [Justin Searls](http://twitter.com/Searls), Pillar Technology
 
 ## Contributions
-Pull requests are, of course, welcome! A few todos as of 6/27, if anyone is interested in tackling them:
+Pull requests are, of course, very welcome! A few todos as of 6/27, if anyone is interested in tackling them:
+
 * Parse & format ignored tests (currently only passing & failing tests are paresed)
 * A report moo that generates JUnit-style XML, so results can easily be rolled up by CI servers.
 * A facility that automatically executes the other goals if only `test` or `preparePackage` is run.
 
 ## Acknowledgments
 * Thanks to Pivotal Labs for authoring and publishing [Jasmine](http://github.com/pivotal/jasmine)
-* Thanks to christian.nelson and sivoh1, owners of the [javascript-test-maven-plugin](http://code.google.com/p/javascript-test-maven-plugin/), which provided a similar implementation from which to glean several valuable lessons.
+* Thanks to christian.nelson and sivoh1, owners of the [javascript-test-maven-plugin](http://code.google.com/p/javascript-test-maven-plugin/) project, which provided a similar implementation from which to glean several valuable lessons.
