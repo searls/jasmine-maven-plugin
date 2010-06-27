@@ -14,12 +14,15 @@ import searls.jasmine.runner.SpecRunnerHtmlGenerator;
  * @goal test
  * @phase test
  */
-public class JasmineMojo extends AbstractJasmineMojo {
+public class TestMojo extends AbstractJasmineMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		getLog().info("Executing Jasmine Tests");
-
-		writeSpecRunnerToOutputDirectory();
+		if(!skipTests) {
+			getLog().info("Executing Jasmine Tests");
+			writeSpecRunnerToOutputDirectory();
+		} else {
+			getLog().info("Skipping Jasmine Tests");
+		}
 	}
 
 	private void writeSpecRunnerToOutputDirectory() {

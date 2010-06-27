@@ -31,6 +31,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected String packageJavaScriptPath;
 	
 	/**
+	 * @parameter expression="${skipTests}"
+	 */
+	protected boolean skipTests;
+	
+	/**
 	 * @parameter default-value="${project.build.directory}/${project.build.finalName}"
 	 */
 	protected String packageDir;
