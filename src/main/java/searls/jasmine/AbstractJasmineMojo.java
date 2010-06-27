@@ -21,14 +21,15 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected String testSrcDir;
 	
 	/**
+	 * @parameter default-value="js"
+	 */
+	protected String packageJavaScriptPath;
+	
+	/**
 	 * @parameter default-value="${project.build.directory}/jasmine"
 	 */
 	protected String jasmineTargetDir;
 	
-	/**
-	 * @parameter default-value="js"
-	 */
-	protected String packageJavaScriptPath;
 	
 	/**
 	 * @parameter expression="${skipTests}"
