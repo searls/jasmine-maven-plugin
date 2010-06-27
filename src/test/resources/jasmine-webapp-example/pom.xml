@@ -22,10 +22,19 @@
 				<groupId>searls</groupId>
 				<artifactId>jasmine-maven-plugin</artifactId>
 				<version>0.11.1-SNAPSHOT</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>resources</goal>
+							<goal>testResources</goal>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
-	
+
 	<repositories>
 		<repository>
 			<id>searls-maven-repository</id>
