@@ -4,7 +4,7 @@
 
 	<groupId>searls</groupId>
 	<artifactId>jasmine-maven-plugin</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.11.1-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>jasmine</name>
@@ -31,7 +31,7 @@
 			<version>2.2.1</version>
 		</dependency>
 
-		<!-- Runtime Dependencies -->
+		<!-- Plugin Dependencies -->
 		<dependency>
 			<groupId>rhino</groupId>
 			<artifactId>js</artifactId>
@@ -48,10 +48,32 @@
 			<artifactId>commons-io</artifactId>
 			<version>1.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.antlr</groupId>
+			<artifactId>stringtemplate</artifactId>
+			<version>3.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.hamcrest</groupId>
+			<artifactId>hamcrest-all</artifactId>
+			<version>1.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.8.2</version>
+			<scope>test</scope>
+		</dependency>
 
 
-
-		<!-- Jasmine Dependencies -->
+		<!-- Jasmine & its Dependencies -->
 		<dependency>
 			<groupId>com.pivotallabs</groupId>
 			<artifactId>jasmine</artifactId>

@@ -1,18 +1,17 @@
 package searls.jasmine;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+
+import searls.jasmine.runner.SpecRunnerHtmlGenerator;
 
 /**
  * @component
@@ -22,9 +21,7 @@ import org.apache.maven.project.MavenProject;
  */
 public class JasmineMojo extends AbstractMojo {
 
-	private static String JAVASCRIPT_TYPE = "js";
-
-	/**
+		/**
 	 * @parameter expression="${project.build.directory}"
 	 * @required
 	 */
@@ -51,20 +48,19 @@ public class JasmineMojo extends AbstractMojo {
 		getLog().info("Executing Jasmine Tests");
 
 		getLog().info("Printing plugin dependencies:");
-		printJavaScriptDependencies();
+
+		writeSpecRunnerToOutputDirectory();
 	}
 
-	private void printJavaScriptDependencies() {
-		for (Artifact dep : pluginArtifacts) {
-			if(JAVASCRIPT_TYPE.equals(dep.getType())) { 
-				getLog().info(" * "+dep.getGroupId()+":"+dep.getArtifactId()+":"+dep.getVersion()+":"+dep.getType());
-				try {
-					String js = FileUtils.readFileToString(dep.getFile());
-					getLog().info(js);
-				} catch (IOException e) {
-					throw new RuntimeException("Failed to open file "+dep.getFile().getName(),e);
-				}
-			}
+	private void writeSpecRunnerToOutputDirectory() {
+		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator();
+		String html = htmlGenerator.generate(pluginArtifacts);
+		try {
+			getLog().info("Writing out html "+html+" to directory "+outputDirectory.getAbsolutePath());
+			FileUtils.writeStringToFile(new File(outputDirectory,"runner.html"), html);
+		} catch (IOException e) {
+			new RuntimeException("Failed to write Spec Runner to target directory",e);
 		}
 	}
+
 }
