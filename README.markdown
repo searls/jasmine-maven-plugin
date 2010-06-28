@@ -150,9 +150,9 @@ At the moment, the plugin is only tested to work if all of its goals are configu
 ## Contributions
 Pull requests are, of course, very welcome! A few todos as of 6/27, if anyone is interested in tackling them:
 
-* Parse & format ignored tests (currently only passing & failing tests are paresed)
-* A report moo that generates JUnit-style XML, so results can easily be rolled up by CI servers.
-* A facility that automatically executes the other goals if only `test` or `preparePackage` is run.
+* Parse & format ignored tests (currently only passing & failing tests are parsed)
+* A report mojo that generates JUnit-style XML, so results can easily be rolled up by CI servers.
+* A facility that automatically executes the other goals if only `test` or `preparePackage` is configured to run.
 
 ## Acknowledgments
 * Thanks to Pivotal Labs for authoring and publishing [Jasmine](http://github.com/pivotal/jasmine)
