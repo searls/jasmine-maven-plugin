@@ -48,8 +48,8 @@ Put this in your POM...
       ...
     </project>
     
-And Smoke It
-------------
+...and Smoke It
+---------------
 
     mvn package
 
