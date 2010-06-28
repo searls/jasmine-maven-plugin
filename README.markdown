@@ -63,22 +63,23 @@ jasmine-maven-plugin halts on spec failures (unless haltOnFailure is set to fals
     -------------------------------------------------------
      J A S M I N E   T E S T S
     -------------------------------------------------------
-    [INFO] Suite FailSpec <<< FAILURE!
-    [INFO]   Suite NestedFail <<< FAILURE!
-    [INFO]     Spec FailSpec NestedFail should fail deeply. <<< FAILURE!
+    [INFO] describe FailSpec <<< FAILURE!
+    [INFO]   describe NestedFail <<< FAILURE!
+    [INFO]     it should fail deeply <<< FAILURE!
     [INFO]       * Expected true to be false.
-    [INFO]   Spec FailSpec should fail. <<< FAILURE!
+    [INFO]   it should fail <<< FAILURE!
     [INFO]     * Expected true to be false.
-    [INFO] Suite HelloWorld <<< FAILURE!
-    [INFO]   Spec HelloWorld should say hello.
-    [INFO]   Spec HelloWorld should say goodbye. <<< FAILURE!
+    [INFO] describe HelloWorld <<< FAILURE!
+    [INFO]   it should say hello
+    [INFO]   it should say goodbye <<< FAILURE!
     [INFO]     * Expected 'Hello, World' to be 'Goodbye, World'.
-    [INFO]   Spec HelloWorld should fail. <<< FAILURE!
+    [INFO]   it should fail <<< FAILURE!
     [INFO]     * Expected 5 to be 6.
     [INFO] 
     Results:
     
-    5 specs, 4 failures in 0.103s
+    5 specs, 4 failures in 0.144s
+    
     [INFO] ------------------------------------------------------------------------
     [ERROR] BUILD FAILURE
     [INFO] ------------------------------------------------------------------------

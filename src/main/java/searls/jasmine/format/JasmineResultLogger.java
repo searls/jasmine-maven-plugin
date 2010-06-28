@@ -27,14 +27,15 @@ public class JasmineResultLogger {
 		
 		logChildren(result,0);			
 				
-		log.info("\nResults:\n\n"+result.getDescription());		
+		log.info("\nResults:\n\n"+result.getDescription()+"\n");		
 	}
 	
 	private void logChildren(ResultItemParent parent, int indentationLevel) {
 		for(TestResultItem item : parent.getChildren()) {
 			StringBuilder sb = new StringBuilder();
 			appendIndent(sb, indentationLevel);
-			sb.append(item.getClass().getSimpleName())
+			
+			sb.append(item instanceof Spec ? "it" : "describe")
 			.append(' ')
 			.append(item.getDescription());
 			if(!item.didPass()) {

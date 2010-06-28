@@ -42,11 +42,11 @@ public class SpecRunnerExecutorTest {
 		assertThat(nestedFail.getChildren().size(),is(1));
 		
 		Spec nestedFailSpec = (Spec) nestedFail.getChildren().get(0);
-		assertThat(nestedFailSpec.getDescription(),is("FailSpec NestedFail should fail deeply."));
+		assertThat(nestedFailSpec.getDescription(),is("should fail deeply"));
 		assertThat(nestedFailSpec.getMessages(),hasItems("Expected true to be false."));
 		
 		Spec failSpecShouldFail = (Spec) failSpec.getChildren().get(1);
-		assertThat(failSpecShouldFail.getDescription(),is("FailSpec should fail."));
+		assertThat(failSpecShouldFail.getDescription(),is("should fail"));
 		assertThat(failSpecShouldFail.didPass(),is(false));
 		assertThat(failSpecShouldFail.getMessages(),hasItems("Expected true to be false."));
 		
@@ -57,17 +57,17 @@ public class SpecRunnerExecutorTest {
 		
 		Spec passingHelloSpec = (Spec) helloWorldSuite.getChildren().get(0);
 		assertThat(passingHelloSpec.didPass(),is(true));
-		assertThat(passingHelloSpec.getDescription(),is("HelloWorld should say hello."));
+		assertThat(passingHelloSpec.getDescription(),is("should say hello"));
 		assertThat(passingHelloSpec.getMessages().size(),is(0));
 		
 		Spec failingGoodbyeSpec = (Spec) helloWorldSuite.getChildren().get(1);
 		assertThat(failingGoodbyeSpec.didPass(),is(false));
-		assertThat(failingGoodbyeSpec.getDescription(),is("HelloWorld should say goodbye."));
+		assertThat(failingGoodbyeSpec.getDescription(),is("should say goodbye"));
 		assertThat(failingGoodbyeSpec.getMessages(),hasItems("Expected 'Hello, World' to be 'Goodbye, World'."));
 		
 		Spec failingGoodbyeSpec2 = (Spec) helloWorldSuite.getChildren().get(2);
 		assertThat(failingGoodbyeSpec2.didPass(),is(false));
-		assertThat(failingGoodbyeSpec2.getDescription(),is("HelloWorld should fail."));
+		assertThat(failingGoodbyeSpec2.getDescription(),is("should fail"));
 		assertThat(failingGoodbyeSpec2.getMessages(),hasItems("Expected 5 to be 6."));
 	}
 	

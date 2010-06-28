@@ -11,6 +11,7 @@ import searls.jasmine.model.Suite;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
+import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.DomText;
 import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
@@ -25,6 +26,8 @@ public class SpecRunnerExecutor {
 	
 	public JasmineResult execute(String runnerFile) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
+		quietIncorrectnessListener(webClient);
+		
 	    HtmlPage initialPage = webClient.getPage("file://"+runnerFile);
 
 	    HtmlCheckBoxInput checkbox = (HtmlCheckBoxInput) initialPage.getElementById(SHOW_PASSED_CHECKBOX);
@@ -39,6 +42,13 @@ public class SpecRunnerExecutor {
 	    return result;
 	}
 
+	private void quietIncorrectnessListener(WebClient webClient) {
+		//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
+		webClient.setIncorrectnessListener(new IncorrectnessListener() {
+			public void notify(String arg0, Object arg1) {}
+		});
+	}
+
 	@SuppressWarnings("unchecked")
 	private void populateChildren(ResultItemParent parent, HtmlDivision resultItem) {
 		List<HtmlDivision> childResultDivs = (List<HtmlDivision>) resultItem.getByXPath("div[contains(@class,'suite') or contains(@class,'spec')]");
@@ -46,10 +56,11 @@ public class SpecRunnerExecutor {
 	    	String[] classes = div.getAttribute("class").split(" ");
 	    	String type = classes[0];
 	    	String success = classes[1];
+	    	String description = ((HtmlAnchor)div.getFirstByXPath("a[@class='description']")).getTextContent();
 	    	boolean passed = "passed".equals(success);
 	    	if("spec".equals(type)) {
 	    		Spec spec = new Spec();
-	    		spec.setDescription(((HtmlAnchor)div.getFirstByXPath("a[@class='description']")).getAttribute("title"));
+	    		spec.setDescription(description);
 	    		spec.setPassed(passed);
 	    		List<DomText> messageTexts = (List<DomText>) div.getByXPath("div[@class='messages']/div/text()");
 	    		for (DomText text : messageTexts) {
@@ -58,7 +69,7 @@ public class SpecRunnerExecutor {
 	    		parent.addChild(spec);
 	    	} else {
 	    		Suite suite = new Suite();
-	    		suite.setDescription(((HtmlAnchor)div.getFirstByXPath("a[@class='description']")).getTextContent());
+	    		suite.setDescription(description);
 	    		suite.setPassed(passed);
 	    		parent.addChild(suite);
 	    		populateChildren(suite,div);
