@@ -53,7 +53,13 @@ Put this in your POM...
 
     mvn package
 
-Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to give. However, the results will only be useful once you've added your JavaScript source to `src/main/javascript` and your specs to `src/test/javascript`!
+Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to give. However, the results will only be useful once you've added some JavaScript and specs
+
+###src/main/javascript 
+Store your project's JavaScript (i.e. `ninja.js`) and dependencies (i.e. `lib/prototype.js`) in `src/main/javsacript`. 
+
+###src/test/javascript 
+Store your Jasmine specs (i.e. `ninjaSpec.js`) in `src/test/javascript`. No need to create an HTML spec runner, one will be generated and executed for you by the **jasmine:test** goal!
     
 Example test Output
 -------------------
