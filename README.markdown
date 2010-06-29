@@ -168,6 +168,19 @@ You can run the plugin with all four goals or only the first three. For instance
       </configuration>
     </execution>
 
+### Configuration
+Among configurations listed elsewhere, you can configure jasmine-maven-plugin to load a specified list of JavaScript sources (relative to ${jsSrcDir}, which defaults to `src/main/javascript`) before the other ones. So, for instance, if you need to load jQuery and then jQuery plugins before your production sources get included in the runner, you can specify those sources you want to preload like so:
+
+    <configuration>
+      ...
+      <preloadSources>
+        <source>vendor/jquery.js</source>
+        <source>vendor/jquery-ui.js</source>
+      </preloadSources>				
+    </configuration>
+    
+In the example above, `vendor/jquery.js` and `vendor/jquery-ui.js` are still added to the generated SpecRunner.html once, just before all other sources in the project.
+
 ## Maintainers
 * [Justin Searls](http://twitter.com/Searls), Pillar Technology
 
