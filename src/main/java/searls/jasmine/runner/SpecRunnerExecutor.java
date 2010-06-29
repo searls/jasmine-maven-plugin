@@ -21,7 +21,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 
 public class SpecRunnerExecutor {
-
+	
+	private static final long MAX_EXECUTION_MILLIS = 300000; //5 minutes 
 	private static final String SHOW_PASSED_CHECKBOX = "__jasmine_TrivialReporter_showPassed__";
 	
 	public JasmineResult execute(String runnerFile) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
@@ -29,7 +30,8 @@ public class SpecRunnerExecutor {
 		quietIncorrectnessListener(webClient);
 		
 	    HtmlPage initialPage = webClient.getPage("file://"+runnerFile);
-
+	    waitForRunnerToFinish(initialPage);
+	    
 	    HtmlCheckBoxInput checkbox = (HtmlCheckBoxInput) initialPage.getElementById(SHOW_PASSED_CHECKBOX);
 	    HtmlPage page = checkbox.click();
 	    
@@ -40,6 +42,25 @@ public class SpecRunnerExecutor {
 	    populateChildren(result, rootDiv);
 	    
 	    return result;
+	}
+
+	private void waitForRunnerToFinish(HtmlPage page) {
+		int waitInMillis = 500;
+		for (int i = 0; i < MAX_EXECUTION_MILLIS/waitInMillis; i++) {
+            if (page.getFirstByXPath("//div[@class='runner running']") != null) {
+        		synchronized (page) {
+        			try {
+						page.wait(waitInMillis);
+					} catch (InterruptedException e) {
+						break;
+					}
+        		}
+            }
+        }
+		if(page.getFirstByXPath("//div[@class='runner running']") != null ) {
+			throw new IllegalStateException("Attempted to wait for the test to complete processing over the course of "+(MAX_EXECUTION_MILLIS/1000)+" seconds," +
+					"but it still appears to be running. Aborting test execution.");
+		}
 	}
 
 	private void quietIncorrectnessListener(WebClient webClient) {
