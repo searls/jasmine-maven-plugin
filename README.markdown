@@ -145,10 +145,10 @@ As seen above, production JavaScript is placed in `src/main/javascript`, while t
 At the moment, the plugin is only tested to work if all of its goals are configured to be executed.
 
 ####jasmine:resources
-This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. It can be changed by configuring a parameter named `srcDir` in the plugin execution section of the POM.
+This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
 
 ####jasmine:testResources
-This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. It can be changed by configuring a parameter named `testSrcDir` in the plugin execution section of the POM.
+This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. It can be changed by configuring a parameter named `jsTestSrcDir` in the plugin execution section of the POM.
 
 ####jasmine:test
 This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.

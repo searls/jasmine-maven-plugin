@@ -16,10 +16,10 @@ public class ProcessTestResourcesMojo extends AbstractJasmineMojo {
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		try {
 			getLog().info("Processing JavaScript Specs");
-			if(FileUtils.fileExists(testSrcDir)) {
-				FileUtils.copyDirectoryStructure(new File(testSrcDir), new File(jasmineTargetDir+File.separatorChar+specDirectoryName));
+			if(FileUtils.fileExists(jsTestSrcDir)) {
+				FileUtils.copyDirectoryStructure(new File(jsTestSrcDir), new File(jasmineTargetDir+File.separatorChar+specDirectoryName));
 			} else {
-				getLog().warn("JavaScript test source folder was expected but was not found. Set configuration property `testSrcDir` to the directory containing your specs. Skipping jasmine:testResources processing.");
+				getLog().warn("JavaScript test source folder was expected but was not found. Set configuration property `jsTestSrcDir` to the directory containing your specs. Skipping jasmine:testResources processing.");
 			}
 		} catch (IOException e) {
 			throw new MojoFailureException("Failed to copy JavaScript test sources.");
