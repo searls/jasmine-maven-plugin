@@ -2,6 +2,8 @@ package searls.jasmine.runner;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.antlr.stringtemplate.StringTemplate;
@@ -19,7 +21,6 @@ public class SpecRunnerHtmlGenerator {
 	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
 	
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
-	private static final String SPECS_TEMPLATE_ATTR_NAME = "specs";	
 	
 	private static final String RUNNER_HTML_TEMPLATE = 
 		"<html>" +
@@ -27,15 +28,17 @@ public class SpecRunnerHtmlGenerator {
 				"$"+CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
 				"$"+JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
 				"$"+SOURCES_TEMPLATE_ATTR_NAME+"$ " +
-				"$"+SPECS_TEMPLATE_ATTR_NAME+"$ " +
 			"</head>" +
 			"<body><script type=\"text/javascript\">jasmine.getEnv().addReporter(new jasmine.TrivialReporter()); jasmine.getEnv().execute();</script></body>" +
 		"</html>";
 	
 	private final String sourceDir;
 	private final String specDir;
+	private List<String> sourcesToLoadFirst;
+	private List<String> fileNamesAlreadyWrittenAsScriptTags = new ArrayList<String>();
 
-	public SpecRunnerHtmlGenerator(String sourceDir,String specDir) {
+	public SpecRunnerHtmlGenerator(List<String> sourcesToLoadFirst, String sourceDir,String specDir) {
+		this.sourcesToLoadFirst = sourcesToLoadFirst;
 		this.sourceDir = sourceDir;
 		this.specDir = specDir;
 	}
@@ -46,9 +49,11 @@ public class SpecRunnerHtmlGenerator {
 			
 			includeJavaScriptAndCssDependencies(dependencies, template);
 
-			populateTemplateForScriptsInDirectory(sourceDir, SOURCES_TEMPLATE_ATTR_NAME, template);
-			
-			populateTemplateForScriptsInDirectory(specDir, SPECS_TEMPLATE_ATTR_NAME, template);
+			StringBuilder scriptTags = new StringBuilder();
+			appendScriptTagsForFileNames(scriptTags,expandSourcesToLoadFirstRelativeToSourceDir());				
+			appendScriptTagsForFileNames(scriptTags, fileNamesForScriptsInDirectory(sourceDir));
+			appendScriptTagsForFileNames(scriptTags, fileNamesForScriptsInDirectory(specDir));
+			template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME,scriptTags.toString());			
 			
 			return template.toString();
 		} catch (IOException e) {
@@ -56,24 +61,34 @@ public class SpecRunnerHtmlGenerator {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	private void populateTemplateForScriptsInDirectory(
-			String directory, String attribute, StringTemplate template)
-			throws IOException {
-		if(directory != null) {
-			FileUtils.mkdir(directory);
-			List<String> sourceFileNames = FileUtils.getFileNames(new File(directory), "**/*.js", null, true);
-			template.setAttribute(attribute,buildScriptTagsForFileNames(sourceFileNames)); 
+	private List<String> expandSourcesToLoadFirstRelativeToSourceDir() {
+		List<String> fullFileNames = new ArrayList<String>();
+		if(sourcesToLoadFirst != null) {
+			for(String sourceToLoadFirst : sourcesToLoadFirst) {
+				fullFileNames.add(sourceDir+File.separatorChar+sourceToLoadFirst);
+			}
 		}
+		return fullFileNames;
 	}
 
-	private String buildScriptTagsForFileNames(List<String> sourceFileNames) {
-		StringBuilder sb = new StringBuilder();
+	@SuppressWarnings("unchecked")
+	private List<String> fileNamesForScriptsInDirectory(String directory) throws IOException {
+		List<String> names = new ArrayList<String>();
+		if(directory != null) {
+			FileUtils.mkdir(directory);
+			names = FileUtils.getFileNames(new File(directory), "**/*.js", null, true);
+			Collections.sort(names); 
+		} 
+		return names;
+	}
+
+	private void appendScriptTagsForFileNames(StringBuilder sb, List<String> sourceFileNames) {
 		for (String sourceFileName : sourceFileNames) {
-			sb.append("<script type=\"text/javascript\" src=\"").append(sourceFileName).append("\"></script>");
+			if(!fileNamesAlreadyWrittenAsScriptTags.contains(sourceFileName)) {
+				sb.append("<script type=\"text/javascript\" src=\"").append(sourceFileName).append("\"></script>");
+				fileNamesAlreadyWrittenAsScriptTags.add(sourceFileName);
+			}
 		}
-		String sourcesScriptTags = sb.toString();
-		return sourcesScriptTags;
 	}
 
 	private void includeJavaScriptAndCssDependencies(

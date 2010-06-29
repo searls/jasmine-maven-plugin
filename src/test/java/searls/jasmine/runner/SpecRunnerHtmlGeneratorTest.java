@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class SpecRunnerHtmlGeneratorTest {
 
-	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null,null);
+	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null,null,null);
 	
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {

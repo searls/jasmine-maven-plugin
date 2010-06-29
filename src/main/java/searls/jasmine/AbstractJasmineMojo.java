@@ -11,19 +11,34 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/** Properties in order of most-to-least interesting for client projects to override **/
 	
 	/**
-	 * @parameter default-value="${project.basedir}/src/main/javascript" expression="${jsSrcDir}"
+	 * @parameter expression="${jsSrcDir}" default-value="${project.basedir}/src/main/javascript"
 	 */
 	protected String jsSrcDir;
 	
 	/**
-	 * @parameter default-value="${project.basedir}/src/test/javascript" expression="${jsTestSrcDir}"
+	 * @parameter expression="${jsTestSrcDir}" default-value="${project.basedir}/src/test/javascript"
 	 */
 	protected String jsTestSrcDir;
 	
 	/**
-	 * @parameter default-value="js" expression="${packageJavaScriptPath}"
+	 * @parameter expression="${packageJavaScriptPath}" default-value="js"
 	 */
 	protected String packageJavaScriptPath;
+	
+	/**
+	 * JavaScript sources (typically vendor/lib dependencies) that need to be loaded
+	 * before other sources (and specs) in a particular order, these are relative to the ${jsSrcDir} 
+	 * directory! Therefore, if jquery.js is in `${jsSrcDir}/vendor`, you would configure:
+	 * 
+	 *  	&lt;preloadSources&gt;
+	 *			&lt;source&gt;vendor/z.js&lt;/source&gt;
+	 *		&lt;/preloadSources&gt;
+	 * 
+	 * And z.js would load before all the other sources and specs.
+	 * 
+	 * @parameter
+	 */
+	protected List<String> preloadSources;
 	
 	/**
 	 * @parameter default-value="${project.build.directory}/jasmine"
