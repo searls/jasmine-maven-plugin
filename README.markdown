@@ -142,7 +142,6 @@ The jasmine-maven-plugin sports a default project directory layout that should b
 As seen above, production JavaScript is placed in `src/main/javascript`, while test specs are each in `src/test/javascript`. The plugin does support nested directories and will maintain your directory structure as it processes the source directories.
 
 ### Goals
-At the moment, the plugin is only tested to work if all of its goals are configured to be executed.
 
 ####jasmine:resources
 This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
@@ -155,6 +154,19 @@ This goal binds to the test phase and generates a Jasmine runner file in `target
 
 ####jasmine:preparePackage 
 This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
+
+You can run the plugin with all four goals or only the first three. For instance, if you run your application in Eclipse WTP and you want to keep your production JavaScript in `src/main/webapp` to facilitate easier iterative development, you could skip the preparePackage goal and configure the `jsSrcDir` property to point at `src/main/webapp/[your-js-directory]` instead. Example POM follows:
+
+    <execution>
+      <goals>
+        <goal>resources</goal>
+        <goal>testResources</goal>
+        <goal>test</goal>
+      </goals>
+      <configuration>
+        <srcDir>${project.basedir}/src/main/webapp/js</srcDir>
+      </configuration>
+    </execution>
 
 ## Maintainers
 * [Justin Searls](http://twitter.com/Searls), Pillar Technology
