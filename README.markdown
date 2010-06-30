@@ -157,10 +157,10 @@ This goal binds to the test phase and generates a Jasmine runner file in `target
 This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
 
 ####jasmine:generateManualRunner
-This goal will generate an extra spec runner HTML alongside your JavaScript source and spec directories. This way, you can easily run your specs in the browser as you develop them, while still leaning on the plugin to keep the HTML up-to-date for you. Note that this HTML file is separate from the one generated during **jasmine:test**, as it points to the source directories directly.
+This goal binds to the generate-test-sources phase and will generate an extra spec runner HTML alongside your JavaScript source and spec directories. This way, you can easily run your specs in the browser as you develop them, while still leaning on the plugin to keep the HTML up-to-date for you. Note that this HTML file is separate from the one generated during **jasmine:test**, as it points to the source directories directly.
 
 
-You can run the plugin with all four goals or only the first three. For instance, if you run your application in Eclipse WTP and you want to keep your production JavaScript in `src/main/webapp` to facilitate easier iterative development, you could skip the preparePackage goal and configure the `jsSrcDir` property to point at `src/main/webapp/[your-js-directory]` instead. Example POM follows:
+You can run the plugin with all five goals or fewer, if you choose. For instance, if you run your application in Eclipse WTP and you want to keep your production JavaScript in `src/main/webapp` to facilitate easier iterative development, you could skip the preparePackage goal and configure the `jsSrcDir` property to point at `src/main/webapp/[your-js-directory]` instead. Example POM follows:
 
     <execution>
       <goals>
