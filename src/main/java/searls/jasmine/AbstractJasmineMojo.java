@@ -11,17 +11,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/** Properties in order of most-to-least interesting for client projects to override **/
 	
 	/**
-	 * @parameter expression="${jsSrcDir}" default-value="${project.basedir}/src/main/javascript"
+	 * @parameter default-value="${project.basedir}/src/main/javascript" expression="${jsSrcDir}"
 	 */
 	protected String jsSrcDir;
 	
 	/**
-	 * @parameter expression="${jsTestSrcDir}" default-value="${project.basedir}/src/test/javascript"
+	 * @parameter default-value="${project.basedir}/src/test/javascript" expression="${jsTestSrcDir}"
 	 */
 	protected String jsTestSrcDir;
 	
 	/**
-	 * @parameter expression="${packageJavaScriptPath}" default-value="js"
+	 * @parameter default-value="js" expression="${packageJavaScriptPath}"
 	 */
 	protected String packageJavaScriptPath;
 	
@@ -52,7 +52,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected boolean skipTests;
 	
 	/**
-	 * @parameter expression="${haltOnFailure}" default-value="true"
+	 * @parameter default-value="true" expression="${haltOnFailure}"
 	 */
 	protected boolean haltOnFailure;
 	

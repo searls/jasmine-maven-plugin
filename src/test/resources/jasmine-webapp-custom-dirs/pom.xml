@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>searls</groupId>
-	<artifactId>jasmine-webapp-example</artifactId>
+	<artifactId>jasmine-webapp-custom-dirs</artifactId>
 	<packaging>war</packaging>
 	<version>0.11.1-SNAPSHOT</version>
 	<name>Example Webapp using Jasmine Maven Plugin</name>
@@ -24,14 +24,13 @@
 				<executions>
 					<execution>
 						<goals>
+							<goal>generateManualRunner</goal>
 							<goal>resources</goal>
 							<goal>testResources</goal>
 							<goal>test</goal>
 						</goals>
 						<configuration>
-							<configuration>
-								<srcDir>${project.basedir}/src/main/webapp/js</srcDir>
-							</configuration>
+							<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
 						</configuration>
 					</execution>
 				</executions>

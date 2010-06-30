@@ -24,6 +24,7 @@
 				<executions>
 					<execution>
 						<goals>
+							<goal>generateManualRunner</goal>
 							<goal>resources</goal>
 							<goal>testResources</goal>
 							<goal>test</goal>
