@@ -13,6 +13,8 @@ import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.util.FileUtils;
 import org.junit.Test;
 
+import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
+
 public class SpecRunnerHtmlGeneratorTest {
 
 	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null,null,null);
@@ -20,7 +22,7 @@ public class SpecRunnerHtmlGeneratorTest {
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
 		List<Artifact> deps = new ArrayList<Artifact>();
-		String html = specRunnerHtmlGenerator.generate(deps);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
 		assertThat(html,containsString("<html>"));
 		assertThat(html,containsString("</html>"));
 	}
@@ -31,7 +33,7 @@ public class SpecRunnerHtmlGeneratorTest {
 		List<Artifact> deps = new ArrayList<Artifact>();
 		deps.add(mockDependency("com.pivotallabs", "jasmine", "0.11.1", "js", expectedContents));
 		
-		String html = specRunnerHtmlGenerator.generate(deps);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
 		
 		assertThat(html,containsString("<script type=\"text/javascript\">"+expectedContents+"</script>"));
 	}
@@ -44,7 +46,7 @@ public class SpecRunnerHtmlGeneratorTest {
 		deps.add(mockDependency("com.pivotallabs", "jasmine", "0.11.1", "js", jasmineString));
 		deps.add(mockDependency("com.pivotallabs", "jasmine-html", "0.11.1", "js", jasmineHtmlString));		
 		
-		String html = specRunnerHtmlGenerator.generate(deps);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
 		
 		assertThat(html,containsString("<script type=\"text/javascript\">"+jasmineString+"</script>"));
 		assertThat(html,containsString("<script type=\"text/javascript\">"+jasmineHtmlString+"</script>"));
@@ -57,7 +59,7 @@ public class SpecRunnerHtmlGeneratorTest {
 		List<Artifact> deps = new ArrayList<Artifact>();
 		deps.add(mockDependency("com.pivotallabs", "jasmine-css", "0.11.1", "css", css));
 		
-		String html = specRunnerHtmlGenerator.generate(deps);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
 		
 		assertThat(html,containsString("<style type=\"text/css\">"+css+"</style>"));
 	}

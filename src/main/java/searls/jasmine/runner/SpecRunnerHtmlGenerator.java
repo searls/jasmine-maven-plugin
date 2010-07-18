@@ -13,25 +13,24 @@ import org.codehaus.plexus.util.FileUtils;
 
 public class SpecRunnerHtmlGenerator {
 	
-
 	private static final String CSS_TYPE = "css";
-	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
-	
+	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";	
 	private static final String JAVASCRIPT_TYPE = "js";
-	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
-	
+	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";	
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
-	
+	private static final String REPORTER_ATTR_NAME = "reporter";
 	private static final String RUNNER_HTML_TEMPLATE = 
 		"<html>" +
-			"<head><title>Jasmine Test Runner</title>" +
-				"$"+CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
-				"$"+JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
-				"$"+SOURCES_TEMPLATE_ATTR_NAME+"$ " +
-			"</head>" +
-			"<body><script type=\"text/javascript\">jasmine.getEnv().addReporter(new jasmine.TrivialReporter()); jasmine.getEnv().execute();</script></body>" +
+		"<head><title>Jasmine Test Runner</title>" +
+		"$"+CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
+		"$"+JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
+		"$"+SOURCES_TEMPLATE_ATTR_NAME+"$ " +
+		"</head>" +
+		"<body><script type=\"text/javascript\">jasmine.getEnv().addReporter(new jasmine.$"+REPORTER_ATTR_NAME+"$()); jasmine.getEnv().execute();</script></body>" +
 		"</html>";
 	
+	public enum ReporterType { TrivialReporter, JsApiReporter };
+		 
 	private final String sourceDir;
 	private final String specDir;
 	private List<String> sourcesToLoadFirst;
@@ -43,22 +42,43 @@ public class SpecRunnerHtmlGenerator {
 		this.specDir = specDir;
 	}
 
-	public String generate(List<Artifact> dependencies) {
+	public String generate(List<Artifact> dependencies, ReporterType reporterType) {
 		try {
 			StringTemplate template = new StringTemplate(RUNNER_HTML_TEMPLATE,DefaultTemplateLexer.class);
 			
 			includeJavaScriptAndCssDependencies(dependencies, template);
-
-			StringBuilder scriptTags = new StringBuilder();
-			appendScriptTagsForFileNames(scriptTags,expandSourcesToLoadFirstRelativeToSourceDir());				
-			appendScriptTagsForFileNames(scriptTags, fileNamesForScriptsInDirectory(sourceDir));
-			appendScriptTagsForFileNames(scriptTags, fileNamesForScriptsInDirectory(specDir));
-			template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME,scriptTags.toString());			
+			setJavaScriptSourcesAttribute(template);			
+			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
 			
 			return template.toString();
 		} catch (IOException e) {
 			throw new RuntimeException("Couldn't open and/or read SpecRunner.html.template",e);
 		}
+	}
+
+	private void includeJavaScriptAndCssDependencies(
+			List<Artifact> dependencies, StringTemplate template)
+			throws IOException {
+		StringBuilder javaScriptDependencies = new StringBuilder();
+		StringBuilder cssDependencies = new StringBuilder();
+		for(Artifact dep : dependencies) {
+			if(JAVASCRIPT_TYPE.equals(dep.getType())) {
+				javaScriptDependencies.append("<script type=\"text/javascript\">").append(FileUtils.fileRead(dep.getFile())).append("</script>");
+			} else if(CSS_TYPE.equals(dep.getType())) {
+				cssDependencies.append("<style type=\"text/css\">").append(FileUtils.fileRead(dep.getFile())).append("</style>");
+			}
+		}
+		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, javaScriptDependencies.toString());
+		template.setAttribute(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, cssDependencies.toString());
+	}
+	
+	private void setJavaScriptSourcesAttribute(StringTemplate template)
+			throws IOException {
+		StringBuilder scriptTags = new StringBuilder();
+		appendScriptTagsForFileNames(scriptTags,expandSourcesToLoadFirstRelativeToSourceDir());				
+		appendScriptTagsForFileNames(scriptTags, fileNamesForScriptsInDirectory(sourceDir));
+		appendScriptTagsForFileNames(scriptTags, fileNamesForScriptsInDirectory(specDir));
+		template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME,scriptTags.toString());
 	}
 
 	private List<String> expandSourcesToLoadFirstRelativeToSourceDir() {
@@ -89,22 +109,6 @@ public class SpecRunnerHtmlGenerator {
 				fileNamesAlreadyWrittenAsScriptTags.add(sourceFileName);
 			}
 		}
-	}
-
-	private void includeJavaScriptAndCssDependencies(
-			List<Artifact> dependencies, StringTemplate template)
-			throws IOException {
-		StringBuilder javaScriptDependencies = new StringBuilder();
-		StringBuilder cssDependencies = new StringBuilder();
-		for(Artifact dep : dependencies) {
-			if(JAVASCRIPT_TYPE.equals(dep.getType())) {
-				javaScriptDependencies.append("<script type=\"text/javascript\">").append(FileUtils.fileRead(dep.getFile())).append("</script>");
-			} else if(CSS_TYPE.equals(dep.getType())) {
-				cssDependencies.append("<style type=\"text/css\">").append(FileUtils.fileRead(dep.getFile())).append("</style>");
-			}
-		}
-		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, javaScriptDependencies.toString());
-		template.setAttribute(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, cssDependencies.toString());
 	}
 	
 }

@@ -8,6 +8,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.codehaus.plexus.util.FileUtils;
 
 import searls.jasmine.runner.SpecRunnerHtmlGenerator;
+import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
 /**
  * @component
@@ -31,7 +32,7 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 
 	private String writeSpecRunnerToSourceSpecDirectory() throws IOException {
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,jsSrcDir,jsTestSrcDir);
-		String html = htmlGenerator.generate(pluginArtifacts);
+		String html = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter);
 		
 		String runnerFilePath = FileUtils.catPath(jsTestSrcDir+File.separatorChar,specRunnerHtmlFileName);
 		FileUtils.fileWrite(runnerFilePath, html);

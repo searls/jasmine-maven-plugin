@@ -11,6 +11,7 @@ import searls.jasmine.format.JasmineResultLogger;
 import searls.jasmine.model.JasmineResult;
 import searls.jasmine.runner.SpecRunnerExecutor;
 import searls.jasmine.runner.SpecRunnerHtmlGenerator;
+import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
 /**
  * @component
@@ -46,7 +47,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
 	private String writeSpecRunnerToOutputDirectory() throws IOException {
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,jasmineTargetDir+File.separatorChar+srcDirectoryName,jasmineTargetDir+File.separatorChar+specDirectoryName);
-		String html = htmlGenerator.generate(pluginArtifacts);
+		String html = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter);
 		
 		getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);
 		String runnerFilePath = FileUtils.catPath(jasmineTargetDir+File.separatorChar,specRunnerHtmlFileName);
