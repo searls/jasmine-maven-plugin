@@ -41,6 +41,8 @@ public class SpecRunnerExecutor {
 	    HtmlDivision rootDiv = page.getFirstByXPath("html/body/div");
 	    populateChildren(result, rootDiv);
 	    
+	    webClient.closeAllWindows();
+	    
 	    return result;
 	}
 
