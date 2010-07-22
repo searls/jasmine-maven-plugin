@@ -2,54 +2,57 @@ package searls.jasmine.runner;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.List;
 
 import searls.jasmine.model.JasmineResult;
-import searls.jasmine.model.ResultItemParent;
-import searls.jasmine.model.Spec;
-import searls.jasmine.model.Suite;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
+import com.gargoylesoftware.htmlunit.ScriptResult;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.DomText;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlCheckBoxInput;
-import com.gargoylesoftware.htmlunit.html.HtmlDivision;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 
 public class SpecRunnerExecutor {
 	
 	private static final long MAX_EXECUTION_MILLIS = 300000; //5 minutes 
-	private static final String SHOW_PASSED_CHECKBOX = "__jasmine_TrivialReporter_showPassed__";
+	private static final String BUILD_REPORT_JS = "var indent=function(c){for(var b='',a=0;a<c;a++)b+='  ';return b},buildMessages=function(c,b){for(var a='',d=0;d<c.length;d++)a+='\\n'+indent(b)+' * '+c[d].message;return a},buildReport=function(c,b){for(var a='',d=0;d<c.length;d++){var e=c[d];a+='\\n'+indent(b)+(e.type=='suite'?'describe ':'it ')+e.name;if(e.type=='spec'){var f=reporter.results()[e.id];if(f.result=='failed'){a+=' <<< FAILURE!';a+=buildMessages(f.messages,b+1)}}a+=' '+buildReport(e.children,b+1)}return a};buildReport(reporter.suites(),0);";
+	private static final String BUILD_CONCLUSION_JS = "var specCount = 0; var failCount=0; for(var key in reporter.results()) { specCount++; if(reporter.results()[key].result == 'failed') failCount++; }; specCount+' specs, '+failCount+' failures'";
 	
 	public JasmineResult execute(String runnerFile) throws FailingHttpStatusCodeException, MalformedURLException, IOException {
 		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
 		quietIncorrectnessListener(webClient);
 		
-	    HtmlPage initialPage = webClient.getPage("file://"+runnerFile);
-	    waitForRunnerToFinish(initialPage);
+	    HtmlPage page = webClient.getPage("file://"+runnerFile);
+	    waitForRunnerToFinish(page);
 	    
-	    HtmlCheckBoxInput checkbox = (HtmlCheckBoxInput) initialPage.getElementById(SHOW_PASSED_CHECKBOX);
-	    HtmlPage page = checkbox.click();
-	    
-	    JasmineResult result = new JasmineResult();
-	    result.setDescription(((DomText) page.getFirstByXPath("//a[@class='description']/text()")).asText());
-	    
-	    HtmlDivision rootDiv = page.getFirstByXPath("html/body/div");
-	    populateChildren(result, rootDiv);
-	    
+	    JasmineResult jasmineResult = new JasmineResult();
+	    jasmineResult.setDescription(buildRunnerDescription(page));
+	    jasmineResult.setDetails(buildReport(page));
+
 	    webClient.closeAllWindows();
 	    
-	    return result;
+	    return jasmineResult;
 	}
+
+
+	private String buildReport(HtmlPage page) throws IOException {
+		ScriptResult report = page.executeJavaScript(BUILD_REPORT_JS);
+		return report.getJavaScriptResult().toString();
+	}
+
+	private String buildRunnerDescription(HtmlPage page) {
+		ScriptResult description = page.executeJavaScript(BUILD_CONCLUSION_JS);
+		return description.getJavaScriptResult().toString();
+	}
+
 
 	private void waitForRunnerToFinish(HtmlPage page) {
 		int waitInMillis = 500;
 		for (int i = 0; i < MAX_EXECUTION_MILLIS/waitInMillis; i++) {
-            if (page.getFirstByXPath("//div[@class='runner running']") != null) {
+			if(executionFinished(page)) {
+				return;
+			} else {
         		synchronized (page) {
         			try {
 						page.wait(waitInMillis);
@@ -59,10 +62,15 @@ public class SpecRunnerExecutor {
         		}
             }
         }
-		if(page.getFirstByXPath("//div[@class='runner running']") != null ) {
+		if(!executionFinished(page)) {
 			throw new IllegalStateException("Attempted to wait for the test to complete processing over the course of "+(MAX_EXECUTION_MILLIS/1000)+" seconds," +
 					"but it still appears to be running. Aborting test execution.");
 		}
+	}
+
+	private Boolean executionFinished(HtmlPage page) {
+		ScriptResult result = page.executeJavaScript("reporter.finished");
+		return (Boolean) result .getJavaScriptResult();
 	}
 
 	private void quietIncorrectnessListener(WebClient webClient) {
@@ -72,33 +80,6 @@ public class SpecRunnerExecutor {
 		});
 	}
 
-	@SuppressWarnings("unchecked")
-	private void populateChildren(ResultItemParent parent, HtmlDivision resultItem) {
-		List<HtmlDivision> childResultDivs = (List<HtmlDivision>) resultItem.getByXPath("div[contains(@class,'suite') or contains(@class,'spec')]");
-	    for (HtmlDivision div : childResultDivs) {			
-	    	String[] classes = div.getAttribute("class").split(" ");
-	    	String type = classes[0];
-	    	String success = classes[1];
-	    	String description = ((HtmlAnchor)div.getFirstByXPath("a[@class='description']")).getTextContent();
-	    	boolean passed = "passed".equals(success);
-	    	if("spec".equals(type)) {
-	    		Spec spec = new Spec();
-	    		spec.setDescription(description);
-	    		spec.setPassed(passed);
-	    		List<DomText> messageTexts = (List<DomText>) div.getByXPath("div[@class='messages']/div/text()");
-	    		for (DomText text : messageTexts) {
-					spec.addMessage(text.getTextContent());
-				}
-	    		parent.addChild(spec);
-	    	} else {
-	    		Suite suite = new Suite();
-	    		suite.setDescription(description);
-	    		suite.setPassed(passed);
-	    		parent.addChild(suite);
-	    		populateChildren(suite,div);
-	    	}	    	
-		}
-	}
 
 
 }

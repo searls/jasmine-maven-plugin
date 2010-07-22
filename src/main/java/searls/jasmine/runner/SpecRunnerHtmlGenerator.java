@@ -26,7 +26,7 @@ public class SpecRunnerHtmlGenerator {
 		"$"+JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
 		"$"+SOURCES_TEMPLATE_ATTR_NAME+"$ " +
 		"</head>" +
-		"<body><script type=\"text/javascript\">jasmine.getEnv().addReporter(new jasmine.$"+REPORTER_ATTR_NAME+"$()); jasmine.getEnv().execute();</script></body>" +
+		"<body><script type=\"text/javascript\">var reporter = new jasmine.$"+REPORTER_ATTR_NAME+"$(); jasmine.getEnv().addReporter(reporter); jasmine.getEnv().execute();</script></body>" +
 		"</html>";
 	
 	public enum ReporterType { TrivialReporter, JsApiReporter };
@@ -52,7 +52,7 @@ public class SpecRunnerHtmlGenerator {
 			
 			return template.toString();
 		} catch (IOException e) {
-			throw new RuntimeException("Couldn't open and/or read SpecRunner.html.template",e);
+			throw new RuntimeException("Failed to load file names for dependencies or scripts",e);
 		}
 	}
 

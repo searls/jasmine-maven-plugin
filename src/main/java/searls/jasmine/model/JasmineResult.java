@@ -1,12 +1,10 @@
 package searls.jasmine.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class JasmineResult implements ResultItemParent {
+public class JasmineResult {
 	private String description;
-	private List<TestResultItem> resultItems = new ArrayList<TestResultItem>();
-
+	private String details;
+	
 	public String getDescription() {
 		return description;
 	}
@@ -22,13 +20,12 @@ public class JasmineResult implements ResultItemParent {
 		return description.contains("0 failures");
 	}
 	
-	public void addChild(TestResultItem item) {
-		resultItems.add(item);
+	public String getDetails() {
+		return details;
 	}
-	
-	public List<TestResultItem> getChildren() {
-		return resultItems;
+
+	public void setDetails(String details) {
+		this.details = details;
 	}
-	
 	
 }

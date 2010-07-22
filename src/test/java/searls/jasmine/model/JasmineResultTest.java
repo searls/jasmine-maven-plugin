@@ -11,7 +11,7 @@ public class JasmineResultTest {
 
 	@Test
 	public void shouldParseDescriptionWhenSuccessful() {
-		jasmineResult.setDescription("1 spec, 0 failures in 0.024s");
+		jasmineResult.setDescription("1 spec, 0 failures");
 		
 		boolean success = jasmineResult.didPass();
 		
@@ -20,7 +20,7 @@ public class JasmineResultTest {
 	
 	@Test
 	public void shouldFailWhenFail() {		
-		jasmineResult.setDescription("2 specs, 1 failure in 0.072s");
+		jasmineResult.setDescription("2 specs, 1 failure");
 		
 		boolean success = jasmineResult.didPass();
 		
