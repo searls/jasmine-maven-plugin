@@ -32,7 +32,7 @@ public class TestMojo extends AbstractJasmineMojo {
 			}
 			logResults(result);
 			if(haltOnFailure && !result.didPass()) {
-				throw new MojoFailureException("There were test failures.");
+				throw new MojoFailureException("There were Jasmine test failures.");
 			}
 		} else {
 			getLog().info("Skipping Jasmine Tests");

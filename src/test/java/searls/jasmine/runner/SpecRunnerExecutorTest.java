@@ -18,7 +18,7 @@ public class SpecRunnerExecutorTest {
 	private SpecRunnerExecutor executor = new SpecRunnerExecutor();
 	
 	@Test
-	public void shouldFindSpecsInResults() throws FailingHttpStatusCodeException, MalformedURLException, IOException {
+	public void shouldFindSpecsInResults() throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
 		URL resource = getClass().getResource("/example_nested_specrunner.html");
 		JasmineResult result = executor.execute(resource.toString());
 		
