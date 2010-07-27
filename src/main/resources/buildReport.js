@@ -1,9 +1,9 @@
 var indent = function(indentLevel) {
-	var indent = '';
+	var indentStr = '';
 	for(var i=0;i<indentLevel;i++) {
-		indent += '  ';
+		indentStr += '  ';
 	}
-	return indent;
+	return indentStr;
 }
 
 var buildMessages = function(messages,indentLevel) {
@@ -14,20 +14,27 @@ var buildMessages = function(messages,indentLevel) {
 	return message;
 }
 
+//Used to prevent an erratic infinite recursion under HtmlUnit
+var reportedItems = [];
+
 var buildReport = function(items,indentLevel) {
 	var line = '';
  	for(var i=0;i<items.length;i++){
-		var item = items[i];
-		line += "\n"+indent(indentLevel)+(item.type == 'suite' ? 'describe ' : 'it ')+item.name;
-		
-		if(item.type == 'spec') {
-			var result = reporter.results()[item.id];
-			if(result.result == 'failed') {
-				line += ' <<< FAILURE!';
-				line += buildMessages(result.messages,indentLevel+1);
+		var item = items[i];	
+		if(reportedItems.indexOf(item) == -1) {
+			line += "\n"+indent(indentLevel)+(item.type == 'suite' ? 'describe ' : 'it ')+item.name;
+			
+			if(item.type == 'spec') {
+				var result = reporter.results()[item.id];
+				if(result.result == 'failed') {
+					line += ' <<< FAILURE!';
+					line += buildMessages(result.messages,indentLevel+1);
+				}
 			}
+			
+			reportedItems.push(item);
+			line += ' '+buildReport(item.children,indentLevel+1);
 		}
-		line += ' '+buildReport(item.children,indentLevel+1);
 	}
 	return line;
 }

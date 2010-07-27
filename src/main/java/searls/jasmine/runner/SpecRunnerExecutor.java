@@ -16,8 +16,8 @@ import com.gargoylesoftware.htmlunit.html.HtmlPage;
 
 public class SpecRunnerExecutor {
 	
-	private static final long MAX_EXECUTION_MILLIS = 300000; //5 minutes 
-	private static final String BUILD_REPORT_JS = "var indent=function(c){for(var b='',a=0;a<c;a++)b+='  ';return b},buildMessages=function(c,b){for(var a='',d=0;d<c.length;d++)a+='\\n'+indent(b)+' * '+c[d].message;return a},buildReport=function(c,b){for(var a='',d=0;d<c.length;d++){var e=c[d];a+='\\n'+indent(b)+(e.type=='suite'?'describe ':'it ')+e.name;if(e.type=='spec'){var f=reporter.results()[e.id];if(f.result=='failed'){a+=' <<< FAILURE!';a+=buildMessages(f.messages,b+1)}}a+=' '+buildReport(e.children,b+1)}return a};buildReport(reporter.suites(),0);";
+	private static final long MAX_EXECUTION_MILLIS = 300000; //5 minutes - TODO make this configurable
+	private static final String BUILD_REPORT_JS = "var indent=function(c){for(var b='',a=0;a<c;a++)b+='  ';return b},buildMessages=function(c,b){for(var a='',d=0;d<c.length;d++)a+='\\n'+indent(b)+' * '+c[d].message;return a},reportedItems=[],buildReport=function(c,b){for(var a='',d=0;d<c.length;d++){var e=c[d];if(reportedItems.indexOf(e)==-1){a+='\\n'+indent(b)+(e.type=='suite'?'describe ':'it ')+e.name;if(e.type=='spec'){var f=reporter.results()[e.id];if(f.result=='failed'){a+=' <<< FAILURE!';a+=buildMessages(f.messages,b+1)}}reportedItems.push(e); a+=' '+buildReport(e.children,b+1)}}return a};buildReport(reporter.suites(),0);";
 	private static final String BUILD_CONCLUSION_JS = "var specCount = 0; var failCount=0; for(var key in reporter.results()) { specCount++; if(reporter.results()[key].result == 'failed') failCount++; }; specCount+' specs, '+failCount+' failures'";
 	
 	public JasmineResult execute(String runnerFile) throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
