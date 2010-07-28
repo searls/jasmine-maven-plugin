@@ -26,7 +26,7 @@ var buildReport = function(items,indentLevel) {
 			
 			if(item.type == 'spec') {
 				var result = reporter.results()[item.id];
-				if(result.result == 'failed') {
+				if(result && result.result == 'failed') {
 					line += ' <<< FAILURE!';
 					line += buildMessages(result.messages,indentLevel+1);
 				}
