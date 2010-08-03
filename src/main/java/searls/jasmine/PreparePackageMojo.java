@@ -14,11 +14,11 @@ import org.codehaus.plexus.util.FileUtils;
 public class PreparePackageMojo extends AbstractJasmineMojo {
 	
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		String targetSrcDir = jasmineTargetDir+File.separatorChar+srcDirectoryName;
-		if(FileUtils.fileExists(targetSrcDir)) {
+		File targetSrcDir = new File(jasmineTargetDir,srcDirectoryName);
+		if(targetSrcDir.exists()) {
 			getLog().info("Copying processed JavaScript sources into package");
 			try {
-				FileUtils.copyDirectoryStructure(new File(targetSrcDir), new File(packageDir+File.separatorChar+packageJavaScriptPath));
+				FileUtils.copyDirectoryStructure(targetSrcDir, new File(packageDir,packageJavaScriptPath));
 			} catch (IOException e) {
 				throw new MojoFailureException("Failed to copy processed JavaScript sources into package directory");
 			}

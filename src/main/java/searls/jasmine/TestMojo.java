@@ -3,9 +3,9 @@ package searls.jasmine;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.codehaus.plexus.util.FileUtils;
 
 import searls.jasmine.format.JasmineResultLogger;
 import searls.jasmine.model.JasmineResult;
@@ -25,14 +25,14 @@ public class TestMojo extends AbstractJasmineMojo {
 			getLog().info("Executing Jasmine Tests");
 			JasmineResult result;
 			try {
-				String runnerPath = writeSpecRunnerToOutputDirectory();
-				result = new SpecRunnerExecutor().execute(runnerPath);
+				File runnerFile = writeSpecRunnerToOutputDirectory();
+				result = new SpecRunnerExecutor().execute(runnerFile.toURI().toURL());
 			} catch (Exception e) {
-				throw new MojoFailureException(e,"JavaScript Test execution failed.","Failed to execute generated SpecRunner.html");
+				throw new MojoExecutionException(e,"There was a problem executing Jasmine specs",e.getMessage());
 			}
 			logResults(result);
 			if(haltOnFailure && !result.didPass()) {
-				throw new MojoFailureException("There were Jasmine test failures.");
+				throw new MojoFailureException("There were Jasmine spec failures.");
 			}
 		} else {
 			getLog().info("Skipping Jasmine Tests");
@@ -45,15 +45,14 @@ public class TestMojo extends AbstractJasmineMojo {
 		resultLogger.log(result);
 	}
 
-	private String writeSpecRunnerToOutputDirectory() throws IOException {
-		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,jasmineTargetDir+File.separatorChar+srcDirectoryName,jasmineTargetDir+File.separatorChar+specDirectoryName);
+	private File writeSpecRunnerToOutputDirectory() throws IOException {
+		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,new File(jasmineTargetDir,srcDirectoryName),new File(jasmineTargetDir,specDirectoryName));
 		String html = htmlGenerator.generate(pluginArtifacts, ReporterType.JsApiReporter);
 		
 		getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);
-		String runnerFilePath = FileUtils.catPath(jasmineTargetDir+File.separatorChar,specRunnerHtmlFileName);
-		FileUtils.fileWrite(runnerFilePath, html);
-		return runnerFilePath;
-		
+		File runnerFile = new File(jasmineTargetDir,specRunnerHtmlFileName);
+		FileUtils.writeStringToFile(runnerFile, html);
+		return runnerFile;
 	}
 
 }

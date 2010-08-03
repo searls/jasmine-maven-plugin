@@ -20,7 +20,7 @@ public class SpecRunnerExecutorTest {
 	@Test
 	public void shouldFindSpecsInResults() throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
 		URL resource = getClass().getResource("/example_nested_specrunner.html");
-		JasmineResult result = executor.execute(resource.toString());
+		JasmineResult result = executor.execute(resource);
 		
 		assertThat(result,is(not(nullValue())));
 		assertThat(result.getDescription(),startsWith("5 specs, 4 failures"));

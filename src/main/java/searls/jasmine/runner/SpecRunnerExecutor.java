@@ -2,6 +2,7 @@ package searls.jasmine.runner;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URL;
 
 import searls.jasmine.model.JasmineResult;
 
@@ -20,14 +21,14 @@ public class SpecRunnerExecutor {
 	private static final String BUILD_REPORT_JS = "var indent=function(c){for(var b='',a=0;a<c;a++)b+='  ';return b},buildMessages=function(c,b){for(var a='',d=0;d<c.length;d++)a+='\\n'+indent(b)+' * '+c[d].message;return a},reportedItems=[],buildReport=function(c,b){for(var a='',d=0;d<c.length;d++){var e=c[d];if(reportedItems.indexOf(e)==-1){a+='\\n'+indent(b)+(e.type=='suite'?'describe ':'it ')+e.name;if(e.type=='spec'){var f=reporter.results()[e.id];if(f && f.result=='failed'){a+=' <<< FAILURE!';a+=buildMessages(f.messages,b+1)}}reportedItems.push(e); a+=' '+buildReport(e.children,b+1)}}return a};buildReport(reporter.suites(),0);";
 	private static final String BUILD_CONCLUSION_JS = "var specCount = 0; var failCount=0; for(var key in reporter.results()) { specCount++; if(reporter.results()[key].result == 'failed') failCount++; }; specCount+' specs, '+failCount+' failures'";
 	
-	public JasmineResult execute(String runnerFile) throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
+	public JasmineResult execute(URL runnerUrl) throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
 		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
 		webClient.setJavaScriptEnabled(true);
 		webClient.setAjaxController(new NicelyResynchronizingAjaxController());
 		
 		quietIncorrectnessListener(webClient);
 		
-	    HtmlPage page = webClient.getPage("file://"+runnerFile);
+	    HtmlPage page = webClient.getPage(runnerUrl);
 	    waitForRunnerToFinish(page);
 	    
 	    JasmineResult jasmineResult = new JasmineResult();
