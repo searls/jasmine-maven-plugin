@@ -19,7 +19,7 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if(jsSrcDir.exists() && jsTestSrcDir.exists()) {
-			getLog().info("Generating a Spec Runner in the project's source test/spec directory that can be executed manually to facilitate faster feedback.");
+			getLog().info("Generating runner '"+manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
 			try {
 				writeSpecRunnerToSourceSpecDirectory();
 			} catch (Exception e) {
@@ -33,7 +33,7 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,jsSrcDir,jsTestSrcDir);
 		String html = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter);
-		FileUtils.writeStringToFile(new File(jsTestSrcDir,specRunnerHtmlFileName), html);
+		FileUtils.writeStringToFile(new File(jasmineTargetDir,manualSpecRunnerHtmlFileName), html);
 	}
 
 }
