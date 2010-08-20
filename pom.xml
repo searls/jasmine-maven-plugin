@@ -11,6 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<powermock.version>1.4</powermock.version>
 	</properties>
 
 	<dependencies>
@@ -60,7 +61,18 @@
 			<version>1.8.5</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>org.powermock.modules</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock.api</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>${powermock.version}</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- Jasmine & its Dependencies -->
 		<dependency>
@@ -154,6 +166,10 @@
 		<repository>
 			<id>searls-maven-thirdparty</id>
 			<url>http://searls-maven-repository.googlecode.com/svn/trunk/thirdparty</url>
+		</repository>
+		<repository>
+			<id>powermock-repo</id>
+			<url>http://powermock.googlecode.com/svn/repo/</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
