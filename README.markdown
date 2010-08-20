@@ -164,7 +164,7 @@ You can run the plugin with all five goals or fewer, if you choose. For instance
       </configuration>
     </execution>
 
-### Configuration
+### Ordering Loading of Dependencies 
 Among configurations listed elsewhere, you can configure jasmine-maven-plugin to load a specified list of JavaScript sources (relative to ${jsSrcDir}, which defaults to `src/main/javascript`) before the other ones. So, for instance, if you need to load jQuery and then jQuery plugins before your production sources get included in the runner, you can specify those sources you want to preload like so:
 
     <configuration>
