@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
@@ -32,8 +33,28 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,jsSrcDir,jsTestSrcDir);
-		String html = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter);
-		FileUtils.writeStringToFile(new File(jasmineTargetDir,manualSpecRunnerHtmlFileName), html);
+		String runner = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter);
+		
+		File destination = new File(jasmineTargetDir,manualSpecRunnerHtmlFileName);
+		String existingRunner = loadExistingManualRunner(destination);
+		
+		if(!StringUtils.equals(runner, existingRunner)) {
+			FileUtils.writeStringToFile(destination, runner);
+		} else {
+			getLog().info("Skipping spec runner generation, because an identical spec runner already exists.");
+		}
+	}
+
+	private String loadExistingManualRunner(File destination) {
+		String existingRunner = null;
+		try {
+			if(destination.exists()) {
+				existingRunner = FileUtils.readFileToString(destination);
+			}
+		} catch(Exception e) {
+			getLog().warn("An error occurred while trying to open an existing manual spec runner. Continuing");
+		}
+		return existingRunner;
 	}
 
 }
