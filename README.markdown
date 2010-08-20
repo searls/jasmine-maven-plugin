@@ -160,7 +160,7 @@ You can run the plugin with all five goals or fewer, if you choose. For instance
         <goal>test</goal>
       </goals>
       <configuration>
-        <srcDir>${project.basedir}/src/main/webapp/js</srcDir>
+        <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
       </configuration>
     </execution>
 
