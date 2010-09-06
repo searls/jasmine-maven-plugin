@@ -2,8 +2,22 @@ jasmine-maven-plugin
 ====================
 **A Maven Plugin for processing JavaScript sources, specs, and executing Jasmine**
 
-Put this in your POM...
------------------------
+Option A: Start from the archetype
+----------------------------------
+
+From the command line, generate a new project using the [jasmine-archetype](http://github.com/searls/jasmine-archetype). 
+See the [jasmine-archetype](http://github.com/searls/jasmine-archetype) project page for more information.
+
+    mvn archetype:generate \
+    -DarchetypeRepository=http://searls-maven-repository.googlecode.com/svn/trunk/snapshots \
+    -DarchetypeGroupId=searls \
+    -DarchetypeArtifactId=jasmine-archetype \
+    -DarchetypeVersion=0.11.1-SNAPSHOT
+
+Option B: Add to your existing project
+--------------------------------------
+
+Add the relevant plugin and repositories entries to your project's `pom.xml`.
 
     <project>
       <build>
@@ -49,12 +63,12 @@ Put this in your POM...
       ...
     </project>
     
-...and Smoke It
----------------
+Build with Jasmine
+------------------
 
     mvn package
 
-Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to give. However, the results will only be useful once you've added some JavaScript and specs
+Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to give. However, the results will only be useful once you've added some JavaScript and specs. Details follow:
 
 ###src/main/javascript 
 Store your project's JavaScript (i.e. `ninja.js`) and dependencies (i.e. `lib/prototype.js`) in `src/main/javsacript`. 
