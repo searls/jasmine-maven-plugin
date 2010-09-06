@@ -6,7 +6,7 @@ Option A: Start from the archetype
 ----------------------------------
 
 From the command line, generate a new project using the [jasmine-archetype](http://github.com/searls/jasmine-archetype). 
-See the [jasmine-archetype](http://github.com/searls/jasmine-archetype) project page for more information.
+See the [jasmine-archetype](http://github.com/searls/jasmine-archetype) project page for more information. Otherwise, just execute this command to get started:
 
     mvn archetype:generate \
     -DarchetypeRepository=http://searls-maven-repository.googlecode.com/svn/trunk/snapshots \
