@@ -191,6 +191,11 @@ Among configurations listed elsewhere, you can configure jasmine-maven-plugin to
     
 In the example above, `vendor/jquery.js` and `vendor/jquery-ui.js` are still added to the generated SpecRunner.html once, just before all other sources in the project.
 
+### Current Version Info
+
+The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.0, so its version number is 1.0.0-SNAPSHOT. 
+If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use 1.0.0-beta-1.  
+
 ## Maintainers
 * [Justin Searls](http://twitter.com/Searls), Pillar Technology
 
