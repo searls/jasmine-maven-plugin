@@ -12,7 +12,7 @@ See the [jasmine-archetype](http://github.com/searls/jasmine-archetype) project 
     -DarchetypeRepository=http://searls-maven-repository.googlecode.com/svn/trunk/snapshots \
     -DarchetypeGroupId=searls \
     -DarchetypeArtifactId=jasmine-archetype \
-    -DarchetypeVersion=0.11.1-SNAPSHOT
+    -DarchetypeVersion=1.0.0-SNAPSHOT
 
 Option B: Add to your existing project
 --------------------------------------
@@ -27,7 +27,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>0.11.1-SNAPSHOT</version>
+            <version>1.0.0-SNAPSHOT</version>
             <executions>
               <execution>
                 <goals>

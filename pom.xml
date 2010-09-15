@@ -4,7 +4,7 @@
 
 	<groupId>searls</groupId>
 	<artifactId>jasmine-maven-plugin</artifactId>
-	<version>0.11.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>jasmine</name>
@@ -12,6 +12,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<powermock.version>1.4</powermock.version>
+		<jasmine.version>1.0.0</jasmine.version>
 	</properties>
 
 	<dependencies>
@@ -78,19 +79,19 @@
 		<dependency>
 			<groupId>com.pivotallabs</groupId>
 			<artifactId>jasmine</artifactId>
-			<version>0.11.1</version>
+			<version>${jasmine.version}</version>
 			<type>js</type>
 		</dependency>
 		<dependency>
 			<groupId>com.pivotallabs</groupId>
 			<artifactId>jasmine-css</artifactId>
-			<version>0.11.1</version>
+			<version>${jasmine.version}</version>
 			<type>css</type>
 		</dependency>
 		<dependency>
 			<groupId>com.pivotallabs</groupId>
 			<artifactId>jasmine-html</artifactId>
-			<version>0.11.1</version>
+			<version>${jasmine.version}</version>
 			<type>js</type>
 		</dependency>
 		<dependency>
