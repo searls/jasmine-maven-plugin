@@ -35,6 +35,22 @@
 
 		<!-- Plugin Dependencies -->
 		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>1.5.15</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>2.4</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.4</version>
+		</dependency>
+		
+		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
 			<artifactId>htmlunit</artifactId>
 			<version>2.7</version>
@@ -74,6 +90,13 @@
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-core</artifactId>
+			<version>1.4</version>
+			<scope>test</scope>
+		</dependency>
+
 
 		<!-- Jasmine & its Dependencies -->
 		<dependency>
