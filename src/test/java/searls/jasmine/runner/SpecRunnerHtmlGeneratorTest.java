@@ -15,7 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import searls.jasmine.fileio.FileUtilsWrapper;
+import searls.jasmine.io.FileUtilsWrapper;
 import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
 @RunWith(MockitoJUnitRunner.class)

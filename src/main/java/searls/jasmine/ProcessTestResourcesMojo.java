@@ -6,7 +6,7 @@ import java.io.IOException;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
-import searls.jasmine.fileio.DirectoryCopier;
+import searls.jasmine.io.DirectoryCopier;
 
 /**
  * @goal testResources

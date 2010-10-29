@@ -11,7 +11,7 @@ import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.maven.artifact.Artifact;
 
-import searls.jasmine.fileio.FileUtilsWrapper;
+import searls.jasmine.io.FileUtilsWrapper;
 
 public class SpecRunnerHtmlGenerator {
 	

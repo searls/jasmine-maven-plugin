@@ -1,4 +1,4 @@
-package searls.jasmine.fileio;
+package searls.jasmine.io;
 
 import static org.mockito.Matchers.*;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -17,6 +17,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import searls.jasmine.io.DirectoryCopier;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(value={FileUtils.class,FileFilterUtils.class})

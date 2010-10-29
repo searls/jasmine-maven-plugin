@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import searls.jasmine.fileio.DirectoryCopier;
+import searls.jasmine.io.DirectoryCopier;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessResourcesMojoTest {
