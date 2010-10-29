@@ -4,7 +4,7 @@
 	<groupId>searls</groupId>
 	<artifactId>jasmine-webapp-empty-example</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>Example Webapp using Jasmine Maven Plugin that doesn't have any JS Sources</name>
 	<dependencies>
 		<dependency>

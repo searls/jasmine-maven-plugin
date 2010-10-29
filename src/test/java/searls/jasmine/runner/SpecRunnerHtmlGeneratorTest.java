@@ -31,7 +31,7 @@ public class SpecRunnerHtmlGeneratorTest {
 	public void shouldPopulateJasmineSourceIntoHtmlWhenProvided() throws Exception {
 		String expectedContents = "javascript()";
 		List<Artifact> deps = new ArrayList<Artifact>();
-		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.0", "js", expectedContents));
+		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.1", "js", expectedContents));
 		
 		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
 		
@@ -43,8 +43,8 @@ public class SpecRunnerHtmlGeneratorTest {
 		String jasmineString = "javascript_jasmine()";
 		String jasmineHtmlString = "javascript_jasmine_html()";
 		List<Artifact> deps = new ArrayList<Artifact>();
-		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.0", "js", jasmineString));
-		deps.add(mockDependency("com.pivotallabs", "jasmine-html", "1.0.0", "js", jasmineHtmlString));		
+		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.1", "js", jasmineString));
+		deps.add(mockDependency("com.pivotallabs", "jasmine-html", "1.0.1", "js", jasmineHtmlString));		
 		
 		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
 		
@@ -57,7 +57,7 @@ public class SpecRunnerHtmlGeneratorTest {
 		String css = "h1 { background-color: awesome}";
 		
 		List<Artifact> deps = new ArrayList<Artifact>();
-		deps.add(mockDependency("com.pivotallabs", "jasmine-css", "1.0.0", "css", css));
+		deps.add(mockDependency("com.pivotallabs", "jasmine-css", "1.0.1", "css", css));
 		
 		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
 		

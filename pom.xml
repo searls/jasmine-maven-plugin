@@ -4,7 +4,7 @@
 
 	<groupId>searls</groupId>
 	<artifactId>jasmine-maven-plugin</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>jasmine</name>
@@ -12,7 +12,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<powermock.version>1.4</powermock.version>
-		<jasmine.version>1.0.0</jasmine.version>
+		<jasmine.version>1.0.1</jasmine.version>
 	</properties>
 
 	<dependencies>
