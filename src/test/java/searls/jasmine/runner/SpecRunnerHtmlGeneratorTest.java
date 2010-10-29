@@ -1,23 +1,28 @@
 package searls.jasmine.runner;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
-import org.codehaus.plexus.util.FileUtils;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
+import searls.jasmine.fileio.FileUtilsWrapper;
 import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
+@RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerHtmlGeneratorTest {
 
-	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null,null,null);
+	@InjectMocks private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null,null,null);
+	@Mock private FileUtilsWrapper fileUtilsWrapper; 
 	
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
@@ -71,10 +76,10 @@ public class SpecRunnerHtmlGeneratorTest {
 		when(dep.getVersion()).thenReturn(version);
 		when(dep.getType()).thenReturn(type);
 		
-		File f = File.createTempFile("test", ".js");
-		FileUtils.fileWrite(f.getAbsolutePath(), fileContents);
+		File f = mock(File.class);
+		when(fileUtilsWrapper.readFileToString(f)).thenReturn(fileContents);
 		when(dep.getFile()).thenReturn(f);
-		
+
 		return dep;
 	}
 	

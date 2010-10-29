@@ -10,7 +10,8 @@ import java.util.List;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.maven.artifact.Artifact;
-import org.codehaus.plexus.util.FileUtils;
+
+import searls.jasmine.fileio.FileUtilsWrapper;
 
 public class SpecRunnerHtmlGenerator {
 	
@@ -31,7 +32,9 @@ public class SpecRunnerHtmlGenerator {
 		"</html>";
 	
 	public enum ReporterType { TrivialReporter, JsApiReporter };
-		 
+
+	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
+	
 	private final File sourceDir;
 	private final File specDir;
 	private List<String> sourcesToLoadFirst;
@@ -64,9 +67,9 @@ public class SpecRunnerHtmlGenerator {
 		StringBuilder cssDependencies = new StringBuilder();
 		for(Artifact dep : dependencies) {
 			if(JAVASCRIPT_TYPE.equals(dep.getType())) {
-				javaScriptDependencies.append("<script type=\"text/javascript\">").append(FileUtils.fileRead(dep.getFile())).append("</script>");
+				javaScriptDependencies.append("<script type=\"text/javascript\">").append(fileUtilsWrapper.readFileToString(dep.getFile())).append("</script>");
 			} else if(CSS_TYPE.equals(dep.getType())) {
-				cssDependencies.append("<style type=\"text/css\">").append(FileUtils.fileRead(dep.getFile())).append("</style>");
+				cssDependencies.append("<style type=\"text/css\">").append(fileUtilsWrapper.readFileToString(dep.getFile())).append("</style>");
 			}
 		}
 		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, javaScriptDependencies.toString());
@@ -92,12 +95,11 @@ public class SpecRunnerHtmlGenerator {
 		return files;
 	}
 
-	@SuppressWarnings("unchecked")
 	private List<File> filesForScriptsInDirectory(File directory) throws IOException {
 		List<File> files = new ArrayList<File>();
 		if(directory != null) {
-			FileUtils.forceMkdir(directory);
-			files = FileUtils.getFiles(directory, "**/*.js", null, true);
+			fileUtilsWrapper.forceMkdir(directory);
+			files = new ArrayList<File>(fileUtilsWrapper.listFiles(directory, new String[] {"js"}, true));
 			Collections.sort(files); 
 		} 
 		return files;
