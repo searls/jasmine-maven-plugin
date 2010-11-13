@@ -206,10 +206,10 @@ If you need a non-snapshot release (say, to satisify the maven-release-plugin), 
 * [Justin Searls](http://twitter.com/Searls), Pillar Technology
 
 ## Contributions
-Pull requests are, of course, very welcome! A few todos as of 6/27, if anyone is interested in tackling them:
+Pull requests are, of course, very welcome! A few todos, if anyone is interested in tackling them:
 
+* JSLint and JSCoverage integration
 * Parse & format ignored tests (currently only passing & failing tests are parsed)
-* A report mojo that generates JUnit-style XML, so results can easily be rolled up by CI servers.
 * A facility that automatically executes the other goals if only `test` or `preparePackage` is configured to run.
 
 ## Acknowledgments
