@@ -191,6 +191,12 @@ Among configurations listed elsewhere, you can configure jasmine-maven-plugin to
     
 In the example above, `vendor/jquery.js` and `vendor/jquery-ui.js` are still added to the generated SpecRunner.html once, just before all other sources in the project.
 
+### JUnit XML Reports
+
+The plugin's `test` goal will output the test results in a JUnit text XML report, located in `target/jasmine/TEST-jasmine.xml`. The implementation attempts to satisfy the most middle-of-the-road consensus as to what the schema-less XML report "[should](http://stackoverflow.com/questions/442556/spec-for-junit-xml-output)" look like.
+
+As an example, to integrate the report to a Hudson job, select "Publish JUnit test result report" among the available "Post-build Actions" and include a file pattern like "**/jasmine/TEST*.xml". Once integrated, your jasmine specs will be counted and interactive in the same way your other tests are!
+
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
