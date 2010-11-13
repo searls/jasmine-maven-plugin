@@ -203,14 +203,112 @@ describe('Junit XML', function() {
 				expect(find('testsuite')).toHaveAttr('skipped','1');
 			});
 			
-			xit('skip',function(){});
-			
 			it('has name jasmine.specs',function(){
 				expect(find('testsuite')).toHaveAttr('name','jasmine.specs');
 			});
 			
+			it('has localhost as hostname',function(){
+				expect(find('testsuite')).toHaveAttr('hostname','localhost');
+			})
+			
 			it('has 7 tests',function(){
 				expect(find('testsuite')).toHaveAttr('tests','7');
+			});
+			
+			it('has time 0.0 (because jsApiReporter tells us nothing of time',function(){
+				expect(find('testsuite')).toHaveAttr('time','0.0');	
+			});
+			
+			it('has a UTC timestamp',function() {
+				var timestamp = find('testsuite').attr('timestamp');
+				var date = new Date();
+				expect(timestamp).toContain(date.getUTCFullYear());
+				expect(timestamp).toContain(date.getUTCMonth());
+				expect(timestamp).toContain(date.getUTCDate());
+				expect(timestamp).toContain(date.getUTCHours());
+				expect(timestamp).toContain(date.getUTCMinutes());
+				expect(timestamp).toContain(date.getUTCSeconds());
+			});
+			
+			describe('testcase elements',function() {
+				it('has 7 elements',function() {
+					expect(find('testsuite testcase').length).toBe(7);
+				});
+				
+				describe('first test',function(){
+					var testcase;
+					
+					beforeEach(function(){
+						testcase = find('testsuite testcase:eq(0)');
+					});
+					 
+					it('is named "Your Project is named Slice-o-matic"',function(){
+						expect(testcase).toHaveAttr('name','Your Project is named Slice-o-matic');
+					});
+					
+					it('has time 0.0 (because jsapireporter has nothing on it)',function(){
+						expect(testcase).toHaveAttr('time','0.0');
+					});
+					
+					it('was not a failure',function(){
+						expect(testcase).toHaveAttr('failure','false');
+					});
+					
+					it('has a classname of jasmine',function(){
+						expect(testcase).toHaveAttr('classname','jasmine');
+					});
+					
+					it('has no error child',function(){
+						expect(testcase.find('error')).not.toExist();
+					});
+				});
+				
+				describe('third test',function(){
+					var testcase;
+					
+					beforeEach(function(){
+						testcase = find('testsuite testcase:eq(2)');
+					});
+					 
+					it('is named "Your Project Feature A does not slice *that*"',function(){
+						expect(testcase).toHaveAttr('name','Your Project Feature A does not slice *that*');
+					});
+				});
+
+				describe('seventh (failing) test',function(){
+					var testcase;
+					
+					beforeEach(function(){
+						testcase = find('testsuite testcase:eq(6)');
+					});
+					 
+					it('was a failure',function(){
+						expect(testcase).toHaveAttr('failure','true');
+					});
+					
+					describe('its error element',function() {
+						var error;
+						beforeEach(function(){
+							error = testcase.find('error');
+						});
+						
+						it('exists',function(){
+							expect(error).toExist();
+						});
+						
+						it('has type "expect.toContain"',function(){
+							expect(error).toHaveAttr('type','expect.toContain');
+						});
+						
+						it('has message "Expected \'Awesome idea\' to contain \'Terrible\'."',function(){
+							expect(error).toHaveAttr('message',"Expected 'Awesome idea' to contain 'Terrible'.");
+						});
+						
+						it('has text "Expected \'Awesome idea\' to contain \'Terrible\'."',function(){
+							expect(error.text()).toBe("Expected 'Awesome idea' to contain 'Terrible'.");
+						});
+					});
+				});
 			});
 			
 		});
@@ -222,7 +320,6 @@ describe('Junit XML', function() {
 			});
 			
 			it('has zero skipped when it has zero tests',function() {
-				
 				expect(find('testsuite')).toHaveAttr('skipped','0');
 			});
 		});

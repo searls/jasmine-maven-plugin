@@ -1,7 +1,6 @@
 package searls.jasmine.model;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 
 import org.junit.Test;
 
@@ -12,21 +11,19 @@ public class JasmineResultTest {
 	@Test
 	public void shouldParseDescriptionWhenSuccessful() {
 		jasmineResult.setDescription("1 spec, 0 failures");
-		
+
 		boolean success = jasmineResult.didPass();
-		
-		assertThat(success,is(true));
+
+		assertThat(success, is(true));
 	}
-	
+
 	@Test
-	public void shouldFailWhenFail() {		
+	public void shouldFailWhenFail() {
 		jasmineResult.setDescription("2 specs, 1 failure");
-		
+
 		boolean success = jasmineResult.didPass();
-		
-		assertThat(success,is(false));
+
+		assertThat(success, is(false));
 	}
 
 }
-
-

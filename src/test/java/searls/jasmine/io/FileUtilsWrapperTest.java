@@ -59,4 +59,15 @@ public class FileUtilsWrapperTest {
 		
 		assertThat(files,is(sameInstance(expected)));
 	}
+	
+	@Test
+	public void writeStringToFile() throws IOException {
+		String data = "string";
+		String encoding = "UTF-8";
+		
+		sut.writeStringToFile(file,data,encoding);
+		
+		verifyStatic();
+		FileUtils.writeStringToFile(file, data,encoding);	
+	}
 }

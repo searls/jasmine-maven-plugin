@@ -26,7 +26,7 @@ public class TestMojo extends AbstractJasmineMojo {
 			JasmineResult result;
 			try {
 				File runnerFile = writeSpecRunnerToOutputDirectory();
-				result = new SpecRunnerExecutor().execute(runnerFile.toURI().toURL());
+				result = new SpecRunnerExecutor().execute(runnerFile.toURI().toURL(), new File(jasmineTargetDir,junitXmlReportFileName));
 			} catch (Exception e) {
 				throw new MojoExecutionException(e,"There was a problem executing Jasmine specs",e.getMessage());
 			}

@@ -5,41 +5,56 @@ import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import searls.jasmine.io.FileUtilsWrapper;
 import searls.jasmine.io.IOUtilsWrapper;
 import searls.jasmine.model.JasmineResult;
-
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerExecutorTest {
 
 	private static final String BUILD_CONCLUSION_JS_CONTENTS = "'kaka';";
 	private static final String BUILD_REPORT_JS_CONTENTS = "'pants';";
+	private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
 	
 	@InjectMocks private SpecRunnerExecutor sut = new SpecRunnerExecutor();
 	@Mock private IOUtilsWrapper ioUtilsWrapper;
+	@Mock private FileUtilsWrapper fileUtilsWrapper;
+	
+	@Mock private File file;
+	private URL resource = getClass().getResource("/example_nested_specrunner.html");
+	
+	@Before
+	public void stubResourceStreams() throws IOException {
+		when(ioUtilsWrapper.toString(isA(InputStream.class))).thenReturn(BUILD_CONCLUSION_JS_CONTENTS,BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
+	}
 	
 	@Test
-	public void shouldFindSpecsInResults() throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
-		when(ioUtilsWrapper.toString(isA(InputStream.class))).thenReturn(BUILD_CONCLUSION_JS_CONTENTS,BUILD_REPORT_JS_CONTENTS);
-		URL resource = getClass().getResource("/example_nested_specrunner.html");
-		JasmineResult result = sut.execute(resource);
+	public void shouldFindSpecsInResults() throws Exception {
+		JasmineResult result = sut.execute(resource, file);
 		
 		assertThat(result,is(not(nullValue())));
 		assertThat(result.getDescription(),containsString("kaka"));
 		assertThat(result.getDetails(),containsString("pants"));
 		assertThat(result.didPass(),is(false));
+	}
+	
+	@Test
+	public void shouldExportJUnitResults() throws Exception {
+		sut.execute(resource, file);
+		
+		verify(fileUtilsWrapper).writeStringToFile(file, "<xml/>", "UTF-8");
 	}
 
 	

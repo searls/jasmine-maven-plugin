@@ -1,9 +1,11 @@
 package searls.jasmine.runner;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import searls.jasmine.io.FileUtilsWrapper;
 import searls.jasmine.io.IOUtilsWrapper;
 import searls.jasmine.model.JasmineResult;
 
@@ -19,12 +21,14 @@ public class SpecRunnerExecutor {
 	
 	public static final String BUILD_REPORT_JS = "/buildReport.js";
 	public static final String BUILD_CONCLUSION_JS = "/buildConclusion.js";
+	public static final String CREATE_JUNIT_XML = "/createJunitXml.js";
 
 	private static final long MAX_EXECUTION_MILLIS = 300000; //5 minutes - TODO make this configurable
 	
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
+	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
-	public JasmineResult execute(URL runnerUrl) throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
+	public JasmineResult execute(URL runnerUrl, File junitXmlReport) throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
 		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
 		webClient.setJavaScriptEnabled(true);
 		webClient.setAjaxController(new NicelyResynchronizingAjaxController());
@@ -37,7 +41,9 @@ public class SpecRunnerExecutor {
 	    JasmineResult jasmineResult = new JasmineResult();
 	    jasmineResult.setDescription(buildRunnerDescription(page));
 	    jasmineResult.setDetails(buildReport(page));
-
+	    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page), "UTF-8");
+	    
+	    
 	    webClient.closeAllWindows();
 	    
 	    return jasmineResult;
@@ -54,6 +60,10 @@ public class SpecRunnerExecutor {
 		return description.getJavaScriptResult().toString();
 	}
 
+	private String buildJunitXmlReport(HtmlPage page) throws IOException {
+		ScriptResult junitReport = page.executeJavaScript(ioUtilsWrapper.toString(getClass().getResourceAsStream(CREATE_JUNIT_XML)) + "junitXmlReporter.report(reporter);"); 
+		return junitReport.getJavaScriptResult().toString();
+	}
 
 	private void waitForRunnerToFinish(HtmlPage page) throws InterruptedException {		
 		page.getWebClient().waitForBackgroundJavaScript(5000);
@@ -84,7 +94,4 @@ public class SpecRunnerExecutor {
 			public void notify(String arg0, Object arg1) {}
 		});
 	}
-
-
-
 }

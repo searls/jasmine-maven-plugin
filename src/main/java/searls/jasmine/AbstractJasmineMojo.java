@@ -74,6 +74,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected String manualSpecRunnerHtmlFileName;
 	
 	/**
+	 * @parameter default-value="TEST-jasmine.xml"
+	 */
+	protected String junitXmlReportFileName;
+	
+	/**
 	 * @parameter default-value="spec"
 	 */
 	protected String specDirectoryName;

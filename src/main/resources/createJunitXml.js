@@ -14,12 +14,53 @@ var junitXmlReporter;
 			var writer = new XmlWriter();
 			writer.beginNode('testsuite');
 			writer.attrib('errors','0');
-			writer.attrib('failures',results.failures);
 			writer.attrib('name','jasmine.specs');
 			writer.attrib('tests',results.tests);
+			writer.attrib('failures',results.failures);
 			writer.attrib('skipped',results.skipped);
+			writer.attrib('hostname','localhost');
+			writer.attrib('time', '0.0');
+			writer.attrib('timestamp',this.currentTimestamp());
+			this.writeChildren(reporter, writer, reporter.suites_,'');
+			writer.endNode();
 			
 			return this.prolog+writer.toString();
+		},
+		writeChildren: function(reporter, writer, tests,runningName) {
+			for(var i=0;i<tests.length;i++) {
+				var name = (runningName.length > 0 ? runningName+' ' : '')+tests[i].name;
+				if(tests[i].type === 'spec') {
+					var specResult = reporter.results_[tests[i].id] || {};
+					this.writeTestcase(writer,specResult,name);
+				}
+				this.writeChildren(reporter, writer,tests[i].children,name);
+			}
+		},
+		writeTestcase: function(writer,specResult,name) {
+			var failure = specResult.result !== 'passed';
+			writer.beginNode('testcase');
+			writer.attrib('classname','jasmine');
+			writer.attrib('name',name);
+			writer.attrib('time','0.0');
+			writer.attrib('failure',failure+'');
+			if(failure) {
+				this.writeError(writer,specResult);
+			}
+			writer.endNode();
+		},
+		writeError: function(writer,specResult) {
+			writer.beginNode('error');
+			var message = '';
+			var type = '';
+			var messages = specResult.messages || [];
+			for(var j=0;j<messages.length;j++) {
+				message += messages[j].message;
+				type = messages[j].type + '.' + messages[j].matcherName;
+			}
+			writer.attrib('type',type);
+			writer.attrib('message',message);
+			writer.writeString(message);
+			writer.endNode();
 		},
 		crunchResults: function(results) {
 			var count=0;
@@ -37,6 +78,21 @@ var junitXmlReporter;
 				failures: fails.toString(),
 				skipped: count > 0 ? (1+parseInt(last)-count).toString() : "0"
 			};
+		},
+		currentTimestamp: function() {
+			var f = function(n) {
+		        // Format integers to have at least two digits.
+		        return n < 10 ? '0' + n : n;
+		    }
+
+			var date = new Date();
+			
+	        return date.getUTCFullYear()   + '-' +
+	             f(date.getUTCMonth() + 1) + '-' +
+	             f(date.getUTCDate())      + 'T' +
+	             f(date.getUTCHours())     + ':' +
+	             f(date.getUTCMinutes())   + ':' +
+	             f(date.getUTCSeconds());
 		}
 	};
 

@@ -21,4 +21,8 @@ public class FileUtilsWrapper {
 		return FileUtils.listFiles(file, extensions, recursive);
 	}
 
+	public void writeStringToFile(File file, String data, String encoding) throws IOException {
+		FileUtils.writeStringToFile(file, data, encoding);
+	}
+
 }
