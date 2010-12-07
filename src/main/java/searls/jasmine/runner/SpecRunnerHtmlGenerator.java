@@ -14,14 +14,15 @@ import org.apache.maven.artifact.Artifact;
 import searls.jasmine.io.FileUtilsWrapper;
 
 public class SpecRunnerHtmlGenerator {
-	
+
 	private static final String CSS_TYPE = "css";
-	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";	
+	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
 	private static final String JAVASCRIPT_TYPE = "js";
-	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";	
+	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
 	private static final String REPORTER_ATTR_NAME = "reporter";
-	private static final String RUNNER_HTML_TEMPLATE = 
+	private static final String RUNNER_HTML_TEMPLATE =
+        "<!DOCTYPE html>" +
 		"<html>" +
 		"<head><title>Jasmine Test Runner</title>" +
 		"$"+CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
@@ -30,11 +31,11 @@ public class SpecRunnerHtmlGenerator {
 		"</head>" +
 		"<body><script type=\"text/javascript\">var reporter = new jasmine.$"+REPORTER_ATTR_NAME+"$(); jasmine.getEnv().addReporter(reporter); jasmine.getEnv().execute();</script></body>" +
 		"</html>";
-	
+
 	public enum ReporterType { TrivialReporter, JsApiReporter };
 
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
-	
+
 	private final File sourceDir;
 	private final File specDir;
 	private List<String> sourcesToLoadFirst;
@@ -49,11 +50,11 @@ public class SpecRunnerHtmlGenerator {
 	public String generate(List<Artifact> dependencies, ReporterType reporterType) {
 		try {
 			StringTemplate template = new StringTemplate(RUNNER_HTML_TEMPLATE,DefaultTemplateLexer.class);
-			
+
 			includeJavaScriptAndCssDependencies(dependencies, template);
-			setJavaScriptSourcesAttribute(template);			
+			setJavaScriptSourcesAttribute(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
-			
+
 			return template.toString();
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load file names for dependencies or scripts",e);
@@ -75,11 +76,11 @@ public class SpecRunnerHtmlGenerator {
 		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, javaScriptDependencies.toString());
 		template.setAttribute(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, cssDependencies.toString());
 	}
-	
+
 	private void setJavaScriptSourcesAttribute(StringTemplate template)
 			throws IOException {
 		StringBuilder scriptTags = new StringBuilder();
-		appendScriptTagsForFiles(scriptTags,expandSourcesToLoadFirstRelativeToSourceDir());				
+		appendScriptTagsForFiles(scriptTags,expandSourcesToLoadFirstRelativeToSourceDir());
 		appendScriptTagsForFiles(scriptTags, filesForScriptsInDirectory(sourceDir));
 		appendScriptTagsForFiles(scriptTags, filesForScriptsInDirectory(specDir));
 		template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME,scriptTags.toString());
@@ -100,8 +101,8 @@ public class SpecRunnerHtmlGenerator {
 		if(directory != null) {
 			fileUtilsWrapper.forceMkdir(directory);
 			files = new ArrayList<File>(fileUtilsWrapper.listFiles(directory, new String[] {"js"}, true));
-			Collections.sort(files); 
-		} 
+			Collections.sort(files);
+		}
 		return files;
 	}
 
@@ -113,5 +114,5 @@ public class SpecRunnerHtmlGenerator {
 			}
 		}
 	}
-	
+
 }
