@@ -31,7 +31,13 @@ public class SpecRunnerHtmlGeneratorTest {
 		assertThat(html,containsString("<html>"));
 		assertThat(html,containsString("</html>"));
 	}
-	
+
+    @Test
+    public void shouldPutInADocTypeWhenNoDependenciesAreProvided() {
+        List<Artifact> deps = new ArrayList<Artifact>();
+        String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
+        assertThat(html, containsString("<!DOCTYPE html>"));
+    }
 	@Test
 	public void shouldPopulateJasmineSourceIntoHtmlWhenProvided() throws Exception {
 		String expectedContents = "javascript()";
