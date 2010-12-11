@@ -216,9 +216,9 @@ loaded before your specs, and you wanted to load [Prototype](http://www.prototyp
       </preloadSources>				
     </configuration>
     
-In the example above, `vendor/jquery.js` and `vendor/jquery-ui.js` are still added to the generated SpecRunner.html once, just before all other sources in the project.
+(Note that `vendor/jquery.js` and `vendor/jquery-ui.js` are still only added to the generated SpecRunner.html a single time, just before all other sources in the project.)
 
-As demonstrated above, `preloadSources` will for each specified source attempt to resolve them in this order before placing them in an HTML `script` tag:
+As demonstrated above, `preloadSources` will attempt to resolve each specified source in this order (before placing it in an HTML `script` tag):
 
 1. As a file that exists relative to the `jsSrcDir`
 2. As a file that  exists relative to the `jsTestSrcDir`
@@ -226,16 +226,18 @@ As demonstrated above, `preloadSources` will for each specified source attempt t
 
 ### Creating a custom SpecRunner HTML template
 
-Sometimes the plugin's generated HTML templates might not fit your project's needs (perhaps you need to reference remote JavaScript sources that aren't bundled in your project, or you want to incorporate JSLint into the runner). 
+Sometimes the plugin's generated HTML templates might not fit your project's needs (perhaps you want to incorporate JSLint/JSCoverage into the runner or simply work around a bug in the plugin). 
 
 While you're encouraged to [create an issue](https://github.com/searls/jasmine-maven-plugin/issues) when you 
-find an area in which the plugin is lacking, one way to get unblocked immediately might be to override the plugin's SpecRunner template. To use a custom runner template:
+find a way in which the plugin is lacking, one approach to unblocking yourself immediately might be to override the plugin's SpecRunner HTML template. 
 
-1. Create a new file in your project (I'd recommend somewhere in `src/test/resources`)
+To use a custom runner template:
+
+1. Create a new empty file in your project (I'd recommend somewhere in `src/test/resources`)
 2. While [eyeballing the plugin's default template](https://github.com/searls/jasmine-maven-plugin/tree/master/src/main/resources/templates/SpecRunner.html), write your custom template file.
 3. Configure jasmine-maven-plugin to use your custom runner template.
 
-The configuration name is `customRunnerTemplate`:
+The configuration name is `customRunnerTemplate` and would be configured in the plugin like so:
 
     <configuration>
       ...
