@@ -202,13 +202,12 @@ find an area in which the plugin is lacking, one way to get unblocked immediatel
 
 1. Create a new file in your project (I'd recommend somewhere in `src/test/resources`)
 2. While [eyeballing the plugin's default template](https://github.com/searls/jasmine-maven-plugin/tree/master/src/main/resources/templates/SpecRunner.html), write your custom template file.
-3. Configure jasmine-maven-plugin to use your custom runner template:
+3. Configure jasmine-maven-plugin to use your custom runner template.
+
+The configuration name is `customRunnerTemplate`:
 
     <configuration>
       ...
-      
-        
-        
       <customRunnerTemplate>${project.basedir}/src/test/resources/path/to/my_spec_runner.template</customRunnerTemplate>null/src/test/resources/templates/specrunner.html				
     </configuration>
     
