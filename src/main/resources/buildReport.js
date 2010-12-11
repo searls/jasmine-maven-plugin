@@ -14,7 +14,6 @@ var buildMessages = function(messages,indentLevel) {
 	return message;
 }
 
-//Used to prevent an erratic infinite recursion under HtmlUnit
 var reportedItems = [];
 
 var buildReport = function(items,indentLevel) {

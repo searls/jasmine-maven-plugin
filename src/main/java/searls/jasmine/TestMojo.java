@@ -9,9 +9,9 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import searls.jasmine.format.JasmineResultLogger;
 import searls.jasmine.model.JasmineResult;
+import searls.jasmine.runner.ReporterType;
 import searls.jasmine.runner.SpecRunnerExecutor;
 import searls.jasmine.runner.SpecRunnerHtmlGenerator;
-import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
 /**
  * @component
@@ -47,7 +47,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
 	private File writeSpecRunnerToOutputDirectory() throws IOException {
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,new File(jasmineTargetDir,srcDirectoryName),new File(jasmineTargetDir,specDirectoryName));
-		String html = htmlGenerator.generate(pluginArtifacts, ReporterType.JsApiReporter);
+		String html = htmlGenerator.generate(pluginArtifacts, ReporterType.JsApiReporter, customRunnerTemplate);
 		
 		getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);
 		File runnerFile = new File(jasmineTargetDir,specRunnerHtmlFileName);

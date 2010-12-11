@@ -8,15 +8,12 @@
 	<packaging>pom</packaging>
 	<name>jasmine-maven-plugin Example Projects</name>
 
-	<properties>
-		<haltOnFailure>false</haltOnFailure>
-	</properties>
-
 	<modules>
 		<module>jasmine-webapp-example</module>
 		<module>jasmine-webapp-custom-dirs</module>
 		<module>jasmine-webapp-empty-example</module>
 		<module>jasmine-webapp-order-matters</module>
+		<module>jasmine-webapp-custom-runner</module>
 	</modules>
 
 </project>

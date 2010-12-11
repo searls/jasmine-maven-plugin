@@ -1,98 +1,97 @@
 package searls.jasmine.io;
 
 import static org.mockito.Matchers.*;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.FileFileFilter;
-import org.apache.commons.io.filefilter.FileFilterUtils;
 import org.apache.commons.io.filefilter.HiddenFileFilter;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
-import searls.jasmine.io.DirectoryCopier;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(value={FileUtils.class,FileFilterUtils.class})
+@RunWith(MockitoJUnitRunner.class)
 public class DirectoryCopierTest {
 
-	private DirectoryCopier directoryCopier = new DirectoryCopier();
-	private File srcDir = mock(File.class);
-	private File destDir = mock(File.class);
+	@InjectMocks private DirectoryCopier directoryCopier = new DirectoryCopier();
+	@Mock private FileUtilsWrapper fileUtilsWrapper;
+	@Mock private FileFilterUtilsWrapper fileFilterUtilsWrapper;
 	
-	@Before
-	public void before() {
-		mockStatic(FileUtils.class);
-		mockStatic(FileFilterUtils.class);
-	}
+	@Mock private File srcDir;
+	@Mock private File destDir;
 	
 	@Test
 	public void shouldBuildSuffixFilter() throws IOException {
 		String suffixFilter = ".js";
 		
 		directoryCopier.copyDirectory(srcDir,destDir,suffixFilter);
-		
-		verifyStatic();
-		FileFilterUtils.suffixFileFilter(suffixFilter);
+
+		verify(fileFilterUtilsWrapper).suffixFileFilter(suffixFilter);
 	}
 	
 	@Test
 	public void shouldAssignSuffixFilterAsFileFilter() throws IOException {
-		IOFileFilter resultSuffixFilter = mock(IOFileFilter.class);
-		when(FileFilterUtils.suffixFileFilter(anyString())).thenReturn(resultSuffixFilter);
+		IOFileFilter expected = stubSuffixFilter();
 		
 		directoryCopier.copyDirectory(srcDir,destDir,".somethingsomething");
 		
-		verifyStatic();
-		FileFilterUtils.andFileFilter(FileFileFilter.FILE, resultSuffixFilter);
+		verify(fileFilterUtilsWrapper).and(FileFileFilter.FILE, expected);
 	}
-	
+
 	@Test
 	public void shouldApplyDirectoriesToFilterAfterFileFilter() throws IOException {
-		IOFileFilter resultFileFilter = mock(IOFileFilter.class);
-		when(FileFilterUtils.suffixFileFilter(anyString())).thenReturn(mock(IOFileFilter.class));
-		when(FileFilterUtils.andFileFilter(isA(IOFileFilter.class), isA(IOFileFilter.class))).thenReturn(resultFileFilter);
+		IOFileFilter suffixFilter = stubSuffixFilter();
+		IOFileFilter expected = stubAndFilter(suffixFilter);
 		
 		directoryCopier.copyDirectory(srcDir,destDir,".somethingsomething");
 		
-		verifyStatic();
-		FileFilterUtils.orFileFilter(DirectoryFileFilter.DIRECTORY, resultFileFilter);
+		verify(fileFilterUtilsWrapper).or(DirectoryFileFilter.DIRECTORY, expected);
 	}
-	
+
 	@Test
 	public void shouldApplyVisibleToFilter() throws IOException {
-		IOFileFilter resultFileFilter = mock(IOFileFilter.class);
-		when(FileFilterUtils.suffixFileFilter(anyString())).thenReturn(mock(IOFileFilter.class));
-		when(FileFilterUtils.andFileFilter(isA(IOFileFilter.class), isA(IOFileFilter.class))).thenReturn(mock(IOFileFilter.class));
-		when(FileFilterUtils.orFileFilter(eq(DirectoryFileFilter.DIRECTORY), isA(IOFileFilter.class))).thenReturn(resultFileFilter);
+		IOFileFilter suffixFilter = stubSuffixFilter();
+		IOFileFilter fileFilter = stubAndFilter(suffixFilter);
+		IOFileFilter dirFilter = stubOrFilter(fileFilter);
 		
 		directoryCopier.copyDirectory(srcDir,destDir,".somethingsomething");
 		
-		verifyStatic();
-		FileFilterUtils.andFileFilter(HiddenFileFilter.VISIBLE, resultFileFilter);
+		verify(fileFilterUtilsWrapper).and(HiddenFileFilter.VISIBLE, dirFilter);
 	}
 	
 	@Test
 	public void shouldCopyDirectory() throws IOException {
-		IOFileFilter resultFilter = mock(IOFileFilter.class);
-		when(FileFilterUtils.suffixFileFilter(anyString())).thenReturn(mock(IOFileFilter.class));
-		when(FileFilterUtils.andFileFilter(isA(IOFileFilter.class), isA(IOFileFilter.class))).thenReturn(mock(IOFileFilter.class));
-		when(FileFilterUtils.orFileFilter(eq(DirectoryFileFilter.DIRECTORY), isA(IOFileFilter.class))).thenReturn(mock(IOFileFilter.class));
-		when(FileFilterUtils.andFileFilter(eq(HiddenFileFilter.VISIBLE), isA(IOFileFilter.class))).thenReturn(resultFilter);
+		IOFileFilter suffixFilter = stubSuffixFilter();
+		IOFileFilter fileFilter = stubAndFilter(suffixFilter);
+		IOFileFilter dirFilter = stubOrFilter(fileFilter);
+		IOFileFilter visibilityFilter = stubAndFilter(dirFilter);
 		
 		directoryCopier.copyDirectory(srcDir,destDir,".something");
 		
-		verifyStatic();
-		FileUtils.copyDirectory(srcDir, destDir, resultFilter);
+		verify(fileUtilsWrapper).copyDirectory(srcDir, destDir, visibilityFilter);
+	}
+
+	private IOFileFilter stubOrFilter(IOFileFilter fileFilter) {
+		IOFileFilter orFilter = mock(IOFileFilter.class);
+		when(fileFilterUtilsWrapper.or(eq(DirectoryFileFilter.DIRECTORY), eq(fileFilter))).thenReturn(orFilter);
+		return orFilter;
 	}
 	
+	private IOFileFilter stubSuffixFilter() {
+		IOFileFilter expected = mock(IOFileFilter.class);
+		when(fileFilterUtilsWrapper.suffixFileFilter(anyString())).thenReturn(expected);
+		return expected;
+	}
 	
+	private IOFileFilter stubAndFilter(IOFileFilter first) {
+		IOFileFilter andResult = mock(IOFileFilter.class);
+		when(fileFilterUtilsWrapper.and(isA(IOFileFilter.class), eq(first))).thenReturn(andResult);
+		return andResult;
+	}
 }

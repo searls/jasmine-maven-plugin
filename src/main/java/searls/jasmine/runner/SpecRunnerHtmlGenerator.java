@@ -12,34 +12,25 @@ import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.maven.artifact.Artifact;
 
 import searls.jasmine.io.FileUtilsWrapper;
+import searls.jasmine.io.IOUtilsWrapper;
 
 public class SpecRunnerHtmlGenerator {
 
-	private static final String CSS_TYPE = "css";
+	public static final String RUNNER_HTML_TEMPLATE_FILE = "/templates/SpecRunner.html";
+
 	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
-	private static final String JAVASCRIPT_TYPE = "js";
 	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
 	private static final String REPORTER_ATTR_NAME = "reporter";
-	private static final String RUNNER_HTML_TEMPLATE =
-		"<!DOCTYPE html>" +
-		"<html>" +
-		"<head><title>Jasmine Test Runner</title>" +
-		"$"+CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
-		"$"+JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
-		"$"+SOURCES_TEMPLATE_ATTR_NAME+"$ " +
-		"</head>" +
-		"<body><script type=\"text/javascript\">var reporter = new jasmine.$"+REPORTER_ATTR_NAME+"$(); jasmine.getEnv().addReporter(reporter); jasmine.getEnv().execute();</script></body>" +
-		"</html>";
+
+	private static final String JAVASCRIPT_TYPE = "js";
+	private static final String CSS_TYPE = "css";
 	
-	public enum ReporterType {
-		TrivialReporter, JsApiReporter
-	};
-
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
+	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
-	private final File sourceDir;
-	private final File specDir;
+	private File sourceDir;
+	private File specDir;
 	private List<String> sourcesToLoadFirst;
 	private List<File> fileNamesAlreadyWrittenAsScriptTags = new ArrayList<File>();
 
@@ -49,9 +40,10 @@ public class SpecRunnerHtmlGenerator {
 		this.specDir = specDir;
 	}
 
-	public String generate(List<Artifact> dependencies, ReporterType reporterType) {
+	public String generate(List<Artifact> dependencies, ReporterType reporterType, File customRunnerTemplate) {
 		try {
-			StringTemplate template = new StringTemplate(RUNNER_HTML_TEMPLATE, DefaultTemplateLexer.class);
+			String htmlTemplate = resolveHtmlTemplate(customRunnerTemplate);
+			StringTemplate template = new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
 
 			includeJavaScriptAndCssDependencies(dependencies, template);
 			setJavaScriptSourcesAttribute(template);
@@ -61,6 +53,12 @@ public class SpecRunnerHtmlGenerator {
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load file names for dependencies or scripts", e);
 		}
+	}
+
+	private String resolveHtmlTemplate(File customRunnerTemplate) throws IOException {
+		return customRunnerTemplate != null ? 
+				fileUtilsWrapper.readFileToString(customRunnerTemplate) 
+				: ioUtilsWrapper.toString(getClass().getResourceAsStream(RUNNER_HTML_TEMPLATE_FILE));
 	}
 
 	private void includeJavaScriptAndCssDependencies(List<Artifact> dependencies, StringTemplate template) throws IOException {
