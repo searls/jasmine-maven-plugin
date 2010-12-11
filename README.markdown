@@ -208,7 +208,7 @@ The configuration name is `customRunnerTemplate`:
 
     <configuration>
       ...
-      <customRunnerTemplate>${project.basedir}/src/test/resources/path/to/my_spec_runner.template</customRunnerTemplate>null/src/test/resources/templates/specrunner.html				
+      <customRunnerTemplate>${project.basedir}/src/test/resources/path/to/my_spec_runner.template</customRunnerTemplate>				
     </configuration>
     
 
