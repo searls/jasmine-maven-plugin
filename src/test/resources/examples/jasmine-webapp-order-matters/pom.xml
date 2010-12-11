@@ -8,7 +8,7 @@
 	</parent>
 	<artifactId>jasmine-webapp-order-matters</artifactId>
 	<packaging>war</packaging>
-	<name>Example Webapp using Jasmine Maven Plugin</name>
+	<name>Example Webapp using Jasmine Maven Plugin where the order of sources matters</name>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>

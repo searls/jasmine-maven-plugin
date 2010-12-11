@@ -8,10 +8,6 @@
 	<packaging>pom</packaging>
 	<name>jasmine-maven-plugin Example Projects</name>
 
-	<properties>
-		<haltOnFailure>false</haltOnFailure>
-	</properties>
-
 	<modules>
 		<module>jasmine-webapp-example</module>
 		<module>jasmine-webapp-custom-dirs</module>

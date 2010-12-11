@@ -9,6 +9,12 @@
 	<artifactId>jasmine-webapp-example</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin</name>
+	
+	<properties>
+		<!-- This project is intended to fail -->
+		<haltOnFailure>false</haltOnFailure>
+	</properties>
+	
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
