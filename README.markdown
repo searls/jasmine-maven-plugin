@@ -63,7 +63,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
       ...
     </project>
     
-Build with Jasmine
+Building your project with Jasmine
 ------------------
 
     mvn package
@@ -71,14 +71,17 @@ Build with Jasmine
 Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to give. However, the results will only be useful once you've added some JavaScript and specs. Details follow:
 
 ###src/main/javascript 
-Store your project's JavaScript (i.e. `ninja.js`) and dependencies (i.e. `lib/prototype.js`) in `src/main/javsacript`. 
+By default, the plugin expects to find your JavaScript sources  (i.e. `ninja.js`) and dependencies (i.e. `lib/prototype.js`) in `src/main/javascript`. However, for most
+existing projects, it will make more sense to specify where your JS sources are in `src/main/webapp` and forego the packageResource goal (see "Supporting WTP" below for an example).
 
 ###src/test/javascript 
 Store your Jasmine specs (i.e. `ninjaSpec.js`) in `src/test/javascript`. No need to create an HTML spec runner, one will be generated and executed for you by the **jasmine:test** goal!
     
 Example test Output
 -------------------
-jasmine-maven-plugin halts on spec failures (unless haltOnFailure is set to false). An example of some failure output follows:
+jasmine-maven-plugin behaves just like maven-surefire-plugin and will fail the build on spec failures (unless haltOnFailure is set to false). 
+
+An example of some failing output follows:
 
     -------------------------------------------------------
      J A S M I N E   T E S T S
@@ -109,7 +112,11 @@ jasmine-maven-plugin halts on spec failures (unless haltOnFailure is set to fals
 Usage Notes
 -----------
 ### Project layout
-The jasmine-maven-plugin sports a default project directory layout that should be convenient for most green field projects. The included example project (which is in [src/test/resources/jasmine-webapp-example](http://github.com/searls/jasmine-maven-plugin/tree/master/src/test/resources/jasmine-webapp-example/) demonstrates this convention and looks something like this:
+The jasmine-maven-plugin presumes a default project directory layout. If this layout doesn't suit your project, fear not, as it's entirely customizable. In adition to everything documented here,
+you can check the documented source of the [base Mojo class](https://github.com/searls/jasmine-maven-plugin/blob/master/src/main/java/searls/jasmine/AbstractJasmineMojo.java) to see which properties have been
+parameterized.
+
+An included example project (in [src/test/resources/examplesjasmine-webapp-example](http://github.com/searls/jasmine-maven-plugin/tree/master/src/test/resources/examples/jasmine-webapp-example/)) is laid out like this: 
 
     |-- pom.xml
     |-- src
@@ -117,8 +124,7 @@ The jasmine-maven-plugin sports a default project directory layout that should b
     |   |   |-- javascript
     |   |   |   |-- HelloWorld.js
     |   |   |   `-- vendor
-    |   |   |       `-- jquery-1.4.2.min.js
-    |   |   |-- resources
+    |   |   |       `-- jquery-1.4.2.min.js    
     |   |   `-- webapp
     |   |       `-- index.html
     |   `-- test
@@ -143,29 +149,39 @@ The jasmine-maven-plugin sports a default project directory layout that should b
         |           `-- jquery-1.4.2.min.js
         `-- jasmine-webapp-example.war
 
-As seen above, production JavaScript is placed in `src/main/javascript`, while test specs are each in `src/test/javascript`. The plugin does support nested directories and will maintain your directory structure as it processes the source directories.
+As seen above, by default, the plugin looks for JavaScript placed in `src/main/javascript`, while test specs are each in `src/test/javascript`. The plugin does support nested directories and will maintain your directory structure as it processes the source directories.
 
 ### Goals
 
 ####jasmine:resources
-This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
+This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. 
+It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
 
 ####jasmine:testResources
-This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. It can be changed by configuring a parameter named `jsTestSrcDir` in the plugin execution section of the POM.
+This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. 
+It can be changed by configuring a parameter named `jsTestSrcDir` in the plugin execution section of the POM.
 
 ####jasmine:test
-This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
+This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. 
+It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
 
 ####jasmine:preparePackage 
-This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
+This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). 
+The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
 
 ####jasmine:generateManualRunner
-This goal binds to the generate-test-sources phase and will generate an extra spec runner HTML (named `ManualSpecRunner.html` by default) in the jasmine target directory (`target/jasmine`). This way, you can easily run your specs in the browser as you develop them, while still leaning on the plugin to keep the HTML up-to-date for you. Note that this HTML file is separate from the one generated during **jasmine:test**, as it points to the source directories directly.
+This goal binds to the generate-test-sources phase and will generate an extra spec runner HTML (named `ManualSpecRunner.html` by default) in the jasmine target directory (`target/jasmine`). 
+This way, you can easily run your specs in the browser as you develop them, while still leaning on the plugin to keep the HTML up-to-date for you. Note that this HTML file is separate from 
+the one generated during **jasmine:test**, because it points to the source directories directly.
 
 When using the manual runner in a browser, be careful to edit your source & specs in the project's `src` directory, even though the runner itself runs in `target`! 
 
 ### Supporting WTP (Leaving your JavaScript sources in your `webapp` directory)
-You can run the plugin with all five goals or fewer, if you choose. For instance, if you run your application in Eclipse WTP and you want to keep your production JavaScript in `src/main/webapp` to facilitate easier iterative development, you could skip the preparePackage goal and configure the `jsSrcDir` property to point at `src/main/webapp/[your-js-directory]` instead. Example POM follows:
+You can run the plugin with all five goals or fewer, if you choose. For instance, if you run your application in Eclipse WTP and you want to keep your production 
+JavaScript in `src/main/webapp` to facilitate easier iterative development, you could skip the preparePackage goal and configure the `jsSrcDir` property to point 
+at `src/main/webapp/[your-js-directory]` instead. 
+
+Here's an example POM snippet:
 
     <execution>
       <goals>
@@ -178,10 +194,12 @@ You can run the plugin with all five goals or fewer, if you choose. For instance
       </configuration>
     </execution>
 
-### Ordering Loading of Dependencies 
-Among configurations listed elsewhere, you can configure jasmine-maven-plugin to load a specified list of JavaScript sources (relative to ${jsSrcDir}, which defaults to `src/main/javascript`) 
-before the other ones. So, for instance, if you need to load jQuery and then jQuery plugins before your production sources get included in the runner, you can specify those sources you want 
-to preload like so:
+### Enforcing the order in which JavaScript files are loaded 
+You can configure the plugin to load a list of JavaScript sources before any others. This is particularly useful when your scripts or specs must be loaded in a particular order
+to work correctly. 
+
+So if you wanted to make sure jQuery was loaded before your application's scripts, and that the terrific [jasmine-jquery](https://github.com/velesin/jasmine-jquery) was 
+loaded before your specs, and you wanted to load [Prototype](http://www.prototypejs.org/) from Google CDN (which isn't even stored in your project), your POM would look like this: 
 
     <configuration>
       ...
@@ -194,7 +212,7 @@ to preload like so:
         <source>jasmine-jquery.js</source>
         
         <!-- Even supports remote resources and arbitrary protocols -->
-        <source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js</source>
+        <source>https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js</source>
       </preloadSources>				
     </configuration>
     
