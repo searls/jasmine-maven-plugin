@@ -12,8 +12,11 @@ import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.maven.artifact.Artifact;
 
 import searls.jasmine.io.FileUtilsWrapper;
+import searls.jasmine.io.IOUtilsWrapper;
 
 public class SpecRunnerHtmlGenerator {
+
+	public static final String RUNNER_HTML_TEMPLATE_FILE = "/templates/SpecRunner.html";
 
 	private static final String CSS_TYPE = "css";
 	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
@@ -21,22 +24,13 @@ public class SpecRunnerHtmlGenerator {
 	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
 	private static final String REPORTER_ATTR_NAME = "reporter";
-	private static final String RUNNER_HTML_TEMPLATE =
-		"<!DOCTYPE html>" +
-		"<html>" +
-		"<head><title>Jasmine Test Runner</title>" +
-		"$"+CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
-		"$"+JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME+"$ " +
-		"$"+SOURCES_TEMPLATE_ATTR_NAME+"$ " +
-		"</head>" +
-		"<body><script type=\"text/javascript\">var reporter = new jasmine.$"+REPORTER_ATTR_NAME+"$(); jasmine.getEnv().addReporter(reporter); jasmine.getEnv().execute();</script></body>" +
-		"</html>";
 	
 	public enum ReporterType {
 		TrivialReporter, JsApiReporter
 	};
 
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
+	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
 	private final File sourceDir;
 	private final File specDir;
@@ -51,7 +45,8 @@ public class SpecRunnerHtmlGenerator {
 
 	public String generate(List<Artifact> dependencies, ReporterType reporterType) {
 		try {
-			StringTemplate template = new StringTemplate(RUNNER_HTML_TEMPLATE, DefaultTemplateLexer.class);
+			String templateHtml = ioUtilsWrapper.toString(getClass().getResourceAsStream(RUNNER_HTML_TEMPLATE_FILE));
+			StringTemplate template = new StringTemplate(templateHtml, DefaultTemplateLexer.class);
 
 			includeJavaScriptAndCssDependencies(dependencies, template);
 			setJavaScriptSourcesAttribute(template);
