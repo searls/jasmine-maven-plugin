@@ -32,7 +32,7 @@ public class SpecRunnerHtmlGenerator {
 	private File sourceDir;
 	private File specDir;
 	private List<String> sourcesToLoadFirst;
-	private List<File> fileNamesAlreadyWrittenAsScriptTags = new ArrayList<File>();
+	private List<String> fileNamesAlreadyWrittenAsScriptTags = new ArrayList<String>();
 
 	public SpecRunnerHtmlGenerator(List<String> sourcesToLoadFirst, File sourceDir, File specDir) {
 		this.sourcesToLoadFirst = sourcesToLoadFirst;
@@ -83,33 +83,51 @@ public class SpecRunnerHtmlGenerator {
 		template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME, scriptTags.toString());
 	}
 
-	private List<File> expandSourcesToLoadFirstRelativeToSourceDir() {
-		List<File> files = new ArrayList<File>();
+	private List<String> expandSourcesToLoadFirstRelativeToSourceDir() {
+		List<String> files = new ArrayList<String>();
 		if (sourcesToLoadFirst != null) {
 			for (String sourceToLoadFirst : sourcesToLoadFirst) {
-				files.add(new File(sourceDir, sourceToLoadFirst));
+				File file = new File(sourceDir, sourceToLoadFirst);
+				File specFile = new File(specDir, sourceToLoadFirst);
+				if(file.exists()) {
+					files.add(fileToString(file));
+				} else if(specFile.exists()) {
+					files.add(fileToString(specFile));
+				} else {
+					files.add(sourceToLoadFirst);
+				}
 			}
 		}
 		return files;
 	}
 
-	private List<File> filesForScriptsInDirectory(File directory) throws IOException {
-		List<File> files = new ArrayList<File>();
+	private List<String> filesForScriptsInDirectory(File directory) throws IOException {
+		List<String> fileNames = new ArrayList<String>();
 		if (directory != null) {
 			fileUtilsWrapper.forceMkdir(directory);
-			files = new ArrayList<File>(fileUtilsWrapper.listFiles(directory, new String[] { "js" }, true));
+			List<File> files = new ArrayList<File>(fileUtilsWrapper.listFiles(directory, new String[] { "js" }, true));
 			Collections.sort(files);
+			for (File file : files) {
+				fileNames.add(fileToString(file));
+			}
 		}
-		return files;
+		return fileNames;
 	}
 
-	private void appendScriptTagsForFiles(StringBuilder sb, List<File> sourceFiles) throws MalformedURLException {
-		for (File sourceFile : sourceFiles) {
+	private void appendScriptTagsForFiles(StringBuilder sb, List<String> sourceFiles) {
+		for (String sourceFile : sourceFiles) {
 			if (!fileNamesAlreadyWrittenAsScriptTags.contains(sourceFile)) {
-				sb.append("<script type=\"text/javascript\" src=\"").append(sourceFile.toURI().toURL().toString()).append("\"></script>");
+				sb.append("<script type=\"text/javascript\" src=\"").append(sourceFile).append("\"></script>");
 				fileNamesAlreadyWrittenAsScriptTags.add(sourceFile);
 			}
 		}
 	}
 
+	private String fileToString(File file) {
+		try {
+			return file.toURI().toURL().toString();
+		} catch (MalformedURLException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
