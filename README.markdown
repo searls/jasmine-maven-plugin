@@ -258,7 +258,7 @@ As an example, to integrate the report into a Hudson job, select "Publish JUnit 
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-2**.  
+If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-3**.  
 
 ## Maintainers
 * [Justin Searls](http://twitter.com/Searls), Pillar Technology
