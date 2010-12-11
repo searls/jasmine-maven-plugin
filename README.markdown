@@ -2,6 +2,12 @@ jasmine-maven-plugin
 ====================
 **A Maven Plugin for processing JavaScript sources, specs, and executing Jasmine**
 
+If you want to use Maven and test-drive JavaScript, this is the plugin for you!
+
+* Generates two HTML test runners Ñ one for test-driving locally in your browser, and one to run as part of the build
+* Continuous integration with no added configuration Ñ because the plugin's `test` goal runs headlessly (thanks HtmlUnit!), your CI system won't need any additional configuration. Your build will fail as soon as your JavaScript tests do.
+* Builds JUnit XML Ñ your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests
+
 Option A: Start from the archetype
 ----------------------------------
 
@@ -68,7 +74,7 @@ Building your project with Jasmine
 
     mvn package
 
-Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to give. However, the results will only be useful once you've added some JavaScript and specs. Details follow:
+Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to offer. However, the results will only be useful once you've added some JavaScript and specs. Details follow:
 
 ###src/main/javascript 
 By default, the plugin expects to find your JavaScript sources  (i.e. `ninja.js`) and dependencies (i.e. `lib/prototype.js`) in `src/main/javascript`. However, for most
