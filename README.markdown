@@ -203,12 +203,14 @@ find an area in which the plugin is lacking, one way to get unblocked immediatel
 1. Create a new file in your project (I'd recommend somewhere in `src/test/resources`)
 2. While [eyeballing the plugin's default template](https://github.com/searls/jasmine-maven-plugin/tree/master/src/main/resources/templates/SpecRunner.html), write your custom template file.
 3. Configure jasmine-maven-plugin to use your custom runner template:
+
     
     <configuration>
       ...
       <customRunnerTemplate>${project.basedir}/src/test/resources/path/to/my_spec_runner.template</customRunnerTemplate>
     </configuration>
     
+
 ### JUnit XML Reports
 
 The plugin's `test` goal will output the test results in a JUnit text XML report, located in `target/jasmine/TEST-jasmine.xml`. The implementation attempts to satisfy the most middle-of-the-road consensus as to what the schema-less XML report "[should](http://stackoverflow.com/questions/442556/spec-for-junit-xml-output)" look like.
