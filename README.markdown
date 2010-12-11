@@ -193,7 +193,7 @@ to preload like so:
         <!-- Also supports test dependencies that need to come before specs -->
         <source>jasmine-jquery.js</source>
         
-        <!-- Even supports remote resources or completely custom protocols -->
+        <!-- Even supports remote resources and arbitrary protocols -->
         <source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js</source>
       </preloadSources>				
     </configuration>
