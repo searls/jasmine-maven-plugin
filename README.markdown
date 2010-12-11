@@ -122,7 +122,7 @@ The jasmine-maven-plugin presumes a default project directory layout. If this la
 you can check the documented source of the [base Mojo class](https://github.com/searls/jasmine-maven-plugin/blob/master/src/main/java/searls/jasmine/AbstractJasmineMojo.java) to see which properties have been
 parameterized.
 
-An included example project (in [src/test/resources/examplesjasmine-webapp-example](http://github.com/searls/jasmine-maven-plugin/tree/master/src/test/resources/examples/jasmine-webapp-example/)) is laid out like this: 
+An included example project (in [src/test/resources/examples/jasmine-webapp-example](http://github.com/searls/jasmine-maven-plugin/tree/master/src/test/resources/examples/jasmine-webapp-example/)) is laid out like this: 
 
     |-- pom.xml
     |-- src
@@ -155,7 +155,7 @@ An included example project (in [src/test/resources/examplesjasmine-webapp-examp
         |           `-- jquery-1.4.2.min.js
         `-- jasmine-webapp-example.war
 
-As seen above, by default, the plugin looks for JavaScript placed in `src/main/javascript`, while test specs are each in `src/test/javascript`. The plugin does support nested directories and will maintain your directory structure as it processes the source directories.
+As seen above, by default, the plugin looks for JavaScript placed in `src/main/javascript`, while test specs are each in `src/test/javascript`. The plugin supports nested directories and will maintain your directory structure as it processes the source directories.
 
 ### Goals
 
@@ -222,8 +222,6 @@ loaded before your specs, and you wanted to load [Prototype](http://www.prototyp
       </preloadSources>				
     </configuration>
     
-(Note that `vendor/jquery.js` and `vendor/jquery-ui.js` are still only added to the generated SpecRunner.html a single time, just before all other sources in the project.)
-
 As demonstrated above, `preloadSources` will attempt to resolve each specified source in this order (before placing it in an HTML `script` tag):
 
 1. As a file that exists relative to the `jsSrcDir`
@@ -232,10 +230,10 @@ As demonstrated above, `preloadSources` will attempt to resolve each specified s
 
 ### Creating a custom SpecRunner HTML template
 
-Sometimes the plugin's generated HTML templates might not fit your project's needs (perhaps you want to incorporate JSLint/JSCoverage into the runner or simply work around a bug in the plugin). 
+Sometimes the plugin's generated HTML runners might not fit your project's needs (perhaps you want to incorporate JSLint/JSCoverage into the runner or simply work around a bug in the plugin). 
 
 While you're encouraged to [create an issue](https://github.com/searls/jasmine-maven-plugin/issues) when you 
-find a way in which the plugin is lacking, one approach to unblocking yourself immediately might be to override the plugin's SpecRunner HTML template. 
+find a way in which the plugin is lacking, one approach to unblocking yourself immediately is to override the plugin's own SpecRunner HTML template. 
 
 To use a custom runner template:
 
@@ -243,7 +241,7 @@ To use a custom runner template:
 2. While [eyeballing the plugin's default template](https://github.com/searls/jasmine-maven-plugin/tree/master/src/main/resources/templates/SpecRunner.html), write your custom template file.
 3. Configure jasmine-maven-plugin to use your custom runner template.
 
-The configuration name is `customRunnerTemplate` and would be configured in the plugin like so:
+The configuration name is `customRunnerTemplate` and would be configured in the POM like so:
 
     <configuration>
       ...
@@ -255,7 +253,7 @@ The configuration name is `customRunnerTemplate` and would be configured in the 
 
 The plugin's `test` goal will output the test results in a JUnit text XML report, located in `target/jasmine/TEST-jasmine.xml`. The implementation attempts to satisfy the most middle-of-the-road consensus as to what the schema-less XML report "[should](http://stackoverflow.com/questions/442556/spec-for-junit-xml-output)" look like.
 
-As an example, to integrate the report to a Hudson job, select "Publish JUnit test result report" among the available "Post-build Actions" and include a file pattern like "\*\*/jasmine/TEST\*.xml". Once integrated, your jasmine specs will be counted and interactive in the same way your other tests are!
+As an example, to integrate the report into a Hudson job, select "Publish JUnit test result report" among the available "Post-build Actions" and include a file pattern like "\*\*/jasmine/TEST\*.xml". Once included, your jasmine specs will be counted and interactive in the same way your other tests are!
 
 ### Current Version Info
 
