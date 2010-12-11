@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>searls</groupId>
+		<artifactId>jasmine-example-superpom</artifactId>
+		<version>1.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>jasmine-webapp-load-remote</artifactId>
+	<packaging>war</packaging>
+	<name>Example Webapp using Jasmine Maven Plugin where remote scripts need to be loaded into the runners.</name>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>jasmine-webapp-example</finalName>
+		<plugins>
+			<plugin>
+				<groupId>searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateManualRunner</goal>
+							<goal>resources</goal>
+							<goal>testResources</goal>
+							<goal>test</goal>
+							<goal>preparePackage</goal>
+						</goals>
+						<configuration>
+							<preloadSources>
+								<source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js</source>
+							</preloadSources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>searls-maven-thirdparty</id>
+			<url>http://searls-maven-repository.googlecode.com/svn/trunk/thirdparty</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>searls-maven-releases</id>
+			<url>http://searls-maven-repository.googlecode.com/svn/trunk/releases</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>searls-maven-snapshots</id>
+			<url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
+		</pluginRepository>
+	</pluginRepositories>
+</project>
