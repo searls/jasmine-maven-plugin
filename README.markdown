@@ -122,7 +122,7 @@ The jasmine-maven-plugin presumes a default project directory layout. If this la
 you can check the documented source of the [base Mojo class](https://github.com/searls/jasmine-maven-plugin/blob/master/src/main/java/searls/jasmine/AbstractJasmineMojo.java) to see which properties have been
 parameterized.
 
-An included example project (in [src/test/resources/examplesjasmine-webapp-example](http://github.com/searls/jasmine-maven-plugin/tree/master/src/test/resources/examples/jasmine-webapp-example/)) is laid out like this: 
+An included example project (in [src/test/resources/examples/jasmine-webapp-example](http://github.com/searls/jasmine-maven-plugin/tree/master/src/test/resources/examples/jasmine-webapp-example/)) is laid out like this: 
 
     |-- pom.xml
     |-- src
