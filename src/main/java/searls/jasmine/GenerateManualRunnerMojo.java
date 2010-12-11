@@ -24,7 +24,7 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 			try {
 				writeSpecRunnerToSourceSpecDirectory();
 			} catch (Exception e) {
-				throw new MojoFailureException(e,"JavaScript Test execution failed.","Failed to execute generated SpecRunner.html");
+				throw new MojoFailureException(e,"JavaScript Test execution failed.","Failed to generate "+manualSpecRunnerHtmlFileName);
 			}
 		} else {
 			getLog().warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+jsSrcDir.getAbsolutePath()+"` and `"+jsTestSrcDir.getAbsolutePath()+"` exist.");
@@ -33,7 +33,7 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,jsSrcDir,jsTestSrcDir);
-		String runner = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter);
+		String runner = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter, customRunnerTemplate);
 		
 		File destination = new File(jasmineTargetDir,manualSpecRunnerHtmlFileName);
 		String existingRunner = loadExistingManualRunner(destination);

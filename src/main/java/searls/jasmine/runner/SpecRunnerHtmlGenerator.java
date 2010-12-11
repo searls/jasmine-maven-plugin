@@ -40,10 +40,10 @@ public class SpecRunnerHtmlGenerator {
 		this.specDir = specDir;
 	}
 
-	public String generate(List<Artifact> dependencies, ReporterType reporterType) {
+	public String generate(List<Artifact> dependencies, ReporterType reporterType, File customRunnerTemplate) {
 		try {
-			String templateHtml = ioUtilsWrapper.toString(getClass().getResourceAsStream(RUNNER_HTML_TEMPLATE_FILE));
-			StringTemplate template = new StringTemplate(templateHtml, DefaultTemplateLexer.class);
+			String htmlTemplate = resolveHtmlTemplate(customRunnerTemplate);
+			StringTemplate template = new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
 
 			includeJavaScriptAndCssDependencies(dependencies, template);
 			setJavaScriptSourcesAttribute(template);
@@ -53,6 +53,12 @@ public class SpecRunnerHtmlGenerator {
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load file names for dependencies or scripts", e);
 		}
+	}
+
+	private String resolveHtmlTemplate(File customRunnerTemplate) throws IOException {
+		return customRunnerTemplate != null ? 
+				fileUtilsWrapper.readFileToString(customRunnerTemplate) 
+				: ioUtilsWrapper.toString(getClass().getResourceAsStream(RUNNER_HTML_TEMPLATE_FILE));
 	}
 
 	private void includeJavaScriptAndCssDependencies(List<Artifact> dependencies, StringTemplate template) throws IOException {

@@ -2,10 +2,14 @@ package searls.jasmine.runner;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
@@ -25,12 +29,12 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	@InjectMocks private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null);
 	
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
-	@Spy @SuppressWarnings("unused") private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
+	@Spy private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
 		List<Artifact> deps = new ArrayList<Artifact>();
-		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
 		assertThat(html, containsString("<html>"));
 		assertThat(html, containsString("</html>"));
 	}
@@ -38,7 +42,7 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	@Test
 	public void shouldPutInADocTypeWhenNoDependenciesAreProvided() {
 		List<Artifact> deps = new ArrayList<Artifact>();
-		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
 		assertThat(html, containsString("<!DOCTYPE html>"));
 	}
 
@@ -48,7 +52,7 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 		List<Artifact> deps = new ArrayList<Artifact>();
 		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.1", "js", expectedContents));
 
-		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
 
 		assertThat(html, containsString("<script type=\"text/javascript\">" + expectedContents + "</script>"));
 	}
@@ -61,7 +65,7 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.1", "js", jasmineString));
 		deps.add(mockDependency("com.pivotallabs", "jasmine-html", "1.0.1", "js", jasmineHtmlString));
 
-		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
 
 		assertThat(html, containsString("<script type=\"text/javascript\">" + jasmineString + "</script>"));
 		assertThat(html, containsString("<script type=\"text/javascript\">" + jasmineHtmlString + "</script>"));
@@ -74,11 +78,31 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 		List<Artifact> deps = new ArrayList<Artifact>();
 		deps.add(mockDependency("com.pivotallabs", "jasmine-css", "1.0.1", "css", css));
 
-		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter);
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
 
 		assertThat(html, containsString("<style type=\"text/css\">" + css + "</style>"));
 	}
+	
+	@Test
+	@SuppressWarnings("unchecked")
+	public void shouldNotReadDefaultTemplateWhenOneIsProvided() throws IOException {
+		File expected = mock(File.class);
+		
+		specRunnerHtmlGenerator.generate(Collections.EMPTY_LIST, ReporterType.TrivialReporter, expected);
 
+		verify(ioUtilsWrapper,never()).toString(isA(InputStream.class));
+	}
+
+	@Test
+	@SuppressWarnings("unchecked")
+	public void shouldReadCustomTemplateWhenOneIsProvided() throws IOException {
+		File expected = mock(File.class);
+		
+		specRunnerHtmlGenerator.generate(Collections.EMPTY_LIST, ReporterType.TrivialReporter, expected);
+
+		verify(fileUtilsWrapper).readFileToString(expected);
+	}
+	
 	private Artifact mockDependency(String groupId, String artifactId, String version, String type, String fileContents) throws Exception {
 		Artifact dep = mock(Artifact.class);
 		when(dep.getGroupId()).thenReturn(groupId);
