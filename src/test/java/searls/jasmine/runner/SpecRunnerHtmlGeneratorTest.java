@@ -2,13 +2,17 @@ package searls.jasmine.runner;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.maven.artifact.Artifact;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,15 +20,22 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import searls.jasmine.io.FileUtilsWrapper;
+import searls.jasmine.io.IOUtilsWrapper;
 import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerHtmlGeneratorTest {
 
-	@InjectMocks
-	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null);
-	@Mock
-	private FileUtilsWrapper fileUtilsWrapper;
+	@InjectMocks private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null);
+	
+	@Mock private FileUtilsWrapper fileUtilsWrapper;
+	@Mock private IOUtilsWrapper ioUtilsWrapper;
+	
+	
+	@Before
+	public void stubDefaultTemplate() throws IOException {
+		when(ioUtilsWrapper.toString(isA(InputStream.class))).thenReturn("<!DOCTYPE html><html><head><title>Jasmine Spec Runner</title>$cssDependencies$$javascriptDependencies$$sources$</head><body><script type=\"text/javascript\">var reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter); jasmine.getEnv().execute();</script></body></html>");
+	}
 
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
