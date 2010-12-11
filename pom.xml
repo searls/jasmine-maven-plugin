@@ -10,9 +10,9 @@
 	<name>jasmine</name>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<powermock.version>1.4.5</powermock.version>
 		<jasmine.version>1.0.1</jasmine.version>
+		<powermock.version>1.4.6</powermock.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 	<dependencies>
@@ -79,21 +79,15 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.modules</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.powermock.api</groupId>
+			<groupId>org.powermock</groupId>
 			<artifactId>powermock-api-mockito</artifactId>
 			<version>${powermock.version}</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.powermock</groupId>
-			<artifactId>powermock-core</artifactId>
-			<version>1.4</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -190,10 +184,6 @@
 		<repository>
 			<id>searls-maven-thirdparty</id>
 			<url>http://searls-maven-repository.googlecode.com/svn/trunk/thirdparty</url>
-		</repository>
-		<repository>
-			<id>powermock-repo</id>
-			<url>http://powermock.googlecode.com/svn/repo/</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
