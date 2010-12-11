@@ -9,9 +9,9 @@ import org.apache.maven.plugin.MojoFailureException;
 
 import searls.jasmine.format.JasmineResultLogger;
 import searls.jasmine.model.JasmineResult;
+import searls.jasmine.runner.ReporterType;
 import searls.jasmine.runner.SpecRunnerExecutor;
 import searls.jasmine.runner.SpecRunnerHtmlGenerator;
-import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
 /**
  * @component

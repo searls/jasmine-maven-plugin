@@ -18,22 +18,19 @@ public class SpecRunnerHtmlGenerator {
 
 	public static final String RUNNER_HTML_TEMPLATE_FILE = "/templates/SpecRunner.html";
 
-	private static final String CSS_TYPE = "css";
 	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
-	private static final String JAVASCRIPT_TYPE = "js";
 	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
 	private static final String REPORTER_ATTR_NAME = "reporter";
-	
-	public enum ReporterType {
-		TrivialReporter, JsApiReporter
-	};
 
+	private static final String JAVASCRIPT_TYPE = "js";
+	private static final String CSS_TYPE = "css";
+	
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
-	private final File sourceDir;
-	private final File specDir;
+	private File sourceDir;
+	private File specDir;
 	private List<String> sourcesToLoadFirst;
 	private List<File> fileNamesAlreadyWrittenAsScriptTags = new ArrayList<File>();
 

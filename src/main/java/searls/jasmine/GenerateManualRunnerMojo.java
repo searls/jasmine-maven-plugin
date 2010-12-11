@@ -8,8 +8,8 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
+import searls.jasmine.runner.ReporterType;
 import searls.jasmine.runner.SpecRunnerHtmlGenerator;
-import searls.jasmine.runner.SpecRunnerHtmlGenerator.ReporterType;
 
 /**
  * @component
