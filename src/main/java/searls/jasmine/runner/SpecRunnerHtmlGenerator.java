@@ -88,8 +88,11 @@ public class SpecRunnerHtmlGenerator {
 		if (sourcesToLoadFirst != null) {
 			for (String sourceToLoadFirst : sourcesToLoadFirst) {
 				File file = new File(sourceDir, sourceToLoadFirst);
+				File specFile = new File(specDir, sourceToLoadFirst);
 				if(file.exists()) {
 					files.add(fileToString(file));
+				} else if(specFile.exists()) {
+					files.add(fileToString(specFile));
 				} else {
 					files.add(sourceToLoadFirst);
 				}
