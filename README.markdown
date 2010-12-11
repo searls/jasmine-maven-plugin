@@ -164,7 +164,7 @@ This goal binds to the generate-test-sources phase and will generate an extra sp
 
 When using the manual runner in a browser, be careful to edit your source & specs in the project's `src` directory, even though the runner itself runs in `target`! 
 
-### Supporting WTP
+### Supporting WTP (Leaving your JavaScript sources in your `webapp` directory)
 You can run the plugin with all five goals or fewer, if you choose. For instance, if you run your application in Eclipse WTP and you want to keep your production JavaScript in `src/main/webapp` to facilitate easier iterative development, you could skip the preparePackage goal and configure the `jsSrcDir` property to point at `src/main/webapp/[your-js-directory]` instead. Example POM follows:
 
     <execution>
@@ -179,7 +179,9 @@ You can run the plugin with all five goals or fewer, if you choose. For instance
     </execution>
 
 ### Ordering Loading of Dependencies 
-Among configurations listed elsewhere, you can configure jasmine-maven-plugin to load a specified list of JavaScript sources (relative to ${jsSrcDir}, which defaults to `src/main/javascript`) before the other ones. So, for instance, if you need to load jQuery and then jQuery plugins before your production sources get included in the runner, you can specify those sources you want to preload like so:
+Among configurations listed elsewhere, you can configure jasmine-maven-plugin to load a specified list of JavaScript sources (relative to ${jsSrcDir}, which defaults to `src/main/javascript`) 
+before the other ones. So, for instance, if you need to load jQuery and then jQuery plugins before your production sources get included in the runner, you can specify those sources you want 
+to preload like so:
 
     <configuration>
       ...
@@ -190,6 +192,23 @@ Among configurations listed elsewhere, you can configure jasmine-maven-plugin to
     </configuration>
     
 In the example above, `vendor/jquery.js` and `vendor/jquery-ui.js` are still added to the generated SpecRunner.html once, just before all other sources in the project.
+
+### Creating a custom SpecRunner HTML template
+
+Sometimes the plugin's generated HTML templates might not fit your project's needs (perhaps you need to reference remote JavaScript sources that aren't bundled in your project, or you want to incorporate JSLint into the runner). 
+
+While you're encouraged to [create an issue](https://github.com/searls/jasmine-maven-plugin/issues) when you 
+find an area in which the plugin is lacking, one way to get unblocked immediately might be to override the plugin's SpecRunner template. To use a custom runner template:
+
+1. Create a new file in your project (I'd recommend somewhere in `src/test/resources`)
+2. While [eyeballing the plugin's default template](https://github.com/searls/jasmine-maven-plugin/tree/master/src/main/resources/templates/SpecRunner.html), add whatever you need to make your specs run.  
+configuring the plugin to use your custom template
+3. Configure jasmine-maven-plugin to use your custom runner template:
+
+    <configuration>
+      ...
+      <customRunnerTemplate>${project.basedir}/src/test/resources/path/to/my_spec_runner.template</customRunnerTemplate>
+    </configuration>
 
 ### JUnit XML Reports
 
