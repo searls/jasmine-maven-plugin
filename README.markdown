@@ -186,12 +186,25 @@ to preload like so:
     <configuration>
       ...
       <preloadSources>
+        <!-- Production dependencies that need to come first -->
         <source>vendor/jquery.js</source>
         <source>vendor/jquery-ui.js</source>
+        
+        <!-- Also supports test dependencies that need to come before specs -->
+        <source>jasmine-jquery.js</source>
+        
+        <!-- Even supports remote resources or completely custom protocols -->
+        <source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js</source>
       </preloadSources>				
     </configuration>
     
 In the example above, `vendor/jquery.js` and `vendor/jquery-ui.js` are still added to the generated SpecRunner.html once, just before all other sources in the project.
+
+As demonstrated above, `preloadSources` will for each specified source attempt to resolve them in this order before placing them in an HTML `script` tag:
+
+1. As a file that exists relative to the `jsSrcDir`
+2. As a file that  exists relative to the `jsTestSrcDir`
+3. Exactly as entered into the POM (e.g. "http://../script.js", "ftp://blah.js", "/path/to/my-other-project/../script.js", etc.)
 
 ### Creating a custom SpecRunner HTML template
 
