@@ -32,7 +32,7 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 	}
 
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
-		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(preloadSources,jsSrcDir,jsTestSrcDir);
+		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(jsSrcDir,jsTestSrcDir,preloadSources, sourceEncoding);
 		String runner = htmlGenerator.generate(pluginArtifacts, ReporterType.TrivialReporter, customRunnerTemplate);
 		
 		File destination = new File(jasmineTargetDir,manualSpecRunnerHtmlFileName);

@@ -23,33 +23,52 @@ import org.mockito.runners.MockitoJUnitRunner;
 import searls.jasmine.io.FileUtilsWrapper;
 import searls.jasmine.io.IOUtilsWrapper;
 
+import com.gargoylesoftware.htmlunit.MockWebConnection;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlMeta;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+
 @RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerHtmlGeneratorIntegrationTest {
 
-	@InjectMocks private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null);
+	private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
+
+	private static final String SOURCE_ENCODING = "as9du20asd xanadu";
+	
+	@InjectMocks private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null, SOURCE_ENCODING);
 	
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	@Spy private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
+	private List<Artifact> deps = new ArrayList<Artifact>();
+	
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
-		List<Artifact> deps = new ArrayList<Artifact>();
 		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
+		
 		assertThat(html, containsString("<html>"));
 		assertThat(html, containsString("</html>"));
 	}
 
 	@Test
 	public void shouldPutInADocTypeWhenNoDependenciesAreProvided() {
-		List<Artifact> deps = new ArrayList<Artifact>();
 		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
-		assertThat(html, containsString("<!DOCTYPE html>"));
+		
+		assertThat(html, containsString(HTML5_DOCTYPE));
+		assertThat(getPage(html).getDoctype().getName(),is("html"));
+	}
+	
+	@Test
+	public void shouldAssignSpecifiedSourceEncoding() {
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
+		
+		HtmlMeta contentType = getPage(html).getFirstByXPath("//meta");
+		assertThat(contentType.getContentAttribute(),is("text/html; charset="+SOURCE_ENCODING));
 	}
 
 	@Test
 	public void shouldPopulateJasmineSourceIntoHtmlWhenProvided() throws Exception {
 		String expectedContents = "javascript()";
-		List<Artifact> deps = new ArrayList<Artifact>();
 		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.1", "js", expectedContents));
 
 		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
@@ -61,7 +80,6 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	public void shouldPopulateMultipleJavascriptSourcesIntoHtmlWhenProvided() throws Exception {
 		String jasmineString = "javascript_jasmine()";
 		String jasmineHtmlString = "javascript_jasmine_html()";
-		List<Artifact> deps = new ArrayList<Artifact>();
 		deps.add(mockDependency("com.pivotallabs", "jasmine", "1.0.1", "js", jasmineString));
 		deps.add(mockDependency("com.pivotallabs", "jasmine-html", "1.0.1", "js", jasmineHtmlString));
 
@@ -74,8 +92,6 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	@Test
 	public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
 		String css = "h1 { background-color: awesome}";
-
-		List<Artifact> deps = new ArrayList<Artifact>();
 		deps.add(mockDependency("com.pivotallabs", "jasmine-css", "1.0.1", "css", css));
 
 		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
@@ -117,4 +133,16 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 		return dep;
 	}
 
+	private HtmlPage getPage(String html) {
+		MockWebConnection webConnection = new MockWebConnection();
+		webConnection.setDefaultResponse(html);
+		WebClient webClient = new WebClient();
+		webClient.setWebConnection(webConnection);
+		webClient.setThrowExceptionOnScriptError(false);
+		try {
+			return webClient.getPage("http://blah");
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

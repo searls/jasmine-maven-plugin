@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Jasmine Spec Runner</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=$sourceEncoding$">
+	<title>Jasmine Spec Runner</title>
 	$cssDependencies$
 	$javascriptDependencies$
 	$sources$

@@ -14,6 +14,7 @@
 		<module>jasmine-webapp-empty-example</module>
 		<module>jasmine-webapp-order-matters</module>
 		<module>jasmine-webapp-spec-order-matters</module>
+		<module>jasmine-webapp-custom-encoding</module>
 		<module>jasmine-webapp-custom-runner</module>
 		<module>jasmine-webapp-load-remote</module>
 	</modules>

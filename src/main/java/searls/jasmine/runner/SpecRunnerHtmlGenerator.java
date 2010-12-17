@@ -16,8 +16,9 @@ import searls.jasmine.io.IOUtilsWrapper;
 
 public class SpecRunnerHtmlGenerator {
 
-	public static final String RUNNER_HTML_TEMPLATE_FILE = "/templates/SpecRunner.html";
+	public static final String RUNNER_HTML_TEMPLATE_FILE = "/jasmine-templates/SpecRunner.htmltemplate";
 
+	private static final String SOURCE_ENCODING = "sourceEncoding";
 	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
 	private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
@@ -25,7 +26,7 @@ public class SpecRunnerHtmlGenerator {
 
 	private static final String JAVASCRIPT_TYPE = "js";
 	private static final String CSS_TYPE = "css";
-	
+
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
@@ -33,11 +34,13 @@ public class SpecRunnerHtmlGenerator {
 	private File specDir;
 	private List<String> sourcesToLoadFirst;
 	private List<String> fileNamesAlreadyWrittenAsScriptTags = new ArrayList<String>();
+	private String sourceEncoding;
 
-	public SpecRunnerHtmlGenerator(List<String> sourcesToLoadFirst, File sourceDir, File specDir) {
+	public SpecRunnerHtmlGenerator(File sourceDir, File specDir, List<String> sourcesToLoadFirst, String sourceEncoding) {
 		this.sourcesToLoadFirst = sourcesToLoadFirst;
 		this.sourceDir = sourceDir;
 		this.specDir = specDir;
+		this.sourceEncoding = sourceEncoding;
 	}
 
 	public String generate(List<Artifact> dependencies, ReporterType reporterType, File customRunnerTemplate) {
@@ -48,6 +51,7 @@ public class SpecRunnerHtmlGenerator {
 			includeJavaScriptAndCssDependencies(dependencies, template);
 			setJavaScriptSourcesAttribute(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
+			template.setAttribute(SOURCE_ENCODING, sourceEncoding);
 
 			return template.toString();
 		} catch (IOException e) {
