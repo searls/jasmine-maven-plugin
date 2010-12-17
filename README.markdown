@@ -255,6 +255,18 @@ The plugin's `test` goal will output the test results in a JUnit text XML report
 
 As an example, to integrate the report into a Hudson job (note that it must be a **freestyle** job), select "Publish JUnit test result report" among the available "Post-build Actions" and include a file pattern like "\*\*/jasmine/TEST\*.xml". Once included, your jasmine specs will be counted and interactive in the same way your other tests are!
 
+### Specifying which Browser to execute Jasmine specs with
+
+By default, the plugin will execute the project's specs using HtmlUnit's "FIREFOX_3" [BrowserVersion](http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html).
+If you'd like to execute your specs against a different one of its profiles, you can specify it in the plugin's configuration in your POM.
+HtmlUnit currently only offers a few flavors of FireFox and IE (see [its JavaDoc for the exact names]((http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html))),
+but here is an example configuration specifying that specs should be executed against HtmlUnit's IE6 profile:
+
+    <configuration>
+      ...
+      <browserVersion>INTERNET_EXPLORER_6</browserVersion>				
+    </configuration>
+
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 

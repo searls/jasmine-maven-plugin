@@ -17,10 +17,20 @@ var buildMessages = function(messages,indentLevel) {
 var reportedItems = [];
 
 var buildReport = function(items,indentLevel) {
+	var inArray = function(arr,val) {
+		var result = false;
+		for(var i=0;i<arr.length;i++) {
+			if(arr[i] === val) {
+				result = true;
+				break;
+			}
+		}
+		return result;
+	};
 	var line = '';
  	for(var i=0;i<items.length;i++){
 		var item = items[i];	
-		if(reportedItems.indexOf(item) == -1) {
+		if(!inArray(reportedItems,item)) {
 			line += "\n"+indent(indentLevel)+(item.type == 'suite' ? 'describe ' : 'it ')+item.name;
 			
 			if(item.type == 'spec') {
