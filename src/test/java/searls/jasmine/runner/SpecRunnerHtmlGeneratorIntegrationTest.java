@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.logging.LogFactory;
 import org.apache.maven.artifact.Artifact;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import searls.jasmine.io.FileUtilsWrapper;
 import searls.jasmine.io.IOUtilsWrapper;
 
+import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlMeta;
@@ -66,6 +68,16 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 		assertThat(contentType.getContentAttribute(),is("text/html; charset="+SOURCE_ENCODING));
 	}
 
+	@Test
+	public void shouldDefaultSourceEncodingWhenUnspecified() {
+		specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null, "");
+		
+		String html = specRunnerHtmlGenerator.generate(deps, ReporterType.TrivialReporter, null);
+		
+		HtmlMeta contentType = getPage(html).getFirstByXPath("//meta");
+		assertThat(contentType.getContentAttribute(),is("text/html; charset="+SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING));
+	}
+	
 	@Test
 	public void shouldPopulateJasmineSourceIntoHtmlWhenProvided() throws Exception {
 		String expectedContents = "javascript()";
@@ -134,11 +146,16 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	}
 
 	private HtmlPage getPage(String html) {
+		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 		MockWebConnection webConnection = new MockWebConnection();
 		webConnection.setDefaultResponse(html);
 		WebClient webClient = new WebClient();
 		webClient.setWebConnection(webConnection);
 		webClient.setThrowExceptionOnScriptError(false);
+		webClient.setIncorrectnessListener(new IncorrectnessListener() {
+			public void notify(String arg0, Object arg1) {
+			}
+		});
 		try {
 			return webClient.getPage("http://blah");
 		} catch (Exception e) {

@@ -10,13 +10,15 @@ import java.util.List;
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.apache.maven.artifact.Artifact;
+import org.codehaus.plexus.util.StringUtils;
 
 import searls.jasmine.io.FileUtilsWrapper;
 import searls.jasmine.io.IOUtilsWrapper;
 
 public class SpecRunnerHtmlGenerator {
 
-	public static final String RUNNER_HTML_TEMPLATE_FILE = "/jasmine-templates/SpecRunner.htmltemplate";
+	public static final String DEFAULT_RUNNER_HTML_TEMPLATE_FILE = "/jasmine-templates/SpecRunner.htmltemplate";
+	public static final String DEFAULT_SOURCE_ENCODING = "UTF-8";
 
 	private static final String SOURCE_ENCODING = "sourceEncoding";
 	private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
@@ -26,6 +28,7 @@ public class SpecRunnerHtmlGenerator {
 
 	private static final String JAVASCRIPT_TYPE = "js";
 	private static final String CSS_TYPE = "css";
+
 
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
@@ -51,7 +54,7 @@ public class SpecRunnerHtmlGenerator {
 			includeJavaScriptAndCssDependencies(dependencies, template);
 			setJavaScriptSourcesAttribute(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
-			template.setAttribute(SOURCE_ENCODING, sourceEncoding);
+			template.setAttribute(SOURCE_ENCODING, StringUtils.isNotBlank(sourceEncoding) ? sourceEncoding : DEFAULT_SOURCE_ENCODING);
 
 			return template.toString();
 		} catch (IOException e) {
@@ -62,7 +65,7 @@ public class SpecRunnerHtmlGenerator {
 	private String resolveHtmlTemplate(File customRunnerTemplate) throws IOException {
 		return customRunnerTemplate != null ? 
 				fileUtilsWrapper.readFileToString(customRunnerTemplate) 
-				: ioUtilsWrapper.toString(getClass().getResourceAsStream(RUNNER_HTML_TEMPLATE_FILE));
+				: ioUtilsWrapper.toString(getClass().getResourceAsStream(DEFAULT_RUNNER_HTML_TEMPLATE_FILE));
 	}
 
 	private void includeJavaScriptAndCssDependencies(List<Artifact> dependencies, StringTemplate template) throws IOException {
