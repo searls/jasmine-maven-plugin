@@ -22,6 +22,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected File jsTestSrcDir;
 	
 	/**
+	 * Determines the browser and version profile to execute the headless specs against. Because the plugin
+	 * 	executes specs using HtmlUnit, this maps 1-to-1 with the public static
+	 * 	instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.
+	 * 	
+	 * 	Some valid examples: FIREFOX_3_6, INTERNET_EXPLORER_6, INTERNET_EXPLORER_7, INTERNET_EXPLORER_8
+	 * 
+	 * @parameter default-value="FIREFOX_3"
+	 */
+	protected String browserVersion;
+	
+	/**
 	 * @parameter default-value="js" expression="${packageJavaScriptPath}"
 	 */
 	protected String packageJavaScriptPath;

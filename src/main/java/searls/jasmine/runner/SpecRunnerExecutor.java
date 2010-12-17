@@ -2,7 +2,6 @@ package searls.jasmine.runner;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import searls.jasmine.io.FileUtilsWrapper;
@@ -10,7 +9,6 @@ import searls.jasmine.io.IOUtilsWrapper;
 import searls.jasmine.model.JasmineResult;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.ScriptResult;
@@ -28,25 +26,26 @@ public class SpecRunnerExecutor {
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
-	public JasmineResult execute(URL runnerUrl, File junitXmlReport) throws FailingHttpStatusCodeException, MalformedURLException, IOException, InterruptedException {
-		WebClient webClient = new WebClient(BrowserVersion.FIREFOX_3);
-		webClient.setJavaScriptEnabled(true);
-		webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-		
-		quietIncorrectnessListener(webClient);
-		
-	    HtmlPage page = webClient.getPage(runnerUrl);
-	    waitForRunnerToFinish(page);
+	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion) {
+		try {
+			BrowserVersion htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(browserVersion).get(BrowserVersion.class);
+			WebClient webClient = new WebClient(htmlUnitBrowserVersion);
+			webClient.setJavaScriptEnabled(true);
+			webClient.setAjaxController(new NicelyResynchronizingAjaxController());
+			quietIncorrectnessListener(webClient);
+			
+		    HtmlPage page = webClient.getPage(runnerUrl);
+		    waitForRunnerToFinish(page);
+		    JasmineResult jasmineResult = new JasmineResult();
+		    jasmineResult.setDescription(buildRunnerDescription(page));
+		    jasmineResult.setDetails(buildReport(page));
+		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page), "UTF-8");
+		    webClient.closeAllWindows();
 	    
-	    JasmineResult jasmineResult = new JasmineResult();
-	    jasmineResult.setDescription(buildRunnerDescription(page));
-	    jasmineResult.setDetails(buildReport(page));
-	    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page), "UTF-8");
-	    
-	    
-	    webClient.closeAllWindows();
-	    
-	    return jasmineResult;
+		    return jasmineResult;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 

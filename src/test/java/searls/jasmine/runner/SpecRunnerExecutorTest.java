@@ -27,12 +27,14 @@ public class SpecRunnerExecutorTest {
 	private static final String BUILD_CONCLUSION_JS_CONTENTS = "'kaka';";
 	private static final String BUILD_REPORT_JS_CONTENTS = "'pants';";
 	private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
+	private static final String BROWSER_VERSION = "INTERNET_EXPLORER_8";
 	
 	@InjectMocks private SpecRunnerExecutor sut = new SpecRunnerExecutor();
 	@Mock private IOUtilsWrapper ioUtilsWrapper;
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	
 	@Mock private File file;
+	
 	private URL resource = getClass().getResource("/example_nested_specrunner.html");
 	
 	@Before
@@ -42,7 +44,7 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldFindSpecsInResults() throws Exception {
-		JasmineResult result = sut.execute(resource, file);
+		JasmineResult result = sut.execute(resource, file, BROWSER_VERSION);
 		
 		assertThat(result,is(not(nullValue())));
 		assertThat(result.getDescription(),containsString("kaka"));
@@ -52,7 +54,7 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldExportJUnitResults() throws Exception {
-		sut.execute(resource, file);
+		sut.execute(resource, file, BROWSER_VERSION);
 		
 		verify(fileUtilsWrapper).writeStringToFile(file, "<xml/>", "UTF-8");
 	}
