@@ -238,7 +238,7 @@ find a way in which the plugin is lacking, one approach to unblocking yourself i
 To use a custom runner template:
 
 1. Create a new empty file in your project (I'd recommend somewhere in `src/test/resources`)
-2. While [eyeballing the plugin's default template](https://github.com/searls/jasmine-maven-plugin/tree/master/src/main/resources/templates/SpecRunner.html), write your custom template file.
+2. While [eyeballing the plugin's default template](https://github.com/searls/jasmine-maven-plugin/blob/master/src/main/resources/jasmine-templates/SpecRunner.htmltemplate), write your custom template file.
 3. Configure jasmine-maven-plugin to use your custom runner template.
 
 The configuration name is `customRunnerTemplate` and would be configured in the POM like so:
