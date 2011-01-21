@@ -16,7 +16,7 @@ See the [jasmine-archetype](http://github.com/searls/jasmine-archetype) project 
 
     mvn archetype:generate \
     -DarchetypeRepository=http://searls-maven-repository.googlecode.com/svn/trunk/snapshots \
-    -DarchetypeGroupId=searls \
+    -DarchetypeGroupId=com.github.searls \
     -DarchetypeArtifactId=jasmine-archetype \
     -DarchetypeVersion=1.0.1-SNAPSHOT
 
@@ -31,7 +31,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
         <plugins>
           ...
           <plugin>
-            <groupId>searls</groupId>
+            <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
             <version>1.0.1-SNAPSHOT</version>
             <executions>
