@@ -3,7 +3,6 @@ package com.github.searls.jasmine;
 import java.io.File;
 import java.util.List;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.project.MavenProject;
 
@@ -125,9 +124,4 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="${project}"
 	 */
 	protected MavenProject mavenProject;
-
-	/**
-	 * @parameter default-value="${plugin.artifacts}"
-	 */
-	protected List<Artifact> pluginArtifacts;
 }

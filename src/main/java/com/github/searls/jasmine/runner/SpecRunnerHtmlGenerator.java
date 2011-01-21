@@ -1,5 +1,7 @@
 package com.github.searls.jasmine.runner;
 
+import static java.util.Arrays.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -9,12 +11,10 @@ import java.util.List;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
-import org.apache.maven.artifact.Artifact;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
-
 
 public class SpecRunnerHtmlGenerator {
 
@@ -27,10 +27,13 @@ public class SpecRunnerHtmlGenerator {
 	private static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
 	private static final String REPORTER_ATTR_NAME = "reporter";
 
-	private static final String JAVASCRIPT_TYPE = "js";
-	private static final String CSS_TYPE = "css";
-
-
+	//TODO - simplify this by finding all resources by folder instead
+	public static final String  JASMINE_JS = "/vendor/js/jasmine.js";
+	public static final String  JASMINE_HTML_JS = "/vendor/js/jasmine-html.js";
+	public static final String  CONSOLE_X_JS = "/vendor/js/consolex.js";
+	public static final String  JSON_2_JS = "/vendor/js/json2.js";
+	public static final String  JASMINE_CSS = "/vendor/css/jasmine.css";
+	
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
@@ -47,12 +50,13 @@ public class SpecRunnerHtmlGenerator {
 		this.sourceEncoding = sourceEncoding;
 	}
 
-	public String generate(List<Artifact> dependencies, ReporterType reporterType, File customRunnerTemplate) {
+	public String generate(ReporterType reporterType, File customRunnerTemplate) {
 		try {
 			String htmlTemplate = resolveHtmlTemplate(customRunnerTemplate);
 			StringTemplate template = new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
 
-			includeJavaScriptAndCssDependencies(dependencies, template);
+			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS,CONSOLE_X_JS,JSON_2_JS), template);
+			includeCssDependencies(asList(JASMINE_CSS), template);
 			setJavaScriptSourcesAttribute(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
 			template.setAttribute(SOURCE_ENCODING, StringUtils.isNotBlank(sourceEncoding) ? sourceEncoding : DEFAULT_SOURCE_ENCODING);
@@ -64,23 +68,23 @@ public class SpecRunnerHtmlGenerator {
 	}
 
 	private String resolveHtmlTemplate(File customRunnerTemplate) throws IOException {
-		return customRunnerTemplate != null ? 
-				fileUtilsWrapper.readFileToString(customRunnerTemplate) 
-				: ioUtilsWrapper.toString(getClass().getResourceAsStream(DEFAULT_RUNNER_HTML_TEMPLATE_FILE));
+		return customRunnerTemplate != null ? fileUtilsWrapper.readFileToString(customRunnerTemplate) : ioUtilsWrapper.toString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE);
 	}
 
-	private void includeJavaScriptAndCssDependencies(List<Artifact> dependencies, StringTemplate template) throws IOException {
-		StringBuilder javaScriptDependencies = new StringBuilder();
-		StringBuilder cssDependencies = new StringBuilder();
-		for (Artifact dep : dependencies) {
-			if (JAVASCRIPT_TYPE.equals(dep.getType())) {
-				javaScriptDependencies.append("<script type=\"text/javascript\">").append(fileUtilsWrapper.readFileToString(dep.getFile())).append("</script>");
-			} else if (CSS_TYPE.equals(dep.getType())) {
-				cssDependencies.append("<style type=\"text/css\">").append(fileUtilsWrapper.readFileToString(dep.getFile())).append("</style>");
-			}
+	private void includeJavaScriptDependencies(List<String> dependencies, StringTemplate template) throws IOException {
+		StringBuilder js = new StringBuilder();
+		for (String jsFile : dependencies) {
+			js.append("<script type=\"text/javascript\">").append(ioUtilsWrapper.toString(jsFile)).append("</script>");
 		}
-		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, javaScriptDependencies.toString());
-		template.setAttribute(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, cssDependencies.toString());
+		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
+	}
+
+	private void includeCssDependencies(List<String> dependencies, StringTemplate template) throws IOException {
+		StringBuilder css = new StringBuilder();
+		for (String cssFile : dependencies) {
+			css.append("<style type=\"text/css\">").append(ioUtilsWrapper.toString(cssFile)).append("</style>");
+		}
+		template.setAttribute(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());
 	}
 
 	private void setJavaScriptSourcesAttribute(StringTemplate template) throws IOException {
@@ -97,9 +101,9 @@ public class SpecRunnerHtmlGenerator {
 			for (String sourceToLoadFirst : sourcesToLoadFirst) {
 				File file = new File(sourceDir, sourceToLoadFirst);
 				File specFile = new File(specDir, sourceToLoadFirst);
-				if(file.exists()) {
+				if (file.exists()) {
 					files.add(fileToString(file));
-				} else if(specFile.exists()) {
+				} else if (specFile.exists()) {
 					files.add(fileToString(specFile));
 				} else {
 					files.add(sourceToLoadFirst);

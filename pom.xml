@@ -114,39 +114,6 @@
 			<version>${powermock.version}</version>
 			<scope>test</scope>
 		</dependency>
-
-
-		<!-- Jasmine & its Dependencies -->
-		<dependency>
-			<groupId>com.pivotallabs</groupId>
-			<artifactId>jasmine</artifactId>
-			<version>${jasmine.version}</version>
-			<type>js</type>
-		</dependency>
-		<dependency>
-			<groupId>com.pivotallabs</groupId>
-			<artifactId>jasmine-css</artifactId>
-			<version>${jasmine.version}</version>
-			<type>css</type>
-		</dependency>
-		<dependency>
-			<groupId>com.pivotallabs</groupId>
-			<artifactId>jasmine-html</artifactId>
-			<version>${jasmine.version}</version>
-			<type>js</type>
-		</dependency>
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json2</artifactId>
-			<version>2010-03-20</version>
-			<type>js</type>
-		</dependency>
-		<dependency>
-			<groupId>com.jaredgrippe</groupId>
-			<artifactId>consolex</artifactId>
-			<version>2010-02-03</version>
-			<type>js</type>
-		</dependency>
 	</dependencies>
 
 	<build>

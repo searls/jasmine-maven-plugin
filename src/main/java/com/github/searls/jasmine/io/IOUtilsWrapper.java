@@ -11,4 +11,8 @@ public class IOUtilsWrapper {
 		return IOUtils.toString(inputStream);
 	}
 
+	public String toString(String name) throws IOException {
+		return toString(getClass().getResourceAsStream(name));
+	}
+
 }

@@ -50,17 +50,17 @@ public class SpecRunnerExecutor {
 
 
 	private String buildReport(HtmlPage page) throws IOException {
-		ScriptResult report = page.executeJavaScript(ioUtilsWrapper.toString(getClass().getResourceAsStream(BUILD_REPORT_JS)));
+		ScriptResult report = page.executeJavaScript(ioUtilsWrapper.toString(BUILD_REPORT_JS));
 		return report.getJavaScriptResult().toString();
 	}
 
 	private String buildRunnerDescription(HtmlPage page) throws IOException {
-		ScriptResult description = page.executeJavaScript(ioUtilsWrapper.toString(getClass().getResourceAsStream(BUILD_CONCLUSION_JS)));
+		ScriptResult description = page.executeJavaScript(ioUtilsWrapper.toString(BUILD_CONCLUSION_JS));
 		return description.getJavaScriptResult().toString();
 	}
 
 	private String buildJunitXmlReport(HtmlPage page) throws IOException {
-		ScriptResult junitReport = page.executeJavaScript(ioUtilsWrapper.toString(getClass().getResourceAsStream(CREATE_JUNIT_XML)) + "junitXmlReporter.report(reporter);"); 
+		ScriptResult junitReport = page.executeJavaScript(ioUtilsWrapper.toString(CREATE_JUNIT_XML) + "junitXmlReporter.report(reporter);"); 
 		return junitReport.getJavaScriptResult().toString();
 	}
 

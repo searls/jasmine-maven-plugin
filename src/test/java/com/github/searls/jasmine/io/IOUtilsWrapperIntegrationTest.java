@@ -1,5 +1,6 @@
 package com.github.searls.jasmine.io;
 
+import static org.mockito.Matchers.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.*;
@@ -16,7 +17,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(IOUtils.class)
-public class IOUtilsWrapperTest {
+public class IOUtilsWrapperIntegrationTest {
 	private IOUtilsWrapper sut = new IOUtilsWrapper();
 	private InputStream inputStream = mock(InputStream.class);
 
@@ -31,6 +32,16 @@ public class IOUtilsWrapperTest {
 		when(IOUtils.toString(inputStream)).thenReturn(expected );
 		
 		String result = sut.toString(inputStream);
+		
+		assertThat(result,is(expected));
+	}
+	
+	@Test
+	public void shouldDelegateResourceStringsToString() throws IOException {
+		String expected = "banana";
+		when(IOUtils.toString(isA(InputStream.class))).thenReturn(expected);
+		
+		String result = sut.toString("/ioUtils.txt");
 		
 		assertThat(result,is(expected));
 	}

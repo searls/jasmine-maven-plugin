@@ -7,7 +7,6 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import org.junit.Before;
@@ -40,7 +39,7 @@ public class SpecRunnerExecutorTest {
 	
 	@Before
 	public void stubResourceStreams() throws IOException {
-		when(ioUtilsWrapper.toString(isA(InputStream.class))).thenReturn(BUILD_CONCLUSION_JS_CONTENTS,BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
+		when(ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_CONCLUSION_JS_CONTENTS,BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
 	}
 	
 	@Test
