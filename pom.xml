@@ -2,12 +2,36 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>searls</groupId>
+	<groupId>com.github.searls</groupId>
 	<artifactId>jasmine-maven-plugin</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
-	<name>jasmine</name>
+	<name>jasmine-maven-plugin</name>
+	<description>A JavaScript unit test plugin that processes JavaScript sources and Jasmine specs, prepares test runner HTML files, executes Jasmine specs headlessly with HtmlUnit, and produces JUnit XML reports</description>
+	<url>https://github.com/searls/jasmine-maven-plugin</url>
+	<licenses>
+		<license>
+			<distribution>repo</distribution>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
+			<comments>Copyright Justin Searls</comments>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>searls</id>
+			<name>Justin Searls</name>
+			<email>searls@gmail.com</email>
+			<organization>Pillar Technology Group</organization>
+			<organizationUrl>http://pillartechnology.com</organizationUrl>
+		</developer>
+	</developers>
+	<scm>
+		<url>https://github.com/searls/jasmine-maven-plugin</url>
+		<connection>scm:git:https://github.com/searls/jasmine-maven-plugin.git</connection>
+		<developerConnection>scm:git:https://searls@github.com/searls/jasmine-maven-plugin.git</developerConnection>
+	</scm>
 
 	<properties>
 		<jasmine.version>1.0.1</jasmine.version>
@@ -49,7 +73,7 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.0</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>net.sourceforge.htmlunit</groupId>
 			<artifactId>htmlunit</artifactId>
@@ -168,7 +192,6 @@
 			</plugin>
 		</plugins>
 	</build>
-
 	<distributionManagement>
 		<repository>
 			<id>local-nexus</id>
@@ -179,22 +202,32 @@
 			<url>http://localhost:8081/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-
-	<repositories>
-		<repository>
-			<id>searls-maven-thirdparty</id>
-			<url>http://searls-maven-repository.googlecode.com/svn/trunk/thirdparty</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>searls-maven-releases</id>
-			<url>http://searls-maven-repository.googlecode.com/svn/trunk/releases</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>searls-maven-snapshots</id>
-			<url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
-		</pluginRepository>
-	</pluginRepositories>
-
+	<profiles>
+		<profile>
+			<id>release-sign-artifacts</id>
+			<activation>
+				<property>
+					<name>performRelease</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
