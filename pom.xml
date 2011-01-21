@@ -13,7 +13,7 @@
 	<licenses>
 		<license>
 			<distribution>repo</distribution>
-			<name>Apache License, Version 2.0</name>
+			<name>The Apache Software License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 			<comments>Copyright Justin Searls</comments>
 		</license>
