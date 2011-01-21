@@ -2,6 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
+	<parent>
+		<artifactId>oss-parent</artifactId>
+		<groupId>org.sonatype.oss</groupId>
+		<version>6</version>
+	</parent>
 	<groupId>com.github.searls</groupId>
 	<artifactId>jasmine-maven-plugin</artifactId>
 	<version>1.0.1-SNAPSHOT</version>
@@ -13,7 +18,7 @@
 	<licenses>
 		<license>
 			<distribution>repo</distribution>
-			<name>Apache License, Version 2.0</name>
+			<name>The Apache Software License, Version 2.0</name>
 			<url>http://www.apache.org/licenses/LICENSE-2.0</url>
 			<comments>Copyright Justin Searls</comments>
 		</license>
@@ -159,16 +164,6 @@
 			</plugin>
 		</plugins>
 	</build>
-	<distributionManagement>
-		<repository>
-			<id>local-nexus</id>
-			<url>http://localhost:8081/nexus/content/repositories/releases</url>
-		</repository>
-		<snapshotRepository>
-			<id>local-nexus</id>
-			<url>http://localhost:8081/nexus/content/repositories/snapshots</url>
-		</snapshotRepository>
-	</distributionManagement>
 	<profiles>
 		<profile>
 			<id>release-sign-artifacts</id>
