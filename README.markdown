@@ -8,7 +8,9 @@ If you want to use Maven and test-drive JavaScript, this is the plugin for you!
 * Continuous integration with no added configuration: because the plugin's `test` goal runs headlessly (thanks HtmlUnit!), your CI system won't need any additional configuration. Your build will fail as soon as your JavaScript tests do.
 * Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests
 
-### Good news, everyone! jasmine-maven-plugin is now hosted on Maven Central!
+
+### 1/25/2010 Update: Good news, everyone! jasmine-maven-plugin is now hosted on Maven Central!
+
 
 Option A: Start from the archetype
 ----------------------------------
