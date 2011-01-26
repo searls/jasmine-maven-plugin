@@ -2,8 +2,6 @@ jasmine-maven-plugin
 ====================
 **A Maven Plugin for processing JavaScript sources, specs, and executing Jasmine**
 
-### Good news everyone! jasmine-maven-plugin is now hosted in Maven Central!
-
 If you want to use Maven and test-drive JavaScript, this is the plugin for you!
 
 * Generates two HTML test runners: one for test-driving locally in your browser, and one to run as part of the build
