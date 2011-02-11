@@ -9,7 +9,7 @@ If you want to use Maven and test-drive JavaScript, this is the plugin for you!
 * Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests
 
 
-### 1/25/2010 Update: Good news, everyone! jasmine-maven-plugin is now hosted on Maven Central!
+### 1/25/2011 Update: Good news, everyone! jasmine-maven-plugin is now hosted on Maven Central!
 
 
 Option A: Start from the archetype
