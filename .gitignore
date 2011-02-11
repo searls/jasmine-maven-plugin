@@ -6,3 +6,5 @@ target
 .settings
 .project
 .idea
+pom.xml.releaseBackup
+release.properties

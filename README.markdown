@@ -8,6 +8,10 @@ If you want to use Maven and test-drive JavaScript, this is the plugin for you!
 * Continuous integration with no added configuration: because the plugin's `test` goal runs headlessly (thanks HtmlUnit!), your CI system won't need any additional configuration. Your build will fail as soon as your JavaScript tests do.
 * Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests
 
+
+### 1/25/2011 Update: Good news, everyone! jasmine-maven-plugin is now hosted on Maven Central!
+
+
 Option A: Start from the archetype
 ----------------------------------
 
@@ -36,7 +40,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
+            <version>1.0.1-beta-6</version>
             <executions>
               <execution>
                 <goals>
@@ -53,25 +57,8 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
         </plugins>
       </build>
       ...
-      <repositories>
-        <repository>
-          <id>searls-maven-thirdparty</id>
-          <url>http://searls-maven-repository.googlecode.com/svn/trunk/thirdparty</url>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>searls-maven-releases</id>
-          <url>http://searls-maven-repository.googlecode.com/svn/trunk/releases</url>
-        </pluginRepository>
-        <pluginRepository>
-          <id>searls-maven-snapshots</id>
-          <url>http://searls-maven-repository.googlecode.com/svn/trunk/snapshots</url>
-        </pluginRepository>
-      </pluginRepositories>
-      ...
     </project>
-    
+
 Building your project with Jasmine
 ------------------
 
@@ -273,7 +260,7 @@ but here is an example configuration specifying that specs should be executed ag
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-4**.  
+If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-6**.  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)
