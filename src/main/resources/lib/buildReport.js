@@ -48,4 +48,6 @@ var buildReport = function(items,indentLevel) {
 	return line;
 }
 
-buildReport(reporter.suites(),0);
+if(typeof reporter !== 'undefined') {
+	buildReport(reporter.suites(),0);
+}

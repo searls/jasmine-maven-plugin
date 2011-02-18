@@ -8,10 +8,6 @@ If you want to use Maven and test-drive JavaScript, this is the plugin for you!
 * Continuous integration with no added configuration: because the plugin's `test` goal runs headlessly (thanks HtmlUnit!), your CI system won't need any additional configuration. Your build will fail as soon as your JavaScript tests do.
 * Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests
 
-
-### 1/25/2011 Update: Good news, everyone! jasmine-maven-plugin is now hosted on Maven Central!
-
-
 Option A: Start from the archetype
 ----------------------------------
 
@@ -64,11 +60,11 @@ Building your project with Jasmine
 
     mvn package
 
-Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to offer. However, the results will only be useful once you've added some JavaScript and specs. Details follow:
+Executing any Maven lifecycle phase after prepare-package will show off everything this plugin has to offer. However, the results will only be useful once you've added some Jasmine specs and JavaScript. Details follow:
 
 ###src/main/javascript 
 By default, the plugin expects to find your JavaScript sources  (i.e. `ninja.js`) and dependencies (i.e. `lib/prototype.js`) in `src/main/javascript`. However, for most
-existing projects, it will make more sense to specify where your JS sources are in `src/main/webapp` and forego the packageResource goal (see "Supporting WTP" below for an example).
+existing projects, it will make more sense to specify where your JS sources are in (usually somewhere in `src/main/webapp`) and remove the packageResource goal (see "Supporting WTP" below for an example).
 
 ###src/test/javascript 
 Store your Jasmine specs (i.e. `ninjaSpec.js`) in `src/test/javascript`. No need to create an HTML spec runner, one will be generated and executed for you by the **jasmine:test** goal!

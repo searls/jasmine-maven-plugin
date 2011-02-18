@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -158,6 +159,28 @@
 						<goals>
 							<goal>jar-no-fork</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>1.0.1-beta-6</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateManualRunner</goal>
+							<goal>resources</goal>
+							<goal>testResources</goal>
+							<goal>test</goal>							
+						</goals>
+						<configuration>
+							<preloadSources>
+								<source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js</source>
+								
+							</preloadSources>
+							<jsSrcDir>${project.basedir}/src/main/resources/lib</jsSrcDir>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>
