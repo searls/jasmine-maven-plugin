@@ -16,7 +16,7 @@ var buildMessages = function(messages,indentLevel) {
 
 var reportedItems = [];
 
-var buildReport = function(items,indentLevel) {
+var buildReport = function(reporter,items,indentLevel) {
 	var inArray = function(arr,val) {
 		var result = false;
 		for(var i=0;i<arr.length;i++) {
@@ -31,7 +31,7 @@ var buildReport = function(items,indentLevel) {
  	for(var i=0;i<items.length;i++){
 		var item = items[i];	
 		if(!inArray(reportedItems,item)) {
-			line += "\n"+indent(indentLevel)+(item.type == 'suite' ? 'describe ' : 'it ')+item.name;
+			line += (i > 0 && indentLevel === 0 ? '\n' : '')+"\n"+indent(indentLevel)+item.name;
 			
 			if(item.type == 'spec') {
 				var result = reporter.results()[item.id];
@@ -42,12 +42,12 @@ var buildReport = function(items,indentLevel) {
 			}
 			
 			reportedItems.push(item);
-			line += ' '+buildReport(item.children,indentLevel+1);
+			line += buildReport(reporter,item.children,indentLevel+1);
 		}
 	}
 	return line;
 }
 
 if(typeof reporter !== 'undefined') {
-	buildReport(reporter.suites(),0);
+	buildReport(reporter,reporter.suites(),0);
 }

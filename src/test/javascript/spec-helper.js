@@ -1,5 +1,16 @@
 beforeEach(function() {
- 	this.reporterHelper = function(){ 
+	this.addMatchers({
+		toHaveIndent: function(indentLevel) {
+			var actualIndent = this.actual.split(/[\S]/)[0].length / 2.0;
+			this.message = function() { return "Expected indent level "+indentLevel+" but was "+actualIndent+" on string '"+this.actual+"'"; };
+			
+			return actualIndent === indentLevel;
+		},
+		toBeTrimmed: function(expected) {
+			return this.actual.trim() === expected;
+		}
+	});
+ 	this.reporterHelper = function(){ 		
 		var r = {
 			"started" : true,
 			"finished" : true,
