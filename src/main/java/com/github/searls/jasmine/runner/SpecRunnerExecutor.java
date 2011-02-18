@@ -17,9 +17,9 @@ import com.github.searls.jasmine.model.JasmineResult;
 
 public class SpecRunnerExecutor {
 	
-	public static final String BUILD_REPORT_JS = "/buildReport.js";
-	public static final String BUILD_CONCLUSION_JS = "/buildConclusion.js";
-	public static final String CREATE_JUNIT_XML = "/createJunitXml.js";
+	public static final String BUILD_REPORT_JS = "/lib/buildReport.js";
+	public static final String BUILD_CONCLUSION_JS = "/lib/buildConclusion.js";
+	public static final String CREATE_JUNIT_XML = "/lib/createJunitXml.js";
 
 	private static final long MAX_EXECUTION_MILLIS = 300000; //5 minutes - TODO make this configurable
 	
