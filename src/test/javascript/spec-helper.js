@@ -7,7 +7,7 @@ beforeEach(function() {
 			return actualIndent === indentLevel;
 		},
 		toBeTrimmed: function(expected) {
-			return this.actual.trim() === expected;
+			return $.trim(this.actual) === expected;
 		}
 	});
  	this.reporterHelper = function(){ 		
