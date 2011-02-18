@@ -9,7 +9,7 @@ var junitXmlReporter;
 			if (reporter.finished !== true)
 				throw 'Jasmine runner is not finished!';
 
-			var results = this.crunchResults(reporter.results_);
+			var results = this.crunchResults(reporter.results());
 			
 			var writer = new XmlWriter();
 			writer.beginNode('testsuite');
@@ -21,7 +21,7 @@ var junitXmlReporter;
 			writer.attrib('hostname','localhost');
 			writer.attrib('time', '0.0');
 			writer.attrib('timestamp',this.currentTimestamp());
-			this.writeChildren(reporter, writer, reporter.suites_,'');
+			this.writeChildren(reporter, writer, reporter.suites(),'');
 			writer.endNode();
 			
 			return this.prolog+writer.toString();
@@ -30,7 +30,7 @@ var junitXmlReporter;
 			for(var i=0;i<tests.length;i++) {
 				var name = (runningName.length > 0 ? runningName+' ' : '')+tests[i].name;
 				if(tests[i].type === 'spec') {
-					var specResult = reporter.results_[tests[i].id] || {};
+					var specResult = reporter.results()[tests[i].id] || {};
 					this.writeTestcase(writer,specResult,name);
 				}
 				this.writeChildren(reporter, writer,tests[i].children,name);
