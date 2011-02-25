@@ -59,14 +59,14 @@
 	var buildFailureSentences = function(reporter,components,failures,sentence) {	
 		for (var i=0; i < components.length; i++) {
 			var component = components[i];
-			var desc = sentence ? sentence + ' ' + component.name : component.name;
+			var desc = sentence ? sentence + ' ' : '';
 			var children = component.children;
 			if(children && children.length > 0) {
-				buildFailureSentences(reporter,children,failures,desc);
+				buildFailureSentences(reporter,children,failures,desc+component.name);
 			} else { 
 				var result = reporter.results()[component.id];
 				if(result && result.result === 'failed') {
-					failures.push(desc + describeMessages(result.messages,2));
+					failures.push(desc + 'it ' + component.name + describeMessages(result.messages,2));
 				}
 			}
 		};

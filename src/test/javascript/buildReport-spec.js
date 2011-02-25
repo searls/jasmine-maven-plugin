@@ -69,7 +69,7 @@ describe("Building the console report", function() {
 		});
 		
 		it("contains a full expansion of the failed spec as a sentence", function() {
-		  expect(lines[17]).toContain('1.) Your Project Feature B B.1 B.1.a dices just by looking at it the wrong way');
+		  expect(lines[17]).toContain('1.) Your Project Feature B B.1 B.1.a it dices just by looking at it the wrong way');
 		});
 		
 		it("indicates a failure on the summary line", function() {
