@@ -36,7 +36,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.1-beta-6</version>
+            <version>1.0.1-beta-7</version>
             <executions>
               <execution>
                 <goals>
@@ -75,31 +75,38 @@ jasmine-maven-plugin behaves just like maven-surefire-plugin and will fail the b
 
 An example of some failing output follows:
 
-    -------------------------------------------------------
-     J A S M I N E   T E S T S
-    -------------------------------------------------------
-    [INFO] describe FailSpec <<< FAILURE!
-    [INFO]   describe NestedFail <<< FAILURE!
-    [INFO]     it should fail deeply <<< FAILURE!
-    [INFO]       * Expected true to be false.
-    [INFO]   it should fail <<< FAILURE!
-    [INFO]     * Expected true to be false.
-    [INFO] describe HelloWorld <<< FAILURE!
-    [INFO]   it should say hello
-    [INFO]   it should say goodbye <<< FAILURE!
-    [INFO]     * Expected 'Hello, World' to be 'Goodbye, World'.
-    [INFO]   it should fail <<< FAILURE!
-    [INFO]     * Expected 5 to be 6.
-    [INFO] 
-    Results:
-    
-    5 specs, 4 failures in 0.144s
-    
-    [INFO] ------------------------------------------------------------------------
-    [ERROR] BUILD FAILURE
-    [INFO] ------------------------------------------------------------------------
-    [INFO] There were test failures.
-    [INFO] ------------------------------------------------------------------------
+		-------------------------------------------------------
+		 J A S M I N E   T E S T S
+		-------------------------------------------------------
+		[INFO] 
+		Slice-o-matic
+		  occupies the SliceOMatic namespace
+		  #slice
+		    slices
+		    does not dice
+		  #dice
+		    when the knob is turned to "Fine"
+		      dices quite finely
+		      does not cut off fingers
+		    when the knob is turned to "Coarse"
+		      dices rather roughly
+		    when a hand is inserted into the Slice-o-matic
+		      is a fantastic idea <<< FAILURE!
+		        * Expected 'Are you kidding? That's a terrible idea!' to contain 'Great idea'.
+
+		1 failure:
+
+		  1.) Slice-o-matic #dice when a hand is inserted into the Slice-o-matic it is a fantastic idea <<< FAILURE!
+		    * Expected 'Are you kidding? That's a terrible idea!' to contain 'Great idea'.
+		[INFO] 
+		Results:
+
+		7 specs, 1 failures
+
+		[INFO] ------------------------------------------------------------------------
+		[ERROR] BUILD FAILURE
+		[INFO] ------------------------------------------------------------------------
+		[INFO] There were Jasmine spec failures.
 
 Usage Notes
 -----------
@@ -256,7 +263,7 @@ but here is an example configuration specifying that specs should be executed ag
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-6**.  
+If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-7**.  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)

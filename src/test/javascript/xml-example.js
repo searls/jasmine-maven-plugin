@@ -1,33 +1,35 @@
-xdescribe('Your Project',function(){
+xdescribe('Slice-o-matic',function(){
 	
-	it('is named Slice-o-matic',function(){});
+	it('occupies the SliceOMatic namespace',function(){});
 	
-	describe('Feature A',function() {
+	describe('#slice',function() {
 		
 		it('slices',function() {});
 		
-		it('does not slice *that*',function(){});
+		it('does not dice',function(){});
 		
 		xit('prevents cuts to your thumb',function(){});
 	});
 	
-	describe('Feature B',function() {
+	describe('#dice',function() {
 		
-		it('dices',function() {});
-		
-		describe('B.1',function() {
-		
-			it('dices finely',function() {});
-			
-			it('dices roughly',function() {});
-			
-			describe('B.1.a',function() {
-				it('dices just by looking at it the wrong way',function(){
-					expect('Awesome idea').toContain('Terrible');
-				});
-			});
-			
+		describe('when the onion is peeled',function() {
+			it('dices evenly-sized cubes',function() {});			
 		});
 		
+		describe('when the knob is turned to "Fine"',function() {
+			it('dices quite finely',function() {});
+			it("does not cut off fingers", function() {});
+		});
+		
+		describe('when the knob is turned to "Coarse"',function() {
+			it('dices rather roughly',function() {});
+		});
+		
+		describe("when a hand is inserted into the Slice-o-matic", function() {
+		  it("is a fantastic idea", function() {
+					expect("Are you kidding? That's a terrible idea!").toContain('Great idea');
+		  });
+		});
 	});
 });
