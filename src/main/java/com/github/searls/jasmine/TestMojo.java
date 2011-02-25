@@ -23,7 +23,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
 	public void execute() throws MojoExecutionException, MojoFailureException {
 		if(!skipTests) {
-			getLog().info("Executing Jasmine Tests");
+			getLog().info("Executing Jasmine Specs");
 			JasmineResult result;
 			try {
 				File runnerFile = writeSpecRunnerToOutputDirectory();
@@ -36,7 +36,7 @@ public class TestMojo extends AbstractJasmineMojo {
 				throw new MojoFailureException("There were Jasmine spec failures.");
 			}
 		} else {
-			getLog().info("Skipping Jasmine Tests");
+			getLog().info("Skipping Jasmine Specs");
 		}
 	}
 
