@@ -36,7 +36,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.1-beta-6</version>
+            <version>1.0.1-beta-7</version>
             <executions>
               <execution>
                 <goals>
@@ -263,7 +263,7 @@ but here is an example configuration specifying that specs should be executed ag
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-6**.  
+If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-7**.  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)
