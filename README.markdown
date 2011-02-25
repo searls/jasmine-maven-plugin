@@ -6,7 +6,7 @@ If you want to use Maven and test-drive JavaScript, this is the plugin for you!
 
 * Generates two HTML test runners: one for test-driving locally in your browser, and one to run as part of the build
 * Continuous integration with no added configuration: because the plugin's `test` goal runs headlessly (thanks HtmlUnit!), your CI system won't need any additional configuration. Your build will fail as soon as your JavaScript tests do.
-* Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests
+* Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests 
 
 Option A: Start from the archetype
 ----------------------------------
