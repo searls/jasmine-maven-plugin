@@ -36,7 +36,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.1-beta-7</version>
+            <version>1.0.1-beta-8</version>
             <executions>
               <execution>
                 <goals>
@@ -241,6 +241,17 @@ The configuration name is `customRunnerTemplate` and would be configured in the 
       <customRunnerTemplate>${project.basedir}/src/test/resources/path/to/my_spec_runner.template</customRunnerTemplate>				
     </configuration>
     
+### Debugging failures and timeouts
+
+The plugin relies on HtmlUnit to execute your specs "headlessly" in a console. If your specs pass when you open `target/jasmine/ManualSpecRunner.html` in each browser but fail when executing the `jasmine:test` goal, it's likely that something went wrong while HtmlUnit was executing. Unfortunately, these failures can be opaque and difficult to trace. If `jasmine:test` is timing out, you might consider trying to debug it with the `debug` configuration flag set to `true` and a shorter timeout to force faster failure.
+
+    <configuration>
+      ...
+      <timeout>60</timeout> <!-- 60 second timeout -->
+      <debug>true</timeout> <!-- attempt to print the spec runner results and build a JUnit report, even if spec execution times out. -->
+    </configuration>
+
+If you have experience debugging heap space or halting errors in HtmlUnit, please consider [opening an issue](https://github.com/searls/jasmine-maven-plugin/issues) to lend some advice on how jasmine-maven-plugin could be improved.
 
 ### JUnit XML Reports
 
@@ -263,7 +274,7 @@ but here is an example configuration specifying that specs should be executed ag
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.1-beta-7**.  
+If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.1-beta-8**.  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)
