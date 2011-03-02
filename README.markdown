@@ -6,7 +6,7 @@ If you want to use Maven and test-drive JavaScript, this is the plugin for you!
 
 * Generates two HTML test runners: one for test-driving locally in your browser, and one to run as part of the build
 * Continuous integration with no added configuration: because the plugin's `test` goal runs headlessly (thanks HtmlUnit!), your CI system won't need any additional configuration. Your build will fail as soon as your JavaScript tests do.
-* Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests
+* Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests 
 
 Option A: Start from the archetype
 ----------------------------------
@@ -111,7 +111,7 @@ An example of some failing output follows:
 Usage Notes
 -----------
 ### Project layout
-The jasmine-maven-plugin presumes a default project directory layout. If this layout doesn't suit your project, fear not, as it's entirely customizable. In adition to everything documented here,
+The jasmine-maven-plugin presumes a default project directory layout. If this layout doesn't suit your project, fear not, as it's entirely customizable. In addition to everything documented here,
 you can check the documented source of the [base Mojo class](https://github.com/searls/jasmine-maven-plugin/blob/master/src/main/java/searls/jasmine/AbstractJasmineMojo.java) to see which properties have been
 parameterized.
 
@@ -263,7 +263,7 @@ but here is an example configuration specifying that specs should be executed ag
 ### Current Version Info
 
 The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisify the maven-release-plugin), you may use **1.0.1-beta-7**.  
+If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.1-beta-7**.  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)
