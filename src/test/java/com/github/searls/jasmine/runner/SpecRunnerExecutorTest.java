@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +35,7 @@ public class SpecRunnerExecutorTest {
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	
 	@Mock private File file;
+	@Mock private Log log;
 	
 	private URL resource = getClass().getResource("/example_nested_specrunner.html");
 	
@@ -44,7 +46,7 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldFindSpecsInResults() throws Exception {
-		JasmineResult result = sut.execute(resource, file, BROWSER_VERSION);
+		JasmineResult result = sut.execute(resource, file, BROWSER_VERSION, 300, false, log);
 		
 		assertThat(result,is(not(nullValue())));
 		assertThat(result.getDescription(),containsString("kaka"));
@@ -54,10 +56,8 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldExportJUnitResults() throws Exception {
-		sut.execute(resource, file, BROWSER_VERSION);
+		sut.execute(resource, file, BROWSER_VERSION, 300, false, log);
 		
 		verify(fileUtilsWrapper).writeStringToFile(file, "<xml/>", "UTF-8");
 	}
-
-	
 }

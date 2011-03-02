@@ -1,5 +1,6 @@
 package com.github.searls.jasmine.runner;
 
+import org.apache.maven.plugin.logging.Log;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -21,25 +22,26 @@ public class SpecRunnerExecutor {
 	public static final String BUILD_CONCLUSION_JS = "/lib/buildConclusion.js";
 	public static final String CREATE_JUNIT_XML = "/lib/createJunitXml.js";
 
-	private static final long MAX_EXECUTION_MILLIS = 300000; //5 minutes - TODO make this configurable
-	
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
-	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion) {
+	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion, int timeout, boolean debug, Log log) {
 		try {
+			//TODO - this class has at least two reasons to change: configuring a web client and running specs. extract at least one class
 			BrowserVersion htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(browserVersion).get(BrowserVersion.class);
 			WebClient webClient = new WebClient(htmlUnitBrowserVersion);
 			webClient.setJavaScriptEnabled(true);
-			webClient.setAjaxController(new NicelyResynchronizingAjaxController());
-			quietIncorrectnessListener(webClient);
+			webClient.setAjaxController(new NicelyResynchronizingAjaxController());			
+			if(!debug) {
+				quietIncorrectnessListener(webClient);
+			}
 			
 		    HtmlPage page = webClient.getPage(runnerUrl);
-		    waitForRunnerToFinish(page);
+		    waitForRunnerToFinish(page, timeout, debug, log);
 		    JasmineResult jasmineResult = new JasmineResult();
 		    jasmineResult.setDescription(buildRunnerDescription(page));
 		    jasmineResult.setDetails(buildReport(page));
-		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page), "UTF-8");
+		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page,debug), "UTF-8");
 		    webClient.closeAllWindows();
 	    
 		    return jasmineResult;
@@ -47,7 +49,6 @@ public class SpecRunnerExecutor {
 			throw new RuntimeException(e);
 		}
 	}
-
 
 	private String buildReport(HtmlPage page) throws IOException {
 		ScriptResult report = page.executeJavaScript(ioUtilsWrapper.toString(BUILD_REPORT_JS));
@@ -59,26 +60,35 @@ public class SpecRunnerExecutor {
 		return description.getJavaScriptResult().toString();
 	}
 
-	private String buildJunitXmlReport(HtmlPage page) throws IOException {
-		ScriptResult junitReport = page.executeJavaScript(ioUtilsWrapper.toString(CREATE_JUNIT_XML) + "junitXmlReporter.report(reporter);"); 
+	private String buildJunitXmlReport(HtmlPage page, boolean debug) throws IOException {
+		ScriptResult junitReport = page.executeJavaScript(ioUtilsWrapper.toString(CREATE_JUNIT_XML) + "junitXmlReporter.report(reporter,"+debug+");"); 
 		return junitReport.getJavaScriptResult().toString();
 	}
 
-	private void waitForRunnerToFinish(HtmlPage page) throws InterruptedException {		
-		page.getWebClient().waitForBackgroundJavaScript(5000);
-		int waitInMillis = 500;
-		for (int i = 0; i < MAX_EXECUTION_MILLIS/waitInMillis; i++) {
-			if(executionFinished(page)) {
+	private void waitForRunnerToFinish(HtmlPage page, int timeout, boolean debug, Log log) throws InterruptedException {
+//		page.getWebClient().waitForBackgroundJavaScript(5000);
+		for (int i = 0; i < timeout; i++) {
+			if (executionFinished(page)) {
 				return;
 			} else {
-        		synchronized (page) {
-					page.wait(waitInMillis);
-        		}
-            }
-        }
-		if(!executionFinished(page)) {
-			throw new IllegalStateException("Attempted to wait for the test to complete processing over the course of "+(MAX_EXECUTION_MILLIS/1000)+" seconds," +
-					"but it still appears to be running. Aborting test execution.");
+				synchronized (page) {
+					page.wait(1000);
+				}
+			}
+		}
+		if (!executionFinished(page)) {
+			handleTimeout(timeout, debug, log);
+		}
+	}
+
+	private void handleTimeout(int timeout, boolean debug, Log log) {
+		log.warn("Attempted to wait for your specs to finish processing over the course of " +
+					timeout + 
+					" seconds, but it still appears to be running.");
+		if(debug) {
+			log.warn("Debug mode: will attempt to parse the incomplete spec runner results");
+		} else {
+			throw new IllegalStateException("Timeout occurred. Aborting execution of specs. (Try configuring 'debug' to 'true' for more details.)");
 		}
 	}
 

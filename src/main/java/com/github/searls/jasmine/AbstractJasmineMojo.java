@@ -84,6 +84,19 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 */
 	protected boolean haltOnFailure;
 	
+	/**
+	 * Timeout for spec execution in seconds.
+	 * 
+	 * @parameter default-value=300
+	 */
+	protected int timeout;
+	
+	/**
+	 * True to increase HtmlUnit output and attempt reporting on specs even if a timeout occurred.
+	 * 
+	 * @parameter default-value=false
+	 */
+	protected boolean debug;
 	
 	/**
 	 * @parameter default-value="${project.build.directory}${file.separator}${project.build.finalName}"
