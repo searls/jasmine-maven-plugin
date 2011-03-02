@@ -129,8 +129,8 @@ describe('Junit XML', function() {
 			});
 			
 			describe('testcase elements',function() {
-				it('has 7 elements',function() {
-					expect(find('testsuite testcase').length).toBe(7);
+				it('has 8 elements',function() {
+					expect(find('testsuite testcase').length).toBe(8);
 				});
 				
 				describe('first test',function(){

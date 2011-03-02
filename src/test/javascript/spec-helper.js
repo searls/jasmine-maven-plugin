@@ -8,6 +8,9 @@ beforeEach(function() {
 		},
 		toBeTrimmed: function(expected) {
 			return $.trim(this.actual) === expected;
+		},
+		toContainFailure: function() {
+			return this.actual.indexOf('<<< FAILURE!') !== -1;
 		}
 	});
  	this.reporterHelper = function(){ 		
@@ -78,7 +81,14 @@ beforeEach(function() {
 														"name" : "dices just by looking at it the wrong way",
 														"type" : "spec",
 														"children" : []
-													} ]
+													},
+													{
+														"id" : 42,
+														"name" : "I'm a spec that didn't quite execute and has a missing result",
+														"type" : "spec",
+														"children" : []
+													}
+													 ]
 												} ]
 									} ]
 						} ]

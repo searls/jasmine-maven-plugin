@@ -49,7 +49,7 @@ describe("Building the console report", function() {
 		});
 		
 		it("has a failure on line 12", function() {
-		  expect(lines[12]).toContain('<<< FAILURE!');
+		  expect(lines[12]).toContainFailure();
 		});
 		
 		it("indented line 12 four times", function() {
@@ -65,19 +65,23 @@ describe("Building the console report", function() {
 		});
 	
 		it("indicates the number of failures", function() {
-		  expect(lines[15]).toContain('1 failure:');
+		  expect(lines[16]).toContain('2 failures:');
 		});
 		
 		it("contains a full expansion of the failed spec as a sentence", function() {
-		  expect(lines[17]).toContain('1.) Your Project Feature B B.1 B.1.a it dices just by looking at it the wrong way');
+		  expect(lines[18]).toContain('1.) Your Project Feature B B.1 B.1.a it dices just by looking at it the wrong way');
 		});
 		
 		it("indicates a failure on the summary line", function() {
-		  expect(lines[17]).toContain(' <<< FAILURE!');
+		  expect(lines[18]).toContainFailure();
 		});
 		
 		it("contains the expectation text on the next line", function() {
-		  expect(lines[18]).toContain("Expected 'Awesome idea' to contain 'Terrible'.");
+		  expect(lines[19]).toContain("Expected 'Awesome idea' to contain 'Terrible'.");
+		});
+		
+		it("prints failure for the spec missing a message", function() {
+		  expect(lines[21]).toContainFailure();
 		});
 				
 	});
