@@ -3,10 +3,10 @@ var junitXmlReporter;
 (function() {
 	junitXmlReporter = {
 		prolog: '<?xml version="1.0" encoding="UTF-8" ?>',
-		report: function(reporter) {
+		report: function(reporter,debug) {
 			if (!reporter)
 				throw 'Jasmine JS API Reporter must not be null.';
-			if (reporter.finished !== true)
+			if (reporter.finished !== true && !debug)
 				throw 'Jasmine runner is not finished!';
 
 			var results = this.crunchResults(reporter.results());
@@ -68,7 +68,7 @@ var junitXmlReporter;
 			var last;
 			for(var key in results) {
 				count++;
-				if(results[key].result === 'failed') {
+				if(results[key].result !== 'passed') {
 					fails++;
 				}
 				last = key;
