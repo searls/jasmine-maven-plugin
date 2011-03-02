@@ -59,7 +59,7 @@ public class SpecRunnerExecutor {
 	}
 
 	private void waitForRunnerToFinish(HtmlPage page, int timeout, boolean debug, Log log) throws InterruptedException {
-//		page.getWebClient().waitForBackgroundJavaScript(5000);
+		page.getWebClient().waitForBackgroundJavaScript(5000);
 		for (int i = 0; i < timeout; i++) {
 			if (executionFinished(page)) {
 				return;
