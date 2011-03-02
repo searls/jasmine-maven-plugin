@@ -19,7 +19,6 @@ import com.github.searls.jasmine.model.JasmineResult;
 public class SpecRunnerExecutor {
 	
 	public static final String BUILD_REPORT_JS = "/lib/buildReport.js";
-	public static final String BUILD_CONCLUSION_JS = "/lib/buildConclusion.js";
 	public static final String CREATE_JUNIT_XML = "/lib/createJunitXml.js";
 
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
@@ -39,7 +38,6 @@ public class SpecRunnerExecutor {
 		    HtmlPage page = webClient.getPage(runnerUrl);
 		    waitForRunnerToFinish(page, timeout, debug, log);
 		    JasmineResult jasmineResult = new JasmineResult();
-		    jasmineResult.setDescription(buildRunnerDescription(page));
 		    jasmineResult.setDetails(buildReport(page));
 		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page,debug), "UTF-8");
 		    webClient.closeAllWindows();
@@ -53,11 +51,6 @@ public class SpecRunnerExecutor {
 	private String buildReport(HtmlPage page) throws IOException {
 		ScriptResult report = page.executeJavaScript(ioUtilsWrapper.toString(BUILD_REPORT_JS));
 		return report.getJavaScriptResult().toString();
-	}
-
-	private String buildRunnerDescription(HtmlPage page) throws IOException {
-		ScriptResult description = page.executeJavaScript(ioUtilsWrapper.toString(BUILD_CONCLUSION_JS));
-		return description.getJavaScriptResult().toString();
 	}
 
 	private String buildJunitXmlReport(HtmlPage page, boolean debug) throws IOException {

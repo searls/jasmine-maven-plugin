@@ -83,7 +83,15 @@ describe("Building the console report", function() {
 		it("prints failure for the spec missing a message", function() {
 		  expect(lines[21]).toContainFailure();
 		});
-				
+		
+		it("prints suggestion that the spec result is missing or did not run", function() {
+		  expect(lines[21]).toContain('Result is missing! Perhaps this spec did not execute?');
+		});
+		
+		it("prints the summary on the last line", function() {
+		  expect(lines[lines.length-1]).toContain("Results: 8 specs, 2 failures");
+		});
+		
 	});
 	
 	

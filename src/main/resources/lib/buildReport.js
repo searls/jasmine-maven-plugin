@@ -1,10 +1,12 @@
 (function() {
 	var jasmineMavenPlugin = window.jasmineMavenPlugin = window.jasmineMavenPlugin || {};
-	var reporter;
+	var reporter,reportedItems,specCount,failureCount;
+
 	jasmineMavenPlugin.printReport = function(r) {
-		reporter = r;
+		reporter = r, reportedItems=[], specCount=0, failureCount=0;
 		var result = buildReport(reporter.suites(),0);
 		result += describeFailureSentences(reporter);
+		result += "\nResults: "+specCount+" specs, "+failureCount+" failures";
 		return result;
 	};
 		
@@ -22,22 +24,11 @@
 			for(var i=0;i<messages.length;i++) {
 				message += '\n'+indent(indentLevel)+'* '+messages[i].message;		
 			}
+		} else {
+			message += ' (Result is missing! Perhaps this spec did not execute?)';
 		}
 		return message;
 	};
-
-	var inArray = function(arr,val) {
-		var result = false;
-		for(var i=0;i<arr.length;i++) {
-			if(arr[i] === val) {
-				result = true;
-				break;
-			}
-		}
-		return result;
-	};
-
-	var reportedItems = [];
 
 	var buildReport = function(items,indentLevel) {
 		var line = '';
@@ -47,8 +38,10 @@
 				line += (i > 0 && indentLevel === 0 ? '\n' : '')+"\n"+indent(indentLevel)+item.name;
 
 				if(item.type == 'spec') {
+					specCount++;
 					var result = resultForSpec(item);
 					if(result.result !== 'passed') {
+						failureCount++;
 						line += describeMessages(result.messages,indentLevel+1);
 					}
 				}
@@ -90,6 +83,17 @@
 			for (var i=0; i < failures.length; i++) {
 				result += '\n\n  ' + (i+1) + '.) ' + failures[i];
 			};
+		}
+		return result;
+	};
+	
+	var inArray = function(arr,val) {
+		var result = false;
+		for(var i=0;i<arr.length;i++) {
+			if(arr[i] === val) {
+				result = true;
+				break;
+			}
 		}
 		return result;
 	};

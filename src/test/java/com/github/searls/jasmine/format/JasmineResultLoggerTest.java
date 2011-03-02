@@ -37,16 +37,5 @@ public class JasmineResultLoggerTest {
 		
 		verify(log).info(details);
 	}
-
-	@Test
-	public void shouldLogDescription() {
-		String description = "Fake Details";
-		JasmineResult result = new JasmineResult();
-		result.setDescription(description);
-		
-		resultLogger.log(result);
-		
-		verify(log).info("\nResults:\n\n"+description+"\n");
-	}
 	
 }
