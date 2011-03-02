@@ -76,7 +76,7 @@ jasmine-maven-plugin behaves just like maven-surefire-plugin and will fail the b
 An example of some failing output follows:
 
 		-------------------------------------------------------
-		 J A S M I N E   T E S T S
+		 J A S M I N E   S P E C S
 		-------------------------------------------------------
 		[INFO] 
 		Slice-o-matic
