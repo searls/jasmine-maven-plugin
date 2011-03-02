@@ -75,38 +75,38 @@ jasmine-maven-plugin behaves just like maven-surefire-plugin and will fail the b
 
 An example of some failing output follows:
 
-    -------------------------------------------------------
-     J A S M I N E   T E S T S
-    -------------------------------------------------------
-    [INFO] 
-    Slice-o-matic
-      occupies the SliceOMatic namespace
-      #slice
-        slices
-        does not dice
-      #dice
-        when the knob is turned to "Fine"
-          dices quite finely
-          does not cut off fingers
-        when the knob is turned to "Coarse"
-          dices rather roughly
-        when a hand is inserted into the Slice-o-matic
-          is a fantastic idea <<< FAILURE!
-            * Expected 'Are you kidding? That's a terrible idea!' to contain 'Great idea'.
+		-------------------------------------------------------
+		 J A S M I N E   S P E C S
+		-------------------------------------------------------
+		[INFO] 
+		Slice-o-matic
+		  occupies the SliceOMatic namespace
+		  #slice
+		    slices
+		    does not dice
+		  #dice
+		    when the knob is turned to "Fine"
+		      dices quite finely
+		      does not cut off fingers
+		    when the knob is turned to "Coarse"
+		      dices rather roughly
+		    when a hand is inserted into the Slice-o-matic
+		      is a fantastic idea <<< FAILURE!
+		        * Expected 'Are you kidding? That's a terrible idea!' to contain 'Great idea'.
 
-    1 failure:
+		1 failure:
 
-      1.) Slice-o-matic #dice when a hand is inserted into the Slice-o-matic it is a fantastic idea <<< FAILURE!
-        * Expected 'Are you kidding? That's a terrible idea!' to contain 'Great idea'.
-    [INFO] 
-    Results:
+		  1.) Slice-o-matic #dice when a hand is inserted into the Slice-o-matic it is a fantastic idea <<< FAILURE!
+		    * Expected 'Are you kidding? That's a terrible idea!' to contain 'Great idea'.
+		[INFO] 
+		Results:
 
-    7 specs, 1 failures
+		7 specs, 1 failures
 
-    [INFO] ------------------------------------------------------------------------
-    [ERROR] BUILD FAILURE
-    [INFO] ------------------------------------------------------------------------
-    [INFO] There were Jasmine spec failures.
+		[INFO] ------------------------------------------------------------------------
+		[ERROR] BUILD FAILURE
+		[INFO] ------------------------------------------------------------------------
+		[INFO] There were Jasmine spec failures.
 
 Usage Notes
 -----------

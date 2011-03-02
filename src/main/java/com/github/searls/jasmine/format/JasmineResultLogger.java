@@ -9,10 +9,8 @@ public class JasmineResultLogger {
 
 	public static final String HEADER="\n"+
 		"-------------------------------------------------------\n"+
-		" J A S M I N E   T E S T S\n"+
+		" J A S M I N E   S P E C S\n"+
 		"-------------------------------------------------------";
-	public static final String FAIL_APPENDAGE = " <<< FAILURE!";
-	public static final String INDENT = "  ";
 	
 	private Log log;
 
@@ -21,11 +19,8 @@ public class JasmineResultLogger {
 	}
 
 	public void log(JasmineResult result) {
-		log.info(HEADER);
-		
+		log.info(HEADER);		
 		log.info(result.getDetails());
-
-		log.info("\nResults:\n\n"+result.getDescription()+"\n");		
 	}
 
 }

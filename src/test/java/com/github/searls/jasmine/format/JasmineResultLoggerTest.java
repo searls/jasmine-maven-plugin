@@ -21,7 +21,6 @@ public class JasmineResultLoggerTest {
 	@Test
 	public void shouldLogHeader() {
 		JasmineResult result = new JasmineResult();
-		result.setDescription("");
 		
 		resultLogger.log(result);
 		
@@ -29,14 +28,14 @@ public class JasmineResultLoggerTest {
 	}
 	
 	@Test
-	public void shouldLogEmptyResultInTrivialWay() {
-		String description = "Fake Result";
+	public void shouldLogDetails() {
+		String details = "Fake Details";
 		JasmineResult result = new JasmineResult();
-		result.setDescription(description);
+		result.setDetails(details);
 		
 		resultLogger.log(result);
 		
-		verify(log).info("\nResults:\n\n"+description+"\n");
+		verify(log).info(details);
 	}
 	
 }

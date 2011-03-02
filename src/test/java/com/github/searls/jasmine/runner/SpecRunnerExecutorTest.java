@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,8 +25,7 @@ import com.github.searls.jasmine.model.JasmineResult;
 @RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerExecutorTest {
 
-	private static final String BUILD_CONCLUSION_JS_CONTENTS = "'kaka';";
-	private static final String BUILD_REPORT_JS_CONTENTS = "'pants';";
+	private static final String BUILD_REPORT_JS_CONTENTS = "'pants\\nkaka';";
 	private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
 	private static final String BROWSER_VERSION = "INTERNET_EXPLORER_8";
 	
@@ -34,17 +34,18 @@ public class SpecRunnerExecutorTest {
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	
 	@Mock private File file;
+	@Mock private Log log;
 	
 	private URL resource = getClass().getResource("/example_nested_specrunner.html");
 	
 	@Before
 	public void stubResourceStreams() throws IOException {
-		when(ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_CONCLUSION_JS_CONTENTS,BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
+		when(ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
 	}
 	
 	@Test
 	public void shouldFindSpecsInResults() throws Exception {
-		JasmineResult result = sut.execute(resource, file, BROWSER_VERSION);
+		JasmineResult result = sut.execute(resource, file, BROWSER_VERSION, 300, false, log);
 		
 		assertThat(result,is(not(nullValue())));
 		assertThat(result.getDescription(),containsString("kaka"));
@@ -54,10 +55,8 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldExportJUnitResults() throws Exception {
-		sut.execute(resource, file, BROWSER_VERSION);
+		sut.execute(resource, file, BROWSER_VERSION, 300, false, log);
 		
 		verify(fileUtilsWrapper).writeStringToFile(file, "<xml/>", "UTF-8");
 	}
-
-	
 }

@@ -46,15 +46,26 @@ describe('Junit XML', function() {
 	});
 
 	describe('Basics', function() {
+		describe("when not in debug mode", function() {
+			it('throws up when reporter is null', function() {
+				expect(junitXmlReporter.report).toThrowWithArgs('Jasmine JS API Reporter must not be null.',null);
+			});
+			it('throws an exception if invoked before ready', function() {
+				reporter.finished = false;
+				expect(junitXmlReporter.report).toThrowWithArgs('Jasmine runner is not finished!',reporter);
+			});		  
+		});
+		describe("when in debug mode", function() {
+			it('no longer throws an exception if invoked before ready', function() {
+				expect(function() {
+					reporter.finished = false;
+					junitXmlReporter.report(reporter,true);
+				}).not.toThrow();
+			});
+			
+		});
 		it('is named junitXmlReporter', function() {
 			expect(junitXmlReporter).toBeDefined();
-		});
-		it('throws up when reporter is null', function() {
-			expect(junitXmlReporter.report).toThrowWithArgs('Jasmine JS API Reporter must not be null.',null);
-		});
-		it('throws an exception if invoked before ready', function() {
-			reporter.finished = false;
-			expect(junitXmlReporter.report).toThrowWithArgs('Jasmine runner is not finished!',reporter);
 		});
 	});
 
@@ -118,8 +129,8 @@ describe('Junit XML', function() {
 			});
 			
 			describe('testcase elements',function() {
-				it('has 7 elements',function() {
-					expect(find('testsuite testcase').length).toBe(7);
+				it('has 8 elements',function() {
+					expect(find('testsuite testcase').length).toBe(8);
 				});
 				
 				describe('first test',function(){

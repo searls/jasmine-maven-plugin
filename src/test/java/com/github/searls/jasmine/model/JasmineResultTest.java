@@ -10,7 +10,10 @@ public class JasmineResultTest {
 
 	@Test
 	public void shouldParseDescriptionWhenSuccessful() {
-		jasmineResult.setDescription("1 spec, 0 failures");
+		jasmineResult.setDetails(
+				"Some results\n" +
+				"More results\n" +
+				"1 spec, 0 failures");
 
 		boolean success = jasmineResult.didPass();
 
@@ -19,7 +22,10 @@ public class JasmineResultTest {
 
 	@Test
 	public void shouldFailWhenFail() {
-		jasmineResult.setDescription("2 specs, 1 failure");
+		jasmineResult.setDetails(
+				"Describe Kaka wants 0 failures \n" +
+				"it is Swedish for cookie\n" +
+				"Results: 2 specs, 1 failure");
 
 		boolean success = jasmineResult.didPass();
 
