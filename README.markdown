@@ -18,7 +18,7 @@ See the [jasmine-archetype](http://github.com/searls/jasmine-archetype) project 
     -DarchetypeRepository=http://searls-maven-repository.googlecode.com/svn/trunk/snapshots \
     -DarchetypeGroupId=com.github.searls \
     -DarchetypeArtifactId=jasmine-archetype \
-    -DarchetypeVersion=1.0.1-SNAPSHOT \
+    -DarchetypeVersion=1.0.2-SNAPSHOT \
     -DgroupId=com.acme \
     -DartifactId=my-jasmine-project \
     -Dversion=0.0.1-SNAPSHOT    
@@ -36,7 +36,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.1-beta-8</version>
+            <version>1.0.2-beta-1</version>
             <executions>
               <execution>
                 <goals>
@@ -273,8 +273,8 @@ but here is an example configuration specifying that specs should be executed ag
 
 ### Current Version Info
 
-The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.1-beta-8**.  
+The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.2, so its version number is 1.0.2-SNAPSHOT. 
+If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.2-beta-1**.  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)
