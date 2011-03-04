@@ -6,7 +6,7 @@
 		reporter = r, reportedItems=[], specCount=0, failureCount=0;
 		var result = buildReport(reporter.suites(),0);
 		result += describeFailureSentences(reporter);
-		result += "\nResults: "+specCount+" specs, "+failureCount+" failures";
+		result += "\n\nResults: "+specCount+" specs, "+failureCount+" failures\n";
 		return result;
 	};
 		
@@ -97,6 +97,7 @@
 		}
 		return result;
 	};
+
 })();
 
 if(typeof window.reporter !== 'undefined') {

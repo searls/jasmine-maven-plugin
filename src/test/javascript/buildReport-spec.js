@@ -89,7 +89,7 @@ describe("Building the console report", function() {
 		});
 		
 		it("prints the summary on the last line", function() {
-		  expect(lines[lines.length-1]).toContain("Results: 8 specs, 2 failures");
+		  expect(lines[lines.length-2]).toContain("Results: 8 specs, 2 failures");
 		});
 		
 	});
