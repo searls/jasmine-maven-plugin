@@ -32,6 +32,16 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected String browserVersion;
 	
 	/**
+	 * Determines the format that jasmine:test will print to console. 
+	 * 	Valid options:
+	 * 		"documentation" - (default) - print specs in a nested format
+	 *		"progress" - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')	
+	 *
+	 * @parameter default-value="documentation"
+	 */
+	protected String format;
+	
+	/**
 	 * @parameter default-value="js" expression="${packageJavaScriptPath}"
 	 */
 	protected String packageJavaScriptPath;

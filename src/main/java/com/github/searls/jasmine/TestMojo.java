@@ -31,7 +31,7 @@ public class TestMojo extends AbstractJasmineMojo {
 						runnerFile.toURI().toURL(), 
 						new File(jasmineTargetDir,junitXmlReportFileName), 
 						browserVersion, 
-						timeout, debug, getLog());
+						timeout, debug, getLog(), format);
 			} catch (Exception e) {
 				throw new MojoExecutionException(e,"There was a problem executing Jasmine specs",e.getMessage());
 			}

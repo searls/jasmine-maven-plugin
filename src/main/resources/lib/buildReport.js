@@ -2,11 +2,17 @@
 	var jasmineMavenPlugin = window.jasmineMavenPlugin = window.jasmineMavenPlugin || {};
 	var reporter,reportedItems,specCount,failureCount;
 
-	jasmineMavenPlugin.printReport = function(r) {
+	jasmineMavenPlugin.printReport = function(r, config) {
+		config = config || {};
 		reporter = r, reportedItems=[], specCount=0, failureCount=0;
-		var result = buildReport(reporter.suites(),0);
+		var result;
+		if (config.format === 'progress') {
+			result = printProgressFormat(reporter);
+		} else {			
+			result = buildDocumentationFormatReport(reporter.suites(),0);
+		}
 		result += describeFailureSentences(reporter);
-		result += "\nResults: "+specCount+" specs, "+failureCount+" failures";
+		result += "\n\nResults: "+specCount+" specs, "+failureCount+" failures\n";
 		return result;
 	};
 		
@@ -30,7 +36,41 @@
 		return message;
 	};
 
-	var buildReport = function(items,indentLevel) {
+	var printProgressFormat = function(reporter) {
+		var linesPerRow = 80;
+		var result = '\n';
+		report = buildProgressFormatReport(reporter.suites());
+		if(report.length > linesPerRow) {
+			for (var i=0; i < report.length; i+=linesPerRow) {
+				result += report.substring(i,i+linesPerRow) + '\n';
+			};
+		} else {
+			result += report;
+		}
+		return result;
+	};
+
+	var buildProgressFormatReport = function(items) {
+		var output = '';
+		for (var i=0; i < items.length; i++) {
+			var item = items[i];	
+			if(item.type == 'spec') {
+				specCount++;
+				var result = resultForSpec(item);
+				if(result.result !== 'passed') {
+					failureCount++;
+					output += 'F';
+				} else {
+					output += '.';
+				}
+			}
+			reportedItems.push(item);
+			output += buildProgressFormatReport(item.children);				
+		}
+		return output;
+	};
+
+	var buildDocumentationFormatReport = function(items,indentLevel) {
 		var line = '';
 	 	for(var i=0;i<items.length;i++){
 			var item = items[i];	
@@ -47,7 +87,7 @@
 				}
 
 				reportedItems.push(item);
-				line += buildReport(item.children,indentLevel+1);
+				line += buildDocumentationFormatReport(item.children,indentLevel+1);
 			}
 		}
 		return line;
@@ -97,8 +137,5 @@
 		}
 		return result;
 	};
-})();
 
-if(typeof window.reporter !== 'undefined') {
-	jasmineMavenPlugin.printReport(window.reporter);
-}
+})();

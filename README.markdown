@@ -18,7 +18,7 @@ See the [jasmine-archetype](http://github.com/searls/jasmine-archetype) project 
     -DarchetypeRepository=http://searls-maven-repository.googlecode.com/svn/trunk/snapshots \
     -DarchetypeGroupId=com.github.searls \
     -DarchetypeArtifactId=jasmine-archetype \
-    -DarchetypeVersion=1.0.1-SNAPSHOT \
+    -DarchetypeVersion=1.0.2-SNAPSHOT \
     -DgroupId=com.acme \
     -DartifactId=my-jasmine-project \
     -Dversion=0.0.1-SNAPSHOT    
@@ -36,7 +36,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.1-beta-8</version>
+            <version>1.0.2-beta-1</version>
             <executions>
               <execution>
                 <goals>
@@ -110,7 +110,7 @@ An example of some failing output follows:
 
 Usage Notes
 -----------
-### Project layout
+## Project layout
 The jasmine-maven-plugin presumes a default project directory layout. If this layout doesn't suit your project, fear not, as it's entirely customizable. In addition to everything documented here,
 you can check the documented source of the [base Mojo class](https://github.com/searls/jasmine-maven-plugin/blob/master/src/main/java/searls/jasmine/AbstractJasmineMojo.java) to see which properties have been
 parameterized.
@@ -150,32 +150,34 @@ An included example project (in [src/test/resources/examples/jasmine-webapp-exam
 
 As seen above, by default, the plugin looks for JavaScript placed in `src/main/javascript`, while test specs are each in `src/test/javascript`. The plugin supports nested directories and will maintain your directory structure as it processes the source directories.
 
-### Goals
+## Goals
 
-####jasmine:resources
-This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. 
-It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
-
-####jasmine:testResources
-This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. 
-It can be changed by configuring a parameter named `jsTestSrcDir` in the plugin execution section of the POM.
-
-####jasmine:test
-This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. 
-It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
-
-####jasmine:preparePackage 
-This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). 
-The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
-
-####jasmine:generateManualRunner
+###jasmine:generateManualRunner
 This goal binds to the generate-test-sources phase and will generate an extra spec runner HTML (named `ManualSpecRunner.html` by default) in the jasmine target directory (`target/jasmine`). 
 This way, you can easily run your specs in the browser as you develop them, while still leaning on the plugin to keep the HTML up-to-date for you. Note that this HTML file is separate from 
 the one generated during **jasmine:test**, because it points to the source directories directly.
 
 When using the manual runner in a browser, be careful to edit your source & specs in the project's `src` directory, even though the runner itself runs in `target`! 
 
-### Supporting WTP (Leaving your JavaScript sources in your `webapp` directory)
+###jasmine:resources
+This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. 
+It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
+
+###jasmine:testResources
+This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. 
+It can be changed by configuring a parameter named `jsTestSrcDir` in the plugin execution section of the POM.
+
+###jasmine:test
+This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. 
+It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
+
+###jasmine:preparePackage 
+This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). 
+The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
+
+## Configuration
+
+### jsSrcDir - Supporting WTP (Leaving your JavaScript sources in your `webapp` directory)
 You can run the plugin with all five goals or fewer, if you choose. For instance, if you run your application in Eclipse WTP and you want to keep your production 
 JavaScript in `src/main/webapp` to facilitate easier iterative development, you could skip the preparePackage goal and configure the `jsSrcDir` property to point 
 at `src/main/webapp/[your-js-directory]` instead. 
@@ -193,7 +195,7 @@ Here's an example POM snippet:
       </configuration>
     </execution>
 
-### Enforcing the order in which JavaScript files are loaded 
+### preloadSources - Enforcing the order in which JavaScript files are loaded 
 You can configure the plugin to load a list of JavaScript sources before any others. This is particularly useful when your scripts or specs must be loaded in a particular order
 to work correctly. 
 
@@ -221,7 +223,7 @@ As demonstrated above, `preloadSources` will attempt to resolve each specified s
 2. As a file that  exists relative to the `jsTestSrcDir`
 3. Exactly as entered into the POM (e.g. "http://../script.js", "ftp://blah.js", "/path/to/my-other-project/../script.js", etc.)
 
-### Creating a custom SpecRunner HTML template
+### customRunnerTemplate - Creating a custom SpecRunner HTML template
 
 Sometimes the plugin's generated HTML runners might not fit your project's needs (perhaps you want to incorporate JSLint/JSCoverage into the runner or simply work around a bug in the plugin). 
 
@@ -240,8 +242,8 @@ The configuration name is `customRunnerTemplate` and would be configured in the 
       ...
       <customRunnerTemplate>${project.basedir}/src/test/resources/path/to/my_spec_runner.template</customRunnerTemplate>				
     </configuration>
-    
-### Debugging failures and timeouts
+     
+### debug - Debugging failures
 
 The plugin relies on HtmlUnit to execute your specs "headlessly" in a console. If your specs pass when you open `target/jasmine/ManualSpecRunner.html` in each browser but fail when executing the `jasmine:test` goal, it's likely that something went wrong while HtmlUnit was executing. Unfortunately, these failures can be opaque and difficult to trace. If `jasmine:test` is timing out, you might consider trying to debug it with the `debug` configuration flag set to `true` and a shorter timeout to force faster failure.
 
@@ -253,17 +255,11 @@ The plugin relies on HtmlUnit to execute your specs "headlessly" in a console. I
 
 If you have experience debugging heap space or halting errors in HtmlUnit, please consider [opening an issue](https://github.com/searls/jasmine-maven-plugin/issues) to lend some advice on how jasmine-maven-plugin could be improved.
 
-### JUnit XML Reports
-
-The plugin's `test` goal will output the test results in a JUnit text XML report, located in `target/jasmine/TEST-jasmine.xml`. The implementation attempts to satisfy the most middle-of-the-road consensus as to what the schema-less XML report "[should](http://stackoverflow.com/questions/442556/spec-for-junit-xml-output)" look like.
-
-As an example, to integrate the report into a Hudson job (note that it must be a **freestyle** job), select "Publish JUnit test result report" among the available "Post-build Actions" and include a file pattern like "\*\*/jasmine/TEST\*.xml". Once included, your jasmine specs will be counted and interactive in the same way your other tests are!
-
-### Specifying which Browser to execute Jasmine specs with
+### browserVersion - Specifying which Browser to execute Jasmine specs with
 
 By default, the plugin will execute the project's specs using HtmlUnit's "FIREFOX_3" [BrowserVersion](http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html).
 If you'd like to execute your specs against a different one of its profiles, you can specify it in the plugin's configuration in your POM.
-HtmlUnit currently only offers a few flavors of FireFox and IE (see [its JavaDoc for the exact names]((http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html))),
+HtmlUnit currently only offers a few flavors of FireFox and IE (see [its JavaDoc for the exact names]((http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html)),
 but here is an example configuration specifying that specs should be executed against HtmlUnit's IE6 profile:
 
     <configuration>
@@ -271,10 +267,48 @@ but here is an example configuration specifying that specs should be executed ag
       <browserVersion>INTERNET_EXPLORER_6</browserVersion>				
     </configuration>
 
-### Current Version Info
+### format - Specifying the style of the console output 
 
-The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.1, so its version number is 1.0.1-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.1-beta-8**.  
+You can configure how the plugin prints your specs to the console. By default, it will print them in a nested format that prints the full text of every `describe` and `it` name.  However, particularly for large projects, you can configure the plugin to output in a format similar to [rspec](https://github.com/rspec/rspec)'s progress format. Just specify configure the `format` parameter like so:
+
+    <configuration>
+      ...
+      <format>progress</format>				
+    </configuration>
+
+And your output will be all the more terse: 
+
+    -------------------------------------------------------
+     J A S M I N E   S P E C S
+    -------------------------------------------------------
+    [INFO] 
+    ................................................................................
+    ................................................................................
+    ................................................................................
+    ..........................................
+
+
+    Results: 282 specs, 0 failures    
+
+### timeout - Specifying the timeout for spec execution
+
+While executing your specs, the plugin will time out after 300 seconds (5 minutes) by default. In the event that your project simply has a *lot* of specs (or, perhaps, a really *slow* build machine), the timeout can be modified with the `timeout` configuration parameter.
+
+    <configuration>
+      ...
+      <timeout>900</timeout>
+    </configuration>
+
+## JUnit XML Reports
+
+The plugin's `test` goal will output the test results in a JUnit text XML report, located in `target/jasmine/TEST-jasmine.xml`. The implementation attempts to satisfy the most middle-of-the-road consensus as to what the schema-less XML report "[should](http://stackoverflow.com/questions/442556/spec-for-junit-xml-output)" look like.
+
+As an example, to integrate the report into a Hudson job (note that it must be a **freestyle** job), select "Publish JUnit test result report" among the available "Post-build Actions" and include a file pattern like "\*\*/jasmine/TEST\*.xml". Once included, your jasmine specs will be counted and interactive in the same way your other tests are!
+
+## Current Version Info
+
+The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.2, so its version number is 1.0.2-SNAPSHOT. 
+If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.2-beta-1**.  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)

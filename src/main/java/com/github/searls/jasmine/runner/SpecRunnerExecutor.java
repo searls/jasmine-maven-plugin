@@ -24,7 +24,7 @@ public class SpecRunnerExecutor {
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
-	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion, int timeout, boolean debug, Log log) {
+	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion, int timeout, boolean debug, Log log, String format) {
 		try {
 			//TODO - this class has at least two reasons to change: configuring a web client and running specs. extract at least one class
 			BrowserVersion htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(browserVersion).get(BrowserVersion.class);
@@ -38,7 +38,7 @@ public class SpecRunnerExecutor {
 		    HtmlPage page = webClient.getPage(runnerUrl);
 		    waitForRunnerToFinish(page, timeout, debug, log);
 		    JasmineResult jasmineResult = new JasmineResult();
-		    jasmineResult.setDetails(buildReport(page));
+		    jasmineResult.setDetails(buildReport(page,format));
 		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page,debug), "UTF-8");
 		    webClient.closeAllWindows();
 	    
@@ -48,13 +48,17 @@ public class SpecRunnerExecutor {
 		}
 	}
 
-	private String buildReport(HtmlPage page) throws IOException {
-		ScriptResult report = page.executeJavaScript(ioUtilsWrapper.toString(BUILD_REPORT_JS));
+	private String buildReport(HtmlPage page, String format) throws IOException {
+		ScriptResult report = page.executeJavaScript(
+				ioUtilsWrapper.toString(BUILD_REPORT_JS) + 
+				"jasmineMavenPlugin.printReport(window.reporter,{format:'"+format+"'});");
 		return report.getJavaScriptResult().toString();
 	}
 
 	private String buildJunitXmlReport(HtmlPage page, boolean debug) throws IOException {
-		ScriptResult junitReport = page.executeJavaScript(ioUtilsWrapper.toString(CREATE_JUNIT_XML) + "junitXmlReporter.report(reporter,"+debug+");"); 
+		ScriptResult junitReport = page.executeJavaScript(
+				ioUtilsWrapper.toString(CREATE_JUNIT_XML) + 
+				"junitXmlReporter.report(reporter,"+debug+");"); 
 		return junitReport.getJavaScriptResult().toString();
 	}
 

@@ -93,25 +93,6 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 
 		assertThat(html, containsScriptTagWith(expected));
 	}
-	@Test
-	public void populatesConsoleXSource() throws Exception {
-		String expected = "javascript()";
-		when(ioUtilsWrapper.toString(CONSOLE_X_JS)).thenReturn(expected);
-
-		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
-
-		assertThat(html, containsScriptTagWith(expected));
-	}
-	
-	@Test
-	public void populatesJson2Source() throws Exception {
-		String expected = "javascript()";
-		when(ioUtilsWrapper.toString(JSON_2_JS)).thenReturn(expected);
-
-		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
-
-		assertThat(html, containsScriptTagWith(expected));
-	}
 	
 	@Test
 	public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {

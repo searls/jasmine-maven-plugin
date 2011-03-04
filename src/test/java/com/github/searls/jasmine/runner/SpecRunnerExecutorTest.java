@@ -25,7 +25,7 @@ import com.github.searls.jasmine.model.JasmineResult;
 @RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerExecutorTest {
 
-	private static final String BUILD_REPORT_JS_CONTENTS = "'pants\\nkaka';";
+	private static final String BUILD_REPORT_JS_CONTENTS = "var jasmineMavenPlugin = {printReport: function(){ return 'pants\\nkaka'; }};";
 	private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
 	private static final String BROWSER_VERSION = "INTERNET_EXPLORER_8";
 	
@@ -45,7 +45,7 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldFindSpecsInResults() throws Exception {
-		JasmineResult result = sut.execute(resource, file, BROWSER_VERSION, 300, false, log);
+		JasmineResult result = sut.execute(resource, file, BROWSER_VERSION, 300, false, log, null);
 		
 		assertThat(result,is(not(nullValue())));
 		assertThat(result.getDescription(),containsString("kaka"));
@@ -55,7 +55,7 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldExportJUnitResults() throws Exception {
-		sut.execute(resource, file, BROWSER_VERSION, 300, false, log);
+		sut.execute(resource, file, BROWSER_VERSION, 300, false, log, null);
 		
 		verify(fileUtilsWrapper).writeStringToFile(file, "<xml/>", "UTF-8");
 	}
