@@ -259,7 +259,7 @@ If you have experience debugging heap space or halting errors in HtmlUnit, pleas
 
 By default, the plugin will execute the project's specs using HtmlUnit's "FIREFOX_3" [BrowserVersion](http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html).
 If you'd like to execute your specs against a different one of its profiles, you can specify it in the plugin's configuration in your POM.
-HtmlUnit currently only offers a few flavors of FireFox and IE (see [its JavaDoc for the exact names]((http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html))),
+HtmlUnit currently only offers a few flavors of FireFox and IE (see [its JavaDoc for the exact names]((http://htmlunit.sourceforge.net/apidocs/com/gargoylesoftware/htmlunit/BrowserVersion.html)),
 but here is an example configuration specifying that specs should be executed against HtmlUnit's IE6 profile:
 
     <configuration>
