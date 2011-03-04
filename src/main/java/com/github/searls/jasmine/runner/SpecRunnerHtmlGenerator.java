@@ -31,7 +31,6 @@ public class SpecRunnerHtmlGenerator {
 	public static final String  JASMINE_JS = "/vendor/js/jasmine.js";
 	public static final String  JASMINE_HTML_JS = "/vendor/js/jasmine-html.js";
 	public static final String  CONSOLE_X_JS = "/vendor/js/consolex.js";
-	public static final String  JSON_2_JS = "/vendor/js/json2.js";
 	public static final String  JASMINE_CSS = "/vendor/css/jasmine.css";
 	
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
@@ -55,7 +54,7 @@ public class SpecRunnerHtmlGenerator {
 			String htmlTemplate = resolveHtmlTemplate(customRunnerTemplate);
 			StringTemplate template = new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
 
-			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS,CONSOLE_X_JS,JSON_2_JS), template);
+			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS,CONSOLE_X_JS), template);
 			includeCssDependencies(asList(JASMINE_CSS), template);
 			setJavaScriptSourcesAttribute(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());

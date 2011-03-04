@@ -104,16 +104,6 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	}
 	
 	@Test
-	public void populatesJson2Source() throws Exception {
-		String expected = "javascript()";
-		when(ioUtilsWrapper.toString(JSON_2_JS)).thenReturn(expected);
-
-		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
-
-		assertThat(html, containsScriptTagWith(expected));
-	}
-	
-	@Test
 	public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
 		String expected = "h1 { background-color: awesome}";
 		when(ioUtilsWrapper.toString(JASMINE_CSS)).thenReturn(expected);
