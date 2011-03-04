@@ -83,7 +83,7 @@ beforeEach(function() {
 														"children" : []
 													},
 													{
-														"id" : 42,
+														"id" : 8,
 														"name" : "I'm a spec that didn't quite execute and has a missing result",
 														"type" : "spec",
 														"children" : []
