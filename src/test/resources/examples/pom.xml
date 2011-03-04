@@ -18,6 +18,7 @@
 		<module>jasmine-webapp-custom-runner</module>
 		<module>jasmine-webapp-custom-browser</module>
 		<module>jasmine-webapp-load-remote</module>
+		<module>jasmine-webapp-progress-format</module>		
 	</modules>
 
 </project>

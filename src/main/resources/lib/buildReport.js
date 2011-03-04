@@ -139,7 +139,3 @@
 	};
 
 })();
-
-if(typeof window.reporter !== 'undefined') {
-	jasmineMavenPlugin.printReport(window.reporter);
-}
