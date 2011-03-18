@@ -14,7 +14,7 @@ public class StringifiesStackTracesTest {
 		Exception deeper = new Exception(deepest);
 		Exception deep = new Exception(deeper);
 		
-		String result = subject.stackTraceAsString(deep);
+		String result = subject.stringify(deep);
 		
 		assertThat(result, containsString(deepest.getMessage()));
 	}

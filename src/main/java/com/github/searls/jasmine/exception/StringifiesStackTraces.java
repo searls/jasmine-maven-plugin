@@ -5,7 +5,7 @@ import java.io.StringWriter;
 
 public class StringifiesStackTraces {
 
-	public String stackTraceAsString(Throwable t) {
+	public String stringify(Throwable t) {
 		StringWriter stringWriter = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(stringWriter);
 		t.printStackTrace(printWriter);
