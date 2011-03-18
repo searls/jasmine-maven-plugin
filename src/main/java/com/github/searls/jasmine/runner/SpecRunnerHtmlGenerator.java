@@ -4,13 +4,15 @@ import static java.util.Arrays.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.codehaus.plexus.util.StringUtils;
 
+import com.github.searls.jasmine.format.FormatsScriptTags;
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.FindsScriptLocationsInDirectory;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
@@ -35,11 +37,11 @@ public class SpecRunnerHtmlGenerator {
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	private ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources = new ResolvesLocationOfPreloadSources();
 	private FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
-
+	private FormatsScriptTags formatsScriptTags = new FormatsScriptTags();
+	
 	private File sourceDir;
 	private File specDir;
 	private List<String> sourcesToLoadFirst;
-	private List<String> fileNamesAlreadyWrittenAsScriptTags = new ArrayList<String>();
 	private String sourceEncoding;
 
 	public SpecRunnerHtmlGenerator(File sourceDir, File specDir, List<String> sourcesToLoadFirst, String sourceEncoding) {
@@ -55,8 +57,8 @@ public class SpecRunnerHtmlGenerator {
 			StringTemplate template = new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
 
 			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS), template);
-			includeCssDependencies(asList(JASMINE_CSS), template);
-			setJavaScriptSourcesAttribute(template);
+			applyCssToTemplate(asList(JASMINE_CSS), template);
+			applyScriptTagsToTemplate(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
 			template.setAttribute(SOURCE_ENCODING, StringUtils.isNotBlank(sourceEncoding) ? sourceEncoding : DEFAULT_SOURCE_ENCODING);
 
@@ -78,7 +80,7 @@ public class SpecRunnerHtmlGenerator {
 		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
 	}
 
-	private void includeCssDependencies(List<String> dependencies, StringTemplate template) throws IOException {
+	private void applyCssToTemplate(List<String> dependencies, StringTemplate template) throws IOException {
 		StringBuilder css = new StringBuilder();
 		for (String cssFile : dependencies) {
 			css.append("<style type=\"text/css\">").append(ioUtilsWrapper.toString(cssFile)).append("</style>");
@@ -86,20 +88,12 @@ public class SpecRunnerHtmlGenerator {
 		template.setAttribute(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());
 	}
 
-	private void setJavaScriptSourcesAttribute(StringTemplate template) throws IOException {
-		StringBuilder scriptTags = new StringBuilder();
-		appendScriptTagsForFiles(scriptTags, resolvesLocationOfPreloadSources.resolve(sourcesToLoadFirst, sourceDir, specDir));
-		appendScriptTagsForFiles(scriptTags, findsScriptLocationsInDirectory.find(sourceDir));
-		appendScriptTagsForFiles(scriptTags, findsScriptLocationsInDirectory.find(specDir));
-		template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME, scriptTags.toString());
+	private void applyScriptTagsToTemplate(StringTemplate template) throws IOException {
+		Set<String> scripts = new LinkedHashSet<String>();
+		scripts.addAll(resolvesLocationOfPreloadSources.resolve(sourcesToLoadFirst, sourceDir, specDir));
+		scripts.addAll(findsScriptLocationsInDirectory.find(sourceDir));
+		scripts.addAll(findsScriptLocationsInDirectory.find(specDir));
+		template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME, formatsScriptTags.format(scripts));
 	}
 
-	private void appendScriptTagsForFiles(StringBuilder sb, List<String> sourceFiles) {
-		for (String sourceFile : sourceFiles) {
-			if (!fileNamesAlreadyWrittenAsScriptTags.contains(sourceFile)) {
-				sb.append("<script type=\"text/javascript\" src=\"").append(sourceFile).append("\"></script>");
-				fileNamesAlreadyWrittenAsScriptTags.add(sourceFile);
-			}
-		}
-	}
 }

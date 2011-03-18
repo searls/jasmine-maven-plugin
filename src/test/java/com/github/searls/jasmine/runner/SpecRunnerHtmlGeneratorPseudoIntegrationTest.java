@@ -28,7 +28,7 @@ import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SpecRunnerHtmlGeneratorIntegrationTest {
+public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
 	private static final String SOURCE_ENCODING = "as9du20asd xanadu";
