@@ -5,8 +5,6 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
@@ -19,14 +17,10 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
  */
 public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void run() throws IOException {
 		if(jsSrcDir.exists() && jsTestSrcDir.exists()) {
 			getLog().info("Generating runner '"+manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
-			try {
-				writeSpecRunnerToSourceSpecDirectory();
-			} catch (Exception e) {
-				throw new MojoFailureException(e,"JavaScript Test execution failed.","Failed to generate "+manualSpecRunnerHtmlFileName);
-			}
+			writeSpecRunnerToSourceSpecDirectory();
 		} else {
 			getLog().warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+jsSrcDir.getAbsolutePath()+"` and `"+jsTestSrcDir.getAbsolutePath()+"` exist.");
 		}
