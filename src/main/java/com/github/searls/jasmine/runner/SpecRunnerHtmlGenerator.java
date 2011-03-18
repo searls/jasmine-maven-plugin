@@ -4,9 +4,7 @@ import static java.util.Arrays.*;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.antlr.stringtemplate.StringTemplate;
@@ -14,7 +12,9 @@ import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.codehaus.plexus.util.StringUtils;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;
+import com.github.searls.jasmine.io.FindsScriptLocationsInDirectory;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.io.ResolvesLocationOfPreloadSources;
 
 public class SpecRunnerHtmlGenerator {
 
@@ -33,6 +33,8 @@ public class SpecRunnerHtmlGenerator {
 	
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
+	private ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources = new ResolvesLocationOfPreloadSources();
+	private FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
 
 	private File sourceDir;
 	private File specDir;
@@ -60,7 +62,7 @@ public class SpecRunnerHtmlGenerator {
 
 			return template.toString();
 		} catch (IOException e) {
-			throw new RuntimeException("Failed to load file names for dependencies or scripts", e);
+			throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
 		}
 	}
 
@@ -86,41 +88,10 @@ public class SpecRunnerHtmlGenerator {
 
 	private void setJavaScriptSourcesAttribute(StringTemplate template) throws IOException {
 		StringBuilder scriptTags = new StringBuilder();
-		appendScriptTagsForFiles(scriptTags, expandSourcesToLoadFirstRelativeToSourceDir());
-		appendScriptTagsForFiles(scriptTags, filesForScriptsInDirectory(sourceDir));
-		appendScriptTagsForFiles(scriptTags, filesForScriptsInDirectory(specDir));
+		appendScriptTagsForFiles(scriptTags, resolvesLocationOfPreloadSources.resolve(sourcesToLoadFirst, sourceDir, specDir));
+		appendScriptTagsForFiles(scriptTags, findsScriptLocationsInDirectory.find(sourceDir));
+		appendScriptTagsForFiles(scriptTags, findsScriptLocationsInDirectory.find(specDir));
 		template.setAttribute(SOURCES_TEMPLATE_ATTR_NAME, scriptTags.toString());
-	}
-
-	private List<String> expandSourcesToLoadFirstRelativeToSourceDir() {
-		List<String> files = new ArrayList<String>();
-		if (sourcesToLoadFirst != null) {
-			for (String sourceToLoadFirst : sourcesToLoadFirst) {
-				File file = new File(sourceDir, sourceToLoadFirst);
-				File specFile = new File(specDir, sourceToLoadFirst);
-				if (file.exists()) {
-					files.add(fileToString(file));
-				} else if (specFile.exists()) {
-					files.add(fileToString(specFile));
-				} else {
-					files.add(sourceToLoadFirst);
-				}
-			}
-		}
-		return files;
-	}
-
-	private List<String> filesForScriptsInDirectory(File directory) throws IOException {
-		List<String> fileNames = new ArrayList<String>();
-		if (directory != null) {
-			fileUtilsWrapper.forceMkdir(directory);
-			List<File> files = new ArrayList<File>(fileUtilsWrapper.listFiles(directory, new String[] { "js" }, true));
-			Collections.sort(files);
-			for (File file : files) {
-				fileNames.add(fileToString(file));
-			}
-		}
-		return fileNames;
 	}
 
 	private void appendScriptTagsForFiles(StringBuilder sb, List<String> sourceFiles) {
@@ -129,14 +100,6 @@ public class SpecRunnerHtmlGenerator {
 				sb.append("<script type=\"text/javascript\" src=\"").append(sourceFile).append("\"></script>");
 				fileNamesAlreadyWrittenAsScriptTags.add(sourceFile);
 			}
-		}
-	}
-
-	private String fileToString(File file) {
-		try {
-			return file.toURI().toURL().toString();
-		} catch (MalformedURLException e) {
-			throw new RuntimeException(e);
 		}
 	}
 }

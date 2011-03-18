@@ -1,7 +1,7 @@
 package com.github.searls.jasmine.runner;
 
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.*;
 import static com.github.searls.jasmine.Matchers.*;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -10,7 +10,9 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.logging.LogFactory;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -39,7 +41,8 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	@Spy private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
-
+	@Rule public ExpectedException expectedException = ExpectedException.none();
+	
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
 		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
@@ -49,7 +52,7 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	}
 
 	@Test
-	public void shouldPutInADocTypeWhenNoDependenciesAreProvided() {
+	public void shouldPutInADocTypeWhenNoDependenciesAreProvided() throws Exception {
 		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
 
 		assertThat(html, containsString(HTML5_DOCTYPE));
@@ -57,7 +60,7 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	}
 
 	@Test
-	public void shouldAssignSpecifiedSourceEncoding() {
+	public void shouldAssignSpecifiedSourceEncoding() throws Exception {
 		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
 
 		HtmlMeta contentType = getPage(html).getFirstByXPath("//meta");
@@ -65,7 +68,7 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 	}
 
 	@Test
-	public void shouldDefaultSourceEncodingWhenUnspecified() {
+	public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
 		specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null, "");
 
 		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
@@ -121,8 +124,18 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 
 		verify(fileUtilsWrapper).readFileToString(expected);
 	}
+	
+	@Test
+	public void throwsRuntimeWhenIOExceptionIsEncountered() throws IOException {
+		when(ioUtilsWrapper.toString(anyString())).thenThrow(new IOException("Am fail"));
+		expectedException.expect(RuntimeException.class);
+		expectedException.expectMessage("Failed to load files for dependencies, sources, or a custom runner");
+		
+		specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
+	}
 
-	private HtmlPage getPage(String html) {
+	
+	private HtmlPage getPage(String html) throws Exception {
 		MockWebConnection webConnection = new MockWebConnection();
 		webConnection.setDefaultResponse(html);
 		WebClient webClient = new WebClient();
@@ -132,10 +145,6 @@ public class SpecRunnerHtmlGeneratorIntegrationTest {
 			public void notify(String arg0, Object arg1) {
 			}
 		});
-		try {
-			return webClient.getPage("http://blah");
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
+		return webClient.getPage("http://blah");
 	}
 }
