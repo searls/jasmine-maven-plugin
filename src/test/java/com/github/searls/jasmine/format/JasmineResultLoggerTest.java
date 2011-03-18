@@ -18,6 +18,8 @@ public class JasmineResultLoggerTest {
 	@InjectMocks private JasmineResultLogger resultLogger = new JasmineResultLogger();
 	@Mock private Log log;
 	
+	
+	
 	@Test
 	public void shouldLogHeader() {
 		JasmineResult result = new JasmineResult();
@@ -36,6 +38,15 @@ public class JasmineResultLoggerTest {
 		resultLogger.log(result);
 		
 		verify(log).info(details);
+	}
+
+	@Test
+	public void setterSetsLogger() {
+		resultLogger.setLog(log);
+		
+		resultLogger.log(new JasmineResult());
+		
+		verify(log, atLeastOnce()).info(anyString());
 	}
 	
 }

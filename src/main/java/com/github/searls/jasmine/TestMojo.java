@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 import com.github.searls.jasmine.format.JasmineResultLogger;
@@ -21,7 +20,7 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
  */
 public class TestMojo extends AbstractJasmineMojo {
 
-	public void execute() throws MojoExecutionException, MojoFailureException {
+	public void run() throws Exception {
 		if(!skipTests) {
 			getLog().info("Executing Jasmine Specs");
 			JasmineResult result;
@@ -33,7 +32,7 @@ public class TestMojo extends AbstractJasmineMojo {
 						browserVersion, 
 						timeout, debug, getLog(), format);
 			} catch (Exception e) {
-				throw new MojoExecutionException(e,"There was a problem executing Jasmine specs",e.getMessage());
+				throw e;
 			}
 			logResults(result);
 			if(haltOnFailure && !result.didPass()) {

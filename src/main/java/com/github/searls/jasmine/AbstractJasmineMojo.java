@@ -4,7 +4,11 @@ import java.io.File;
 import java.util.List;
 
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+
+import com.github.searls.jasmine.exception.StringifiesStackTraces;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo {
 
@@ -147,4 +151,19 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="${project}"
 	 */
 	protected MavenProject mavenProject;
+	
+	protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
+	
+	public final void execute() throws MojoExecutionException, MojoFailureException {
+		try {
+			run();
+		} catch(MojoFailureException e) {
+			throw e;
+		} catch(Exception e) {
+			throw new MojoExecutionException("The jasmine-maven-plugin encountered an exception: \n"+stringifiesStackTraces.stringify(e),e);
+		}
+	}
+	
+	public abstract void run() throws Exception;
+	
 }
