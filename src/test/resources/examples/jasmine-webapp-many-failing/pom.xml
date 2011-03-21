@@ -6,15 +6,10 @@
 		<artifactId>jasmine-example-superpom</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>jasmine-webapp-example</artifactId>
+	<artifactId>jasmine-webapp-many-failing</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin</name>
-	
-	<properties>
-		<!-- This project is intended to fail -->
-		<haltOnFailure>false</haltOnFailure>
-	</properties>
-	
+		
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -24,7 +19,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>jasmine-webapp-example</finalName>
 		<plugins>
 			<plugin>
 				<groupId>com.github.searls</groupId>
