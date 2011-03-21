@@ -5,4 +5,11 @@ describe('HelloWorld',function(){
 		expect(helloWorld.greeting()).toBe("Hello, World");
 	});
 	
+	it('wins',function() {});
+	it('wins',function() {});
+	it('wins',function() {});
+	it('loses',function() {
+		expect('sad').toBe('panda');
+	});
+	
 });
