@@ -6,7 +6,7 @@ describe('FailSpec',function(){
 	
 	describe('NestedFail',function() {
 		it('should fail deeply',function() {
-			expect(true).toBe(false);
+			expect(7).toBe(89);
 		});
 	})
 	

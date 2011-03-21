@@ -6,10 +6,10 @@
 		<artifactId>jasmine-example-superpom</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>jasmine-webapp-custom-dirs</artifactId>
+	<artifactId>jasmine-webapp-single-failing</artifactId>
 	<packaging>war</packaging>
-	<name>Example Webapp using Jasmine Maven Plugin using custom directories</name>
-	
+	<name>Example Webapp using Jasmine Maven Plugin</name>
+		
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
@@ -19,7 +19,6 @@
 		</dependency>
 	</dependencies>
 	<build>
-		<finalName>jasmine-webapp-custom-dirs</finalName>
 		<plugins>
 			<plugin>
 				<groupId>com.github.searls</groupId>
@@ -32,10 +31,8 @@
 							<goal>resources</goal>
 							<goal>testResources</goal>
 							<goal>test</goal>
+							<goal>preparePackage</goal>
 						</goals>
-						<configuration>
-							<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
