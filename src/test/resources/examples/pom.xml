@@ -7,17 +7,4 @@
 	<version>1.0.2-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>jasmine-maven-plugin Example Projects</name>
-
-	<modules>
-		<module>jasmine-webapp-custom-dirs</module>
-		<module>jasmine-webapp-empty-example</module>
-		<module>jasmine-webapp-order-matters</module>
-		<module>jasmine-webapp-spec-order-matters</module>
-		<module>jasmine-webapp-custom-encoding</module>
-		<module>jasmine-webapp-custom-runner</module>
-		<module>jasmine-webapp-custom-browser</module>
-		<module>jasmine-webapp-load-remote</module>
-		<module>jasmine-webapp-progress-format</module>
-	</modules>
-
 </project>
