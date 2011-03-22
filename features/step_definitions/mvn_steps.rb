@@ -22,3 +22,7 @@ end
 Then /^I should not see "([^"]*)"$/ do |content|
   @output.should_not match content
 end
+
+Then /^the file "([^"]*)" should contain "(.*)"$/ do |file_name,content|
+  File.read(Dir.pwd+'/'+file_name).should match content
+end
