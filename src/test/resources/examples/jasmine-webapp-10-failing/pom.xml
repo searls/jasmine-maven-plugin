@@ -10,14 +10,6 @@
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin</name>
 		
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 	<build>
 		<plugins>
 			<plugin>
@@ -31,7 +23,6 @@
 							<goal>resources</goal>
 							<goal>testResources</goal>
 							<goal>test</goal>
-							<goal>preparePackage</goal>
 						</goals>
 					</execution>
 				</executions>
