@@ -31,5 +31,15 @@ public class JasmineResultTest {
 
 		assertThat(success, is(false));
 	}
+	
+
+	@Test
+	public void shouldFailWhenMultipleOfTenFails() {
+		jasmineResult.setDetails("Results: 2 specs, 10 failures");
+
+		boolean success = jasmineResult.didPass();
+
+		assertThat(success, is(false));
+	}
 
 }
