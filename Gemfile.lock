@@ -14,6 +14,7 @@ GEM
       json (>= 1.4.6)
     json (1.5.1)
     linecache (0.43)
+    nokogiri (1.4.4)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
@@ -34,5 +35,6 @@ PLATFORMS
 
 DEPENDENCIES
   cucumber (~> 0.10.2)
+  nokogiri (~> 1.4.4)
   rspec (~> 2.5.0)
   ruby-debug
