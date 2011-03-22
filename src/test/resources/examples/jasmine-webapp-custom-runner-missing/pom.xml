@@ -9,14 +9,7 @@
 	<artifactId>jasmine-webapp-custom-runner-missing</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin that overrides the default custom runner template but the file is misplaced</name>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+
 	<build>
 		<finalName>jasmine-webapp-custom-runner-missing</finalName>
 		<plugins>
@@ -31,7 +24,6 @@
 							<goal>resources</goal>
 							<goal>testResources</goal>
 							<goal>test</goal>
-							<goal>preparePackage</goal>
 						</goals>
 					</execution>
 				</executions>

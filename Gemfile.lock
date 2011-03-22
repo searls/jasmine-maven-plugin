@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    archive-tar-minitar (0.5.2)
     builder (3.0.0)
     columnize (0.3.2)
     cucumber (0.10.2)
@@ -12,8 +13,16 @@ GEM
     diff-lcs (1.1.2)
     gherkin (2.3.5)
       json (>= 1.4.6)
-    json (1.5.1)
+    json (1.4.6)
     linecache (0.43)
+    mime-types (1.16)
+    nokogiri (1.4.4)
+    relish (0.2.2)
+      archive-tar-minitar (~> 0.5.2)
+      json (~> 1.4.6)
+      rest-client (~> 1.6.1)
+    rest-client (1.6.1)
+      mime-types (>= 1.16)
     rspec (2.5.0)
       rspec-core (~> 2.5.0)
       rspec-expectations (~> 2.5.0)
@@ -34,5 +43,7 @@ PLATFORMS
 
 DEPENDENCIES
   cucumber (~> 0.10.2)
+  nokogiri (~> 1.4.4)
+  relish (~> 0.2.2)
   rspec (~> 2.5.0)
   ruby-debug

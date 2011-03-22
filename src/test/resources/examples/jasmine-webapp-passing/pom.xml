@@ -6,10 +6,10 @@
 		<artifactId>jasmine-example-superpom</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>jasmine-webapp-order-matters</artifactId>
+	<artifactId>jasmine-webapp-passing</artifactId>
 	<packaging>war</packaging>
-	<name>Example Webapp using Jasmine Maven Plugin where the order of sources matters</name>
-	
+	<name>Example Webapp using Jasmine Maven Plugin</name>
+		
 	<build>
 		<plugins>
 			<plugin>
@@ -19,15 +19,11 @@
 				<executions>
 					<execution>
 						<goals>
+							<goal>generateManualRunner</goal>
 							<goal>resources</goal>
 							<goal>testResources</goal>
 							<goal>test</goal>
 						</goals>
-						<configuration>
-							<preloadSources>
-								<source>z.js</source>
-							</preloadSources>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>

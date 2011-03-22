@@ -10,16 +10,7 @@
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin using custom directories</name>
 	
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.8.1</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 	<build>
-		<finalName>jasmine-webapp-custom-dirs</finalName>
 		<plugins>
 			<plugin>
 				<groupId>com.github.searls</groupId>
@@ -35,6 +26,7 @@
 						</goals>
 						<configuration>
 							<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+							<jsTestSrcDir>${project.basedir}/src/test/jasmine</jsTestSrcDir>
 						</configuration>
 					</execution>
 				</executions>
