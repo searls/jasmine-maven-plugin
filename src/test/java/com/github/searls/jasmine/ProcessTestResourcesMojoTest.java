@@ -17,31 +17,30 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.searls.jasmine.io.DirectoryCopier;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessTestResourcesMojoTest {
 
-	@InjectMocks private ProcessResourcesMojo processResourcesMojo = new ProcessResourcesMojo();
+	@InjectMocks private ProcessResourcesMojo subject = new ProcessResourcesMojo();
 	@Mock private DirectoryCopier directoryCopier;
 	
 	@Before
-	public void before() {
-		//eat logging
-		processResourcesMojo.setLog(mock(Log.class));
+	public void killLogging() {
+		subject.setLog(mock(Log.class));
 	}
 	
 	@Test
 	public void shouldUseDirectoryCopier() throws IOException, MojoExecutionException, MojoFailureException {
-		String expectedSuffix = ".js";
 		File srcDir = mock(File.class);
 		when(srcDir.exists()).thenReturn(true);
-		processResourcesMojo.jsSrcDir = srcDir;
-		processResourcesMojo.srcDirectoryName = "blah";
+		subject.sources = new ScriptSearch(srcDir,null,null);
+		subject.srcDirectoryName = "blah";
 		
-		processResourcesMojo.execute();
+		subject.run();
 		
-		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class), eq(expectedSuffix));
+		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class));
 	}
 	
 	

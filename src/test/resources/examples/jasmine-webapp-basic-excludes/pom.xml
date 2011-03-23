@@ -1,0 +1,40 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.github.searls</groupId>
+		<artifactId>jasmine-example-superpom</artifactId>
+		<version>1.0.2-SNAPSHOT</version>
+	</parent>
+	<artifactId>jasmine-webapp-basic-excludes</artifactId>
+	<packaging>war</packaging>
+	<name>Example Webapp using Jasmine Maven Plugin using custom directories</name>
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>generateManualRunner</goal>
+							<goal>resources</goal>
+							<goal>testResources</goal>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+              <sourceExcludes>
+                <exclude>yui/**</exclude>
+              </sourceExcludes>
+              <specExcludes>
+                <exclude>bomb-spec.js</exclude>
+              </specExcludes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

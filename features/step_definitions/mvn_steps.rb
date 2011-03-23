@@ -31,6 +31,16 @@ Then /^the file "([^"]*)" should have XML "(.*)"$/ do |file_name, xpath|
   Nokogiri::XML.parse(load_file(file_name)).xpath(xpath).length.should be >= 1
 end
 
+Given /^the file "([^"]*)" does exist$/ do |file_name|
+  File.exist?(file_name).should be true  
+end
+
+Then /^the file "([^"]*)" does not exist$/ do |file_name|
+  File.exist?(file_name).should be false  
+end
+
+private
+
 def load_file file_name
   File.read(Dir.pwd+'/'+file_name)
 end

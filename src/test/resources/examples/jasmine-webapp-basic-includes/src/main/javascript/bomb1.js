@@ -1,0 +1,1 @@
+throw 'bomb 1';

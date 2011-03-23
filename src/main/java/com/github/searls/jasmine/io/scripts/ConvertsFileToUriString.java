@@ -1,4 +1,4 @@
-package com.github.searls.jasmine.io;
+package com.github.searls.jasmine.io.scripts;
 
 import java.io.File;
 import java.net.MalformedURLException;

@@ -16,22 +16,11 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(FileFilterUtils.class)
 public class FileFilterUtilsWrapperTest {
 
-	private FileFilterUtilsWrapper sut = new FileFilterUtilsWrapper();
+	private FileFilterUtilsWrapper subject = new FileFilterUtilsWrapper();
 	
 	@Before
 	public void powerfullyMockStaticClasses() {
 		mockStatic(FileFilterUtils.class);
-	}
-	
-	@Test
-	public void suffixFileFilterDelegates() {
-		String string = "blah";
-		IOFileFilter expected = mock(IOFileFilter.class);
-		when(FileFilterUtils.suffixFileFilter(string)).thenReturn(expected);
-		
-		IOFileFilter result = sut.suffixFileFilter(string);
-		
-		assertThat(result,is(expected));
 	}
 	
 	@Test
@@ -41,7 +30,7 @@ public class FileFilterUtilsWrapperTest {
 		IOFileFilter expected = mock(IOFileFilter.class);
 		when(FileFilterUtils.and(first,second)).thenReturn(expected);
 		
-		IOFileFilter result = sut.and(first,second);
+		IOFileFilter result = subject.and(first,second);
 		
 		assertThat(result,is(expected));
 	}
@@ -53,7 +42,7 @@ public class FileFilterUtilsWrapperTest {
 		IOFileFilter expected = mock(IOFileFilter.class);
 		when(FileFilterUtils.or(first,second)).thenReturn(expected);
 		
-		IOFileFilter result = sut.or(first,second);
+		IOFileFilter result = subject.or(first,second);
 		
 		assertThat(result,is(expected));
 	}
