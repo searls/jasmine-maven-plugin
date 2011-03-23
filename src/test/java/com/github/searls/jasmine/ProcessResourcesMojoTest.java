@@ -26,8 +26,7 @@ public class ProcessResourcesMojoTest {
 	@Mock private DirectoryCopier directoryCopier;
 	
 	@Before
-	public void before() {
-		//eat logging
+	public void killLogging() {
 		processTestResourcesMojo.setLog(mock(Log.class));
 	}
 	

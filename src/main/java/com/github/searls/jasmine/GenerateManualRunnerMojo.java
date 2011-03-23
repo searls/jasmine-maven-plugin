@@ -8,7 +8,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
 import com.github.searls.jasmine.io.scripts.ResolvesCompleteListOfScriptLocations;
-import com.github.searls.jasmine.io.scripts.ResolvesLocationOfPreloadSources;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
 

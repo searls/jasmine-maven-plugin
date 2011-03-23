@@ -1,10 +1,10 @@
 package com.github.searls.jasmine;
 
 import static java.util.Arrays.*;
+
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

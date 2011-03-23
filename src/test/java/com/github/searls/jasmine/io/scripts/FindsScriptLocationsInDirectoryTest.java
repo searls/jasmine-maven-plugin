@@ -1,74 +1,61 @@
 package com.github.searls.jasmine.io.scripts;
 
 import static java.util.Arrays.*;
-import static org.mockito.Mockito.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.searls.jasmine.io.FileUtilsWrapper;
+import com.github.searls.jasmine.io.ScansDirectory;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindsScriptLocationsInDirectoryTest {
 
+	private static final List<String> INCLUDES = asList("So in");
+	private static final List<String> EXCLUDES = asList("So out");
+	private static final String FILE_LOCATION = "blah/a.js";
+	
 	@InjectMocks private FindsScriptLocationsInDirectory subject = new FindsScriptLocationsInDirectory();
 
-	@Mock private FileUtilsWrapper fileUtilsWrapper;
+	@Mock private ScansDirectory scansDirectory;
 	@Mock private ConvertsFileToUriString convertsFileToUriString; 
 	
-	@Mock private File directory;
-	@Mock private File file;
+	@Spy private File directory = new File("Not quite a real directory");
 	
-	@Test
-	public void returnsEmptyCollectionWhenDirIsNull() throws IOException {
-//		List<String> prepare = subject.find(null);
-//		
-//		assertThat(prepare,is(Collections.emptyList()));
+	@Before
+	public void directoryStubbing() {
+		when(directory.canRead()).thenReturn(true);
 	}
 	
-//	@Test
-//	public void forceMakesTheDirectory() throws IOException {
-//		subject.find(directory);
-//		
-//		verify(fileUtilsWrapper).forceMkdir(directory);
-//	}
-//
-//	@Test
-//	public void addsJsFilesInDirectory() throws IOException {
-//		String expected = "pants";
-//		when(fileUtilsWrapper.listFiles(directory, new String[] {"js"}, true)).thenReturn(asList(file));
-//		when(convertsFileToUriString.convert(file)).thenReturn(expected);
-//		
-//		List<String> result = subject.find(directory);
-//		
-//		assertThat(result,hasItem(expected));
-//	}
-//	
-//	@Test
-//	public void sortsFiles() throws IOException {
-//		String first = "A";
-//		String second = "B";
-//		File firstFile = new File(first);
-//		File secondFile = new File(second);
-//		when(fileUtilsWrapper.listFiles(directory, new String[] {"js"}, true)).thenReturn(asList(secondFile,firstFile));
-//		when(convertsFileToUriString.convert(firstFile)).thenReturn(first);
-//		when(convertsFileToUriString.convert(secondFile)).thenReturn(second);
-//		
-//		List<String> result = subject.find(directory);
-//		
-//		assertThat(result.get(0),is(first));
-//		assertThat(result.get(1),is(second));
-//	}
+	@Test
+	public void returnsEmptyWhenDirectoryDoesNotExist() throws IOException {
+		List<String> result = subject.find(new File("No way does this file exist"),null,null);
+		
+		assertThat(result,is(Collections.emptyList()));
+	}
+
+	@Test
+	public void addsScriptLocationScannerFinds() throws IOException {
+		String expected = "full blown file";
+		when(scansDirectory.scan(directory, INCLUDES, EXCLUDES)).thenReturn(asList(FILE_LOCATION));
+		when(convertsFileToUriString.convert(new File(directory,FILE_LOCATION))).thenReturn(expected);
+		
+		List<String> result = subject.find(directory,INCLUDES,EXCLUDES);
+		
+		assertThat(result,hasItem(expected));
+	}
 	
 }

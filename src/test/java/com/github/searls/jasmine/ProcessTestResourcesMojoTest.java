@@ -22,24 +22,22 @@ import com.github.searls.jasmine.io.DirectoryCopier;
 @RunWith(MockitoJUnitRunner.class)
 public class ProcessTestResourcesMojoTest {
 
-	@InjectMocks private ProcessResourcesMojo processResourcesMojo = new ProcessResourcesMojo();
+	@InjectMocks private ProcessResourcesMojo subject = new ProcessResourcesMojo();
 	@Mock private DirectoryCopier directoryCopier;
 	
 	@Before
-	public void before() {
-		//eat logging
-		processResourcesMojo.setLog(mock(Log.class));
+	public void killLogging() {
+		subject.setLog(mock(Log.class));
 	}
 	
 	@Test
 	public void shouldUseDirectoryCopier() throws IOException, MojoExecutionException, MojoFailureException {
-		String expectedSuffix = ".js";
 		File srcDir = mock(File.class);
 		when(srcDir.exists()).thenReturn(true);
-		processResourcesMojo.jsSrcDir = srcDir;
-		processResourcesMojo.srcDirectoryName = "blah";
+		subject.jsSrcDir = srcDir;
+		subject.srcDirectoryName = "blah";
 		
-		processResourcesMojo.execute();
+		subject.execute();
 		
 		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class));
 	}
