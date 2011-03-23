@@ -21,7 +21,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(FileUtils.class)
 public class FileUtilsWrapperTest {
 
-	private FileUtilsWrapper sut = new FileUtilsWrapper();
+	private FileUtilsWrapper subject = new FileUtilsWrapper();
+	
 	private File file = mock(File.class);
 
 	@Before
@@ -34,14 +35,14 @@ public class FileUtilsWrapperTest {
 		String expected = "contents";
 		when(FileUtils.readFileToString(file)).thenReturn(expected);
 
-		String result = sut.readFileToString(file);
+		String result = subject.readFileToString(file);
 
 		assertThat(result,is(expected));
 	}
 	
 	@Test
 	public void delegatesForcingMkdirToFileUtils() throws IOException {
-		sut.forceMkdir(file);
+		subject.forceMkdir(file);
 
 		verifyStatic();
 		FileUtils.forceMkdir(file);
@@ -54,7 +55,7 @@ public class FileUtilsWrapperTest {
 		boolean recursive = true;
 		when(FileUtils.listFiles(file, extensions, recursive)).thenReturn(expected);
 		
-		Collection<File> files = sut.listFiles(file,extensions,recursive);
+		Collection<File> files = subject.listFiles(file,extensions,recursive);
 		
 		assertThat(files,is(sameInstance(expected)));
 	}
@@ -64,7 +65,7 @@ public class FileUtilsWrapperTest {
 		String data = "string";
 		String encoding = "UTF-8";
 		
-		sut.writeStringToFile(file,data,encoding);
+		subject.writeStringToFile(file,data,encoding);
 		
 		verifyStatic();
 		FileUtils.writeStringToFile(file, data,encoding);	
@@ -76,7 +77,7 @@ public class FileUtilsWrapperTest {
 		File destDir = mock(File.class);
 		IOFileFilter filter = mock(IOFileFilter.class);
 		
-		sut.copyDirectory(srcDir,destDir,filter);
+		subject.copyDirectory(srcDir,destDir,filter);
 		
 		verifyStatic();
 		FileUtils.copyDirectory(srcDir, destDir, filter);

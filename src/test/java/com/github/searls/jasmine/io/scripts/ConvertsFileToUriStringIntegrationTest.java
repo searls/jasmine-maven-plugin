@@ -1,4 +1,4 @@
-package com.github.searls.jasmine.io;
+package com.github.searls.jasmine.io.scripts;
 
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -13,6 +13,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.internal.matchers.TypeSafeMatcher;
 import org.junit.rules.ExpectedException;
+
 
 public class ConvertsFileToUriStringIntegrationTest {
 	private ConvertsFileToUriString subject = new ConvertsFileToUriString();

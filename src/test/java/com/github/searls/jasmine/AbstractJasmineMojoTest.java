@@ -1,7 +1,11 @@
 package com.github.searls.jasmine;
 
+import static com.github.searls.jasmine.Matchers.*;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -32,6 +36,45 @@ public class AbstractJasmineMojoTest {
 		doThrow(e).when(subject).run();
 		
 		subject.execute();
+	}
+
+	@Test
+	public void rethrowsMojoFailureExceptions() throws Exception {
+		String expected = "panda";
+		expectedException.expect(MojoFailureException.class);
+		expectedException.expectMessage(expected);
+		MojoFailureException e = new MojoFailureException(expected);
+		doThrow(e).when(subject).run();
+		
+		subject.execute();		
+	}
+
+	@Test
+	public void setsSourceIncludes() throws Exception {
+		subject.execute();
+		
+		assertThat(subject.sources.getIncludes(),hasItem("**/*.js"));
+	}
+	
+	@Test
+	public void setsSourceExcludes() throws Exception {
+		subject.execute();
+		
+		assertThat(subject.sources.getExcludes(),is(empty()));
+	}
+
+	@Test
+	public void setsSpecIncludes() throws Exception {
+		subject.execute();
+		
+		assertThat(subject.specs.getIncludes(),hasItem("**/*.js"));
+	}
+	
+	@Test
+	public void setsSpecExcludes() throws Exception {
+		subject.execute();
+		
+		assertThat(subject.specs.getExcludes(),is(empty()));
 	}
 	
 }

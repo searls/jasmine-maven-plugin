@@ -11,14 +11,12 @@ import com.github.searls.jasmine.io.DirectoryCopier;
  */
 public class ProcessTestResourcesMojo extends AbstractJasmineMojo {
 
-	private static final String JS_EXT = ".js";
-
 	private DirectoryCopier directoryCopier = new DirectoryCopier();
 
 	public void run() throws IOException {
 		getLog().info("Processing JavaScript Specs");
-		if (jsTestSrcDir.exists()) {
-			directoryCopier.copyDirectory(jsTestSrcDir, new File(jasmineTargetDir, specDirectoryName), JS_EXT);
+		if (specs.getDirectory().exists()) {
+			directoryCopier.copyDirectory(specs.getDirectory(), new File(jasmineTargetDir, specDirectoryName));
 		} else {
 			getLog().warn("JavaScript test source folder was expected but was not found. " +
 					"Set configuration property `jsTestSrcDir` to the directory containing your specs. " +

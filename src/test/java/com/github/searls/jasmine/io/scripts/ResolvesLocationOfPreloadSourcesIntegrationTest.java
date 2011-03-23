@@ -1,4 +1,4 @@
-package com.github.searls.jasmine.io;
+package com.github.searls.jasmine.io.scripts;
 
 import static java.util.Arrays.*;
 import static org.hamcrest.Matchers.*;
@@ -11,6 +11,9 @@ import java.util.List;
 import org.junit.After;
 import org.junit.Test;
 
+import com.github.searls.jasmine.io.CreatesTempDirectories;
+
+
 public class ResolvesLocationOfPreloadSourcesIntegrationTest {
 
 	private static final String SPEC = "spec";
@@ -18,8 +21,9 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
 
 	private ResolvesLocationOfPreloadSources subject = new ResolvesLocationOfPreloadSources();
 	
-	private File sourceDir = createTempDir(SOURCE);
-	private File specDir = createTempDir(SPEC);
+	private CreatesTempDirectories createsTempDirectories = new CreatesTempDirectories();
+	private File sourceDir = createsTempDirectories.create(SOURCE);
+	private File specDir = createsTempDirectories.create(SPEC);
 	
 	@After
 	public void deleteTempDirs() {
@@ -74,17 +78,5 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
 		assertThat(result.size(),is(1));
 		assertThat(result.get(0),is(expected));
 	}
-
-	private File createTempDir(String name) {
-		try {
-			File temp = File.createTempFile(name, "");
-			temp.delete();
-			temp.mkdir();
-			return temp;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-	
-	
+//	
 }

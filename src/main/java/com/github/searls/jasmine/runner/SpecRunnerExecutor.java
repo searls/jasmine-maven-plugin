@@ -26,7 +26,7 @@ public class SpecRunnerExecutor {
 	
 	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion, int timeout, boolean debug, Log log, String format) {
 		try {
-			//TODO - this class has at least two reasons to change: configuring a web client and running specs. extract at least one class
+			//TODO - this class has numerous reasons to change: configuring a web client and running specs. extract at least one class
 			BrowserVersion htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(browserVersion).get(BrowserVersion.class);
 			WebClient webClient = new WebClient(htmlUnitBrowserVersion);
 			webClient.setJavaScriptEnabled(true);
