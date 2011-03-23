@@ -12,13 +12,11 @@ public class ResolvesCompleteListOfScriptLocations {
 	private FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
 	private ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources = new ResolvesLocationOfPreloadSources();
 	
-	public Set<String> resolveWithPreloadSources(ScriptSearch sources, ScriptSearch specs, List<String> preloadSources) throws IOException {
+	public Set<String> resolve(ScriptSearch sources, ScriptSearch specs, List<String> preloadSources) throws IOException {
 		Set<String> scripts =  new LinkedHashSet<String>();
-		List<String> sourceScripts = findsScriptLocationsInDirectory.find(sources);
-		List<String> specScripts = findsScriptLocationsInDirectory.find(specs);
-		scripts.addAll(resolvesLocationOfPreloadSources.resolve(preloadSources, sources.getBaseDirectory(), specs.getBaseDirectory()));
-		scripts.addAll(sourceScripts);
-		scripts.addAll(specScripts);
+		scripts.addAll(resolvesLocationOfPreloadSources.resolve(preloadSources, sources.getDirectory(), specs.getDirectory()));
+		scripts.addAll(findsScriptLocationsInDirectory.find(sources));
+		scripts.addAll(findsScriptLocationsInDirectory.find(specs));
 		return scripts;
 	}
 	

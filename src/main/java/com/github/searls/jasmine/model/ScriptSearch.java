@@ -5,18 +5,18 @@ import java.util.List;
 
 public class ScriptSearch {
 
-	private File baseDirectory;
+	private File directory;
 	private List<String> includes;
 	private List<String> excludes;
 	
-	public ScriptSearch(File baseDirectory, List<String> includes, List<String> excludes) {
-		this.baseDirectory = baseDirectory;
+	public ScriptSearch(File directory, List<String> includes, List<String> excludes) {
+		this.directory = directory;
 		this.includes = includes;
 		this.excludes = excludes;
 	}
 	
-	public File getBaseDirectory() {
-		return baseDirectory;
+	public File getDirectory() {
+		return directory;
 	}
 
 	public List<String> getIncludes() {

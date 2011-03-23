@@ -15,9 +15,9 @@ public class FindsScriptLocationsInDirectory {
 	
 	public List<String> find(ScriptSearch search) throws IOException {
 		List<String> scriptLocations = new ArrayList<String>();
-		if(search.getBaseDirectory().canRead()) {
-			for(String script : scansDirectory.scan(search.getBaseDirectory(), search.getIncludes(), search.getExcludes())) {
-				scriptLocations.add(convertsFileToUriString.convert(new File(search.getBaseDirectory(),script)));
+		if(search.getDirectory().canRead()) {
+			for(String script : scansDirectory.scan(search.getDirectory(), search.getIncludes(), search.getExcludes())) {
+				scriptLocations.add(convertsFileToUriString.convert(new File(search.getDirectory(),script)));
 			}
 		}
 		return scriptLocations;

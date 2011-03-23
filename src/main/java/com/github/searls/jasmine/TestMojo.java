@@ -54,7 +54,7 @@ public class TestMojo extends AbstractJasmineMojo {
 	}
 
 	private File writeSpecRunnerToOutputDirectory() throws IOException {
-		Set<String> scripts = resolvesCompleteListOfScriptLocations.resolveWithPreloadSources(
+		Set<String> scripts = resolvesCompleteListOfScriptLocations.resolve(
 				searchForDir(new File(jasmineTargetDir,srcDirectoryName),sources),
 				searchForDir(new File(jasmineTargetDir,specDirectoryName),specs),
 				preloadSources);

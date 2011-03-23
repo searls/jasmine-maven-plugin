@@ -15,8 +15,8 @@ public class ProcessResourcesMojo extends AbstractJasmineMojo {
 
 	public void run() throws IOException {
 		getLog().info("Processing JavaScript Sources");
-		if (sources.getBaseDirectory().exists()) {
-			directoryCopier.copyDirectory(sources.getBaseDirectory(), new File(jasmineTargetDir, srcDirectoryName));
+		if (sources.getDirectory().exists()) {
+			directoryCopier.copyDirectory(sources.getDirectory(), new File(jasmineTargetDir, srcDirectoryName));
 		} else {
 			getLog().warn("JavaScript source folder was expected but was not found. " +
 					"Set configuration property `jsSrcDir` to the directory containing your JavaScript sources. " +

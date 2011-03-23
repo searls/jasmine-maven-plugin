@@ -22,16 +22,16 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 	private ResolvesCompleteListOfScriptLocations resolvesCompleteListOfScriptLocations = new ResolvesCompleteListOfScriptLocations();
 	
 	public void run() throws IOException {
-		if(sources.getBaseDirectory().exists() && specs.getBaseDirectory().exists()) {
+		if(sources.getDirectory().exists() && specs.getDirectory().exists()) {
 			getLog().info("Generating runner '"+manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
 			writeSpecRunnerToSourceSpecDirectory();
 		} else {
-			getLog().warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+sources.getBaseDirectory().getAbsolutePath()+"` and `"+specs.getBaseDirectory().getAbsolutePath()+"` exist.");
+			getLog().warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+sources.getDirectory().getAbsolutePath()+"` and `"+specs.getDirectory().getAbsolutePath()+"` exist.");
 		}
 	}
 
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
-		Set<String> scripts = resolvesCompleteListOfScriptLocations.resolveWithPreloadSources(sources, specs, preloadSources);
+		Set<String> scripts = resolvesCompleteListOfScriptLocations.resolve(sources, specs, preloadSources);
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(scripts, sourceEncoding);
 		String runner = htmlGenerator.generate(ReporterType.TrivialReporter, customRunnerTemplate);
 		
