@@ -19,7 +19,6 @@ public class ScansDirectoryIntegrationTest {
 	private ScansDirectory subject = new ScansDirectory();
 	
 	private CreatesTempDirectories createsTempDirectories = new CreatesTempDirectories();
-	
 	private File directory = createsTempDirectories.create("someDir");
 	
 	@Test

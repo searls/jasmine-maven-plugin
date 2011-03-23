@@ -7,20 +7,18 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.github.searls.jasmine.model.ScriptSearch;
+
 public class ResolvesCompleteListOfScriptLocations {
 
 	private FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
 	private ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources = new ResolvesLocationOfPreloadSources();
 	
-	public Set<String> resolve(File sourceBaseDir, File specBaseDir, List<String> sourceIncludes, List<String> sourceExcludes, List<String> specIncludes, List<String> specExcludes) throws IOException {
-		return resolveWithPreloadSources(sourceBaseDir, specBaseDir, sourceIncludes, sourceExcludes, specIncludes, specExcludes, new ArrayList<String>());
-	}
-	
-	public Set<String> resolveWithPreloadSources(File sourceBaseDir, File specBaseDir, List<String> sourceIncludes, List<String> sourceExcludes, List<String> specIncludes, List<String> specExcludes, List<String> preloadSources) throws IOException {
+	public Set<String> resolveWithPreloadSources(ScriptSearch sources, ScriptSearch specs, List<String> preloadSources) throws IOException {
 		Set<String> scripts =  new LinkedHashSet<String>();
-		List<String> sourceScripts = findsScriptLocationsInDirectory.find(sourceBaseDir,sourceIncludes,sourceExcludes);
-		List<String> specScripts = findsScriptLocationsInDirectory.find(specBaseDir,specIncludes,specExcludes);
-		scripts.addAll(resolvesLocationOfPreloadSources.resolve(preloadSources, sourceBaseDir, specBaseDir));
+		List<String> sourceScripts = findsScriptLocationsInDirectory.find(sources);
+		List<String> specScripts = findsScriptLocationsInDirectory.find(specs);
+		scripts.addAll(resolvesLocationOfPreloadSources.resolve(preloadSources, sources.getBaseDirectory(), specs.getBaseDirectory()));
 		scripts.addAll(sourceScripts);
 		scripts.addAll(specScripts);
 		return scripts;

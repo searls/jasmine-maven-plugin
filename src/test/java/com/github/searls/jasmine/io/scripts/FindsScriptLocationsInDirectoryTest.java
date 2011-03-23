@@ -18,6 +18,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 import edu.emory.mathcs.backport.java.util.Collections;
 
@@ -42,7 +43,7 @@ public class FindsScriptLocationsInDirectoryTest {
 	
 	@Test
 	public void returnsEmptyWhenDirectoryDoesNotExist() throws IOException {
-		List<String> result = subject.find(new File("No way does this file exist"),null,null);
+		List<String> result = subject.find(new ScriptSearch(new File("No way does this file exist"),null,null));
 		
 		assertThat(result,is(Collections.emptyList()));
 	}
@@ -53,7 +54,7 @@ public class FindsScriptLocationsInDirectoryTest {
 		when(scansDirectory.scan(directory, INCLUDES, EXCLUDES)).thenReturn(asList(FILE_LOCATION));
 		when(convertsFileToUriString.convert(new File(directory,FILE_LOCATION))).thenReturn(expected);
 		
-		List<String> result = subject.find(directory,INCLUDES,EXCLUDES);
+		List<String> result = subject.find(new ScriptSearch(directory,INCLUDES,EXCLUDES));
 		
 		assertThat(result,hasItem(expected));
 	}

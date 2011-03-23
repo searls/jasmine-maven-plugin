@@ -12,6 +12,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo {
 
@@ -20,12 +21,12 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter default-value="${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript" expression="${jsSrcDir}"
 	 */
-	protected File jsSrcDir;
+	private File jsSrcDir;
 	
 	/**
 	 * @parameter default-value="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript" expression="${jsTestSrcDir}"
 	 */
-	protected File jsTestSrcDir;
+	private File jsTestSrcDir;
 	
 	/**
 	 * Determines the browser and version profile to execute the headless specs against. Because the plugin
@@ -153,32 +154,37 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter
 	 */
-	protected List<String> sourceIncludes = asList("**/*.js");
+	private List<String> sourceIncludes = asList("**/*.js");
 	
 	/**
 	 * @parameter
 	 */
-	protected List<String> sourceExcludes = Collections.emptyList();
+	private List<String> sourceExcludes = Collections.emptyList();
 	
 	/**
 	 * @parameter
 	 */
-	protected List<String> specIncludes = asList("**/*.js");
+	private List<String> specIncludes = asList("**/*.js");
 	
 	/**
 	 * @parameter
 	 */
-	protected List<String> specExcludes = Collections.emptyList();
-	
+	private List<String> specExcludes = Collections.emptyList();
 	
 	/**
 	 * @parameter default-value="${project}"
 	 */
 	protected MavenProject mavenProject;
+
+	protected ScriptSearch sources;
+	protected ScriptSearch specs;
 	
 	protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
-	
+
 	public final void execute() throws MojoExecutionException, MojoFailureException {
+		sources = new ScriptSearch(jsSrcDir,sourceIncludes,sourceExcludes);
+		specs = new ScriptSearch(jsTestSrcDir,specIncludes,specExcludes);
+		
 		try {
 			run();
 		} catch(MojoFailureException e) {

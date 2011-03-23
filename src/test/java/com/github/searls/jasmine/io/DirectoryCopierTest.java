@@ -19,7 +19,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class DirectoryCopierTest {
 
-	@InjectMocks private DirectoryCopier directoryCopier = new DirectoryCopier();
+	@InjectMocks private DirectoryCopier subject = new DirectoryCopier();
+	
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	@Mock private FileFilterUtilsWrapper fileFilterUtilsWrapper;
 	
@@ -30,7 +31,7 @@ public class DirectoryCopierTest {
 	public void shouldApplyDirectoriesToFilterAfterFileFilter() throws IOException {
 		IOFileFilter expected = FileFileFilter.FILE;
 		
-		directoryCopier.copyDirectory(srcDir,destDir);
+		subject.copyDirectory(srcDir,destDir);
 		
 		verify(fileFilterUtilsWrapper).or(DirectoryFileFilter.DIRECTORY, expected);
 	}
@@ -40,7 +41,7 @@ public class DirectoryCopierTest {
 		IOFileFilter fileFilter = FileFileFilter.FILE;
 		IOFileFilter dirFilter = stubOrFilter(fileFilter);
 		
-		directoryCopier.copyDirectory(srcDir,destDir);
+		subject.copyDirectory(srcDir,destDir);
 		
 		verify(fileFilterUtilsWrapper).and(HiddenFileFilter.VISIBLE, dirFilter);
 	}
@@ -51,7 +52,7 @@ public class DirectoryCopierTest {
 		IOFileFilter dirFilter = stubOrFilter(fileFilter);
 		IOFileFilter visibilityFilter = stubAndFilter(dirFilter);
 		
-		directoryCopier.copyDirectory(srcDir,destDir);
+		subject.copyDirectory(srcDir,destDir);
 		
 		verify(fileUtilsWrapper).copyDirectory(srcDir, destDir, visibilityFilter);
 	}

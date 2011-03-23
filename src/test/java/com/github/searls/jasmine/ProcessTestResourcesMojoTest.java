@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.searls.jasmine.io.DirectoryCopier;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,7 +35,7 @@ public class ProcessTestResourcesMojoTest {
 	public void shouldUseDirectoryCopier() throws IOException, MojoExecutionException, MojoFailureException {
 		File srcDir = mock(File.class);
 		when(srcDir.exists()).thenReturn(true);
-		subject.jsSrcDir = srcDir;
+		subject.sources = new ScriptSearch(srcDir,null,null);
 		subject.srcDirectoryName = "blah";
 		
 		subject.execute();

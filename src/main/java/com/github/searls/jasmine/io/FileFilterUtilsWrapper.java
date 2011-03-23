@@ -5,10 +5,6 @@ import org.apache.commons.io.filefilter.IOFileFilter;
 
 public class FileFilterUtilsWrapper {
 
-	public IOFileFilter suffixFileFilter(String suffix) {
-		return FileFilterUtils.suffixFileFilter(suffix);
-	}
-
 	public IOFileFilter and(IOFileFilter... filters) {
 		return FileFilterUtils.and(filters);
 	}
