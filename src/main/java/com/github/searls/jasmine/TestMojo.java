@@ -2,6 +2,7 @@ package com.github.searls.jasmine;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
@@ -27,30 +28,13 @@ public class TestMojo extends AbstractJasmineMojo {
 	public void run() throws Exception {
 		if(!skipTests) {
 			getLog().info("Executing Jasmine Specs");
-			JasmineResult result;
-			try {
-				File runnerFile = writeSpecRunnerToOutputDirectory();
-				result = new SpecRunnerExecutor().execute(
-						runnerFile.toURI().toURL(), 
-						new File(jasmineTargetDir,junitXmlReportFileName), 
-						browserVersion, 
-						timeout, debug, getLog(), format);
-			} catch (Exception e) {
-				throw e;
-			}
+			File runnerFile = writeSpecRunnerToOutputDirectory();
+			JasmineResult result = executeSpecs(runnerFile);
 			logResults(result);
-			if(haltOnFailure && !result.didPass()) {
-				throw new MojoFailureException("There were Jasmine spec failures.");
-			}
+			throwAnySpecFailures(result);
 		} else {
 			getLog().info("Skipping Jasmine Specs");
 		}
-	}
-
-	private void logResults(JasmineResult result) {
-		JasmineResultLogger resultLogger = new JasmineResultLogger();
-		resultLogger.setLog(getLog());
-		resultLogger.log(result);
 	}
 
 	private File writeSpecRunnerToOutputDirectory() throws IOException {
@@ -66,6 +50,27 @@ public class TestMojo extends AbstractJasmineMojo {
 		FileUtils.writeStringToFile(runnerFile, html);
 		return runnerFile;
 	}
+	
+	private JasmineResult executeSpecs(File runnerFile) throws MalformedURLException {
+		JasmineResult result = new SpecRunnerExecutor().execute(
+			runnerFile.toURI().toURL(), 
+			new File(jasmineTargetDir,junitXmlReportFileName), 
+			browserVersion, 
+			timeout, debug, getLog(), format);
+		return result;
+	}
+
+	private void logResults(JasmineResult result) {
+		JasmineResultLogger resultLogger = new JasmineResultLogger();
+		resultLogger.setLog(getLog());
+		resultLogger.log(result);
+	}
+
+	private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
+		if(haltOnFailure && !result.didPass()) {
+			throw new MojoFailureException("There were Jasmine spec failures.");
+		}
+	}	
 	
 	private ScriptSearch searchForDir(File dir, ScriptSearch search) {
 		return new ScriptSearch(dir,search.getIncludes(),search.getExcludes());
