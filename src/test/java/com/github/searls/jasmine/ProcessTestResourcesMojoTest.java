@@ -38,7 +38,7 @@ public class ProcessTestResourcesMojoTest {
 		subject.sources = new ScriptSearch(srcDir,null,null);
 		subject.srcDirectoryName = "blah";
 		
-		subject.execute();
+		subject.run();
 		
 		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class));
 	}
