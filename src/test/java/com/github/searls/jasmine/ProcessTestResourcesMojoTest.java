@@ -41,7 +41,7 @@ public class ProcessTestResourcesMojoTest {
 		
 		processResourcesMojo.execute();
 		
-		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class), eq(expectedSuffix));
+		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class));
 	}
 	
 	

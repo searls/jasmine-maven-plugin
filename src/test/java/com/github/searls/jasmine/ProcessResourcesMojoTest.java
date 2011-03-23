@@ -33,7 +33,6 @@ public class ProcessResourcesMojoTest {
 	
 	@Test
 	public void shouldUseDirectoryCopier() throws IOException, MojoExecutionException, MojoFailureException {
-		String expectedSuffix = ".js";
 		File srcDir = mock(File.class);
 		when(srcDir.exists()).thenReturn(true);
 		processTestResourcesMojo.jsTestSrcDir = srcDir;
@@ -41,7 +40,7 @@ public class ProcessResourcesMojoTest {
 		
 		processTestResourcesMojo.execute();
 		
-		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class), eq(expectedSuffix));
+		verify(directoryCopier).copyDirectory(eq(srcDir), isA(File.class));
 	}
 	
 	

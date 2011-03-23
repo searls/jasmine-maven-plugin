@@ -6,7 +6,7 @@
 		<artifactId>jasmine-example-superpom</artifactId>
 		<version>1.0.2-SNAPSHOT</version>
 	</parent>
-	<artifactId>jasmine-webapp-include-excludes</artifactId>
+	<artifactId>jasmine-webapp-basic-excludes</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin using custom directories</name>
 	

@@ -11,14 +11,12 @@ import com.github.searls.jasmine.io.DirectoryCopier;
  */
 public class ProcessResourcesMojo extends AbstractJasmineMojo {
 
-	private static final String JS_EXT = ".js";
-
 	private DirectoryCopier directoryCopier = new DirectoryCopier();
 
 	public void run() throws IOException {
 		getLog().info("Processing JavaScript Sources");
 		if (jsSrcDir.exists()) {
-			directoryCopier.copyDirectory(jsSrcDir, new File(jasmineTargetDir, srcDirectoryName), JS_EXT);
+			directoryCopier.copyDirectory(jsSrcDir, new File(jasmineTargetDir, srcDirectoryName));
 		} else {
 			getLog().warn("JavaScript source folder was expected but was not found. " +
 					"Set configuration property `jsSrcDir` to the directory containing your JavaScript sources. " +

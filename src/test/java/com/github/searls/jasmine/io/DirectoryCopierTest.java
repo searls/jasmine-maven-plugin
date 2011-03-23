@@ -25,54 +25,33 @@ public class DirectoryCopierTest {
 	
 	@Mock private File srcDir;
 	@Mock private File destDir;
-	
-	@Test
-	public void shouldBuildSuffixFilter() throws IOException {
-		String suffixFilter = ".js";
-		
-		directoryCopier.copyDirectory(srcDir,destDir,suffixFilter);
-
-		verify(fileFilterUtilsWrapper).suffixFileFilter(suffixFilter);
-	}
-	
-	@Test
-	public void shouldAssignSuffixFilterAsFileFilter() throws IOException {
-		IOFileFilter expected = stubSuffixFilter();
-		
-		directoryCopier.copyDirectory(srcDir,destDir,".somethingsomething");
-		
-		verify(fileFilterUtilsWrapper).and(FileFileFilter.FILE, expected);
-	}
 
 	@Test
 	public void shouldApplyDirectoriesToFilterAfterFileFilter() throws IOException {
-		IOFileFilter suffixFilter = stubSuffixFilter();
-		IOFileFilter expected = stubAndFilter(suffixFilter);
+		IOFileFilter expected = FileFileFilter.FILE;
 		
-		directoryCopier.copyDirectory(srcDir,destDir,".somethingsomething");
+		directoryCopier.copyDirectory(srcDir,destDir);
 		
 		verify(fileFilterUtilsWrapper).or(DirectoryFileFilter.DIRECTORY, expected);
 	}
 
 	@Test
 	public void shouldApplyVisibleToFilter() throws IOException {
-		IOFileFilter suffixFilter = stubSuffixFilter();
-		IOFileFilter fileFilter = stubAndFilter(suffixFilter);
+		IOFileFilter fileFilter = FileFileFilter.FILE;
 		IOFileFilter dirFilter = stubOrFilter(fileFilter);
 		
-		directoryCopier.copyDirectory(srcDir,destDir,".somethingsomething");
+		directoryCopier.copyDirectory(srcDir,destDir);
 		
 		verify(fileFilterUtilsWrapper).and(HiddenFileFilter.VISIBLE, dirFilter);
 	}
 	
 	@Test
 	public void shouldCopyDirectory() throws IOException {
-		IOFileFilter suffixFilter = stubSuffixFilter();
-		IOFileFilter fileFilter = stubAndFilter(suffixFilter);
+		IOFileFilter fileFilter = FileFileFilter.FILE;
 		IOFileFilter dirFilter = stubOrFilter(fileFilter);
 		IOFileFilter visibilityFilter = stubAndFilter(dirFilter);
 		
-		directoryCopier.copyDirectory(srcDir,destDir,".something");
+		directoryCopier.copyDirectory(srcDir,destDir);
 		
 		verify(fileUtilsWrapper).copyDirectory(srcDir, destDir, visibilityFilter);
 	}
@@ -81,12 +60,6 @@ public class DirectoryCopierTest {
 		IOFileFilter orFilter = mock(IOFileFilter.class);
 		when(fileFilterUtilsWrapper.or(eq(DirectoryFileFilter.DIRECTORY), eq(fileFilter))).thenReturn(orFilter);
 		return orFilter;
-	}
-	
-	private IOFileFilter stubSuffixFilter() {
-		IOFileFilter expected = mock(IOFileFilter.class);
-		when(fileFilterUtilsWrapper.suffixFileFilter(anyString())).thenReturn(expected);
-		return expected;
 	}
 	
 	private IOFileFilter stubAndFilter(IOFileFilter first) {

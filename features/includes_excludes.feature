@@ -5,8 +5,7 @@ Feature: setting custom includes & excludes
   
   Scenario: a project with a simple source include/excludes
   
-    Given I am currently in the "jasmine-webapp-include-excludes" project
+    Given I am currently in the "jasmine-webapp-basic-excludes" project
     When I run "mvn clean test"
     Then the build should succeed
-
     
