@@ -1,4 +1,4 @@
-package com.github.searls.jasmine.io;
+package com.github.searls.jasmine.io.scripts;
 
 import static java.util.Arrays.*;
 import static org.hamcrest.Matchers.*;
@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.After;
 import org.junit.Test;
+
 
 public class ResolvesLocationOfPreloadSourcesIntegrationTest {
 

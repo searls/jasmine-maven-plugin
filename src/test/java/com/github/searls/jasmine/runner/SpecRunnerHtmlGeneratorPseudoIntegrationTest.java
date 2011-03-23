@@ -2,12 +2,16 @@ package com.github.searls.jasmine.runner;
 
 import static com.github.searls.jasmine.Matchers.*;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.*;
+import static java.util.Arrays.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.apache.commons.logging.LogFactory;
 import org.junit.Rule;
@@ -32,12 +36,14 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
 	private static final String SOURCE_ENCODING = "as9du20asd xanadu";
+	private static final Set<String> SCRIPTS = new LinkedHashSet<String>(asList("A"));
+	
 	static {
 		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 	}
 
 	@InjectMocks
-	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null, SOURCE_ENCODING);
+	private SpecRunnerHtmlGenerator specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(SCRIPTS,SOURCE_ENCODING);
 
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	@Spy private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
@@ -69,7 +75,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	@Test
 	public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
-		specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(null, null, null, "");
+		specRunnerHtmlGenerator = new SpecRunnerHtmlGenerator(SCRIPTS, "");
 
 		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
 
@@ -133,8 +139,16 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 		
 		specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
 	}
-
 	
+	@Test
+	public void containsScriptTagOfSource() {
+		String expected = SCRIPTS.iterator().next();
+
+		String html = specRunnerHtmlGenerator.generate(ReporterType.TrivialReporter, null);
+
+		assertThat(html, containsScriptTagWithSource(expected));
+	}
+
 	private HtmlPage getPage(String html) throws Exception {
 		MockWebConnection webConnection = new MockWebConnection();
 		webConnection.setDefaultResponse(html);

@@ -2,10 +2,13 @@ package com.github.searls.jasmine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.github.searls.jasmine.io.scripts.ResolvesCompleteListOfScriptLocations;
+import com.github.searls.jasmine.io.scripts.ResolvesLocationOfPreloadSources;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
 
@@ -17,6 +20,8 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
  */
 public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 
+	private ResolvesCompleteListOfScriptLocations resolvesCompleteListOfScriptLocations = new ResolvesCompleteListOfScriptLocations();
+	
 	public void run() throws IOException {
 		if(jsSrcDir.exists() && jsTestSrcDir.exists()) {
 			getLog().info("Generating runner '"+manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
@@ -27,7 +32,12 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 	}
 
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
-		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(jsSrcDir,jsTestSrcDir,preloadSources, sourceEncoding);
+		Set<String> scripts = resolvesCompleteListOfScriptLocations.resolveWithPreloadSources(jsSrcDir, jsTestSrcDir,
+				sourceIncludes,
+				sourceExcludes,
+				specIncludes,
+				specExcludes, preloadSources);
+		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(scripts, sourceEncoding);
 		String runner = htmlGenerator.generate(ReporterType.TrivialReporter, customRunnerTemplate);
 		
 		File destination = new File(jasmineTargetDir,manualSpecRunnerHtmlFileName);

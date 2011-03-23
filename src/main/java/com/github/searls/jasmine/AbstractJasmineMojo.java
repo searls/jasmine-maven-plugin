@@ -1,7 +1,10 @@
 package com.github.searls.jasmine;
 
+import static java.util.Arrays.*;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -146,6 +149,27 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="${project.build.sourceEncoding}"
 	 */
 	protected String sourceEncoding;
+	
+	/**
+	 * @parameter
+	 */
+	protected List<String> sourceIncludes = asList("**/*.js");
+	
+	/**
+	 * @parameter
+	 */
+	protected List<String> sourceExcludes = Collections.emptyList();
+	
+	/**
+	 * @parameter
+	 */
+	protected List<String> specIncludes = asList("**/*.js");
+	
+	/**
+	 * @parameter
+	 */
+	protected List<String> specExcludes = Collections.emptyList();
+	
 	
 	/**
 	 * @parameter default-value="${project}"

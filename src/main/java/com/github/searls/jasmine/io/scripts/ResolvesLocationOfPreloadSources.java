@@ -1,4 +1,4 @@
-package com.github.searls.jasmine.io;
+package com.github.searls.jasmine.io.scripts;
 
 import static com.github.searls.jasmine.collections.CollectionHelper.*;
 

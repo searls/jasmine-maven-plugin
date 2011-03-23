@@ -2,11 +2,13 @@ package com.github.searls.jasmine;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoFailureException;
 
 import com.github.searls.jasmine.format.JasmineResultLogger;
+import com.github.searls.jasmine.io.scripts.ResolvesCompleteListOfScriptLocations;
 import com.github.searls.jasmine.model.JasmineResult;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerExecutor;
@@ -19,7 +21,8 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
  * @phase test
  */
 public class TestMojo extends AbstractJasmineMojo {
-
+	private ResolvesCompleteListOfScriptLocations resolvesCompleteListOfScriptLocations = new ResolvesCompleteListOfScriptLocations();
+	
 	public void run() throws Exception {
 		if(!skipTests) {
 			getLog().info("Executing Jasmine Specs");
@@ -50,7 +53,15 @@ public class TestMojo extends AbstractJasmineMojo {
 	}
 
 	private File writeSpecRunnerToOutputDirectory() throws IOException {
-		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(new File(jasmineTargetDir,srcDirectoryName),new File(jasmineTargetDir,specDirectoryName),preloadSources, sourceEncoding);
+		Set<String> scripts = resolvesCompleteListOfScriptLocations.resolveWithPreloadSources(
+				new File(jasmineTargetDir,srcDirectoryName), 
+				new File(jasmineTargetDir,specDirectoryName), 
+				sourceIncludes,
+				sourceExcludes,
+				specIncludes,
+				specExcludes,
+				preloadSources);
+		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(scripts, sourceEncoding);
 		String html = htmlGenerator.generate(ReporterType.JsApiReporter, customRunnerTemplate);
 		
 		getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);

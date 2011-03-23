@@ -15,6 +15,16 @@ public class Matchers {
 			}
 		};
 	}
+	public static Matcher<String> containsScriptTagWithSource(final String src) {
+		return new TypeSafeMatcher<String>() {
+			public boolean matchesSafely(String html) {
+				return html.contains("<script type=\"text/javascript\" src=\"" + src + "\"></script>");
+			}
+			public void describeTo(Description description) {
+				description.appendText("contains <script/> tag with src='"+src+"'");
+			}
+		};
+	}
 	public static Matcher<String> containsStyleTagWith(final String style) {
 		return new TypeSafeMatcher<String>() {
 			public boolean matchesSafely(String html) {
