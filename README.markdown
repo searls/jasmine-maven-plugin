@@ -36,7 +36,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.2-beta-1</version>
+            <version>1.0.2-beta-2</version>
             <executions>
               <execution>
                 <goals>
@@ -160,20 +160,16 @@ the one generated during **jasmine:test**, because it points to the source direc
 When using the manual runner in a browser, be careful to edit your source & specs in the project's `src` directory, even though the runner itself runs in `target`! 
 
 ###jasmine:resources
-This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`. 
-It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
+This goal binds to the process-resources phase and copies the `src/main/javascript` directory into `target/jasmine/src`.  It can be changed by configuring a parameter named `jsSrcDir` in the plugin execution section of the POM.
 
 ###jasmine:testResources
-This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`. 
-It can be changed by configuring a parameter named `jsTestSrcDir` in the plugin execution section of the POM.
+This goal binds to the process-test-resources phase and copies the `src/test/javascript` directory into `target/jasmine/spec`.  It can be changed by configuring a parameter named `jsTestSrcDir` in the plugin execution section of the POM.
 
 ###jasmine:test
-This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies. 
-It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
+This goal binds to the test phase and generates a Jasmine runner file in `target/jasmine/SpecRunner.html` based on the sources processed by the previous two goals and Jasmine's own dependencies.  It will respect the `skipTests` property, and will not halt processing if `haltOnFailure` is set to false.
 
 ###jasmine:preparePackage 
-This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). 
-The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
+This goal binds to the prepare-package phase and copies the production JavaScript sources from `target/jasmine/src` to `/js` within the package directory (e.g. `target/your-webapp/js`). The sub-path can be cleared or changed by setting the `packageJavaScriptPath` property
 
 ## Configuration
 
@@ -195,23 +191,68 @@ Here's an example POM snippet:
       </configuration>
     </execution>
 
-### preloadSources - Enforcing the order in which JavaScript files are loaded 
-You can configure the plugin to load a list of JavaScript sources before any others. This is particularly useful when your scripts or specs must be loaded in a particular order
-to work correctly. 
+### sourceIncludes, sourceExcludes - Specifying patterns to include & exclude scripts
+If the load order of your project's JavaScript matters, or if your base JavaScript directory contains script files or directories that shouldn't be included when your Jasmine specs are executed, you can specify string patterns to control which sources get included, excluded, and in which order by using the `sourceIncludes` configuration element.
 
-So if you wanted to make sure jQuery was loaded before your application's scripts, and that the terrific [jasmine-jquery](https://github.com/velesin/jasmine-jquery) was 
-loaded before your specs, and you wanted to load [Prototype](http://www.prototypejs.org/) from Google CDN (which isn't even stored in your project), your POM would look like this: 
+The default includes pattern is "\*\*/\*.js" (that is, matching all files with the "js" extension in all sub-directories of `jsSrcDir`). It's likely that you'll want to include this pattern definition at the bottom of any custom patterns
+
+**Example:** a project contains jQuery & a raft of jQuery plugins under the "vendor" directory; your scripts depend on jQuery, so it's imperative that jQuery loads first. Meanwhile, there's a "main.js" file on the root that must be included before our other application scripts. 
+
+The configuration, therefore, might look like:
 
     <configuration>
       ...
+      <sourceIncludes>
+        <include>vendor/**/*.js</include>
+        <include>main.js</include>
+        <include>**/*.js</include>
+      </sourceIncludes>
+    </configuration>
+
+Building on this example, if there were a script (say, "vendor/ajax.js") in your source directories that doesn't need to be included in the runner (perhaps it causes Jasmine execution to fail, or it consumes significant resources without being relevant to your suite of specs), it could be ignored with `sourceExcludes` like so:
+
+    <configuration>
+      ...
+      <sourceExcludes>
+        <exclude>vendor/ajax.js</exclude>
+      </sourceExcludes>
+    </configuration>
+
+Per the `sourceIncludes` settings, everything under the vendor directory will still be loaded first, but "vendor/ajax.js" will be excluded from the runner HTML altogether.
+
+### specIncludes, specExcludes - Specifying patterns to include & exclude specs
+`specIncludes` and `specExcludes` are just like `sourceIncludes` and `sourceExcludes`, except they govern the files under your `jsTestSrcDir` base spec directory, as opposed to your production sources in your `jsSrcDir`.
+
+These options will probably come in handy less frequently than their `sourceIncludes`/`sourceExcludes` analogues, because the load order of Jasmine spec scripts ought not matter. Still, perhaps an application-wide "spec-helper.js" (or a support library like [jasmine-jquery](https://github.com/velesin/jasmine-jquery) or [jasmine-fixture](https://github.com/searls/jasmine-fixture)) needs to be loaded before the specs themselves. That can be accomplished like so:
+
+    <configuration>
+      ...
+      <specIncludes>
+        <include>lib/jasmine-jquery.js</include>
+        <include>lib/jasmine-fixture.js</include>
+        <include>support/spec-helper.js</include>
+        <include>**/*.js</include>
+      </specIncludes>
+    </configuration>
+
+### preloadSources - Enforcing the precise order in which JavaScript files are loaded 
+
+**Note: Prior to the release of version 1.0.2-beta-2, the `preloadSources` configuration was the only way to control the ordering of scripts. Now that the plugin supports includes/excludes with wildcards, the number of situations in which `preloadSources` is necessary should be dramatically reduced**
+
+You can configure the plugin to load a list of JavaScript sources before any others. This is useful in situations where the above includes/excludes options fall short. One such situation is when a test-scoped file needs to overwrite the functionality of a production source, something one team ran into with a localization plugin. In that case, all of the included files will still be loaded, but anything found in `preloadSources` will be moved to the top, per the resolution rules at the bottom of this section.
+
+    <configuration>
+      <sourceIncludes>
+        <include>vendor/**/*.js</include>
+        <include>**/*.js</include>
+      </sourceIncludes>
+
       <preloadSources>
-        <!-- Production dependencies that need to come first -->
+        <!-- execute a script that overwrites another before the production sources load -->
         <source>vendor/jquery.js</source>
-        <source>vendor/jquery-ui.js</source>
-        
-        <!-- Also supports test dependencies that need to come before specs -->
-        <source>jasmine-jquery.js</source>
-        
+        <source>vendor/jquery.i18n.js</source>
+        <source>hack-i18n-for-specs.js</source> <!-- resolves files in jsTestSrcDir using a relative path, too -->
+          
         <!-- Even supports remote resources and arbitrary protocols -->
         <source>https://ajax.googleapis.com/ajax/libs/prototype/1.7.0.0/prototype.js</source>
       </preloadSources>				
@@ -307,8 +348,9 @@ As an example, to integrate the report into a Hudson job (note that it must be a
 
 ## Current Version Info
 
-The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.2, so its version number is 1.0.2-SNAPSHOT. 
-If you need a non-snapshot release (say, to satisfy the maven-release-plugin), you may use **1.0.2-beta-1**.  
+The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.2, so its version number is **1.0.2-beta-2**.
+
+If you want to point at snapshot releases of the plugin, they're hosted on the [Sonatype OSS snapshot repository](https://oss.sonatype.org/service/local/repositories/snapshots).  
 
 ## Maintainers
 * [Justin Searls](http://about.emw/searls), [Pillar Technology](http://pillartechnology.com)
