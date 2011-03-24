@@ -1,8 +1,9 @@
 package com.github.searls.jasmine.io;
 
+import static java.util.Arrays.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static java.util.Arrays.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
@@ -60,7 +61,7 @@ public class ScansDirectoryIntegrationTest {
 	
 	@Test
 	public void shouldNotIncludeHiddenSvnFiles() {
-		new File(directory,".svn").mkdir();
+		createSubDir(".svn");
 		String expected = ".svn/logs";
 		createFile(expected);
 		
@@ -69,11 +70,112 @@ public class ScansDirectoryIntegrationTest {
 		assertThat(results,not(hasItem(expected)));
 	}
 	
-	private void createFile(String path) {
-		try {
-			new File(directory,path).createNewFile();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+	@Test
+	public void sortsAnExactMatchOverALaterExactMatch() {
+		createFile("a.js", "b.js");
+
+		List<String> result = subject.scan(directory,asList("b.js", "a.js"),Collections.EMPTY_LIST);
+		
+		assertThat(result, is(asList("b.js", "a.js")));
+	}
+
+	@Test
+	public void alphabetizesMatches() {
+		createSubDir("c");
+		createFile("c/d","c/a","b","a");
+
+		List<String> result = subject.scan(directory,asList("**"),Collections.EMPTY_LIST);
+
+		assertThat(result, is(asList("a","b","c/a","c/d")));		
+	}
+	
+
+	@Test
+	public void matchesRootItemsWhenIncludeHasFileSeparator() {
+		createSubDir("b");
+		createFile("a.js","b/c.js");
+
+		List<String> result = subject.scan(directory,asList(ScansDirectory.DEFAULT_INCLUDES),Collections.EMPTY_LIST);
+
+		assertThat(result, is(asList("a.js","b/c.js")));		
+	}
+	
+	@Test
+	public void matchesRootItemUnderSubfolder() {
+		createSubDir("lib");
+		createFile("b.js","lib/a.js");
+
+		List<String> result = subject.scan(directory,asList("lib/**/*.js","**/*.js"),Collections.EMPTY_LIST);
+
+		assertThat(result, is(asList("lib/a.js","b.js")));		
+	}
+	
+	@Test
+	public void sortsARealWorldTestAsExpected() {
+		createSubDir("category",
+				"customer",
+				"customer/customcode",
+				"jquery","jquery/cookie",
+				"jquery/jcrumb",
+				"jquery/underscore",
+				"yui2",
+				"yui2/animation",
+				"yui2/paginator",
+				"yui2/selector",
+				"yui2/yahoo-dom-event",
+				"panda");
+		createFile("breadcrumbs.js",
+				"category/category-management.js",
+				"a.js",
+				"customer/customcode/custom-code-preferences.js",
+				"customer/view.js",
+				"b.js",
+				"jquery/cookie/jquery.cookie.js",
+				"jquery/jcrumb/jquery.jcrumbs-1.0.js",
+				"jquery/underscore/underscore-min-1.1.2.js",
+				"utils.js",
+				"yui2/animation/animation-min.js",
+				"yui2/paginator/paginator.js",
+				"yui2/selector/selector-min.js",
+				"jquery/jquery.formatCurrency-1.4.0.min.js",
+				"yui2/yahoo-dom-event/yahoo-dom-event.js",
+				"c.js",
+				"panda/sad.js");
+		
+		List<String> result = subject.scan(directory,asList("jquery/**/*.js", "yui2/**/*.js", "**/*.js"),Collections.EMPTY_LIST);
+		
+		assertThat(result, is(asList("jquery/cookie/jquery.cookie.js",
+				"jquery/jcrumb/jquery.jcrumbs-1.0.js",
+				"jquery/jquery.formatCurrency-1.4.0.min.js",
+				"jquery/underscore/underscore-min-1.1.2.js",
+				"yui2/animation/animation-min.js",
+				"yui2/paginator/paginator.js",
+				"yui2/selector/selector-min.js",
+				"yui2/yahoo-dom-event/yahoo-dom-event.js",
+				"a.js",
+				"b.js",
+				"breadcrumbs.js",
+				"c.js",
+				"category/category-management.js",
+				"customer/customcode/custom-code-preferences.js",
+				"customer/view.js",
+				"panda/sad.js",
+				"utils.js")));
+	}
+	
+	private void createFile(String... paths) {
+		for (String path : paths) {
+			try {
+				new File(directory,path).createNewFile();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		}
+	}
+	
+	private void createSubDir(String... names) {
+		for (String name : names) {
+			new File(directory,name).mkdir();
+		}	
 	}
 }

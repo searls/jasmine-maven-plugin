@@ -12,6 +12,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo {
@@ -154,7 +155,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter
 	 */
-	private List<String> sourceIncludes = asList("**/*.js");
+	private List<String> sourceIncludes = asList(ScansDirectory.DEFAULT_INCLUDES);
 	
 	/**
 	 * @parameter
@@ -164,7 +165,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter
 	 */
-	private List<String> specIncludes = asList("**/*.js");
+	private List<String> specIncludes = asList(ScansDirectory.DEFAULT_INCLUDES);
 	
 	/**
 	 * @parameter
