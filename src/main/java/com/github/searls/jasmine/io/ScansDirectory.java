@@ -3,30 +3,37 @@ package com.github.searls.jasmine.io;
 import static java.util.Arrays.*;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 
-import com.github.searls.jasmine.collections.ScriptSorter;
-
 public class ScansDirectory {
 
+	public final static String DEFAULT_INCLUDES = "**"+File.separator+"*.js";
+	
 	private DirectoryScanner directoryScanner = new DirectoryScanner();
-	private ScriptSorter scriptSorter = new ScriptSorter();
 	
 	public List<String> scan(File directory, List<String> includes, List<String> excludes) {
-		List<String> files = performScan(directory, includes, excludes);
-		scriptSorter.sort(files, includes);
-		return files;
+		Set<String> set = new LinkedHashSet<String>();
+		for (String include : includes) {
+			set.addAll(performScan(directory, include, excludes));
+		}
+		return new ArrayList<String>(set);
 	}
 
-	private List<String> performScan(File directory, List<String> includes, List<String> excludes) {
+	private List<String> performScan(File directory, String include, List<String> excludes) {
 		directoryScanner.setBasedir(directory);		
-		directoryScanner.setIncludes(includes.toArray(new String[]{}));
+		directoryScanner.setIncludes(new String[]{ include });
 		directoryScanner.setExcludes(excludes.toArray(new String[]{}));
 		directoryScanner.addDefaultExcludes();
 		directoryScanner.scan();
-		return asList(directoryScanner.getIncludedFiles());
+		ArrayList<String> result = new ArrayList<String>(asList(directoryScanner.getIncludedFiles()));
+		Collections.sort(result);
+		return result;
 	}
 
 }
