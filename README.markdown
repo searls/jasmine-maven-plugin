@@ -192,13 +192,11 @@ Here's an example POM snippet:
     </execution>
 
 ### sourceIncludes, sourceExcludes - Specifying patterns to include & exclude scripts
-If the load order of your project's JavaScript matters, or if your base JavaScript directory contains script files or directories that shouldn't be included when your Jasmine specs are executed, you can specify string patterns to control which sources get included, excluded, and in which order by using the `sourceIncludes` configuration element.
+If the load order of your project's JavaScript matters, or if your base JavaScript directory contains script files or directories that shouldn't be included when your Jasmine specs are executed, you can specify string patterns to control which sources get included and excluded (and in which order) by using the `sourceIncludes` and `sourceExcludes` configuration elements.
 
-The default includes pattern is "\*\*/\*.js" (that is, matching all files with the "js" extension in all sub-directories of `jsSrcDir`). It's likely that you'll want to include this pattern definition at the bottom of any custom patterns
+The default includes pattern is "\*\*/\*.js" (that is, all files with a "js" extension in all sub-directories of `jsSrcDir`). When specifying a custom includes pattern to coerce the ordering of the scripts, it usually makes sense to include this pattern at the bottom so that all remaining unmatched scripts are caught.
 
-**Example:** a project contains jQuery & a raft of jQuery plugins under the "vendor" directory; your scripts depend on jQuery, so it's imperative that jQuery loads first. Meanwhile, there's a "main.js" file on the root that must be included before our other application scripts. 
-
-The configuration, therefore, might look like:
+**Example:** a project depends on jQuery & a raft of jQuery plugins under the "vendor" directory; your scripts depend on jQuery, so it's imperative that jQuery loads first. Meanwhile, there's a "main.js" file on the root that must be included before your other application scripts:
 
     <configuration>
       ...
@@ -209,7 +207,7 @@ The configuration, therefore, might look like:
       </sourceIncludes>
     </configuration>
 
-Building on this example, if there were a script (say, "vendor/ajax.js") in your source directories that doesn't need to be included in the runner (perhaps it causes Jasmine execution to fail, or it consumes significant resources without being relevant to your suite of specs), it could be ignored with `sourceExcludes` like so:
+Building on this example, if there were a script (say, "vendor/ajax.js") in your source directories that didn't need to be included in the runner (perhaps it causes Jasmine execution to fail, or it consumes significant resources without being relevant to your suite of specs), it could be ignored with `sourceExcludes` like so:
 
     <configuration>
       ...
@@ -221,7 +219,7 @@ Building on this example, if there were a script (say, "vendor/ajax.js") in your
 Per the `sourceIncludes` settings, everything under the vendor directory will still be loaded first, but "vendor/ajax.js" will be excluded from the runner HTML altogether.
 
 ### specIncludes, specExcludes - Specifying patterns to include & exclude specs
-`specIncludes` and `specExcludes` are just like `sourceIncludes` and `sourceExcludes`, except they govern the files under your `jsTestSrcDir` base spec directory, as opposed to your production sources in your `jsSrcDir`.
+`specIncludes` and `specExcludes` are just like `sourceIncludes` and `sourceExcludes`, except they govern the files under your `jsTestSrcDir` base spec directory, as opposed to your production sources in `jsSrcDir`.
 
 These options will probably come in handy less frequently than their `sourceIncludes`/`sourceExcludes` analogues, because the load order of Jasmine spec scripts ought not matter. Still, perhaps an application-wide "spec-helper.js" (or a support library like [jasmine-jquery](https://github.com/velesin/jasmine-jquery) or [jasmine-fixture](https://github.com/searls/jasmine-fixture)) needs to be loaded before the specs themselves. That can be accomplished like so:
 
@@ -237,9 +235,9 @@ These options will probably come in handy less frequently than their `sourceIncl
 
 ### preloadSources - Enforcing the precise order in which JavaScript files are loaded 
 
-**Note: Prior to the release of version 1.0.2-beta-2, the `preloadSources` configuration was the only way to control the ordering of scripts. Now that the plugin supports includes/excludes with wildcards, the number of situations in which `preloadSources` is necessary should be dramatically reduced**
+**Note: Prior to the release of version 1.0.2-beta-2, the `preloadSources` configuration was the only way to control the order in which scripts were loaded by the runners. Now that the plugin supports includes/excludes with wildcards, the number of situations where `preloadSources` is necessary should be dramatically reduced.**
 
-You can configure the plugin to load a list of JavaScript sources before any others. This is useful in situations where the above includes/excludes options fall short. One such situation is when a test-scoped file needs to overwrite the functionality of a production source, something one team ran into with a localization plugin. In that case, all of the included files will still be loaded, but anything found in `preloadSources` will be moved to the top, per the resolution rules at the bottom of this section.
+You can configure the plugin to load a list of JavaScript sources before any others. This is useful in situations where the above includes/excludes options fall short. One such situation is when a test-scoped file needs to overwrite the functionality of a production source file before other production sources get loaded, which was something one team ran into with a localization plugin. In that case, all of the included files will still be loaded, but anything found in `preloadSources` will be moved to the very top, per the resolution rules enumerated at the bottom of this section.
 
     <configuration>
       <sourceIncludes>
