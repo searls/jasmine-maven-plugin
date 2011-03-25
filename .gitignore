@@ -9,3 +9,5 @@ target
 pom.xml.releaseBackup
 release.properties
 rerun.txt
+*.iml
+*.ipr
