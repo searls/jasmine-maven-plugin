@@ -11,3 +11,4 @@ release.properties
 rerun.txt
 *.iml
 *.ipr
+*.iws
