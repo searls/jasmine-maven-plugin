@@ -15,7 +15,8 @@ public class ResolvesLocationOfPreloadSources {
 		List<String> sources = new ArrayList<String>();
 		for (String source : collectionHelper.list(preloadSources)) {
 			if(fileCouldNotBeAdded(new File(sourceDir, source),sources) 
-				&& fileCouldNotBeAdded(new File(specDir, source),sources)) {
+				&& fileCouldNotBeAdded(new File(specDir, source),sources)
+					&& fileCouldNotBeAdded(new File(source),sources)) {
 				sources.add(source);
 			}
 		}

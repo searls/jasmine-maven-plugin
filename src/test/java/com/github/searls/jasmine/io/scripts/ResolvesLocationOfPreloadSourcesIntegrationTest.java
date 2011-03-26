@@ -18,17 +18,20 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
 
 	private static final String SPEC = "spec";
 	private static final String SOURCE = "source";
+	private static final String SEPARATED_DIR = "separatedDir";
 
 	private ResolvesLocationOfPreloadSources subject = new ResolvesLocationOfPreloadSources();
 	
 	private CreatesTempDirectories createsTempDirectories = new CreatesTempDirectories();
 	private File sourceDir = createsTempDirectories.create(SOURCE);
 	private File specDir = createsTempDirectories.create(SPEC);
-	
+	private File separatedDir = createsTempDirectories.create(SEPARATED_DIR);
+
 	@After
 	public void deleteTempDirs() {
 		sourceDir.delete();
 		specDir.delete();
+		separatedDir.delete();
 	}
 	
 	@Test
@@ -66,6 +69,18 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
 		assertThat(result.size(),is(1));
 		assertThat(result.get(0),containsString(SPEC));
 		assertThat(result.get(0),containsString(expected));
+	}
+
+	@Test
+	public void loadsExistentFileWithURIIfItIsNotInEitherSourceAndSpecFolders() throws Exception {
+		String expected = "panda";
+		new File(separatedDir,expected).createNewFile();
+		List<String> preloadSources = asList(separatedDir.getAbsolutePath() + File.separator + expected);
+
+		List<String> result = subject.resolve(preloadSources,sourceDir,specDir);
+
+		assertThat(result.size(),is(1));
+		assertThat(result.get(0),containsString("file:/"));
 	}
 	
 	@Test
