@@ -289,7 +289,7 @@ The plugin relies on HtmlUnit to execute your specs "headlessly" in a console. I
     <configuration>
       ...
       <timeout>60</timeout> <!-- 60 second timeout -->
-      <debug>true</timeout> <!-- attempt to print the spec runner results and build a JUnit report, even if spec execution times out. -->
+      <debug>true</debug> <!-- attempt to print the spec runner results and build a JUnit report, even if spec execution times out. -->
     </configuration>
 
 If you have experience debugging heap space or halting errors in HtmlUnit, please consider [opening an issue](https://github.com/searls/jasmine-maven-plugin/issues) to lend some advice on how jasmine-maven-plugin could be improved.
