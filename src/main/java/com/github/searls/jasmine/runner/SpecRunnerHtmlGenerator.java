@@ -28,6 +28,7 @@ public class SpecRunnerHtmlGenerator {
 
 	public static final String  JASMINE_JS = "/vendor/js/jasmine.js";
 	public static final String  JASMINE_HTML_JS = "/vendor/js/jasmine-html.js";
+	public static final String  COFFEE_JS = "/vendor/js/coffee-script.js";
 	public static final String  JASMINE_CSS = "/vendor/css/jasmine.css";
 	
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
@@ -47,7 +48,7 @@ public class SpecRunnerHtmlGenerator {
 			String htmlTemplate = resolveHtmlTemplate(customRunnerTemplate);
 			StringTemplate template = new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
 
-			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS), template);
+			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS,coffeeIfNecessary()), template);
 			applyCssToTemplate(asList(JASMINE_CSS), template);
 			applyScriptTagsToTemplate(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
@@ -59,6 +60,15 @@ public class SpecRunnerHtmlGenerator {
 		}
 	}
 
+	private String coffeeIfNecessary() {
+		for (String s : scripts) {
+			if(s.endsWith(".coffee")) {
+				return COFFEE_JS;
+			}
+		}
+		return null;
+	}
+
 	private String resolveHtmlTemplate(File customRunnerTemplate) throws IOException {
 		return customRunnerTemplate != null ? fileUtilsWrapper.readFileToString(customRunnerTemplate) : ioUtilsWrapper.toString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE);
 	}
@@ -66,7 +76,9 @@ public class SpecRunnerHtmlGenerator {
 	private void includeJavaScriptDependencies(List<String> dependencies, StringTemplate template) throws IOException {
 		StringBuilder js = new StringBuilder();
 		for (String jsFile : dependencies) {
-			js.append("<script type=\"text/javascript\">").append(ioUtilsWrapper.toString(jsFile)).append("</script>");
+			if(jsFile != null) {
+				js.append("<script type=\"text/javascript\">").append(ioUtilsWrapper.toString(jsFile)).append("</script>");
+			}
 		}
 		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
 	}

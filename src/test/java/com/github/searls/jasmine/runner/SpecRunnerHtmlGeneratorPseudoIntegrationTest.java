@@ -36,14 +36,15 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
 	private static final String SOURCE_ENCODING = "as9du20asd xanadu";
-	private static final Set<String> SCRIPTS = new LinkedHashSet<String>(asList("A"));
+	
+	private Set<String> scripts = new LinkedHashSet<String>(asList("A"));
 	
 	static {
 		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 	}
 
 	@InjectMocks
-	private SpecRunnerHtmlGenerator subject = new SpecRunnerHtmlGenerator(SCRIPTS,SOURCE_ENCODING);
+	private SpecRunnerHtmlGenerator subject = new SpecRunnerHtmlGenerator(scripts,SOURCE_ENCODING);
 
 	@Mock private FileUtilsWrapper fileUtilsWrapper;
 	@Spy private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
@@ -75,7 +76,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	@Test
 	public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
-		subject = new SpecRunnerHtmlGenerator(SCRIPTS, "");
+		subject = new SpecRunnerHtmlGenerator(scripts, "");
 
 		String html = subject.generate(ReporterType.TrivialReporter, null);
 
@@ -142,11 +143,32 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 	
 	@Test
 	public void containsScriptTagOfSource() {
-		String expected = SCRIPTS.iterator().next();
+		String expected = scripts.iterator().next();
 
 		String html = subject.generate(ReporterType.TrivialReporter, null);
 
 		assertThat(html, containsScriptTagWithSource(expected));
+	}
+	
+	@Test
+	public void whenCoffeeScriptExistsItAddsCoffeeCompiler() throws IOException {
+		String expected = "coffee!";
+		when(ioUtilsWrapper.toString(COFFEE_JS)).thenReturn(expected);
+		scripts.add("b.coffee");
+		
+		String html = subject.generate(ReporterType.TrivialReporter, null);
+		
+		assertThat(html, containsScriptTagWith(expected));
+	}
+	
+	@Test
+	public void whenNoCoffeeScriptExistsItDoesNotAddCoffeeCompiler() throws IOException {
+		String expected = "coffee!";
+		when(ioUtilsWrapper.toString(COFFEE_JS)).thenReturn(expected);
+		
+		String html = subject.generate(ReporterType.TrivialReporter, null);
+		
+		assertThat(html, not(containsScriptTagWith(expected)));
 	}
 
 	private HtmlPage getPage(String html) throws Exception {

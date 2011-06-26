@@ -9,8 +9,16 @@
 </head>
 <body>
 	<script type="text/javascript">
-		var reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
-		jasmine.getEnv().execute();
+		var executeJasmineSpecs = function(){
+			window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
+			jasmine.getEnv().execute();
+		};
+	
+		if (window.addEventListener) {
+			addEventListener('DOMContentLoaded', executeJasmineSpecs, false);
+		} else {
+			attachEvent('onload', executeJasmineSpecs);
+		}		
 	</script>
 </body>
 </html>

@@ -1,7 +1,5 @@
 package com.github.searls.jasmine;
 
-import static java.util.Arrays.*;
-
 import java.io.File;
 import java.util.Collections;
 import java.util.List;
@@ -155,7 +153,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter
 	 */
-	private List<String> sourceIncludes = asList(ScansDirectory.DEFAULT_INCLUDES);
+	private List<String> sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
 	
 	/**
 	 * @parameter
@@ -165,7 +163,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	/**
 	 * @parameter
 	 */
-	private List<String> specIncludes = asList(ScansDirectory.DEFAULT_INCLUDES);
+	private List<String> specIncludes = ScansDirectory.DEFAULT_INCLUDES;
 	
 	/**
 	 * @parameter
