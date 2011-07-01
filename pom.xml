@@ -92,6 +92,11 @@
 			<artifactId>stringtemplate</artifactId>
 			<version>3.2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-server</artifactId>
+			<version>7.4.2.v20110526</version>
+		</dependency>
 		
 		<!-- Plugin test deps -->
 		<dependency>

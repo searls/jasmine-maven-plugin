@@ -174,6 +174,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="${project}"
 	 */
 	protected MavenProject mavenProject;
+	
+	/**
+	 * @parameter default-value="8234"
+	 */
+	protected int serverPort;
 
 	protected ScriptSearch sources;
 	protected ScriptSearch specs;
