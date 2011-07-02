@@ -4,9 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 
+import com.github.searls.jasmine.io.FileUtilsWrapper;
+import com.github.searls.jasmine.io.scripts.RelativizesASetOfScripts;
 import com.github.searls.jasmine.io.scripts.ResolvesCompleteListOfScriptLocations;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
@@ -15,11 +16,14 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
 /**
  * @component
  * @goal generateManualRunner
- * @phase generate-test-sources
+ * @phase generate-sources
  */
 public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 
 	private ResolvesCompleteListOfScriptLocations resolvesCompleteListOfScriptLocations = new ResolvesCompleteListOfScriptLocations();
+	private RelativizesASetOfScripts relativizesASetOfScripts = new RelativizesASetOfScripts();
+	
+	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
 	public void run() throws IOException {
 		if(sources.getDirectory().exists() && specs.getDirectory().exists()) {
@@ -31,7 +35,8 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 	}
 
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
-		Set<String> scripts = resolvesCompleteListOfScriptLocations.resolve(sources, specs, preloadSources);
+		Set<String> scripts = relativizesASetOfScripts.relativize(jasmineTargetDir, resolvesCompleteListOfScriptLocations.resolve(sources, specs, preloadSources));
+		
 		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(scripts, sourceEncoding);
 		String runner = htmlGenerator.generate(ReporterType.TrivialReporter, customRunnerTemplate);
 		
@@ -39,20 +44,20 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 		String existingRunner = loadExistingManualRunner(destination);
 		
 		if(!StringUtils.equals(runner, existingRunner)) {
-			FileUtils.writeStringToFile(destination, runner);
+			fileUtilsWrapper.writeStringToFile(destination, runner, sourceEncoding);
 		} else {
 			getLog().info("Skipping spec runner generation, because an identical spec runner already exists.");
 		}
 	}
 
-	private String loadExistingManualRunner(File destination) {
+	private String loadExistingManualRunner(File destination) throws IOException {
 		String existingRunner = null;
 		try {
 			if(destination.exists()) {
-				existingRunner = FileUtils.readFileToString(destination);
+				existingRunner = fileUtilsWrapper.readFileToString(destination);
 			}
 		} catch(Exception e) {
-			getLog().warn("An error occurred while trying to open an existing manual spec runner. Continuing");
+			getLog().warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
 		}
 		return existingRunner;
 	}
