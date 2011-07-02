@@ -9,7 +9,7 @@
 	<artifactId>jasmine-webapp-custom-dirs</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin using custom directories</name>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -19,9 +19,6 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>generateManualRunner</goal>
-							<goal>resources</goal>
-							<goal>testResources</goal>
 							<goal>test</goal>
 						</goals>
 						<configuration>

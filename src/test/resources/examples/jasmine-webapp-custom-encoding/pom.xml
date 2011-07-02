@@ -9,11 +9,11 @@
 	<artifactId>jasmine-webapp-custom-encoding</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin that uses a custom encoding</name>
-	
+
 	<properties>
-		<project.build.sourceEncoding>LOL</project.build.sourceEncoding>
+		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 	</properties>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -23,9 +23,6 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>generateManualRunner</goal>
-							<goal>resources</goal>
-							<goal>testResources</goal>
 							<goal>test</goal>
 						</goals>
 					</execution>
