@@ -96,7 +96,7 @@ public class GenerateManualRunnerMojoTest {
 	}
 	
 	@Before
-	public void stubRelativizationOfTestScripts() {
+	public void stubRelativizationOfTestScripts() throws IOException {
 		when(relativizesASetOfScripts.relativize(jasmineTargetDir,RESOLVED_SOURCES)).thenReturn(RELATIVIZED_SOURCES);
 	}
 	
