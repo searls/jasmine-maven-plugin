@@ -9,7 +9,7 @@
 	<artifactId>jasmine-webapp-progress-format</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin that uses the progress format</name>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -19,8 +19,6 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>resources</goal>
-							<goal>testResources</goal>
 							<goal>test</goal>
 						</goals>
 						<configuration>
