@@ -11,6 +11,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.server.JasmineResourceHandler;
 
 /**
  * @goal server
@@ -27,8 +28,8 @@ public class ServerMojo extends AbstractJasmineMojo {
 		SelectChannelConnector connector = new SelectChannelConnector();
         connector.setPort(serverPort);
         server.addConnector(connector);
- 
-        ResourceHandler resourceHandler = new ResourceHandler();
+        
+        ResourceHandler resourceHandler = new JasmineResourceHandler(this);
         resourceHandler.setDirectoriesListed(true);       
         resourceHandler.setWelcomeFiles(new String[]{ manualSpecRunnerPath() });
         resourceHandler.setResourceBase(mavenProject.getBasedir().getAbsolutePath());

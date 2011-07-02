@@ -24,6 +24,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.server.JasmineResourceHandler;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServerMojoTest {
@@ -80,6 +81,7 @@ public class ServerMojoTest {
 		verify(server).setHandler(handlerListCaptor.capture());
 		ResourceHandler handler = (ResourceHandler) handlerListCaptor.getValue().getHandlers()[0];
 		
+		assertThat(handler,is(JasmineResourceHandler.class));
 		assertThat(handler.isDirectoriesListed(),is(true));
 		assertThat(handler.getWelcomeFiles()[0],is(RELATIVE_TARGET_DIR+File.separator+MANUAL_SPEC_RUNNER_NAME));
 		assertThat(handler.getResourceBase(),is(Resource.newResource(BASE_DIR).toString()));
