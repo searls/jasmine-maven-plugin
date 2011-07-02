@@ -26,7 +26,7 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
 	public void run() throws IOException {
-		if(sources.getDirectory().exists() && specs.getDirectory().exists()) {
+		if(writingAManualSpecRunnerIsNecessary()) {
 			getLog().info("Generating runner '"+manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
 			writeSpecRunnerToSourceSpecDirectory();
 		} else {
@@ -34,23 +34,26 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 		}
 	}
 
+	private boolean writingAManualSpecRunnerIsNecessary() {
+		return sources.getDirectory().exists() && specs.getDirectory().exists();
+	}
+
 	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
-		Set<String> scripts = relativizesASetOfScripts.relativize(jasmineTargetDir, resolvesCompleteListOfScriptLocations.resolve(sources, specs, preloadSources));
+		File runnerDestination = new File(jasmineTargetDir,manualSpecRunnerHtmlFileName);
 		
-		SpecRunnerHtmlGenerator htmlGenerator = new SpecRunnerHtmlGenerator(scripts, sourceEncoding);
-		String runner = htmlGenerator.generate(ReporterType.TrivialReporter, customRunnerTemplate);
-		
-		File destination = new File(jasmineTargetDir,manualSpecRunnerHtmlFileName);
-		String existingRunner = loadExistingManualRunner(destination);
-		
-		if(!StringUtils.equals(runner, existingRunner)) {
-			fileUtilsWrapper.writeStringToFile(destination, runner, sourceEncoding);
+		String newRunnerHtml = new SpecRunnerHtmlGenerator(scriptsForRunner(), sourceEncoding).generate(ReporterType.TrivialReporter, customRunnerTemplate);
+		if(newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
+			saveRunner(runnerDestination, newRunnerHtml);
 		} else {
 			getLog().info("Skipping spec runner generation, because an identical spec runner already exists.");
 		}
 	}
 
-	private String loadExistingManualRunner(File destination) throws IOException {
+	private Set<String> scriptsForRunner() throws IOException {
+		return relativizesASetOfScripts.relativize(jasmineTargetDir, resolvesCompleteListOfScriptLocations.resolve(sources, specs, preloadSources));
+	}
+
+	private String existingRunner(File destination) throws IOException {
 		String existingRunner = null;
 		try {
 			if(destination.exists()) {
@@ -62,4 +65,11 @@ public class GenerateManualRunnerMojo extends AbstractJasmineMojo {
 		return existingRunner;
 	}
 
+	private boolean newRunnerDiffersFromOldRunner(File runnerDestination, String newRunner) throws IOException {
+		return !StringUtils.equals(newRunner, existingRunner(runnerDestination));
+	}
+	
+	private void saveRunner(File runnerDestination, String newRunner) throws IOException {
+		fileUtilsWrapper.writeStringToFile(runnerDestination, newRunner, sourceEncoding);
+	}
 }
