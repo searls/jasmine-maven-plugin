@@ -38,6 +38,12 @@ public class ServerMojo extends AbstractJasmineMojo {
         server.setHandler(handlers);
 
         server.start();
+        getLog().info("\n\n" +
+				"Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n\t" +
+				"http://localhost:"+serverPort+
+				"\n\n" +
+				"Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.");
+        
 		server.join();
 	}
 

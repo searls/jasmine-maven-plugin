@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.DefaultHandler;
@@ -34,6 +35,7 @@ public class ServerMojoTest {
 	
 	@InjectMocks private ServerMojo subject = new ServerMojo();
 	
+	@Mock private Log log;
 	@Mock private MavenProject mavenProject;
 	@Mock private Server server = new Server();
 	@Mock private RelativizesFilePaths relativizesFilePaths;
@@ -45,6 +47,7 @@ public class ServerMojoTest {
 	
 	@Before
 	public void arrangeAndAct() throws Exception {
+		subject.setLog(log);
 		subject.serverPort = PORT;
 		subject.jasmineTargetDir = targetDir;
 		subject.manualSpecRunnerHtmlFileName = MANUAL_SPEC_RUNNER_NAME;
@@ -53,6 +56,16 @@ public class ServerMojoTest {
 		when(relativizesFilePaths.relativize(baseDir,targetDir)).thenReturn(RELATIVE_TARGET_DIR);
 		
 		subject.run();
+	}
+	
+	@Test
+	public void logsInstructions() {
+		verify(log).info(
+				"\n\n" +
+				"Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n\t" +
+				"http://localhost:"+PORT+
+				"\n\n" +
+				"Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.");
 	}
 	
 	@Test
