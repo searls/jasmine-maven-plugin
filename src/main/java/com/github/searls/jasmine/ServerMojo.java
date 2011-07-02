@@ -14,6 +14,7 @@ import com.github.searls.jasmine.io.RelativizesFilePaths;
 
 /**
  * @goal server
+ * @execute lifecycle="jasmine-lifecycle" phase="generate-test-sources"
  */
 public class ServerMojo extends AbstractJasmineMojo {
 
