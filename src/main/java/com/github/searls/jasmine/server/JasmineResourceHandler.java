@@ -11,6 +11,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import com.github.searls.jasmine.AbstractJasmineMojo;
 import com.github.searls.jasmine.CreatesManualRunner;
+import com.github.searls.jasmine.NullLog;
 
 public class JasmineResourceHandler extends ResourceHandler {
 
@@ -18,6 +19,7 @@ public class JasmineResourceHandler extends ResourceHandler {
 
 	public JasmineResourceHandler(AbstractJasmineMojo config) {
 		createsManualRunner = new CreatesManualRunner(config);
+		createsManualRunner.setLog(new NullLog());
 	}
 
 	@Override

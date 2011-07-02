@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.plugin.logging.Log;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.RelativizesASetOfScripts;
@@ -20,16 +21,19 @@ public class CreatesManualRunner {
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private AbstractJasmineMojo config;
 	
+	private Log log;
+
 	public CreatesManualRunner(AbstractJasmineMojo config) {
 		this.config = config;
+		log = config.getLog();
 	}
 	
 	public void create() throws IOException {
 		if(writingAManualSpecRunnerIsNecessary()) {
-			config.getLog().info("Generating runner '"+config.manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
+			log.info("Generating runner '"+config.manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
 			writeSpecRunnerToSourceSpecDirectory();
 		} else {
-			config.getLog().warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+config.sources.getDirectory().getAbsolutePath()+"` and `"+config.specs.getDirectory().getAbsolutePath()+"` exist.");
+			log.warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+config.sources.getDirectory().getAbsolutePath()+"` and `"+config.specs.getDirectory().getAbsolutePath()+"` exist.");
 		}
 	}
 
@@ -44,7 +48,7 @@ public class CreatesManualRunner {
 		if(newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
 			saveRunner(runnerDestination, newRunnerHtml);
 		} else {
-			config.getLog().info("Skipping spec runner generation, because an identical spec runner already exists.");
+			log.info("Skipping spec runner generation, because an identical spec runner already exists.");
 		}
 	}
 
@@ -59,7 +63,7 @@ public class CreatesManualRunner {
 				existingRunner = fileUtilsWrapper.readFileToString(destination);
 			}
 		} catch(Exception e) {
-			config.getLog().warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
+			log.warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
 		}
 		return existingRunner;
 	}
@@ -70,5 +74,9 @@ public class CreatesManualRunner {
 	
 	private void saveRunner(File runnerDestination, String newRunner) throws IOException {
 		fileUtilsWrapper.writeStringToFile(runnerDestination, newRunner, config.sourceEncoding);
+	}
+	
+	public void setLog(Log log) {
+		this.log = log;
 	}
 }
