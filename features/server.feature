@@ -8,7 +8,7 @@ Feature: running a local server
   Scenario: running the specs in a browser
 
     Given I am currently in the "jasmine-webapp-passing" project
-    When I run "mvn clean jasmine:server" in a new process
+    When I run "mvn clean jasmine:bdd" in a new process
     And I load "http://localhost:8234" in a browser
     Then I should see my specs pass
 
