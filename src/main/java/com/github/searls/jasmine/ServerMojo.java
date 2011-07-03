@@ -53,7 +53,7 @@ public class ServerMojo extends AbstractJasmineMojo {
 		return resourceHandler;
 	}
 	
-	private void startServer() {
+	private void startServer() throws Exception {
 		server.start();
         getLog().info(buildServerInstructions());
 		server.join();
