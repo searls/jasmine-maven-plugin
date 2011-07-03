@@ -8,6 +8,7 @@ import static org.hamcrest.Matchers.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.hamcrest.Description;
@@ -39,7 +40,8 @@ public class RelativizesASetOfScriptsTest {
 		when(relativizesFilePaths.relativize(eq(from), (File) argThat(is(fileNamed("b"))))).thenReturn("beta");
 
 		Set<String> result = subject.relativize(from, sources);
-
+		
+		assertThat(result, is(LinkedHashSet.class));
 		assertThat(result, hasItems("alpha", "beta"));
 	}
 
