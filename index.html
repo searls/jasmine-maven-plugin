@@ -10,17 +10,91 @@
   <link rel="stylesheet" type="text/css" href="css/jasmine-maven-plugin.css" />
 
   <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.14/jquery-ui.min.js"></script>
   <script type="text/javascript" src="js/vendor/underscore-min.js"></script>
   <script type="text/javascript" src="js/jasmine-maven-plugin.js"></script>
 </head>
 <body>
   <div class="big title">jasmine-maven-plugin</div>
   <div class="section">
-    <span class="title">what's this we have here?</span>
+    <span class="title">what have we here?</span>
     <p>
-      You might be able to intuit that jasmine-maven-plugin is a <a href="http://maven.apache.org/">Maven</a> <a href="http://maven.apache.org/guides/mini/guide-configuring-plugins.html">plugin</a> for the JavaScript testing framework <a href="http://pivotal.github.com/jasmine/">Jasmine</a>.
+      As one might intuit, the jasmine-maven-plugin is a <a href="http://maven.apache.org/">Maven</a> <a href="http://maven.apache.org/guides/mini/guide-configuring-plugins.html">plugin</a> for the JavaScript testing framework, <a href="http://pivotal.github.com/jasmine/">Jasmine</a>.
+    </p>
+    <p>
+      If you're using Maven, you're probably writing Java (but, hey, you could be using it for <a href="http://polyglot.sonatype.org/index.html">any JVM-language</a>). And if you're anything like me, you're here to figure out how to treat your client-side code with the same degree of professionalism that you already show server-side code. Maybe that means you want a painless way to <a href="http://en.wikipedia.org/wiki/Test-driven_development">test-drive</a> your JavaScript and <a href="http://jashkenas.github.com/coffee-script/">CoffeeScript</a>. Maybe you're trying to figure out how to incorporate JavaScript tests on your <a href="http://jenkins-ci.org/">continuous integration server</a> without requiring any <a href="http://seleniumhq.org/">browser shenanigans</a>.
+    </p>
+    <p>If that's the sort of thing that you'd be into, then good news: the plugin does those two things pretty well.</p>
+  </div>
 
+  <div class="section">
+    <span class="title">adding it to your project</span>
+    <div class="heads-up expandable">
+      <p>Long-time user of the plugin? I suggest you take a second-look at your POM configuration. <a href="#" class="show-more">Click here</a> for some details.</p>
+      <div class="more">
+        <ul>
+          <li>
+            Your <code>&lt;configuration/&gt;</code> element should rest directly underneath your <code>&lt;plugin/&gt;</code> element (as opposed to under an <code>&lt;execution/&gt;</code>). Otherwise your configuration will be invisible when you run <code>jasmine:XXX</code> goals from the command line.
+            I learned this the <a href="http://stackoverflow.com/questions/6560904/why-might-my-maven-mojo-lose-its-configuration-properties-when-run-individually">hard way</a>, just for you.
+          </li>
+          <li>
+            Your plugin configuration's <code>&lt;goals/&gt;</code> should only specify the <code>test</code> goal. The <code>generateManualRunner</code>, <code>prepareResources</code>, and <code>prepareTestResources</code> goals will now fire on their own when they need to. Leaving them in there will at best cause them to run twice, and at worst break with a subsequent release.
+          </li>
+          <li>
+            If you're relying on the <code>preparePackage</code> goal, might I suggest you look into using <a href="http://code.google.com/p/wro4j/">wro4j</a>? Packing JS for distribution is really outside of the plugin's focus, and it's never done a good job of   it. As of <code>1.0.2-beta-3</code>, the <code>preparePackage</code> goal is deprecated.
+          </li>
+        </ul>
+      </div>
+    </div>
+    <p>
+      If you're already familiar with adding Maven plugins to <a href="http://maven.apache.org/guides/introduction/introduction-to-the-pom.html">POM files</a>, then this should be a breeze. If it's new to you, then take a deep breath and contemplate adding this XML to your project's "<code>pom.xml</code>" file:
+      <pre><code>
+  &lt;build&gt;
+    &hellip;
+    &lt;plugins&gt;
+      &hellip;
+      &lt;plugin&gt;
+        &lt;groupId&gt;com.github.searls&lt;/groupId&gt;
+        &lt;artifactId&gt;jasmine-maven-plugin&lt;/artifactId&gt;
+        &lt;version&gt;1.0.2-beta-3&lt;/version&gt;
+        &lt;executions&gt;
+          &lt;execution&gt;
+            &lt;goals&gt;
+              &lt;goal&gt;test&lt;/goal&gt;
+            &lt;/goals&gt;
+          &lt;/execution&gt;
+        &lt;/executions&gt;
+        &lt;configuration&gt;
+          &lt;!-- configuration properties will go here --&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
+      &hellip;
+    &lt;/plugins&gt;
+    &hellip;
+  &lt;/build&gt;
+      </code></pre>
     </p>
   </div>
+  <div class="section">
+    <span class="title">tailoring it to fit your project</span>
+    <p>
+      The plugin makes numerous assumptions about how you've structured your project. To compensate, it comes with a confusingly large array of configuration properties. While you can find all of the properties in the project's <a href="https://github.com/searls/jasmine-maven-plugin/blob/master/src/main/java/com/github/searls/jasmine/AbstractJasmineMojo.java">source code</a>, here are some of the popular ones:
+    </p>
+    <table>
+      <tr>
+        <th>name</th>
+        <th>purpose</th>
+        <th>default</th>
+        <th>example</th>
+      </tr>
+      <tr>
+        <td>jsSrcDir</td>
+        <td>the directory in which you store your production JavaScript</td>
+        <td>src/main/javascript</td>
+        <td>If you're using serving a Java webapp you might set this to: <code>${project.basedir}/src/main/webapp/js</code></td>
+      </tr>
+    </table>
+  </div>
+
 </body>
 </html>

@@ -24,20 +24,45 @@ body {
   margin: 0 auto;
   margin-top: 30px;
   background-color: #fff;
-  width: 80%;
-  padding: 5px 0px 5px 10px;
+  width: 1000px;
+  padding: 5px 10px 5px 10px;
   border-radius: 5px;
 }
 
 .section p {
   padding-left: 10px;
+  line-height: 1.75;
+}
+
+.section .heads-up {
+  margin: 10px;
+  padding: 0px 15px 0px 5px;
+  background-color: #ffc;
+  border: 1px solid #cc0;
 }
 
 .section a {
-  color: blue;
+  color: #99C;
+  font-weight: bold;
   text-decoration: none;
+}
+
+.section li {
+  margin-top: 10px;
 }
 
 .section a:hover {
   text-decoration: underline;
+}
+
+
+.more {
+  display: none;
+}
+
+pre {
+  margin: 0px 35px 0px 35px;
+  padding: 0px 15px 0px 15px;
+  background-color: #eee;
+  border: 1px solid #777;
 }
