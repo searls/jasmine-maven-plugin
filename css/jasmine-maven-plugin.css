@@ -1,0 +1,30 @@
+body {
+  background-color: #444;
+}
+
+.title {
+  font-family: 'Ubuntu', sans-serif;
+  color: #fff;
+  text-shadow: 1px 1px 2px #aaa;
+}
+
+.title.big {
+  text-align: center;
+  font-size: 80px;
+}
+
+.section .title {
+  padding-left: 20px;
+  font-size: 40px;
+  color: #444;
+}
+
+
+.section {
+    margin: 0 auto;
+    margin-top: 30px;
+    background-color: #fff;
+    width: 80%;
+    padding: 5px 0px 5px 10px;
+    border-radius: 5px;
+}
