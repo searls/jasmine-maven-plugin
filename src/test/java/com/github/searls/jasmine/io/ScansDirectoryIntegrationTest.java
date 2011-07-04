@@ -95,7 +95,7 @@ public class ScansDirectoryIntegrationTest {
 		createSubDir("b");
 		createFile("a.js","b/c.js");
 
-		List<String> result = subject.scan(directory,asList(ScansDirectory.DEFAULT_INCLUDES),Collections.EMPTY_LIST);
+		List<String> result = subject.scan(directory,ScansDirectory.DEFAULT_INCLUDES,Collections.EMPTY_LIST);
 
 		assertThat(result, is(asList("a.js","b/c.js")));		
 	}

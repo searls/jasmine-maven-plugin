@@ -9,7 +9,7 @@
 	<artifactId>jasmine-webapp-order-matters</artifactId>
 	<packaging>war</packaging>
 	<name>Example Webapp using Jasmine Maven Plugin where the order of sources matters</name>
-	
+
 	<build>
 		<plugins>
 			<plugin>
@@ -19,8 +19,6 @@
 				<executions>
 					<execution>
 						<goals>
-							<goal>resources</goal>
-							<goal>testResources</goal>
 							<goal>test</goal>
 						</goals>
 						<configuration>

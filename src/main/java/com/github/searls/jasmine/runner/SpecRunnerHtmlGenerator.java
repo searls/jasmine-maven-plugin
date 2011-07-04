@@ -66,7 +66,9 @@ public class SpecRunnerHtmlGenerator {
 	private void includeJavaScriptDependencies(List<String> dependencies, StringTemplate template) throws IOException {
 		StringBuilder js = new StringBuilder();
 		for (String jsFile : dependencies) {
-			js.append("<script type=\"text/javascript\">").append(ioUtilsWrapper.toString(jsFile)).append("</script>");
+			if(jsFile != null) {
+				js.append("<script type=\"text/javascript\">").append(ioUtilsWrapper.toString(jsFile)).append("</script>");
+			}
 		}
 		template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
 	}

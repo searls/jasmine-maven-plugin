@@ -7,6 +7,12 @@ When /^I run "([^"]*)"$/ do |command|
   @output = `#{command}`
 end
 
+When /^I run "([^"]*)" in a new process$/ do |arg1|
+  pending
+  @pid = Process.spawn "#{command}"
+end
+
+
 Then /^the build should fail$/ do
   @output.should match /BUILD FAILURE/
 end
@@ -32,12 +38,22 @@ Then /^the file "([^"]*)" should have XML "(.*)"$/ do |file_name, xpath|
 end
 
 Given /^the file "([^"]*)" does exist$/ do |file_name|
-  File.exist?(file_name).should be true  
+  File.exist?(file_name).should be true
 end
 
 Then /^the file "([^"]*)" does not exist$/ do |file_name|
-  File.exist?(file_name).should be false  
+  File.exist?(file_name).should be false
 end
+
+
+When /^I load "([^"]*)" in a browser$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^I should see my specs pass$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
 
 private
 

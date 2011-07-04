@@ -8,6 +8,7 @@ import org.codehaus.plexus.util.FileUtils;
 /**
  * @goal preparePackage
  * @phase prepare-package
+ * @deprecated "If you're using jasmine-maven-plugin to package your web assets, I strongly encourage you to migrate to WRO4j: http://code.google.com/p/wro4j/"
  */
 public class PreparePackageMojo extends AbstractJasmineMojo {
 
