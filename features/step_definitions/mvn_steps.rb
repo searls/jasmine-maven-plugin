@@ -8,8 +8,8 @@ When /^I run "([^"]*)"$/ do |command|
 end
 
 When /^I run "([^"]*)" in a new process$/ do |arg1|
+  pending
   @pid = Process.spawn "#{command}"
-  #wait...
 end
 
 
