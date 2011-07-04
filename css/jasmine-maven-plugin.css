@@ -1,5 +1,6 @@
 body {
   background-color: #444;
+  font-family: 'Nobile', sans-serif;
 }
 
 .title {
@@ -14,17 +15,29 @@ body {
 }
 
 .section .title {
-  padding-left: 20px;
   font-size: 40px;
   color: #444;
 }
 
 
 .section {
-    margin: 0 auto;
-    margin-top: 30px;
-    background-color: #fff;
-    width: 80%;
-    padding: 5px 0px 5px 10px;
-    border-radius: 5px;
+  margin: 0 auto;
+  margin-top: 30px;
+  background-color: #fff;
+  width: 80%;
+  padding: 5px 0px 5px 10px;
+  border-radius: 5px;
+}
+
+.section p {
+  padding-left: 10px;
+}
+
+.section a {
+  color: blue;
+  text-decoration: none;
+}
+
+.section a:hover {
+  text-decoration: underline;
 }
