@@ -20,6 +20,17 @@ import com.github.searls.jasmine.server.JasmineResourceHandler;
  */
 public class ServerMojo extends AbstractJasmineMojo {
 
+	public static final String INSTRUCTION_FORMAT = 
+		"\n\n" +
+		"Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n" +
+		"  http://localhost:%s"+
+		"\n\n" +
+		"The server will monitor these two directories for scripts that you add, remove, and change:\n\n" +
+		"  source directory: %s\n\n"+
+		"  spec directory: %s"+
+		"\n\n"+		
+		"Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.";
+	
 	private Server server = new Server();
 	
 	private RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
@@ -59,12 +70,12 @@ public class ServerMojo extends AbstractJasmineMojo {
 		server.join();
 	}
 
-	private String buildServerInstructions() {
-		return "\n\n" +
-				"Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n\t" +
-				"http://localhost:"+serverPort+
-				"\n\n" +
-				"Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.";
+	private String buildServerInstructions() throws IOException {
+		return String.format(
+				INSTRUCTION_FORMAT, 
+				serverPort,
+				relativizesFilePaths.relativize(mavenProject.getBasedir(), sources.getDirectory()),
+				relativizesFilePaths.relativize(mavenProject.getBasedir(), specs.getDirectory()));
 	}
 
 	private String manualSpecRunnerPath() throws IOException {
