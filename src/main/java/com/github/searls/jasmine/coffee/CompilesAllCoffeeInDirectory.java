@@ -7,7 +7,7 @@ import com.github.searls.jasmine.io.FileUtilsWrapper;
 
 public class CompilesAllCoffeeInDirectory {
 	
-	public static final String[] COFFEE_EXTENSIONS = new String[]{".coffee"};
+	public static final String[] COFFEE_EXTENSIONS = new String[]{"coffee"};
 	
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private CompilesCoffeeInPlace compilesCoffeeInPlace = new CompilesCoffeeInPlace();
