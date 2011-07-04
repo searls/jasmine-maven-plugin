@@ -32,7 +32,7 @@ public class CoffeeScriptIntegrationTest {
 	public void party() throws IOException {
 		String result = subject.compile(COFFEE);
 		
-//		assertThat(result,is(JAVASCRIPT));
+		assertThat(result,is(JAVASCRIPT));
 	}
 	
 }
