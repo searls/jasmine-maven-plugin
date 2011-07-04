@@ -41,6 +41,11 @@ body {
   border: 1px solid #cc0;
 }
 
+.section.wide {
+  width: 95%;
+  min-width: 1000px;
+}
+
 .section a {
   color: #99C;
   font-weight: bold;
@@ -61,8 +66,32 @@ body {
 }
 
 pre {
-  margin: 0px 35px 0px 35px;
+  margin: 5px 35px 0px 35px;
   padding: 0px 15px 0px 15px;
   background-color: #eee;
   border: 1px solid #777;
+}
+
+pre.terminal {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #fff;
+  background-color: #000;
+}
+
+table {
+  margin: 0 auto;
+}
+
+thead {
+  color: #fff;
+  background-color: #000;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #eee;
+}
+
+td,th {
+  padding: 10px;
 }
