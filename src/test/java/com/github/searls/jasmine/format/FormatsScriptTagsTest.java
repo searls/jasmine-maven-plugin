@@ -29,8 +29,13 @@ public class FormatsScriptTagsTest {
 		
 		assertThat(result,containsString(expectedScriptTagFormat(first)+"\n"+expectedScriptTagFormat(second)));
 	}
-		
+			
 	private String expectedScriptTagFormat(String scriptName) {
-		return "<script type=\"text/javascript\" src=\""+scriptName+"\"></script>";
+		return expectedScriptTagFormat(scriptName, "text/javascript");
 	}
+	
+	private String expectedScriptTagFormat(String scriptName, String scriptType) {
+		return "<script type=\""+scriptType+"\" src=\""+scriptName+"\"></script>";
+	}
+	
 }

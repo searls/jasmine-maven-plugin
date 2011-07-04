@@ -121,7 +121,7 @@ describe('Junit XML', function() {
 				var timestamp = find('testsuite').attr('timestamp');
 				var date = new Date();
 				expect(timestamp).toContain(date.getUTCFullYear());
-				expect(timestamp).toContain(date.getUTCMonth());
+				expect(timestamp).toContain(date.getUTCMonth()+1);
 				expect(timestamp).toContain(date.getUTCDate());
 				expect(timestamp).toContain(date.getUTCHours());
 				expect(timestamp).toContain(date.getUTCMinutes());
