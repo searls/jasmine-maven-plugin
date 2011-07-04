@@ -14,11 +14,21 @@ body {
   font-size: 80px;
 }
 
+ul.links {
+  text-align: center;
+  margin: 0 auto;
+}
+
+ul.links li {
+  list-style-type: none;
+  display: inline;
+  padding: 0px 15px 0px 15px;
+}
+
 .section .title {
   font-size: 40px;
   color: #444;
 }
-
 
 .section {
   margin: 0 auto;
@@ -81,7 +91,7 @@ code {
 }
 
 pre.terminal {
-  font-weight: bold;
+  font-size: 1.1em;
   overflow: auto;
   color: #fff;
   background-color: #000;
