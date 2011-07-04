@@ -9,8 +9,6 @@ import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.resource.Resource;
 
-import ro.isdc.wro.extensions.processor.algorithm.coffeescript.CoffeeScript;
-
 import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
 
 public class HandlesRequestsForCoffee {

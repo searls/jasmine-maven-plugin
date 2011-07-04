@@ -18,8 +18,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import ro.isdc.wro.extensions.processor.algorithm.coffeescript.CoffeeScript;
-
 import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -41,7 +39,7 @@ public class HandlesRequestsForCoffeeTest {
 	}
 	
 	@Before
-	public void defaultCoffeeStubbing() {
+	public void defaultCoffeeStubbing() throws IOException {
 		when(coffeeScript.compile(COFFEE)).thenReturn("blarg!");
 	}
 	

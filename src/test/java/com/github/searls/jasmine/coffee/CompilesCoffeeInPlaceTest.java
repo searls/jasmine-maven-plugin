@@ -11,8 +11,6 @@ import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import ro.isdc.wro.extensions.processor.algorithm.coffeescript.CoffeeScript;
-
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 
 @RunWith(PowerMockRunner.class)

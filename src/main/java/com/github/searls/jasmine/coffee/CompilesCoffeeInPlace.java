@@ -6,8 +6,6 @@ import java.io.IOException;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 
-import ro.isdc.wro.extensions.processor.algorithm.coffeescript.CoffeeScript;
-
 public class CompilesCoffeeInPlace {
 
 	private CoffeeScript coffeeScript = new CoffeeScript();
