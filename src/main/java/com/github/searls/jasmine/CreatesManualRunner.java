@@ -29,19 +29,6 @@ public class CreatesManualRunner {
 	}
 	
 	public void create() throws IOException {
-		if(writingAManualSpecRunnerIsNecessary()) {
-			log.info("Generating runner '"+config.manualSpecRunnerHtmlFileName+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
-			writeSpecRunnerToSourceSpecDirectory();
-		} else {
-			log.warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+config.sources.getDirectory().getAbsolutePath()+"` and `"+config.specs.getDirectory().getAbsolutePath()+"` exist.");
-		}
-	}
-
-	private boolean writingAManualSpecRunnerIsNecessary() {
-		return config.sources.getDirectory().exists() && config.specs.getDirectory().exists();
-	}
-
-	private void writeSpecRunnerToSourceSpecDirectory() throws IOException {
 		File runnerDestination = new File(config.jasmineTargetDir,config.manualSpecRunnerHtmlFileName);
 		
 		String newRunnerHtml = new SpecRunnerHtmlGenerator(scriptsForRunner(), config.sourceEncoding).generate(ReporterType.TrivialReporter, config.customRunnerTemplate);

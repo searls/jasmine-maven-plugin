@@ -17,6 +17,7 @@ import org.eclipse.jetty.util.resource.Resource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
@@ -24,11 +25,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.server.JasmineResourceHandler;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServerMojoTest {
 
+	private static final String SPECS_DIR = "spec dir";
+	private static final String SOURCE_DIR = "source dir";
 	private static final int PORT = 8923;
 	private static final String RELATIVE_TARGET_DIR = "some dir";
 	private static final String MANUAL_SPEC_RUNNER_NAME = "nacho specs";
@@ -42,12 +46,18 @@ public class ServerMojoTest {
 	@Mock private RelativizesFilePaths relativizesFilePaths;
 	@Mock private File baseDir;
 	@Mock private File targetDir;
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS) private ScriptSearch sources;
+	@Mock(answer=Answers.RETURNS_DEEP_STUBS) private ScriptSearch specs;
+	
+	
 	
 	@Captor private ArgumentCaptor<SelectChannelConnector> connectorCaptor;
 	@Captor private ArgumentCaptor<HandlerList> handlerListCaptor;
 	
 	@Before
 	public void arrangeAndAct() throws Exception {
+		subject.sources = sources;
+		subject.specs = specs;
 		subject.setLog(log);
 		subject.serverPort = PORT;
 		subject.jasmineTargetDir = targetDir;
@@ -55,18 +65,15 @@ public class ServerMojoTest {
 		when(baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
 		when(mavenProject.getBasedir()).thenReturn(baseDir);
 		when(relativizesFilePaths.relativize(baseDir,targetDir)).thenReturn(RELATIVE_TARGET_DIR);
+		when(relativizesFilePaths.relativize(baseDir,sources.getDirectory())).thenReturn(SOURCE_DIR);
+		when(relativizesFilePaths.relativize(baseDir,specs.getDirectory())).thenReturn(SPECS_DIR);
 		
 		subject.run();
 	}
 	
 	@Test
 	public void logsInstructions() {
-		verify(log).info(
-				"\n\n" +
-				"Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n\t" +
-				"http://localhost:"+PORT+
-				"\n\n" +
-				"Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.");
+		verify(log).info(String.format(ServerMojo.INSTRUCTION_FORMAT, PORT, SOURCE_DIR, SPECS_DIR));
 	}
 	
 	@Test

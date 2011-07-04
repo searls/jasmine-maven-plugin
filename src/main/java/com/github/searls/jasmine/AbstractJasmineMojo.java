@@ -176,7 +176,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected MavenProject mavenProject;
 	
 	/**
-	 * @parameter default-value="8234"
+	 * @parameter default-value="8234" expression="${jasmine.serverPort}"
 	 */
 	protected int serverPort;
 

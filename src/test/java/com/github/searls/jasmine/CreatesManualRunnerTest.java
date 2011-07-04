@@ -108,33 +108,6 @@ public class CreatesManualRunnerTest {
 	}
 	
 	@Test
-	public void whenSpecsOrSourceDoExistLogAboutIt() throws IOException {
-		subject.create();
-		
-		verify(log).info("Generating runner '"+MANUAL_RUNNER_NAME+"' in the Jasmine plugin's target directory to open in a browser to facilitate faster feedback.");
-	}
-	
-	@Test
-	public void whenSpecsAndSourceDirsDoNotExistLogAboutIt() throws IOException {
-		when(specDirectory.exists()).thenReturn(false);
-		when(sourceDirectory.exists()).thenReturn(false);
-		
-		subject.create();
-		
-		verify(log).warn("Skipping manual spec runner generation. Check to make sure that both JavaScript directories `"+SOURCE_DIR+"` and `"+SPEC_DIR+"` exist.");
-	}
-
-	@Test
-	public void whenSpecsAndSourceDirsDoNotExistDoNotWriteAnyFiles() throws IOException {
-		when(specDirectory.exists()).thenReturn(false);
-		when(sourceDirectory.exists()).thenReturn(false);
-		
-		subject.create();
-		
-		neverWriteAFile();
-	}
-	
-	@Test
 	public void whenRunnerDoesNotExistThenCreateNewRunner() throws Exception {
 		String expected = "I'm a new spec runner yay!";
         when(runnerDestination.exists()).thenReturn(false);
