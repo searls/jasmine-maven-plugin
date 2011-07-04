@@ -1,5 +1,7 @@
 package org.eclipse.jetty.server;
 
+import org.eclipse.jetty.util.component.Container;
+
 //Link Seam for jetty server.
 public class Server {
 
@@ -10,4 +12,6 @@ public class Server {
 	public void join() {}
 	
 	public void setHandler(Handler handler) {}
+	
+	public Container getContainer() { return null; }
 }
