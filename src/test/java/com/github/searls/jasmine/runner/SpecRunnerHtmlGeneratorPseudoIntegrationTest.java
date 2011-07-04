@@ -149,27 +149,6 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 		assertThat(html, containsScriptTagWithSource(expected));
 	}
-	
-	@Test
-	public void whenCoffeeScriptExistsItAddsCoffeeCompiler() throws IOException {
-		String expected = "coffee!";
-		when(ioUtilsWrapper.toString(COFFEE_JS)).thenReturn(expected);
-		scripts.add("b.coffee");
-		
-		String html = subject.generate(ReporterType.TrivialReporter, null);
-		
-		assertThat(html, containsScriptTagWith(expected));
-	}
-	
-	@Test
-	public void whenNoCoffeeScriptExistsItDoesNotAddCoffeeCompiler() throws IOException {
-		String expected = "coffee!";
-		when(ioUtilsWrapper.toString(COFFEE_JS)).thenReturn(expected);
-		
-		String html = subject.generate(ReporterType.TrivialReporter, null);
-		
-		assertThat(html, not(containsScriptTagWith(expected)));
-	}
 
 	private HtmlPage getPage(String html) throws Exception {
 		MockWebConnection webConnection = new MockWebConnection();

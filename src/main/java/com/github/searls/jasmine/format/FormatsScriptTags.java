@@ -7,13 +7,9 @@ public class FormatsScriptTags {
 	public String format(Set<String> sourceLocations) {
 		StringBuilder sb = new StringBuilder();
 		for (String location : sourceLocations) {
-			sb.append("<script type=\""+type(location)+"\" src=\"").append(location).append("\"></script>").append("\n");
+			sb.append("<script type=\"text/javascript\" src=\"").append(location).append("\"></script>").append("\n");
 		}
 		return sb.toString();
-	}
-
-	private String type(String name) {
-		return name.endsWith(".coffee") ? "text/coffeescript" : "text/javascript";
 	}
 	
 }

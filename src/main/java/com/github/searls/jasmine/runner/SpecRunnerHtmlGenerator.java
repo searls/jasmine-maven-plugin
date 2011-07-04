@@ -28,7 +28,6 @@ public class SpecRunnerHtmlGenerator {
 
 	public static final String  JASMINE_JS = "/vendor/js/jasmine.js";
 	public static final String  JASMINE_HTML_JS = "/vendor/js/jasmine-html.js";
-	public static final String  COFFEE_JS = "/vendor/js/coffee-script.js";
 	public static final String  JASMINE_CSS = "/vendor/css/jasmine.css";
 	
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
@@ -48,7 +47,7 @@ public class SpecRunnerHtmlGenerator {
 			String htmlTemplate = resolveHtmlTemplate(customRunnerTemplate);
 			StringTemplate template = new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
 
-			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS,coffeeIfNecessary()), template);
+			includeJavaScriptDependencies(asList(JASMINE_JS,JASMINE_HTML_JS), template);
 			applyCssToTemplate(asList(JASMINE_CSS), template);
 			applyScriptTagsToTemplate(template);
 			template.setAttribute(REPORTER_ATTR_NAME, reporterType.name());
@@ -58,15 +57,6 @@ public class SpecRunnerHtmlGenerator {
 		} catch (IOException e) {
 			throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
 		}
-	}
-
-	private String coffeeIfNecessary() {
-		for (String s : scripts) {
-			if(s.endsWith(".coffee")) {
-				return COFFEE_JS;
-			}
-		}
-		return null;
 	}
 
 	private String resolveHtmlTemplate(File customRunnerTemplate) throws IOException {

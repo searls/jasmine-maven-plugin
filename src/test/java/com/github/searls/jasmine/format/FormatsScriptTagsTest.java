@@ -29,16 +29,7 @@ public class FormatsScriptTagsTest {
 		
 		assertThat(result,containsString(expectedScriptTagFormat(first)+"\n"+expectedScriptTagFormat(second)));
 	}
-		
-	@Test
-	public void formatsCoffeeScripts() {
-		String coffee = "see_it_ends_with.coffee";
-		
-		String result = subject.format(new HashSet<String>(asList(coffee)));
-		
-		assertThat(result,containsString(expectedScriptTagFormat(coffee,"text/coffeescript")));
-	}
-	
+			
 	private String expectedScriptTagFormat(String scriptName) {
 		return expectedScriptTagFormat(scriptName, "text/javascript");
 	}
