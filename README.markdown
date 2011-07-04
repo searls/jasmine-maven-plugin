@@ -1,12 +1,7 @@
 jasmine-maven-plugin
 ====================
-**A Maven Plugin for processing JavaScript sources, specs, and executing Jasmine**
 
-If you want to use Maven and test-drive JavaScript, this is the plugin for you!
-
-* Generates two HTML test runners: one for test-driving locally in your browser, and one to run as part of the build
-* Continuous integration with no added configuration: because the plugin's `test` goal runs headlessly (thanks HtmlUnit!), your CI system won't need any additional configuration. Your build will fail as soon as your JavaScript tests do.
-* Builds JUnit XML: your CI reporting can incorporate each Jasmine spec alongside any reports of your existing xUnit tests 
+Check out the jasmine-maven-page
 
 Option A: Start from the archetype
 ----------------------------------
@@ -36,7 +31,7 @@ Add the relevant plugin and repositories entries to your project's `pom.xml`.
           <plugin>
             <groupId>com.github.searls</groupId>
             <artifactId>jasmine-maven-plugin</artifactId>
-            <version>1.0.2-beta-3</version>
+            <version>1.0.2-beta-4</version>
             <executions>
               <execution>
                 <goals>
@@ -235,7 +230,7 @@ These options will probably come in handy less frequently than their `sourceIncl
 
 ### preloadSources - Enforcing the precise order in which JavaScript files are loaded 
 
-**Note: Prior to the release of version 1.0.2-beta-3, the `preloadSources` configuration was the only way to control the order in which scripts were loaded by the runners. Now that the plugin supports includes/excludes with wildcards, the number of situations where `preloadSources` is necessary should be dramatically reduced.**
+**Note: Prior to the release of version 1.0.2-beta-4, the `preloadSources` configuration was the only way to control the order in which scripts were loaded by the runners. Now that the plugin supports includes/excludes with wildcards, the number of situations where `preloadSources` is necessary should be dramatically reduced.**
 
 You can configure the plugin to load a list of JavaScript sources before any others. This is useful in situations where the above includes/excludes options fall short. One such situation is when a test-scoped file needs to overwrite the functionality of a production source file before other production sources get loaded, which was something one team ran into with a localization plugin. In that case, all of the included files will still be loaded, but anything found in `preloadSources` will be moved to the very top, per the resolution rules enumerated at the bottom of this section.
 
@@ -346,7 +341,7 @@ As an example, to integrate the report into a Hudson job (note that it must be a
 
 ## Current Version Info
 
-The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.2, so its version number is **1.0.2-beta-3**.
+The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.2, so its version number is **1.0.2-beta-4**.
 
 If you want to point at snapshot releases of the plugin, they're hosted on the [Sonatype OSS snapshot repository](https://oss.sonatype.org/service/local/repositories/snapshots).  
 
