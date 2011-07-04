@@ -60,6 +60,10 @@ body {
   text-decoration: underline;
 }
 
+.section img {
+  text-align: center;
+}
+
 
 .more {
   display: none;
@@ -72,9 +76,13 @@ pre {
   border: 1px solid #777;
 }
 
+code {
+  font-size: 1.3em;
+}
+
 pre.terminal {
-  font-size: 1.4em;
   font-weight: bold;
+  overflow: auto;
   color: #fff;
   background-color: #000;
 }

@@ -42,7 +42,7 @@
             Your plugin configuration's <code>&lt;goals/&gt;</code> should only specify the <code>test</code> goal. The <code>generateManualRunner</code>, <code>prepareResources</code>, and <code>prepareTestResources</code> goals will now fire on their own when they need to. Leaving them in there will at best cause them to run twice, and at worst break with a subsequent release.
           </li>
           <li>
-            If you're relying on the <code>preparePackage</code> goal, might I suggest you look into using <a href="http://code.google.com/p/wro4j/">wro4j</a>? Packing JS for distribution is really outside of the plugin's focus, and it's never done a good job of   it. As of <code>1.0.2-beta-3</code>, the <code>preparePackage</code> goal is deprecated.
+            If you're relying on the <code>preparePackage</code> goal, might I suggest you look into using <a href="http://code.google.com/p/wro4j/">wro4j</a>? Packing JS for distribution is really outside of the plugin's focus, and it's never done a good job of   it. As of <code>1.0.2-beta-4</code>, the <code>preparePackage</code> goal is deprecated.
           </li>
         </ul>
       </div>
@@ -57,7 +57,7 @@
       &lt;plugin&gt;
         &lt;groupId&gt;com.github.searls&lt;/groupId&gt;
         &lt;artifactId&gt;jasmine-maven-plugin&lt;/artifactId&gt;
-        &lt;version&gt;1.0.2-beta-3&lt;/version&gt;
+        &lt;version&gt;1.0.2-beta-4&lt;/version&gt;
         &lt;executions&gt;
           &lt;execution&gt;
             &lt;goals&gt;
@@ -77,11 +77,39 @@
     </p>
   </div>
   <div class="section">
-    <span class="title">writing some specs</span>
-    <p>Ready to try it out? In a terminal, just run:</p>
+    <span class="title">writing specs</span>
+    <p>Ready to try it out? Once you've added the plugin to your project, just run the following in a terminal:</p>
     <pre class="terminal"><code>
 mvn jasmine:bdd
     </code></pre>
+    <p>You should see some output like this</p>
+    <pre class="terminal"><code>
+[INFO]
+
+Server started--it's time to spec some JavaScript! You can run your
+ specs as you develop by visiting this URL in a web browser:
+
+  http://localhost:8234
+
+The server will monitor these two directories for scripts
+ that you add, remove, and change:
+
+  source directory: src/main/javascript
+
+  spec directory: src/test/javascript
+
+Just leave this process running as you test-drive your code,
+refreshing your browser window to re-run your specs.
+You can kill the server with Ctrl-C when you're done.
+    </code></pre>
+    <p>Now visit <a href="http://localhost:8234">http://localhost:8234</a> in your browser of choice and you should see a Jasmine spec runner with 0 specs, 0 failures. Sort of like this one:</p>
+    <img src="img/empty.png" width="764" height="462" />
+    <p>
+      And that's it! When you add source scripts to the source directory and spec scripts to the specs directory and refresh the page, your specs will be executed.
+    </p>
+    <p>
+      Running the <code>jasmine:bdd</code> goal and refreshing an actual browser will always provide substantially faster feedback than the headless <code>jasmine:test</code> goal. As a result, I strongly recommend you use it to drive development of your JavaScript and only worry about running the headless execution when you would otherwise perform full Maven builds (like before you push your code or in CI).
+    </p>
   </div>
   <div class="section wide">
     <span class="title">tailoring it</span>
