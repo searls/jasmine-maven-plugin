@@ -4,7 +4,11 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.util.Collections;
+import java.util.Map;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.junit.Test;
 
 public class CoffeeScriptIntegrationTest {
@@ -29,10 +33,27 @@ public class CoffeeScriptIntegrationTest {
 	private CoffeeScript subject = new CoffeeScript();
 	
 	@Test
-	public void party() throws IOException {
+	public void itCompiles() throws IOException {
 		String result = subject.compile(COFFEE);
 		
 		assertThat(result,is(JAVASCRIPT));
+	}
+	
+	@Test
+	public void itReliesOnTheCache() throws Exception {
+		String expected = "win";
+		subject.compile(COFFEE);
+		injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeJavaScript(COFFEE), expected));
+		
+		String result = subject.compile(COFFEE);
+		
+		assertThat(result,is(expected));
+	}
+
+	private void injectFakeCache(Map<String,String> cacheMap) throws Exception {
+		Field cache = subject.getClass().getDeclaredField("cache");
+		cache.setAccessible(true);
+		cache.set(subject, cacheMap);
 	}
 	
 }
