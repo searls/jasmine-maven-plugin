@@ -193,27 +193,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>com.github.searls</groupId>
-				<artifactId>jasmine-maven-plugin</artifactId>
-				<version>1.0.2-beta-4</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generateManualRunner</goal>
-							<goal>resources</goal>
-							<goal>testResources</goal>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<preloadSources>
-								<source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js</source>
-							</preloadSources>
-							<jsSrcDir>${project.basedir}/src/main/resources/lib</jsSrcDir>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
+			
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>

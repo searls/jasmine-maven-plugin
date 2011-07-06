@@ -38,12 +38,16 @@ public class RelativizesFilePathsTest {
 	
 	@Test
 	public void resolvesDeepChild() throws IOException {
-		from = new File("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/target/jasmine");
-		to = new File("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/src/test/javascript/fun-spec.js");
+		from = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/target/jasmine"));
+		to = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/src/test/javascript/fun-spec.js"));
 		
 		String result = subject.relativize(from,to);
 		
 		assertThat(result,is("../../src/test/javascript/fun-spec.js"));		
+	}
+	
+	private String slash(String s) {
+		return s.replace('/', File.separatorChar);
 	}
 	
 }

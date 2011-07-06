@@ -1,5 +1,6 @@
 package com.github.searls.jasmine.io;
 
+import java.util.ArrayList;
 import static java.util.Arrays.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
@@ -86,7 +87,7 @@ public class ScansDirectoryIntegrationTest {
 
 		List<String> result = subject.scan(directory,asList("**"),Collections.EMPTY_LIST);
 
-		assertThat(result, is(asList("a","b","c/a","c/d")));		
+		assertThat(result, is(asList("a","b","c"+File.separator+"a","c"+File.separator+"d")));		
 	}
 	
 
@@ -97,7 +98,7 @@ public class ScansDirectoryIntegrationTest {
 
 		List<String> result = subject.scan(directory,ScansDirectory.DEFAULT_INCLUDES,Collections.EMPTY_LIST);
 
-		assertThat(result, is(asList("a.js","b/c.js")));		
+		assertThat(result, is(asList("a.js","b"+File.separator+"c.js")));		
 	}
 	
 	@Test
@@ -107,7 +108,7 @@ public class ScansDirectoryIntegrationTest {
 
 		List<String> result = subject.scan(directory,asList("lib/**/*.js","**/*.js"),Collections.EMPTY_LIST);
 
-		assertThat(result, is(asList("lib/a.js","b.js")));		
+		assertThat(result, is(asList("lib"+File.separator+"a.js","b.js")));		
 	}
 	
 	@Test
@@ -144,7 +145,7 @@ public class ScansDirectoryIntegrationTest {
 		
 		List<String> result = subject.scan(directory,asList("jquery/**/*.js", "yui2/**/*.js", "**/*.js"),Collections.EMPTY_LIST);
 		
-		assertThat(result, is(asList("jquery/cookie/jquery.cookie.js",
+		assertThat(result, is(slashify("jquery/cookie/jquery.cookie.js",
 				"jquery/jcrumb/jquery.jcrumbs-1.0.js",
 				"jquery/jquery.formatCurrency-1.4.0.min.js",
 				"jquery/underscore/underscore-min-1.1.2.js",
@@ -161,6 +162,14 @@ public class ScansDirectoryIntegrationTest {
 				"customer/view.js",
 				"panda/sad.js",
 				"utils.js")));
+	}
+	
+	private List<String> slashify(String...scripts){
+		List<String> slashed = new ArrayList<String>();
+		for (String s : scripts) {
+			slashed.add(s.replace('/', File.separatorChar));
+		}
+		return slashed;
 	}
 	
 	private void createFile(String... paths) {
