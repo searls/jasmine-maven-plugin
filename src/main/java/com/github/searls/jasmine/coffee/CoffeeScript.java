@@ -1,6 +1,9 @@
 package com.github.searls.jasmine.coffee;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
 
@@ -12,6 +15,8 @@ import com.github.searls.jasmine.io.IOUtilsWrapper;
 
 public class CoffeeScript {
 
+	private static Map<String,String> cache = Collections.synchronizedMap(new WeakHashMap<String,String>());
+	
 	private ThreadLocal<HtmlPage> htmlPage = new ThreadLocal<HtmlPage>() {
 		@Override
 		protected HtmlPage initialValue() {
@@ -31,8 +36,15 @@ public class CoffeeScript {
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	
 	public String compile(String coffee) throws IOException {
-		ScriptResult scriptResult = htmlPage.get().executeJavaScript(String.format("CoffeeScript.compile(\"%s\");", StringEscapeUtils.escapeJavaScript(coffee)));
-		return (String) scriptResult.getJavaScriptResult();
+		String escapedCoffee = StringEscapeUtils.escapeJavaScript(coffee);
+		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(escapedCoffee);
+	}
+	
+	private String compileAndCache(String input) {
+		ScriptResult scriptResult = htmlPage.get().executeJavaScript(String.format("CoffeeScript.compile(\"%s\");", input));
+		String result = (String) scriptResult.getJavaScriptResult();
+		cache.put(input,result);
+		return result;
 	}
 
 }
