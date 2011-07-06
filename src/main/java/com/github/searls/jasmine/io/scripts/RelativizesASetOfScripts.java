@@ -15,10 +15,11 @@ public class RelativizesASetOfScripts {
 	public Set<String> relativize(File from, Set<String> absoluteScripts) throws IOException {
 		Set<String> relativeScripts = new LinkedHashSet<String>();
 		for (String absoluteScript : absoluteScripts) {
-			if(webUrl(absoluteScript) || !new File(absoluteScript).exists()) {
-				relativeScripts.add(absoluteScript);
+			File script = new File(stripStart(absoluteScript,"file:/"));
+			if(!webUrl(absoluteScript) && script.exists()) {
+				relativeScripts.add(relativizesFilePaths.relativize(from, script));
 			} else {
-				relativeScripts.add(relativizesFilePaths.relativize(from, new File(stripStart(absoluteScript,"file:/"))));
+				relativeScripts.add(absoluteScript);
 			}
 		}
 		return relativeScripts;

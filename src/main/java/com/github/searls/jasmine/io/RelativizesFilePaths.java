@@ -1,8 +1,10 @@
 package com.github.searls.jasmine.io;
 
+import static org.apache.commons.lang.StringEscapeUtils.*;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
 import static org.apache.commons.lang.StringUtils.*;
@@ -23,7 +25,11 @@ public class RelativizesFilePaths {
 		}
 		result.append(pathAfterRoot(toPath, root));
 		
-		return trimLeadingSlashIfNecessary(result);
+		return convertSlashes(trimLeadingSlashIfNecessary(result));
+	}
+
+	private String convertSlashes(String path) {
+		return path.replace(File.separatorChar, '/');
 	}
 
 	private boolean fromPathIsNotADirectAncestor(String fromPath, String root) {
@@ -31,7 +37,7 @@ public class RelativizesFilePaths {
 	}
 
 	private String[] divergentDirectories(String root, String fullPath) {
-		return pathAfterRoot(fullPath, root).split(File.separator);
+		return pathAfterRoot(fullPath, root).split(escapeJava(File.separator));
 	}
 
 	private String pathAfterRoot(String path, String root) {

@@ -5,6 +5,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.io.File;
+
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -53,7 +55,7 @@ public class AbstractJasmineMojoTest {
 	public void setsSourceIncludes() throws Exception {
 		subject.execute();
 		
-		assertThat(subject.sources.getIncludes(),hasItem("**/*.js"));
+		assertThat(subject.sources.getIncludes(),hasItem("**"+File.separator+"*.js"));
 	}
 	
 	@Test
@@ -67,7 +69,7 @@ public class AbstractJasmineMojoTest {
 	public void setsSpecIncludes() throws Exception {
 		subject.execute();
 		
-		assertThat(subject.specs.getIncludes(),hasItem("**/*.js"));
+		assertThat(subject.specs.getIncludes(),hasItem("**"+File.separator+"*.js"));
 	}
 	
 	@Test
