@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.io.scripts;
 
 import static java.util.Arrays.*;
+import static org.apache.commons.lang.StringUtils.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
@@ -59,8 +60,9 @@ public class RelativizesASetOfScriptsTest {
 	@Test
 	public void removesLeadingFileProtocol() throws Exception {
 		stubbingForFiles(true);
-		HashSet<String> sources = new HashSet<String>(asList("file:/c:/panda"));
-		when(relativizesFilePaths.relativize(eq(from), (File) argThat(is(fileNamed("c:/panda"))))).thenReturn("panda");
+		String name = stripFile("file:/c:/panda");
+		HashSet<String> sources = new HashSet<String>(asList(name));
+		when(relativizesFilePaths.relativize(eq(from), (File) argThat(is(fileNamed(name))))).thenReturn("panda");
 
 		Set<String> result = subject.relativize(from, sources);
 		
@@ -124,5 +126,10 @@ public class RelativizesASetOfScriptsTest {
 			}
 			public void describeTo(Description description) {}
 		};	
+	}
+	
+	private String stripFile(String absoluteScript) {
+		String strip = "file:" + (File.separatorChar == '/' ? "" : "/");
+		return stripStart(absoluteScript,strip);
 	}
 }
