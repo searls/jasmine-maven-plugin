@@ -186,11 +186,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
 	public final void execute() throws MojoExecutionException, MojoFailureException {
+    System.out.println("Mojo is executing");
 		sources = new ScriptSearch(jsSrcDir,sourceIncludes,sourceExcludes);
 		specs = new ScriptSearch(jsTestSrcDir,specIncludes,specExcludes);
-		
 		try {
+      System.out.println("jsSrcDir: " + jsSrcDir.getCanonicalPath());
+      System.out.println("jsTestSrcDir: " + jsTestSrcDir.getCanonicalPath());
 			run();
+      System.out.println("Mojo Ran");
 		} catch(MojoFailureException e) {
 			throw e;
 		} catch(Exception e) {
