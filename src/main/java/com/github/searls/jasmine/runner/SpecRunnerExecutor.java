@@ -7,13 +7,8 @@ import java.net.URL;
 import org.apache.maven.plugin.logging.Log;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.IncorrectnessListener;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.WebClient;
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.model.JasmineResult;
@@ -27,29 +22,17 @@ public class SpecRunnerExecutor {
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
-	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion, int timeout, final boolean debug, Log log, String format) {
+	public JasmineResult execute(URL runnerUrl, File junitXmlReport, WebDriver driver, int timeout, boolean debug, Log log, String format) {
 		try {
-			//TODO - this class has numerous reasons to change: configuring a web client and running specs. extract at least one class
-			BrowserVersion htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(browserVersion).get(BrowserVersion.class);
-			HtmlUnitDriver driver = new HtmlUnitDriver(htmlUnitBrowserVersion) {
-				protected WebClient modifyWebClient(WebClient client) {
-					client.setAjaxController(new NicelyResynchronizingAjaxController());
-					
-					//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
-					if (!debug) 
-						client.setIncorrectnessListener(new IncorrectnessListener() {
-					        public void notify(String arg0, Object arg1) {}
-					});
-
-					return client;
-				};
-			};
-			driver.setJavascriptEnabled(true);
+			if (!(driver instanceof JavascriptExecutor)) {
+				throw new RuntimeException("The provided web driver can't execute JavaScript: " + driver.getClass());
+			}
+			JavascriptExecutor executor = (JavascriptExecutor) driver;
 		    driver.get(runnerUrl.toString());
 		    waitForRunnerToFinish(driver, timeout, debug, log);
 		    JasmineResult jasmineResult = new JasmineResult();
-		    jasmineResult.setDetails(buildReport(driver,format));
-		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(driver,debug), "UTF-8");
+		    jasmineResult.setDetails(buildReport(executor,format));
+		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(executor,debug), "UTF-8");
 		    driver.quit();
 	    
 		    return jasmineResult;
@@ -73,14 +56,15 @@ public class SpecRunnerExecutor {
 		return junitReport.toString();
 	}
 
-	private <T extends WebDriver & JavascriptExecutor> void waitForRunnerToFinish(final T page, int timeout, boolean debug, Log log) throws InterruptedException {
-		new WebDriverWait(page, timeout, 1000).until(new Predicate<WebDriver>() {
+	private void waitForRunnerToFinish(final WebDriver driver, int timeout, boolean debug, Log log) throws InterruptedException {
+		final JavascriptExecutor executor = (JavascriptExecutor) driver;
+		new WebDriverWait(driver, timeout, 1000).until(new Predicate<WebDriver>() {
 			public boolean apply(WebDriver input) {
-				return executionFinished(page);
+				return executionFinished(executor);
 			}
 		});
 		
-		if (!executionFinished(page)) {
+		if (!executionFinished(executor)) {
 			handleTimeout(timeout, debug, log);
 		}
 	}
