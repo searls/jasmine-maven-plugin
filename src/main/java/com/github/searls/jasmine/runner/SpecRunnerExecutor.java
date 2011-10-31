@@ -1,20 +1,23 @@
 package com.github.searls.jasmine.runner;
 
-import org.apache.maven.plugin.logging.Log;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+import org.apache.maven.plugin.logging.Log;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.ScriptResult;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.model.JasmineResult;
+import com.google.common.base.Predicate;
 
 public class SpecRunnerExecutor {
 	
@@ -24,23 +27,30 @@ public class SpecRunnerExecutor {
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
-	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion, int timeout, boolean debug, Log log, String format) {
+	public JasmineResult execute(URL runnerUrl, File junitXmlReport, String browserVersion, int timeout, final boolean debug, Log log, String format) {
 		try {
 			//TODO - this class has numerous reasons to change: configuring a web client and running specs. extract at least one class
 			BrowserVersion htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(browserVersion).get(BrowserVersion.class);
-			WebClient webClient = new WebClient(htmlUnitBrowserVersion);
-			webClient.setJavaScriptEnabled(true);
-			webClient.setAjaxController(new NicelyResynchronizingAjaxController());			
-			if(!debug) {
-				quietIncorrectnessListener(webClient);
-			}
-			
-		    HtmlPage page = webClient.getPage(runnerUrl);
-		    waitForRunnerToFinish(page, timeout, debug, log);
+			HtmlUnitDriver driver = new HtmlUnitDriver(htmlUnitBrowserVersion) {
+				protected WebClient modifyWebClient(WebClient client) {
+					client.setAjaxController(new NicelyResynchronizingAjaxController());
+					
+					//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
+					if (!debug) 
+						client.setIncorrectnessListener(new IncorrectnessListener() {
+					        public void notify(String arg0, Object arg1) {}
+					});
+
+					return client;
+				};
+			};
+			driver.setJavascriptEnabled(true);
+		    driver.get(runnerUrl.toString());
+		    waitForRunnerToFinish(driver, timeout, debug, log);
 		    JasmineResult jasmineResult = new JasmineResult();
-		    jasmineResult.setDetails(buildReport(page,format));
-		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(page,debug), "UTF-8");
-		    webClient.closeAllWindows();
+		    jasmineResult.setDetails(buildReport(driver,format));
+		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(driver,debug), "UTF-8");
+		    driver.quit();
 	    
 		    return jasmineResult;
 		} catch (Exception e) {
@@ -48,31 +58,28 @@ public class SpecRunnerExecutor {
 		}
 	}
 
-	private String buildReport(HtmlPage page, String format) throws IOException {
-		ScriptResult report = page.executeJavaScript(
+	private String buildReport(JavascriptExecutor driver, String format) throws IOException {
+		String script = 
 				ioUtilsWrapper.toString(BUILD_REPORT_JS) + 
-				"jasmineMavenPlugin.printReport(window.reporter,{format:'"+format+"'});");
-		return report.getJavaScriptResult().toString();
+				"return jasmineMavenPlugin.printReport(window.reporter,{format:'"+format+"'});";
+		Object report = driver.executeScript(script);
+		return report.toString();
 	}
 
-	private String buildJunitXmlReport(HtmlPage page, boolean debug) throws IOException {
-		ScriptResult junitReport = page.executeJavaScript(
+	private String buildJunitXmlReport(JavascriptExecutor driver, boolean debug) throws IOException {
+		Object junitReport = driver.executeScript(
 				ioUtilsWrapper.toString(CREATE_JUNIT_XML) + 
-				"junitXmlReporter.report(reporter,"+debug+");"); 
-		return junitReport.getJavaScriptResult().toString();
+				"return junitXmlReporter.report(reporter,"+debug+");"); 
+		return junitReport.toString();
 	}
 
-	private void waitForRunnerToFinish(HtmlPage page, int timeout, boolean debug, Log log) throws InterruptedException {
-		page.getWebClient().waitForBackgroundJavaScript(5000);
-		for (int i = 0; i < timeout; i++) {
-			if (executionFinished(page)) {
-				return;
-			} else {
-				synchronized (page) {
-					page.wait(1000);
-				}
+	private <T extends WebDriver & JavascriptExecutor> void waitForRunnerToFinish(final T page, int timeout, boolean debug, Log log) throws InterruptedException {
+		new WebDriverWait(page, timeout, 1000).until(new Predicate<WebDriver>() {
+			public boolean apply(WebDriver input) {
+				return executionFinished(page);
 			}
-		}
+		});
+		
 		if (!executionFinished(page)) {
 			handleTimeout(timeout, debug, log);
 		}
@@ -89,15 +96,8 @@ public class SpecRunnerExecutor {
 		}
 	}
 
-	private Boolean executionFinished(HtmlPage page) {
-		ScriptResult result = page.executeJavaScript("reporter.finished");
-		return (Boolean) result .getJavaScriptResult();
+	private Boolean executionFinished(JavascriptExecutor driver) {
+		return (Boolean) driver.executeScript("return reporter.finished");
 	}
-
-	private void quietIncorrectnessListener(WebClient webClient) {
-		//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
-		webClient.setIncorrectnessListener(new IncorrectnessListener() {
-			public void notify(String arg0, Object arg1) {}
-		});
-	}
+	
 }
