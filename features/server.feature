@@ -10,6 +10,6 @@ Feature: running a local server
     Given I am currently in the "jasmine-webapp-passing" project
     When I run "mvn clean jasmine:bdd" in a new process
     And I load "http://localhost:8234" in a browser
-    Then I should see my specs pass
+    Then I should see "1 spec, 0 failures"
 
 

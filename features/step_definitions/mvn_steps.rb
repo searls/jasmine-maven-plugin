@@ -8,8 +8,8 @@ When /^I run "([^"]*)"$/ do |command|
 end
 
 When /^I run "([^"]*)" in a new process$/ do |arg1|
-  pending
-  @pid = Process.spawn "#{command}"
+  @process = ChildProcess.build arg1
+  @process.start
 end
 
 
@@ -22,7 +22,7 @@ Then /^the build should succeed$/ do
 end
 
 Then /^I should see "([^"]*)"$/ do |content|
-  @output.should match content
+  @output.should match /#{content}.*/
 end
 
 Then /^I should not see "([^"]*)"$/ do |content|
@@ -47,7 +47,9 @@ end
 
 
 When /^I load "([^"]*)" in a browser$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+  @browser = Watir::Browser.new
+  @browser.goto arg1
+  @output = @browser.link(:class, 'description').text
 end
 
 Then /^I should see my specs pass$/ do
