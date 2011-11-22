@@ -7,9 +7,10 @@ When /^I run "([^"]*)"$/ do |command|
   @output = `#{command}`
 end
 
-When /^I run "([^"]*)" in a new process$/ do |arg1|
-  @process = ChildProcess.build arg1
+When /^I run "([^"]*)" in a new process$/ do |command|
+  @process = ChildProcess.build command
   @process.start
+  sleep 3
 end
 
 
@@ -46,10 +47,14 @@ Then /^the file "([^"]*)" does not exist$/ do |file_name|
 end
 
 
-When /^I load "([^"]*)" in a browser$/ do |arg1|
-  @browser = Watir::Browser.new
-  @browser.goto arg1
-  @output = @browser.link(:class, 'description').text
+When /^I load "([^"]*)" in a browser$/ do |url|
+  if @process && @process.alive?
+    @browser = Watir::Browser.new
+    @browser.goto url
+    @output = @browser.link(:class, 'description').text
+  else
+    raise "Server not running!"
+  end
 end
 
 Then /^I should see my specs pass$/ do
