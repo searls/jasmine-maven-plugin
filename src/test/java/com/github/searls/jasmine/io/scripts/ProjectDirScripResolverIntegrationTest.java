@@ -116,7 +116,7 @@ public class ProjectDirScripResolverIntegrationTest {
 
 	@Test
 	public void shouldReturnSourcesDirectory() throws Exception {
-		assertThat(projectDirScripResolver.getSourceDirectory(), Matchers.endsWith("root/src/main/webapp/js"));
+		assertThat(projectDirScripResolver.getSourceDirectory(), Matchers.endsWith("root/src/main/webapp/js/"));
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class ProjectDirScripResolverIntegrationTest {
 
 	@Test
 	public void shouldReturnSpecDirectory() throws Exception {
-		assertThat(projectDirScripResolver.getSpecDirectoryPath(), Matchers.endsWith("root/src/test/javascript"));
+		assertThat(projectDirScripResolver.getSpecDirectoryPath(), Matchers.endsWith("root/src/test/javascript/"));
 	}
 
 	@Test

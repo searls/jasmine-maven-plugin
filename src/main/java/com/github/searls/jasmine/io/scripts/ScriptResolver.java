@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.io.scripts;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.Set;
 
 public interface ScriptResolver {
@@ -15,9 +16,9 @@ public interface ScriptResolver {
 
 	Set<String> getAllScripts();
 
-	String getSourceDirectory();
+	String getSourceDirectory() throws IOException;
 
-	String getSpecDirectoryPath();
+	String getSpecDirectoryPath() throws MalformedURLException;
 
 	Set<String> getSourcesRelativePath() throws IOException;
 

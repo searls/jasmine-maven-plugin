@@ -5,6 +5,7 @@ import com.github.searls.jasmine.model.ScriptSearch;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -45,12 +46,12 @@ public abstract class AbstractScriptResolver implements ScriptResolver {
 		return addAllScripts(scriptsToPreload, sources, specs);
 	}
 
-	public String getSourceDirectory() {
-		return scriptSearchSources.getDirectory().getAbsolutePath();
+	public String getSourceDirectory() throws IOException {
+		return scriptSearchSources.getDirectory().toURI().toURL().toString();
 	}
 
-	public String getSpecDirectoryPath() {
-		return scriptSearchSpecs.getDirectory().getAbsolutePath();
+	public String getSpecDirectoryPath() throws MalformedURLException {
+		return scriptSearchSpecs.getDirectory().toURI().toURL().toString();
 	}
 
 	public Set<String> getSourcesRelativePath() throws IOException {
