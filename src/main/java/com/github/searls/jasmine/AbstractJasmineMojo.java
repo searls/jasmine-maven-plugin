@@ -26,7 +26,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript" expression="${jsTestSrcDir}"
 	 */
 	private File jsTestSrcDir;
-	
+
 	/**
 	 * Determines the browser and version profile to execute the headless specs against. Because the plugin
 	 * 	executes specs using HtmlUnit, this maps 1-to-1 with the public static
@@ -180,6 +180,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 */
 	protected int serverPort;
 
+	/**
+	 * Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
+	 * implementation of the runner generator. Typically this is used when using different script runners.
+	 *
+	 *
+	 * 	Some valid examples: REQUIRE_JS
+	 *
+	 * @parameter default-value="DEFAULT" expression="${jasmine.specRunnerTemplate}"
+	 */
+	protected String specRunnerTemplate;
+
 	protected ScriptSearch sources;
 	protected ScriptSearch specs;
 	
@@ -199,5 +210,44 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	}
 	
 	public abstract void run() throws Exception;
-	
+
+	public String getSourceEncoding() {
+		return sourceEncoding;
+	}
+
+	public File getCustomRunnerTemplate() {
+		return customRunnerTemplate;
+	}
+
+	public String getSpecRunnerTemplate() {
+		return specRunnerTemplate;
+	}
+
+	public File getJasmineTargetDir() {
+		return jasmineTargetDir;
+	}
+
+	public String getSrcDirectoryName() {
+		return srcDirectoryName;
+	}
+
+	public ScriptSearch getSources() {
+		return sources;
+	}
+
+	public ScriptSearch getSpecs() {
+		return specs;
+	}
+
+	public String getSpecDirectoryName() {
+		return specDirectoryName;
+	}
+
+	public List<String> getPreloadSources() {
+		return preloadSources;
+	}
+
+	public MavenProject getMavenProject() {
+		return mavenProject;
+	}
 }

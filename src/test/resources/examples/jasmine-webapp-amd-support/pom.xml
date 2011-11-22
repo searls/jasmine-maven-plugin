@@ -6,9 +6,9 @@
         <artifactId>jasmine-example-superpom</artifactId>
         <version>1.1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>jasmine-webapp-order-matters</artifactId>
+    <artifactId>jasmine-webapp-amd-support</artifactId>
     <packaging>war</packaging>
-    <name>Example Webapp using Jasmine Maven Plugin where the order of sources matters</name>
+    <name>Example Webapp using Jasmine Maven Plugin using custom directories</name>
 
     <build>
         <plugins>
@@ -24,9 +24,15 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <preloadSources>
-                        <source>z.js</source>
-                    </preloadSources>
+                    <debug>true</debug>
+                    <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
+                    	<configuration>
+							<preloadSources>
+								<source>lib/jasmine.fooMatcher.js</source>
+							</preloadSources>
+						</configuration>
+                    <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+                    <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
                 </configuration>
             </plugin>
         </plugins>
