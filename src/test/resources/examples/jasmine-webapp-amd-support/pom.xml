@@ -26,13 +26,11 @@
                 <configuration>
                     <debug>true</debug>
                     <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
-                    	<configuration>
-							<preloadSources>
-								<source>lib/jasmine.fooMatcher.js</source>
-							</preloadSources>
-						</configuration>
                     <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
                     <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
+                    <preloadSources>
+                        <source>lib/jasmine.fooMatcher.js</source>
+                    </preloadSources>
                 </configuration>
             </plugin>
         </plugins>

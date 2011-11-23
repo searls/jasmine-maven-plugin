@@ -115,6 +115,10 @@ public class HtmlGeneratorConfiguration {
 	public String getSourceDirectoryRelativePath() throws IOException {
 		return scriptResolver.getSourceDirectoryRelativePath();
 	}
+
+    public Set<String> getPreloadsRelativePath() throws IOException {
+        return scriptResolver.getPreloadsRelativePath();
+    }
 }
 
 

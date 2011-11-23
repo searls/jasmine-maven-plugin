@@ -37,16 +37,20 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 
 		includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS, REQUIRE_JS), template);
 		applyCssToTemplate(asList(JASMINE_CSS), template);
-		applyScriptTagsToTemplate(SOURCES_TEMPLATE_ATTR_NAME, getConfiguration().getPreloads(), template);
+		Set<String> preloads = getConfiguration().getPreloadsRelativePath();
+		template.setAttribute("priority", createArrayOfScripts(preloads));
 		template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
 		template.setAttribute("sourceDir", sourceDirectory);
-		template.setAttribute("specs", createArrayOfRequiredModules(specsRelativePath));
+		template.setAttribute("specs", createArrayOfScripts(specsRelativePath));
 		setEncoding(getConfiguration(), template);
 
 		return template.toString();
 	}
 
-	private String createArrayOfRequiredModules(Set<String> scripts) throws IOException {
+	private String createArrayOfScripts(Set<String> scripts) throws IOException {
+		if (null == scripts || scripts.isEmpty()) {
+			return null;
+		}
 		StringBuilder builder = new StringBuilder("[");
 		for (String script : scripts) {
 			builder.append("'" + script + "'");
@@ -55,7 +59,7 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 		if (!scripts.isEmpty()) {
 			builder.delete(builder.lastIndexOf(", "), builder.length());
 		}
-		builder.append("];");
+		builder.append("]");
 		return builder.toString();
 	}
 
