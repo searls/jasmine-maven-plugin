@@ -31,6 +31,7 @@ public class JasmineResourceHandler extends ResourceHandler {
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		createManualSpecRunnerIfNecessary(target);
 		Resource resource = getResource(baseRequest);
+		response.addDateHeader("EXPIRES", 0L);
 		if (detectsCoffee.detect(target) && weCanHandleIt(baseRequest, resource)) {
 			handlesRequestsForCoffee.handle(baseRequest, response, resource);
 		} else {
