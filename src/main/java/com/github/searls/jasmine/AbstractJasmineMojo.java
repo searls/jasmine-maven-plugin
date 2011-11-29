@@ -84,6 +84,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	protected File customRunnerTemplate;
+
+	/**
+	 * Sometimes you want to have full control over how scriptloaders are configured. In order to interpolate custom configuration
+	 * into the generated runnerTemplate, specify a file containing the additional config.
+	 *
+	 * 	 * Example usage:
+	 *  &lt;customRunnerConfiguration&gt;${project.basedir}/src/test/resources/myCustomConfig.txt&lt;/customRunnerConfiguration&gt;
+	 *
+	 * @parameter
+	 */
+	protected File customRunnerConfiguration;
 	
 	/**
 	 * @parameter default-value="${project.build.directory}${file.separator}jasmine"
@@ -249,5 +260,10 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
 	public MavenProject getMavenProject() {
 		return mavenProject;
+	}
+
+	public File getCustomRunnerConfiguration() {
+		return customRunnerConfiguration;
+
 	}
 }

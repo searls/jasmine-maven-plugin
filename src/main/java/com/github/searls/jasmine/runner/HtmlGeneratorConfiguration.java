@@ -18,6 +18,7 @@ public class HtmlGeneratorConfiguration {
 	private String specRunnerTemplate;
 	private ScriptResolver scriptResolver;
 	private String sourceDirectoryRelativePath;
+	private File customRunnerConfiguration;
 
 
 	public HtmlGeneratorConfiguration(ReporterType reporterType, AbstractJasmineMojo configuration, ScriptResolver scriptResolver) throws IOException {
@@ -27,6 +28,7 @@ public class HtmlGeneratorConfiguration {
 		this.customRunnerTemplate = configuration.getCustomRunnerTemplate();
 		this.specRunnerTemplate = configuration.getSpecRunnerTemplate();
 		this.scriptResolver = scriptResolver;
+		this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();
 
 	}
 
@@ -119,6 +121,14 @@ public class HtmlGeneratorConfiguration {
     public Set<String> getPreloadsRelativePath() throws IOException {
         return scriptResolver.getPreloadsRelativePath();
     }
+
+	public String getCustomRunnerConfiguration() throws IOException {
+		if(null != customRunnerConfiguration) {
+			return fileUtilsWrapper.readFileToString(customRunnerConfiguration);
+		}  else {
+			return null;
+		}
+	}
 }
 
 

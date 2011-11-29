@@ -19,6 +19,9 @@
 		    $if(priority)$
 		    , priority: $priority$
 		    $endif$
+		    $if(customRunnerConfiguration)$
+		    , $customRunnerConfiguration$
+		    $endif$
         });
 
 		require(specs, function() {

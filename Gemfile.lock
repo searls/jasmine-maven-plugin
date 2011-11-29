@@ -3,6 +3,8 @@ GEM
   specs:
     archive-tar-minitar (0.5.2)
     builder (3.0.0)
+    childprocess (0.2.3)
+      ffi (~> 1.0.6)
     columnize (0.3.2)
     cucumber (0.10.2)
       builder (>= 2.1.2)
@@ -11,11 +13,13 @@ GEM
       json (>= 1.4.6)
       term-ansicolor (>= 1.0.5)
     diff-lcs (1.1.2)
+    ffi (1.0.11)
     gherkin (2.3.5)
       json (>= 1.4.6)
     json (1.4.6)
     linecache (0.43)
     mime-types (1.16)
+    multi_json (1.0.4)
     nokogiri (1.4.4)
     relish (0.2.2)
       archive-tar-minitar (~> 0.5.2)
@@ -36,7 +40,15 @@ GEM
       ruby-debug-base (~> 0.10.4.0)
     ruby-debug-base (0.10.4)
       linecache (>= 0.3)
+    rubyzip (0.9.5)
+    selenium-webdriver (2.14.0)
+      childprocess (>= 0.2.1)
+      ffi (~> 1.0.9)
+      multi_json (~> 1.0.4)
+      rubyzip
     term-ansicolor (1.0.5)
+    watir-webdriver (0.4.0)
+      selenium-webdriver (>= 2.12.0)
 
 PLATFORMS
   ruby
@@ -47,3 +59,4 @@ DEPENDENCIES
   relish (~> 0.2.2)
   rspec (~> 2.5.0)
   ruby-debug
+  watir-webdriver

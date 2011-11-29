@@ -51,6 +51,7 @@ When /^I load "([^"]*)" in a browser$/ do |url|
   if @process && @process.alive?
     @browser = Watir::Browser.new
     @browser.goto url
+    sleep 2
     @output = @browser.link(:class, 'description').text
   else
     raise "Server not running!"

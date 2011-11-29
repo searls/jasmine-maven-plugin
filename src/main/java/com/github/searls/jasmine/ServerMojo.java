@@ -1,17 +1,11 @@
 package com.github.searls.jasmine;
 
-import java.io.File;
 import java.io.IOException;
 
-import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.handler.DefaultHandler;
-import org.eclipse.jetty.server.handler.HandlerList;
-import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.server.JasmineResourceHandler;
 
 /**
  * @goal bdd
@@ -34,12 +28,16 @@ public class ServerMojo extends AbstractJasmineMojo {
 	private Server server = new Server();
 	
 	private RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
-	
+
 	@Override
 	public void run() throws Exception {
 		addConnectorToServer();
         addHandlersToServer();
         startServer();
+	}
+
+	private void addHandlersToServer() throws IOException {
+		server.setHandler(new ResourceHandlerConfigurator(this, relativizesFilePaths).createHandler(specRunnerTemplate));
 	}
 
 	private void addConnectorToServer() {
@@ -48,22 +46,6 @@ public class ServerMojo extends AbstractJasmineMojo {
 		server.addConnector(connector);
 	}
 
-	private void addHandlersToServer() throws IOException {
-		ResourceHandler resourceHandler = createResourceHandler();
-
-        HandlerList handlers = new HandlerList();
-        handlers.setHandlers(new Handler[] { resourceHandler, new DefaultHandler() });
-        server.setHandler(handlers);
-	}
-
-	private ResourceHandler createResourceHandler() throws IOException {
-		ResourceHandler resourceHandler = new JasmineResourceHandler(this);
-        resourceHandler.setDirectoriesListed(true);       
-        resourceHandler.setWelcomeFiles(new String[]{ manualSpecRunnerPath() });
-        resourceHandler.setResourceBase(mavenProject.getBasedir().getAbsolutePath());
-		return resourceHandler;
-	}
-	
 	private void startServer() throws Exception {
 		server.start();
         getLog().info(buildServerInstructions());
@@ -76,10 +58,6 @@ public class ServerMojo extends AbstractJasmineMojo {
 				serverPort,
 				relativizesFilePaths.relativize(mavenProject.getBasedir(), sources.getDirectory()),
 				relativizesFilePaths.relativize(mavenProject.getBasedir(), specs.getDirectory()));
-	}
-
-	private String manualSpecRunnerPath() throws IOException {
-		return relativizesFilePaths.relativize(mavenProject.getBasedir(), jasmineTargetDir) + File.separator +manualSpecRunnerHtmlFileName;
 	}
 
 }
