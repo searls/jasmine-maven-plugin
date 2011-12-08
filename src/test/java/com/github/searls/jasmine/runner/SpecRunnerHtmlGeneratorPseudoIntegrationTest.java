@@ -7,14 +7,12 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -118,30 +116,6 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 		String html = subject.generate();
 
 		assertThat(html, containsStyleTagWith(expected));
-	}
-
-	@Test
-	//TODO: refactor these kinds of tests into HtmlGeneratorConfigurationTest
-	public void shouldNotReadDefaultTemplateWhenOneIsProvided() throws IOException {
-		File expected = mock(File.class);
-		when(generatorConfiguration.getCustomRunnerTemplate()).thenReturn(expected);
-
-		subject.generate();
-
-		verify(generatorConfiguration, never()).IOtoString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE);
-	}
-
-	@Test
-	@Ignore
-	//TODO belongs in HtmlGeneratorConfigurationTest
-	public void shouldReadCustomTemplateWhenOneIsProvided() throws IOException {
-		File expected = mock(File.class);
-		when(generatorConfiguration.getCustomRunnerTemplate()).thenReturn(expected);
-
-		subject.generate();
-
-		verify(generatorConfiguration).readFileToString(expected);
-//		verify(fileUtilsWrapper).readFileToString(expected);
 	}
 
 	@Test

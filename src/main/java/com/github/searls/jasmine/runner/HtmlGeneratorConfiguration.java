@@ -13,8 +13,8 @@ public class HtmlGeneratorConfiguration {
 	private final String sourceEncoding;
 	private final ReporterType reporterType;
 	private final File customRunnerTemplate;
-	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
-	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
+    private FileUtilsWrapper fileUtilsWrapper;
+	private IOUtilsWrapper ioUtilsWrapper;
 	private String specRunnerTemplate;
 	private ScriptResolver scriptResolver;
 	private String sourceDirectoryRelativePath;
@@ -29,6 +29,8 @@ public class HtmlGeneratorConfiguration {
 		this.specRunnerTemplate = configuration.getSpecRunnerTemplate();
 		this.scriptResolver = scriptResolver;
 		this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();
+        this.fileUtilsWrapper = new FileUtilsWrapper();
+        this.ioUtilsWrapper  = new IOUtilsWrapper();
 
 	}
 
@@ -129,6 +131,15 @@ public class HtmlGeneratorConfiguration {
 			return null;
 		}
 	}
+
+
+    public void setFileUtilsWrapper(FileUtilsWrapper fileUtilsWrapper) {
+        this.fileUtilsWrapper = fileUtilsWrapper;
+    }
+
+    public void setIoUtilsWrapper(IOUtilsWrapper ioUtilsWrapper) {
+        this.ioUtilsWrapper = ioUtilsWrapper;
+    }
 }
 
 
