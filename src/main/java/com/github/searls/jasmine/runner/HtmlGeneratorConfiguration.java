@@ -18,6 +18,7 @@ public class HtmlGeneratorConfiguration {
 	private String specRunnerTemplate;
 	private ScriptResolver scriptResolver;
 	private String sourceDirectoryRelativePath;
+    private String scriptLoaderPath;
 	private File customRunnerConfiguration;
 
 
@@ -31,7 +32,7 @@ public class HtmlGeneratorConfiguration {
 		this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();
         this.fileUtilsWrapper = new FileUtilsWrapper();
         this.ioUtilsWrapper  = new IOUtilsWrapper();
-
+        this.scriptLoaderPath = configuration.getScriptLoaderPath();
 	}
 
 	public Set<String> getAllScripts() throws IOException {
@@ -139,6 +140,10 @@ public class HtmlGeneratorConfiguration {
 
     public void setIoUtilsWrapper(IOUtilsWrapper ioUtilsWrapper) {
         this.ioUtilsWrapper = ioUtilsWrapper;
+    }
+
+    public String getScriptLoaderPath() {
+        return scriptLoaderPath;
     }
 }
 

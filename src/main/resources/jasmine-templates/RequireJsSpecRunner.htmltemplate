@@ -5,6 +5,7 @@
 	<title>Jasmine Spec Runner</title>
 	$cssDependencies$
 	$javascriptDependencies$
+	<script type="text/javascript" src="$requirejsPath$"></script>
 </head>
 <body>
 	<script type="text/javascript">

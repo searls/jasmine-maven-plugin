@@ -202,6 +202,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 */
 	protected String specRunnerTemplate;
 
+    /**
+     * Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
+     * the selected spcRunnerTemplate. I.e require.js is used when REQUIRE_JS is selected as specRunnerTemplate.
+     *
+     * @parameter
+     */
+    protected String scriptLoaderPath;
+
 	protected ScriptSearch sources;
 	protected ScriptSearch specs;
 	
@@ -266,4 +274,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 		return customRunnerConfiguration;
 
 	}
+
+    public String getScriptLoaderPath() {
+        return scriptLoaderPath;
+    }
 }
