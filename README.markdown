@@ -10,7 +10,7 @@ The plugin's version numbering will mirror the version of Jasmine that backs it.
 If you want to point at snapshot releases of the plugin (note that I don't deploy them often), they're hosted on the [Sonatype OSS snapshot repository](https://oss.sonatype.org/service/local/repositories/snapshots).
 
 ## Maintainers
-* [Justin Searls](http://about.me/searls), [Pillar Technology](http://pillartechnology.com)
+* [Justin Searls](http://about.me/searls), [Test Double](http://test-double.com)
 
 ## Contributions
 Pull requests are, of course, very welcome! A few todos, if anyone is interested in tackling them:
