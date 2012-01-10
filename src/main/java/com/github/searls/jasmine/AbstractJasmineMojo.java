@@ -26,7 +26,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript" expression="${jsTestSrcDir}"
 	 */
 	private File jsTestSrcDir;
-	
+
 	/**
 	 * Determines the browser and version profile to execute the headless specs against. Because the plugin
 	 * 	executes specs using HtmlUnit, this maps 1-to-1 with the public static
@@ -84,6 +84,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	protected File customRunnerTemplate;
+
+	/**
+	 * Sometimes you want to have full control over how scriptloaders are configured. In order to interpolate custom configuration
+	 * into the generated runnerTemplate, specify a file containing the additional config.
+	 *
+	 * 	 * Example usage:
+	 *  &lt;customRunnerConfiguration&gt;${project.basedir}/src/test/resources/myCustomConfig.txt&lt;/customRunnerConfiguration&gt;
+	 *
+	 * @parameter
+	 */
+	protected File customRunnerConfiguration;
 	
 	/**
 	 * @parameter default-value="${project.build.directory}${file.separator}jasmine"
@@ -180,6 +191,25 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 */
 	protected int serverPort;
 
+	/**
+	 * Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
+	 * implementation of the runner generator. Typically this is used when using different script runners.
+	 *
+	 *
+	 * 	Some valid examples: REQUIRE_JS
+	 *
+	 * @parameter default-value="DEFAULT" expression="${jasmine.specRunnerTemplate}"
+	 */
+	protected String specRunnerTemplate;
+
+    /**
+     * Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
+     * the selected spcRunnerTemplate. I.e require.js is used when REQUIRE_JS is selected as specRunnerTemplate.
+     *
+     * @parameter
+     */
+    protected String scriptLoaderPath;
+
 	protected ScriptSearch sources;
 	protected ScriptSearch specs;
 	
@@ -199,5 +229,53 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	}
 	
 	public abstract void run() throws Exception;
-	
+
+	public String getSourceEncoding() {
+		return sourceEncoding;
+	}
+
+	public File getCustomRunnerTemplate() {
+		return customRunnerTemplate;
+	}
+
+	public String getSpecRunnerTemplate() {
+		return specRunnerTemplate;
+	}
+
+	public File getJasmineTargetDir() {
+		return jasmineTargetDir;
+	}
+
+	public String getSrcDirectoryName() {
+		return srcDirectoryName;
+	}
+
+	public ScriptSearch getSources() {
+		return sources;
+	}
+
+	public ScriptSearch getSpecs() {
+		return specs;
+	}
+
+	public String getSpecDirectoryName() {
+		return specDirectoryName;
+	}
+
+	public List<String> getPreloadSources() {
+		return preloadSources;
+	}
+
+	public MavenProject getMavenProject() {
+		return mavenProject;
+	}
+
+	public File getCustomRunnerConfiguration() {
+		return customRunnerConfiguration;
+
+	}
+
+    public String getScriptLoaderPath() {
+        return scriptLoaderPath;
+    }
 }

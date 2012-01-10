@@ -1,26 +1,23 @@
 package com.github.searls.jasmine.runner;
 
 import static com.github.searls.jasmine.Matchers.*;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.*;
+import static com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator.*;
 import static java.util.Arrays.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
@@ -28,7 +25,6 @@ import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlMeta;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,23 +32,30 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
 	private static final String SOURCE_ENCODING = "as9du20asd xanadu";
-	
+
 	private Set<String> scripts = new LinkedHashSet<String>(asList("A"));
-	
+
 	static {
 		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 	}
 
-	@InjectMocks
-	private SpecRunnerHtmlGenerator subject = new SpecRunnerHtmlGenerator(scripts,SOURCE_ENCODING);
+	private SpecRunnerHtmlGenerator subject;
 
-	@Mock private FileUtilsWrapper fileUtilsWrapper;
-	@Spy private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
+	@Mock private HtmlGeneratorConfiguration generatorConfiguration;
 	@Rule public ExpectedException expectedException = ExpectedException.none();
-	
+
+
+	@Before
+	public void setupGeneratorConfiguration() throws IOException{
+		when(generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
+		when(generatorConfiguration.getReporterType()).thenReturn(ReporterType.TrivialReporter);
+		when(generatorConfiguration.getRunnerTemplate(DEFAULT_RUNNER_HTML_TEMPLATE_FILE)).thenReturn(new IOUtilsWrapper().toString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE));
+	    subject = new DefaultSpecRunnerHtmlGenerator(generatorConfiguration);
+	}
+
 	@Test
 	public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+		String html = subject.generate();
 
 		assertThat(html, containsString("<html>"));
 		assertThat(html, containsString("</html>"));
@@ -60,7 +63,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	@Test
 	public void shouldPutInADocTypeWhenNoDependenciesAreProvided() throws Exception {
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+		String html = subject.generate();
 
 		assertThat(html, containsString(HTML5_DOCTYPE));
 		assertThat(getPage(html).getDoctype().getName(), is("html"));
@@ -68,7 +71,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	@Test
 	public void shouldAssignSpecifiedSourceEncoding() throws Exception {
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+		String html = subject.generate();
 
 		HtmlMeta contentType = getPage(html).getFirstByXPath("//meta");
 		assertThat(contentType.getContentAttribute(), is("text/html; charset=" + SOURCE_ENCODING));
@@ -76,9 +79,9 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
 	@Test
 	public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
-		subject = new SpecRunnerHtmlGenerator(scripts, "");
+		when(generatorConfiguration.getSourceEncoding()).thenReturn(null);
 
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+		String html = subject.generate();
 
 		HtmlMeta contentType = getPage(html).getFirstByXPath("//meta");
 		assertThat(contentType.getContentAttribute(), is("text/html; charset=" + SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING));
@@ -87,9 +90,9 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 	@Test
 	public void populatesJasmineSource() throws Exception {
 		String expected = "javascript()";
-		when(ioUtilsWrapper.toString(JASMINE_JS)).thenReturn(expected);
+		when(generatorConfiguration.IOtoString(eq(JASMINE_JS))).thenReturn(expected);
 
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+		String html = subject.generate();
 
 		assertThat(html, containsScriptTagWith(expected));
 	}
@@ -97,55 +100,30 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 	@Test
 	public void populatesJasmineHtmlSource() throws Exception {
 		String expected = "javascript()";
-		when(ioUtilsWrapper.toString(JASMINE_HTML_JS)).thenReturn(expected);
+		when(generatorConfiguration.IOtoString(eq(JASMINE_HTML_JS))).thenReturn(expected);
 
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+
+		String html = subject.generate();
 
 		assertThat(html, containsScriptTagWith(expected));
 	}
-	
+
 	@Test
 	public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
 		String expected = "h1 { background-color: awesome}";
-		when(ioUtilsWrapper.toString(JASMINE_CSS)).thenReturn(expected);
 
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+		when(generatorConfiguration.IOtoString(eq(JASMINE_CSS))).thenReturn(expected);
+		String html = subject.generate();
 
 		assertThat(html, containsStyleTagWith(expected));
 	}
 
 	@Test
-	public void shouldNotReadDefaultTemplateWhenOneIsProvided() throws IOException {
-		File expected = mock(File.class);
-
-		subject.generate(ReporterType.TrivialReporter, expected);
-
-		verify(ioUtilsWrapper, never()).toString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE);
-	}
-
-	@Test
-	public void shouldReadCustomTemplateWhenOneIsProvided() throws IOException {
-		File expected = mock(File.class);
-
-		subject.generate(ReporterType.TrivialReporter, expected);
-
-		verify(fileUtilsWrapper).readFileToString(expected);
-	}
-	
-	@Test
-	public void throwsRuntimeWhenIOExceptionIsEncountered() throws IOException {
-		when(ioUtilsWrapper.toString(anyString())).thenThrow(new IOException("Am fail"));
-		expectedException.expect(RuntimeException.class);
-		expectedException.expectMessage("Failed to load files for dependencies, sources, or a custom runner");
-		
-		subject.generate(ReporterType.TrivialReporter, null);
-	}
-	
-	@Test
-	public void containsScriptTagOfSource() {
+	public void containsScriptTagOfSource() throws IOException {
 		String expected = scripts.iterator().next();
 
-		String html = subject.generate(ReporterType.TrivialReporter, null);
+		when(generatorConfiguration.getAllScripts()).thenReturn(scripts);
+		String html = subject.generate();
 
 		assertThat(html, containsScriptTagWithSource(expected));
 	}
