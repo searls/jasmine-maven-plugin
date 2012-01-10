@@ -56,7 +56,14 @@ public class HandlesRequestsForCoffeeTest {
 		
 		verify(response).setContentType("text/javascript");
 	}
-	
+
+    @Test
+    public void setCharacterEncodingToJavaScript() throws IOException {
+        subject.handle(baseRequest, response, resource);
+        
+        verify(response).setCharacterEncoding("UTF-8");
+    }
+
 	@Test
 	public void setsResourceLastModifiedOnResponseHeader() throws IOException {
 		long expected = 98123l;
@@ -77,6 +84,17 @@ public class HandlesRequestsForCoffeeTest {
 		verify(response.getWriter()).write(expected);
 		verify(response).setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(expected.length()));
 	}
+
+	@Test
+    public void whenCoffeeCompilesHasMultiByteThenWriteIt() throws IOException {
+        String expected = "あいうえお.coffee";
+        when(coffeeScript.compile(COFFEE)).thenReturn(expected);
+
+        subject.handle(baseRequest, response, resource);
+        
+        verify(response.getWriter()).write(expected);
+        verify(response).setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(expected.getBytes("UTF-8").length));
+    }
 
 	@Test
 	public void whenCoffeeCompilationFailsThenWriteTheErrorOutInItsStead() throws IOException {
