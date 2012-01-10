@@ -8,7 +8,7 @@
 	</parent>
 	<groupId>com.github.searls</groupId>
 	<artifactId>jasmine-maven-plugin</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.1.0-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 
 	<name>jasmine-maven-plugin</name>
@@ -38,7 +38,7 @@
 	</scm>
 
 	<properties>
-		<jasmine.version>1.0.2</jasmine.version>
+		<jasmine.version>1.1.0</jasmine.version>
 		<powermock.version>1.4.6</powermock.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
