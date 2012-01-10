@@ -15,7 +15,7 @@ import com.github.searls.jasmine.server.JasmineResourceHandler;
 
 /**
  * @goal bdd
- * @execute lifecycle="jasmine-lifecycle" phase="generate-sources"
+ * @execute phase="jasmine-generate-runner"
  * @requiresDirectInvocation true
  */
 public class ServerMojo extends AbstractJasmineMojo {
