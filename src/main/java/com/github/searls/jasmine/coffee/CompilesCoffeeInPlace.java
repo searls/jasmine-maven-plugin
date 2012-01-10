@@ -11,10 +11,10 @@ public class CompilesCoffeeInPlace {
 	private CoffeeScript coffeeScript = new CoffeeScript();
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	
-	public void compile(File coffeeFile) throws IOException {
+	public void compile(File coffeeFile, boolean coffeeBareOption) throws IOException {
 		String coffee = fileUtilsWrapper.readFileToString(coffeeFile);
 		FileWriter javaScriptWriter = new FileWriter(coffeeFile, false);
-		javaScriptWriter.write(coffeeScript.compile(coffee));
+		javaScriptWriter.write(coffeeScript.compile(coffee, coffeeBareOption));
 		javaScriptWriter.close();
 	}
 	

@@ -79,4 +79,12 @@ public class AbstractJasmineMojoTest {
 		assertThat(subject.specs.getExcludes(),is(empty()));
 	}
 	
+	@Test
+	public void setsCoffeeBareOption() throws Exception {
+		subject.execute();
+		
+		assertThat(subject.coffeeBareOption, is(false));
+		
+	}
+	
 }

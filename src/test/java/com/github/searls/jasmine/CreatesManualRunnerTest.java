@@ -1,6 +1,10 @@
 package com.github.searls.jasmine;
 
-import static org.mockito.Mockito.*;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -10,7 +14,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.searls.jasmine.io.scripts.ProjectDirScripResolver;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator;
 import com.github.searls.jasmine.runner.ReporterType;
@@ -18,7 +21,6 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -39,6 +41,8 @@ public class CreatesManualRunnerTest {
 	private static final String MANUAL_RUNNER_NAME = "Jerry. That's a nice name.";
 	private static final List<String> PRELOAD_SOURCES = new ArrayList<String>();
 	public static final String SPEC_RUNNER_GENERATOR = "DEFAULT";
+
+	private static final boolean BARE_OPTION = true;
 
 	private AbstractJasmineMojo config = new AbstractJasmineMojo(){ public void run() throws Exception {}};
 	
@@ -88,6 +92,7 @@ public class CreatesManualRunnerTest {
 		config.specRunnerTemplate = SPEC_RUNNER_GENERATOR;
 		config.customRunnerTemplate = customRunnerTemplate;
 		config.mavenProject = mock(MavenProject.class);
+		config.coffeeBareOption = BARE_OPTION;
 	}
 	
 	@Before
@@ -99,6 +104,11 @@ public class CreatesManualRunnerTest {
 	public void stubConstructionOfHtmlGenerator() throws Exception {
 		whenNew(SpecRunnerHtmlGeneratorFactory.class).withNoArguments().thenReturn(specRunnerHtmlGeneratorFactory);
 		when(specRunnerHtmlGeneratorFactory.create(any(ReporterType.class), any(AbstractJasmineMojo.class), any(ScriptResolver.class))).thenReturn(specRunnerHtmlGenerator);
+	}
+	
+	@Test
+	public void stubConstructionOfCoffeeBareOption() throws Exception {
+		assertThat(this.subject.isCoffeeBareOption(), is(true));
 	}
 	
 	@Test

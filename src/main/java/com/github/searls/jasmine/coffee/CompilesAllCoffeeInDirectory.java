@@ -12,9 +12,9 @@ public class CompilesAllCoffeeInDirectory {
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private CompilesCoffeeInPlace compilesCoffeeInPlace = new CompilesCoffeeInPlace();
 	
-	public void compile(File directory) throws IOException {
+	public void compile(File directory, boolean coffeeBareOption) throws IOException {
 		for(File coffeeFile : fileUtilsWrapper.listFiles(directory, COFFEE_EXTENSIONS, true)) {
-			compilesCoffeeInPlace.compile(coffeeFile);
+			compilesCoffeeInPlace.compile(coffeeFile, coffeeBareOption);
 		}
 	}
 	

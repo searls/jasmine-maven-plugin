@@ -225,6 +225,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	
 	protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
+	/**
+	 * @parameter default-value="false"
+	 */
+	protected boolean coffeeBareOption;
+
 	public final void execute() throws MojoExecutionException, MojoFailureException {
 		sources = new ScriptSearch(jsSrcDir,sourceIncludes,sourceExcludes);
 		specs = new ScriptSearch(jsTestSrcDir,specIncludes,specExcludes);

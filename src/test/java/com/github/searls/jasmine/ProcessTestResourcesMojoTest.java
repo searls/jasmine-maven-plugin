@@ -26,7 +26,8 @@ import com.github.searls.jasmine.model.ScriptSearch;
 @PrepareForTest(ProcessTestResourcesMojo.class)
 public class ProcessTestResourcesMojoTest {
 
-private static final String SPEC_DIR_NAME = "blarh";
+	private static final String SPEC_DIR_NAME = "blarh";
+	private static final boolean BARE_OPTION = false;
 	
 	@InjectMocks private ProcessTestResourcesMojo subject = new ProcessTestResourcesMojo();
 	
@@ -82,7 +83,7 @@ private static final String SPEC_DIR_NAME = "blarh";
 		
 		subject.run();
 		
-		verify(compilesAllCoffeeInDirectory).compile(targetDir);
+		verify(compilesAllCoffeeInDirectory).compile(targetDir, BARE_OPTION);
 	}
 	
 	@Test
@@ -93,7 +94,7 @@ private static final String SPEC_DIR_NAME = "blarh";
 		subject.run();
 		
 		verify(directoryCopier,never()).copyDirectory(any(File.class),any(File.class));
-		verify(compilesAllCoffeeInDirectory,never()).compile(any(File.class));
+		verify(compilesAllCoffeeInDirectory,never()).compile(any(File.class), anyBoolean());
 		verify(log).warn(ProcessTestResourcesMojo.MISSING_DIR_WARNING);
 	}
 	
