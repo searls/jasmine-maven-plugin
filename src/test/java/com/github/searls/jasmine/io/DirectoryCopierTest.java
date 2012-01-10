@@ -1,6 +1,5 @@
 package com.github.searls.jasmine.io;
 
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;

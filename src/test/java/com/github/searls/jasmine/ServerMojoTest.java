@@ -62,6 +62,7 @@ public class ServerMojoTest {
 		subject.serverPort = PORT;
 		subject.jasmineTargetDir = targetDir;
 		subject.manualSpecRunnerHtmlFileName = MANUAL_SPEC_RUNNER_NAME;
+		subject.specRunnerTemplate = "DEFAULT";
 		when(baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
 		when(mavenProject.getBasedir()).thenReturn(baseDir);
 		when(relativizesFilePaths.relativize(baseDir,targetDir)).thenReturn(RELATIVE_TARGET_DIR);
