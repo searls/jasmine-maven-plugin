@@ -28,9 +28,19 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	private File jsTestSrcDir;
 
 	/**
-	 * Determines the browser and version profile to execute the headless specs against. Because the plugin
-	 * 	executes specs using HtmlUnit, this maps 1-to-1 with the public static
-	 * 	instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.
+	 * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
+	 * The plugin uses HtmlUnit by default. 
+	 * 	
+	 * 	Some valid examples: org.openqa.selenium.htmlunit.HtmlUnitDriver, org.openqa.selenium.firefox.FirefoxDriver, org.openqa.selenium.ie.InternetExplorerDriver
+	 * 
+	 * @parameter default-value="org.openqa.selenium.htmlunit.HtmlUnitDriver"
+	 */
+	protected String webDriverClassName;
+	
+	/**
+	 * Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
+	 * This maps 1-to-1 with the public static
+	 * 	instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}. 
 	 * 	
 	 * 	Some valid examples: FIREFOX_3_6, INTERNET_EXPLORER_6, INTERNET_EXPLORER_7, INTERNET_EXPLORER_8
 	 * 

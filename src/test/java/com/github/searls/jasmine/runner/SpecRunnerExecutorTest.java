@@ -1,9 +1,13 @@
 package com.github.searls.jasmine.runner;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +20,9 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.model.JasmineResult;
@@ -27,7 +33,7 @@ public class SpecRunnerExecutorTest {
 
 	private static final String BUILD_REPORT_JS_CONTENTS = "var jasmineMavenPlugin = {printReport: function(){ return 'pants\\nkaka'; }};";
 	private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
-	private static final String BROWSER_VERSION = "INTERNET_EXPLORER_8";
+	private static HtmlUnitDriver driver;
 	
 	@InjectMocks private SpecRunnerExecutor subject = new SpecRunnerExecutor();
 	
@@ -42,11 +48,13 @@ public class SpecRunnerExecutorTest {
 	@Before
 	public void stubResourceStreams() throws IOException {
 		when(ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
+		driver = new HtmlUnitDriver(BrowserVersion.INTERNET_EXPLORER_8);
+		driver.setJavascriptEnabled(true);
 	}
 	
 	@Test
 	public void shouldFindSpecsInResults() throws Exception {
-		JasmineResult result = subject.execute(resource, file, BROWSER_VERSION, 300, false, log, null);
+		JasmineResult result = subject.execute(resource, file, driver, 300, false, log, null);
 		
 		assertThat(result,is(not(nullValue())));
 		assertThat(result.getDescription(),containsString("kaka"));
@@ -56,7 +64,7 @@ public class SpecRunnerExecutorTest {
 	
 	@Test
 	public void shouldExportJUnitResults() throws Exception {
-		subject.execute(resource, file, BROWSER_VERSION, 300, false, log, null);
+		subject.execute(resource, file, driver, 300, false, log, null);
 		
 		verify(fileUtilsWrapper).writeStringToFile(file, "<xml/>", "UTF-8");
 	}
