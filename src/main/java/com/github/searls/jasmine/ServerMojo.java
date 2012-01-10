@@ -9,7 +9,7 @@ import com.github.searls.jasmine.io.RelativizesFilePaths;
 
 /**
  * @goal bdd
- * @execute lifecycle="jasmine-lifecycle" phase="generate-sources"
+ * @execute phase="jasmine-generate-runner"
  * @requiresDirectInvocation true
  */
 public class ServerMojo extends AbstractJasmineMojo {
