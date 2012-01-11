@@ -5,7 +5,7 @@ For information on how to use jasmine-plugin, check out its [documentation](http
 
 ## Current Version Info
 
-The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.0.2, so its version number is **1.0.2-beta-5**.
+The plugin's version numbering will mirror the version of Jasmine that backs it. The latest version of the plugin points to Jasmine 1.1.0, so its version number is **1.1.0**.
 
 If you want to point at snapshot releases of the plugin (note that I don't deploy them often), they're hosted on the [Sonatype OSS snapshot repository](https://oss.sonatype.org/service/local/repositories/snapshots).
 
