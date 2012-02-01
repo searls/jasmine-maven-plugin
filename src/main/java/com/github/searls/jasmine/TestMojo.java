@@ -58,7 +58,8 @@ public class TestMojo extends AbstractJasmineMojo {
 			runnerFile.toURI().toURL(), 
 			new File(jasmineTargetDir,junitXmlReportFileName), 
 			driver, 
-			timeout, debug, getLog(), format);
+			timeout, debug, getLog(), format, coverage,
+			                new File(jasmineTargetDir, coverageReportFileName));
 		return result;
 	}
 

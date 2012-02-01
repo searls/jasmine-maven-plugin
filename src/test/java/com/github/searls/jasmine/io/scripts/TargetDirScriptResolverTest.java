@@ -58,6 +58,8 @@ public class TargetDirScriptResolverTest {
 
 		createFile(jasmine, "src", "z.js");
 		createFile(jasmine, "src", "a.js");
+		createFile(jasmine, "instrumented", "z.js");
+		createFile(jasmine, "instrumented", "a.js");
 		createFile(jasmine, "spec", "AisNotZSpec.js");
 
 		initMock();
@@ -77,6 +79,7 @@ public class TargetDirScriptResolverTest {
 	@Test
 	public void shouldResolveScriptsOrderMatters() throws Exception {
 		TargetDirScriptResolver targetDirScriptResolver = new TargetDirScriptResolver(config);
+		
 		LinkedHashSet<String> allScripts = (LinkedHashSet<String>) targetDirScriptResolver.getAllScripts();
 		Iterator<String> iterator = allScripts.iterator();
 		String first = iterator.next();
@@ -87,6 +90,24 @@ public class TargetDirScriptResolverTest {
 		assertTrue(second.endsWith("/root/target/jasmine/src/a.js"));
 		assertTrue(third.endsWith("/root/target/jasmine/spec/AisNotZSpec.js"));
 	}
+	
+    @Test
+    public void should_resolveScripts_from_instrumented() throws Exception {
+        when(config.getInstrumentedDirectoryName()).thenReturn("instrumented");
+        when(config.isCoverage()).thenReturn(true);
+        
+        TargetDirScriptResolver targetDirScriptResolver = new TargetDirScriptResolver(config);
+
+        LinkedHashSet<String> allScripts = (LinkedHashSet<String>) targetDirScriptResolver.getAllScripts();
+        Iterator<String> iterator = allScripts.iterator();
+        String first = iterator.next();
+        String second = iterator.next();
+        String third = iterator.next();
+        assertEquals(3, allScripts.size());
+        assertTrue(first.endsWith("/root/target/jasmine/instrumented/z.js"));
+        assertTrue(second.endsWith("/root/target/jasmine/instrumented/a.js"));
+        assertTrue(third.endsWith("/root/target/jasmine/spec/AisNotZSpec.js"));
+    }
 
 	private File createFile(File root, String dir, String filename) throws IOException {
 		File directory = new File(root, dir);
