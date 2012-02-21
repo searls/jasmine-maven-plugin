@@ -52,7 +52,7 @@ public class SpecRunnerExecutor {
 	private String buildJunitXmlReport(JavascriptExecutor driver, boolean debug) throws IOException {
 		Object junitReport = driver.executeScript(
 				ioUtilsWrapper.toString(CREATE_JUNIT_XML) + 
-				"return junitXmlReporter.report(reporter,"+debug+");"); 
+				"return junitXmlReporter.report(window.reporter,"+debug+");"); 
 		return junitReport.toString();
 	}
 
@@ -81,7 +81,7 @@ public class SpecRunnerExecutor {
 	}
 
 	private Boolean executionFinished(JavascriptExecutor driver) {
-		return (Boolean) driver.executeScript("return reporter.finished");
+		return (Boolean) driver.executeScript("return (window.reporter === undefined) ? false : window.reporter.finished");
 	}
 	
 }
