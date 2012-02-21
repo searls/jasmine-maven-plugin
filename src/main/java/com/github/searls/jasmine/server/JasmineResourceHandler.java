@@ -33,7 +33,7 @@ public class JasmineResourceHandler extends ResourceHandler {
 		Resource resource = getResource(baseRequest);
 		response.addDateHeader("EXPIRES", 0L);
 		if (detectsCoffee.detect(target) && weCanHandleIt(baseRequest, resource)) {
-			handlesRequestsForCoffee.handle(baseRequest, response, resource);
+			handlesRequestsForCoffee.handle(baseRequest, response, resource, createsManualRunner.isCoffeeBareOption());
 		} else {
 			//Not testable. Who knew test-driving an LSP violation would be this hard. Sigh.  :-(
 			super.handle(target, baseRequest, baseRequest, response);

@@ -16,6 +16,7 @@ import com.github.searls.jasmine.io.FileUtilsWrapper;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompilesAllCoffeeInDirectoryTest {
+	private static final boolean BARE_OPTION = false;
 
 	@InjectMocks private CompilesAllCoffeeInDirectory subject = new CompilesAllCoffeeInDirectory();
 	
@@ -30,10 +31,10 @@ public class CompilesAllCoffeeInDirectoryTest {
 	public void compilesEachFile() throws IOException {
 		when(fileUtilsWrapper.listFiles(directory, CompilesAllCoffeeInDirectory.COFFEE_EXTENSIONS, true)).thenReturn(asList(file,anotherFile));
 		
-		subject.compile(directory);
+		subject.compile(directory, BARE_OPTION);
 		
-		verify(compilesCoffeeInPlace).compile(file);
-		verify(compilesCoffeeInPlace).compile(anotherFile);
+		verify(compilesCoffeeInPlace).compile(file, BARE_OPTION);
+		verify(compilesCoffeeInPlace).compile(anotherFile, BARE_OPTION);
 	}
 	
 	

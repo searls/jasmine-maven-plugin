@@ -64,4 +64,8 @@ public class CreatesManualRunner {
 	public void setLog(Log log) {
 		this.log = log;
 	}
+	
+	public boolean isCoffeeBareOption() {
+		return this.config.coffeeBareOption;
+	}
 }

@@ -25,7 +25,7 @@ public class ProcessResourcesMojo extends AbstractJasmineMojo {
 		if (sources.getDirectory().exists()) {
 			File destination = new File(jasmineTargetDir, srcDirectoryName);
 			directoryCopier.copyDirectory(sources.getDirectory(), destination);
-			compilesAllCoffeeInDirectory.compile(destination);
+			compilesAllCoffeeInDirectory.compile(destination, coffeeBareOption);
 		} else {
 			getLog().warn(MISSING_DIR_WARNING);
 		}

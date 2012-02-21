@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.apache.commons.lang.StringEscapeUtils;
 
 import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.gargoylesoftware.htmlunit.ScriptResult;
@@ -34,16 +33,17 @@ public class CoffeeScript {
 	};
 	
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
-	
-	public String compile(String coffee) throws IOException {
-		String escapedCoffee = StringEscapeUtils.escapeJavaScript(coffee);
-		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(escapedCoffee);
+
+	public String compile(String coffee, boolean coffeeBareOption) throws IOException {
+		CoffeeBeans beans = new CoffeeBeans(coffee, coffeeBareOption);
+		String escapedCoffee = beans.getCacheKey();
+		return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(beans);
 	}
-	
-	private String compileAndCache(String input) {
-		ScriptResult scriptResult = htmlPage.get().executeJavaScript(String.format("CoffeeScript.compile(\"%s\");", input));
+
+	private String compileAndCache(CoffeeBeans beans) {
+		ScriptResult scriptResult = htmlPage.get().executeJavaScript(beans.createCoffeeScriptFunction());
 		String result = (String) scriptResult.getJavaScriptResult();
-		cache.put(input,result);
+		cache.put(beans.getCacheKey(),result);
 		return result;
 	}
 

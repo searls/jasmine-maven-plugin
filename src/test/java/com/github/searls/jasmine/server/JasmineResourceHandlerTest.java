@@ -1,8 +1,14 @@
 package com.github.searls.jasmine.server;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyBoolean;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.mockito.Mockito.*;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -58,7 +64,7 @@ public class JasmineResourceHandlerTest {
 		
 		verify(createsManualRunner).setLog((Log) argThat(is(NullLog.class)));
 	}
-	
+
 	@Test
 	public void whenTargetIsSlashThenCreateManualRunner() throws IOException, ServletException {
 		subject.handle("/", baseRequest,request,response);
@@ -80,7 +86,7 @@ public class JasmineResourceHandlerTest {
 		
 		subject.handle(TARGET, baseRequest,request,response);
 
-		verify(handlesRequestsForCoffee).handle(baseRequest, response, resource);
+		verify(handlesRequestsForCoffee).handle(baseRequest, response, resource, false);
 	}
 
 	@Test
@@ -90,7 +96,7 @@ public class JasmineResourceHandlerTest {
 		
 		subject.handle(TARGET, baseRequest,request,response);
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class), anyBoolean());
 	}
 
 	@Test
@@ -101,7 +107,7 @@ public class JasmineResourceHandlerTest {
 		
 		subject.handle(TARGET, baseRequest,request,response);
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class), anyBoolean());
 	}
 	
 	@Test
@@ -111,7 +117,7 @@ public class JasmineResourceHandlerTest {
 		
 		subject.handle(TARGET, baseRequest,request,response);
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class), anyBoolean());
 	}
 
 	@Test
@@ -121,7 +127,19 @@ public class JasmineResourceHandlerTest {
 		
 		subject.handle(TARGET, baseRequest,request,response);
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class), anyBoolean());
+	}
+
+	@Test
+	public void whenCoffeeBareOptionValue() throws Exception {
+		when(detectsCoffee.detect(TARGET)).thenReturn(true);
+		when(resource.exists()).thenReturn(true);
+		when(createsManualRunner.isCoffeeBareOption()).thenReturn(true);
+		
+		subject.handle(TARGET, baseRequest,request,response);
+
+		verify(handlesRequestsForCoffee).handle(baseRequest, response, resource, true);
+		verify(createsManualRunner).isCoffeeBareOption();
 	}
 	
 }

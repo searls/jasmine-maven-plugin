@@ -29,6 +29,8 @@ public class ProcessResourcesMojoTest {
 
 	private static final String SRC_DIR_NAME = "blarh";
 	
+	private static final boolean BARE_OPTION = false;
+	
 	@InjectMocks private ProcessResourcesMojo subject = new ProcessResourcesMojo();
 	
 	@Mock private DirectoryCopier directoryCopier;
@@ -83,7 +85,7 @@ public class ProcessResourcesMojoTest {
 		
 		subject.run();
 		
-		verify(compilesAllCoffeeInDirectory).compile(targetDir);
+		verify(compilesAllCoffeeInDirectory).compile(targetDir, BARE_OPTION);
 	}
 	
 	@Test
@@ -94,7 +96,7 @@ public class ProcessResourcesMojoTest {
 		subject.run();
 		
 		verify(directoryCopier,never()).copyDirectory(any(File.class),any(File.class));
-		verify(compilesAllCoffeeInDirectory,never()).compile(any(File.class));
+		verify(compilesAllCoffeeInDirectory,never()).compile(any(File.class), anyBoolean());
 		verify(log).warn(ProcessResourcesMojo.MISSING_DIR_WARNING);
 	}
 	
