@@ -26,6 +26,7 @@ import com.github.searls.jasmine.model.JasmineResult;
  * @goal test
  * @phase test
  * @execute lifecycle="jasmine-lifecycle" phase="process-test-resources"
+ * @requiresDependencyResolution test
  */
 public class TestMojo extends AbstractJasmineMojo {
 
@@ -87,7 +88,7 @@ public class TestMojo extends AbstractJasmineMojo {
 				client.setAjaxController(new NicelyResynchronizingAjaxController());
 				
 				WebConnection connection = client.getWebConnection();
-				client.setWebConnection(new ClasspathWebConnection(connection));
+				client.setWebConnection(new FakeHttpWebConnection(connection, getMavenProject()));
 				
 				//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
 				if (!debug) 
