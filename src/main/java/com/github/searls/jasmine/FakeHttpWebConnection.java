@@ -1,6 +1,7 @@
 package com.github.searls.jasmine;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -40,6 +41,10 @@ public class FakeHttpWebConnection implements WebConnection {
 	public static final String PROTOCOL="http";
 	public static final String FAKE_HOST = "maven.test.dependencies";
 	
+	/** Level for diagnostics tracing. */
+	private static final Level TRACE_LEVEL = Level.INFO;
+	private static final Level ERROR_LEVEL = Level.WARNING;
+	
 	/** Relevant scopes to search in. */
 	private static final Set<String> RELEVANT_SCOPES;
 	static{
@@ -68,9 +73,8 @@ public class FakeHttpWebConnection implements WebConnection {
 	public WebResponse getResponse(WebRequest request) throws IOException {
 		long startTime = System.currentTimeMillis();
 		if(isMine(request)){
-			Logger log = Logger.getLogger(getClass().getName());
 			URL url = request.getUrl();
-			log.log(Level.INFO, "Handling resource: {0}", url);
+			log(TRACE_LEVEL, "Handling resource: {0}", url);
 			final InputStream resource = getResource(url);
 			if(resource != null){
 				try {
@@ -82,7 +86,7 @@ public class FakeHttpWebConnection implements WebConnection {
 				}
 
 			} else {
-				log.log(Level.WARNING, "Resource not found: {0}", url);
+				log(ERROR_LEVEL, "Resource not found: {0}", url);
 			}
 		} else if(m_next != null){
 			return m_next.getResponse(request);
@@ -190,27 +194,89 @@ public class FakeHttpWebConnection implements WebConnection {
 	 */
 	private static URL[] getUrls(MavenProject project) {
 		
-		Logger log = Logger.getLogger(FakeHttpWebConnection.class.getName());
-		StringBuilder logMessage = new StringBuilder("Test classpath entry:\n");
+		List<URL> list = new ArrayList<URL>();
 		
-		@SuppressWarnings("unchecked")
-		Set<Artifact> artifacts = project.getArtifacts();
-		List<URL> list = new ArrayList<URL>(artifacts.size());
-		for(Artifact artifact : artifacts)
-		{	
-			if(RELEVANT_SCOPES.contains(artifact.getScope()))
-			try {
-				URL url = artifact.getFile().toURI().toURL();
-				list.add(url);
-				logMessage.append(url.toString());
-				logMessage.append('\n');
-			} catch (MalformedURLException e) {
-				log.log(Level.WARNING, "Failed to parse test classpath entry for: {0}/{1}", 
-						new Object[]{artifact.getGroupId(), artifact.getId()});
-			} 
-		}
-		log.log(Level.INFO, logMessage.toString());
+		mergeTestClasspathElements(list, project);
+		mergeDependencyClasspathElements(list, project);
+		
+		logUrls(list);
 		return list.toArray(new URL[list.size()]);
 	}
 
+	/**
+	 * Trace the output URLs.
+	 * @param list to trace.
+	 */
+	private static void logUrls(List<URL> list) {
+		if(isTracingEnabled()){
+			StringBuilder logMessage = new StringBuilder("Test classpath entry:\n");
+			for(URL url : list){
+				logMessage.append("  ");
+				logMessage.append(url);
+				logMessage.append('\n');
+			}
+			log(TRACE_LEVEL, logMessage.toString());
+		}
+	}
+
+	/**
+	 * @param result
+	 * @param project
+	 */
+	private static void mergeDependencyClasspathElements(List<URL> result,
+			MavenProject project) {
+		@SuppressWarnings("unchecked")
+		Set<Artifact> artifacts = project.getArtifacts();
+		for(Artifact artifact : artifacts)
+		{	
+			if(RELEVANT_SCOPES.contains(artifact.getScope())) {
+				File file = artifact.getFile();
+				try {
+					URL url = file.toURI().toURL();
+					result.add(url);
+				} catch (MalformedURLException e) {
+					log(ERROR_LEVEL, "Failed to parse test classpath entry for: {0}/{1}", 
+							artifact.getGroupId(), artifact.getId());
+				} 
+			}
+		}
+	}
+
+	/**
+	 * @param result
+	 * @param project
+	 */
+	private static void mergeTestClasspathElements(List<URL> result,
+			MavenProject project) {
+		try {
+			List<String> testClasspathElements = project.getTestClasspathElements();
+			for (String path : testClasspathElements) {
+				try {
+					URL url = new File(path).toURI().toURL();
+					result.add(url);
+				} catch (MalformedURLException e) {
+					log(ERROR_LEVEL, "Failed to parse test classpath element: {0}", path);
+				}
+			}
+		} catch (DependencyResolutionRequiredException e) {
+			log(ERROR_LEVEL, "Failed to find project test classpath elements: {0}", e);
+		}
+	}
+
+	/**
+	 * Log something
+	 * @param level level to log at
+	 * @param message message with {0} style markup
+	 * @param params parameters for the message.
+	 */
+	private static void log(Level level, String message, Object... params){
+		Logger log = Logger.getLogger(FakeHttpWebConnection.class.getName());
+		log.log(level, message, params);
+	}
+	
+	/** Is tracing enabled? */
+	private static boolean isTracingEnabled() {
+		Logger log = Logger.getLogger(FakeHttpWebConnection.class.getName());
+		return log.isLoggable(TRACE_LEVEL);
+	}
 }
