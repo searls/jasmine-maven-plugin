@@ -27,10 +27,16 @@ import com.gargoylesoftware.htmlunit.WebResponseData;
 import com.gargoylesoftware.htmlunit.util.NameValuePair;
 
 /**
- * A WebConnection for HTMLUnit that will load resources from the CLASSPATH.
- * It looks for the marker "{@value #PROTOCOL}:" and the host {@value #FAKE_HOST}.
+ * A WebConnection for HTMLUnit that will load resources from the Maven Test Dependencies Classpath.
  * 
- * If it does not recognise the request it can delegate to a wrapped WebConnection.
+ * It looks for the protocol "{@value #PROTOCOL}:" and the host defined in
+ * {@link #setFakeHost(String)}. This defaults to "maven.test.dependencies"
+ * 
+ * <p>If the requested URL matches then the file part will be extracted and loaded using a
+ * URLClassLoader. The Class Loader is initialised with the test classes output directory for
+ * the current project, and the locations of dependencies of type "Compile", "Runtime" and "Test".
+ * 
+ * <p>If it does not recognise the request it can delegate to a wrapped WebConnection.
  * 
  * @author Richard Corfield &lt;m0rjc@m0rjc.me.uk&gt;
  */
