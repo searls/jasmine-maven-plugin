@@ -43,7 +43,7 @@ public class FakeHttpWebConnectionTest {
 		
 		FakeHttpWebConnection subject = new FakeHttpWebConnection(null, projectMock);
 		
-		URLClassLoader loader = (URLClassLoader) subject.m_classLoader;
+		URLClassLoader loader = (URLClassLoader) subject.classLoader;
 		URL[] urls = loader.getURLs();
 		Assert.assertEquals(5, urls.length);
 		checkUrl(urls[0], "test1file");
@@ -94,6 +94,7 @@ public class FakeHttpWebConnectionTest {
 		Assert.assertEquals(200, response.getStatusCode());
 		String data = response.getContentAsString();
 		Assert.assertTrue(data.startsWith("var HelloWorld = function() {"));
+		Assert.assertEquals("application/javascript", response.getContentType());
 	}
 
 	@Test
@@ -113,6 +114,50 @@ public class FakeHttpWebConnectionTest {
 		Assert.assertEquals(404, response.getStatusCode());
 	}
 
+	@Test
+	public void testAllowsFakeHostNameToBeChanged() throws Exception {
+		MavenProject projectMock = Mockito.mock(MavenProject.class);
+		
+		List<String> testElements = new ArrayList<String>();
+		testElements.add("src/test/resources"); // Expecting to run in the project root directory.
+		Mockito.when(projectMock.getTestClasspathElements()).thenReturn(testElements);
+		
+		Set<Artifact> artifacts = new HashSet<Artifact>();
+		Mockito.when(projectMock.getArtifacts()).thenReturn(artifacts);
+		
+		FakeHttpWebConnection subject = new FakeHttpWebConnection(null, projectMock);
+		subject.setFakeHost("an.alternate.host.com");
+		WebResponse response = subject.getResponse(new WebRequest(new URL("http://an.alternate.host.com/HelloWorld.js")));
+		
+		Assert.assertEquals(200, response.getStatusCode());
+		String data = response.getContentAsString();
+		Assert.assertTrue(data.startsWith("var HelloWorld = function() {"));
+	}
+	
+	/**
+	 * Ext-JS appends ?_dc=12312225 to the end of its requests to cripple caching. 
+	 * This can be turned off, but seems on by default.
+	 */
+	@Test
+	public void testCorrectlyHandlesExtJsStyleCacheBreakingParameter() throws Exception {
+		MavenProject projectMock = Mockito.mock(MavenProject.class);
+		
+		List<String> testElements = new ArrayList<String>();
+		testElements.add("src/test/resources"); // Expecting to run in the project root directory.
+		Mockito.when(projectMock.getTestClasspathElements()).thenReturn(testElements);
+		
+		Set<Artifact> artifacts = new HashSet<Artifact>();
+		Mockito.when(projectMock.getArtifacts()).thenReturn(artifacts);
+		
+		FakeHttpWebConnection subject = new FakeHttpWebConnection(null, projectMock);
+		WebResponse response = subject.getResponse(new WebRequest(new URL("http://maven.test.dependencies/HelloWorld.js?_dc=12233241234")));
+		
+		Assert.assertEquals(200, response.getStatusCode());
+		String data = response.getContentAsString();
+		Assert.assertTrue(data.startsWith("var HelloWorld = function() {"));
+		Assert.assertEquals("application/javascript", response.getContentType());
+	}
+	
 	
 	/** 
 	 * Check that the resultant url contains the expected portion.

@@ -1,13 +1,11 @@
 package com.github.searls.jasmine;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -38,12 +36,12 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
  */
 public class FakeHttpWebConnection implements WebConnection {
 	public static final String PROTOCOL="http";
-	public static final String FAKE_HOST = "maven.test.dependencies";
 	
 	private static final int HTTP_STATUS_NOT_FOUND = 404;
 	private static final int HTTP_STATUS_OK = 200;
+	
 	/** Level for diagnostics tracing. */
-	private static final Level TRACE_LEVEL = Level.INFO;
+	private static final Level TRACE_LEVEL = Level.FINE;
 	private static final Level ERROR_LEVEL = Level.WARNING;
 	
 	/** Relevant scopes to search in. */
@@ -59,7 +57,8 @@ public class FakeHttpWebConnection implements WebConnection {
 	/** If I cannot resolve the URL then delegate to the next in the chain. */
 	private final WebConnection m_next;
 	
-	protected final ClassLoader m_classLoader;
+	protected final ClassLoader classLoader;
+	private String fakeServerHostName = "maven.test.dependencies";
 	
 	/**
 	 * @param connectionToWrap WebConnection to use if this connection does not recognise the URL.
@@ -67,10 +66,24 @@ public class FakeHttpWebConnection implements WebConnection {
 	 */
 	public FakeHttpWebConnection(WebConnection connectionToWrap, MavenProject project) {
 		m_next = connectionToWrap;
-		m_classLoader = new URLClassLoader(getUrls(project));
+		classLoader = new URLClassLoader(getClasspathUrlsForProject(project));
+	}
+	
+	/**
+	 * @return the hostname to use as the fake host.
+	 */
+	public String getFakeHost() {
+		return fakeServerHostName;
 	}
 
-//	@Override
+	/**
+	 * @param fakeHost requests to this fake host will be intercepted.
+	 */
+	public void setFakeHost(String fakeHost) {
+		fakeServerHostName = fakeHost;
+	}
+
+	//	@Override
 	public WebResponse getResponse(WebRequest request) throws IOException {
 		long startTime = System.currentTimeMillis();
 		if(isMine(request)){
@@ -97,10 +110,11 @@ public class FakeHttpWebConnection implements WebConnection {
 	}
 
 	/**
-	 * @param request
-	 * @param startTime
-	 * @return
-	 * @throws IOException
+	 * Make a WebResponse for Not Found
+	 * @param request request to include
+	 * @param startTime start time used to calculate processing time
+	 * @return the Not Found response.
+	 * @throws IOException from WebResponseData.
 	 */
 	private WebResponse makeNotFoundResponse(WebRequest request, long startTime)
 			throws IOException {
@@ -110,17 +124,18 @@ public class FakeHttpWebConnection implements WebConnection {
 	}
 
 	/**
-	 * @param request
-	 * @param resource
-	 * @param startTime
-	 * @return
-	 * @throws IOException
+	 * Make a response for found data.
+	 * @param request request to include.
+	 * @param data data to wrap
+	 * @param startTime start time used to calculate response time.
+	 * @return the response containing the data
+	 * @throws IOException from WebResponseData.
 	 */
 	private WebResponse makeResponse(WebRequest request,
 			final byte[] data, long startTime) throws IOException {
 		
 		DownloadedContent responseBody = new DownloadedContent.InMemory(data); 
-		String contentType = guessContentType(request.getUrl().getFile(), data);
+		String contentType = MimeMagic.guessContentType(request.getUrl(), data);
 		List<NameValuePair> headers = new ArrayList<NameValuePair>();
 		
 		headers.add(new NameValuePair("Content-Type", contentType));
@@ -130,42 +145,16 @@ public class FakeHttpWebConnection implements WebConnection {
 	}
 
 	/**
-	 * @param url
-	 * @param resource
-	 * @return
-	 * @throws IOException 
-	 */
-	private String guessContentType(String filename, byte[] data) throws IOException {
-		
-		String result = URLConnection.guessContentTypeFromName(filename);
-		if(result == null)
-		{
-			result = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(data));
-		}
-		if(filename.endsWith(".js"))
-		{
-			return "application/javascript";
-		}
-		
-		if(filename.endsWith(".html"))
-		{
-			return "text/html";
-		}
-		
-		return "application/octet-stream";
-	}
-
-	/**
-	 * @param request
-	 * @return
+	 * @param request incoming request
+	 * @return true if the request should be intercepted by this class.
 	 */
 	private boolean isMine(WebRequest request) {
-		return PROTOCOL.equals(request.getUrl().getProtocol()) && FAKE_HOST.equalsIgnoreCase(request.getUrl().getHost());
+		return PROTOCOL.equals(request.getUrl().getProtocol()) && fakeServerHostName.equalsIgnoreCase(request.getUrl().getHost());
 	}
 
 	/**
-	 * @param url
-	 * @return
+	 * @param url the requested URL
+	 * @return the data as an inputstream, or null if not found.
 	 */
 	private InputStream getResource(URL url) {
 		String part = url.getFile();
@@ -183,17 +172,17 @@ public class FakeHttpWebConnection implements WebConnection {
 		
 		part = part.substring(startIndex, queryIndex);
 		
-		InputStream stream = m_classLoader.getResourceAsStream(part);
+		InputStream stream = classLoader.getResourceAsStream(part);
 		return stream;
 	}
 
 	/**
 	 * Dependency URLs from the project.
-	 * @param project
-	 * @return
+	 * @param project Maven project
+	 * @return array of URLs in which to search for resources
 	 * @throws DependencyResolutionRequiredException from Maven
 	 */
-	private static URL[] getUrls(MavenProject project) {
+	private static URL[] getClasspathUrlsForProject(MavenProject project) {
 		
 		List<URL> list = new ArrayList<URL>();
 		
@@ -205,7 +194,7 @@ public class FakeHttpWebConnection implements WebConnection {
 	}
 
 	/**
-	 * Trace the output URLs.
+	 * Trace the output URLs to the Logger.
 	 * @param list to trace.
 	 */
 	private static void logUrls(List<URL> list) {
@@ -219,33 +208,11 @@ public class FakeHttpWebConnection implements WebConnection {
 			log(TRACE_LEVEL, logMessage.toString());
 		}
 	}
-
+	
 	/**
-	 * @param result
-	 * @param project
-	 */
-	private static void mergeDependencyClasspathElements(List<URL> result,
-			MavenProject project) {
-		@SuppressWarnings("unchecked")
-		Set<Artifact> artifacts = project.getArtifacts();
-		for(Artifact artifact : artifacts)
-		{	
-			if(RELEVANT_SCOPES.contains(artifact.getScope())) {
-				File file = artifact.getFile();
-				try {
-					URL url = file.toURI().toURL();
-					result.add(url);
-				} catch (MalformedURLException e) {
-					log(ERROR_LEVEL, "Failed to parse test classpath entry for: {0}/{1}", 
-							artifact.getGroupId(), artifact.getId());
-				} 
-			}
-		}
-	}
-
-	/**
-	 * @param result
-	 * @param project
+	 * Add test classpath elements, the output diectories, from the project to the result list.
+	 * @param result list to append to
+	 * @param project project to query.
 	 */
 	private static void mergeTestClasspathElements(List<URL> result,
 			MavenProject project) {
@@ -261,6 +228,29 @@ public class FakeHttpWebConnection implements WebConnection {
 			}
 		} catch (DependencyResolutionRequiredException e) {
 			log(ERROR_LEVEL, "Failed to find project test classpath elements: {0}", e);
+		}
+	}
+
+	/**
+	 * Add dependency classpath elements from the project to the result list.
+	 * @param result list to append to.
+	 * @param project project to query.
+	 */
+	private static void mergeDependencyClasspathElements(List<URL> result, MavenProject project) {
+		@SuppressWarnings("unchecked")
+		Set<Artifact> artifacts = project.getArtifacts();
+		for(Artifact artifact : artifacts)
+		{	
+			if(RELEVANT_SCOPES.contains(artifact.getScope())) {
+				File file = artifact.getFile();
+				try {
+					URL url = file.toURI().toURL();
+					result.add(url);
+				} catch (MalformedURLException e) {
+					log(ERROR_LEVEL, "Failed to parse test classpath entry for: {0}/{1}", 
+							artifact.getGroupId(), artifact.getId());
+				} 
+			}
 		}
 	}
 

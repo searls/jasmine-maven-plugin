@@ -30,6 +30,19 @@ import com.github.searls.jasmine.model.JasmineResult;
  */
 public class TestMojo extends AbstractJasmineMojo {
 
+	/**
+	 * The fake host name that will be used to make Maven Dependency Classpath resources available
+	 * to test scripts.
+	 * 
+	 * The default value is "maven.test.dependencies". If this is used an an URL of the form
+	 * <code>http://maven.test.dependencies/foo/bar.js</code> is requested then then Maven Test
+	 * Classpath will be searched for "foo/bar.js".
+	 *
+	 * @parameter default-value="maven.test.dependencies"
+	 */
+	protected String fakeServerHostName;
+
+	
 	public void run() throws Exception {
 		if(!skipTests) {
 			getLog().info("Executing Jasmine Specs");
@@ -88,7 +101,10 @@ public class TestMojo extends AbstractJasmineMojo {
 				client.setAjaxController(new NicelyResynchronizingAjaxController());
 				
 				WebConnection connection = client.getWebConnection();
-				client.setWebConnection(new FakeHttpWebConnection(connection, getMavenProject()));
+				FakeHttpWebConnection fakeWebConnection = new FakeHttpWebConnection(connection, getMavenProject());
+				fakeWebConnection.setFakeHost(fakeServerHostName);
+				client.setWebConnection(fakeWebConnection);
+				
 				
 				//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
 				if (!debug) 
