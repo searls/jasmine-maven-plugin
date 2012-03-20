@@ -37,10 +37,11 @@ import com.gargoylesoftware.htmlunit.util.NameValuePair;
  * @author Richard Corfield &lt;m0rjc@m0rjc.me.uk&gt;
  */
 public class FakeHttpWebConnection implements WebConnection {
-
 	public static final String PROTOCOL="http";
 	public static final String FAKE_HOST = "maven.test.dependencies";
 	
+	private static final int HTTP_STATUS_NOT_FOUND = 404;
+	private static final int HTTP_STATUS_OK = 200;
 	/** Level for diagnostics tracing. */
 	private static final Level TRACE_LEVEL = Level.INFO;
 	private static final Level ERROR_LEVEL = Level.WARNING;
@@ -58,7 +59,7 @@ public class FakeHttpWebConnection implements WebConnection {
 	/** If I cannot resolve the URL then delegate to the next in the chain. */
 	private final WebConnection m_next;
 	
-	private final ClassLoader m_classLoader;
+	protected final ClassLoader m_classLoader;
 	
 	/**
 	 * @param connectionToWrap WebConnection to use if this connection does not recognise the URL.
@@ -104,7 +105,7 @@ public class FakeHttpWebConnection implements WebConnection {
 	private WebResponse makeNotFoundResponse(WebRequest request, long startTime)
 			throws IOException {
 		DownloadedContent responseBody = new DownloadedContent.InMemory("Not Found".getBytes());
-		WebResponseData responseData = new WebResponseData(responseBody, 404, "Not found", (List<NameValuePair>) Collections.EMPTY_LIST);
+		WebResponseData responseData = new WebResponseData(responseBody, HTTP_STATUS_NOT_FOUND, "Not found", (List<NameValuePair>) Collections.EMPTY_LIST);
 		return new WebResponse(responseData, request, System.currentTimeMillis() - startTime);
 	}
 
@@ -123,7 +124,7 @@ public class FakeHttpWebConnection implements WebConnection {
 		List<NameValuePair> headers = new ArrayList<NameValuePair>();
 		
 		headers.add(new NameValuePair("Content-Type", contentType));
-		WebResponseData responseData = new WebResponseData(responseBody, 200, "OK", headers);
+		WebResponseData responseData = new WebResponseData(responseBody, HTTP_STATUS_OK, "OK", headers);
 		long loadTime = System.currentTimeMillis() - startTime;
 		return new WebResponse(responseData, request, loadTime);
 	}
