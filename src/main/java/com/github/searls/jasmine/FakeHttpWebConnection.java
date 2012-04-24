@@ -47,7 +47,7 @@ public class FakeHttpWebConnection implements WebConnection {
 	/** If I cannot resolve the URL then delegate to the next in the chain. */
 	private final WebConnection m_next;
 	
-	private String fakeServerHostName = "maven.test.dependencies";
+	private String fakeServerHostName = "localhost";
 
 	private MavenResourceProvider mavenResourceProvider;
 	

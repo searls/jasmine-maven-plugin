@@ -56,7 +56,7 @@ public class FakeHttpWebConnectionTest {
 		Mockito.when(projectMock.getArtifacts()).thenReturn(artifacts);
 		
 		FakeHttpWebConnection subject = new FakeHttpWebConnection(null, projectMock);
-		WebResponse response = subject.getResponse(new WebRequest(new URL("http://maven.test.dependencies/HelloWorld.js")));
+		WebResponse response = subject.getResponse(new WebRequest(new URL("http://localhost:8234/HelloWorld.js")));
 		
 		Assert.assertEquals(200, response.getStatusCode());
 		String data = response.getContentAsString();
@@ -76,7 +76,7 @@ public class FakeHttpWebConnectionTest {
 		Mockito.when(projectMock.getArtifacts()).thenReturn(artifacts);
 		
 		FakeHttpWebConnection subject = new FakeHttpWebConnection(null, projectMock);
-		WebResponse response = subject.getResponse(new WebRequest(new URL("http://maven.test.dependencies/resources/ThisFileDoesNotExist.js")));
+		WebResponse response = subject.getResponse(new WebRequest(new URL("http://localhost:8234/resources/ThisFileDoesNotExist.js")));
 		
 		Assert.assertEquals(404, response.getStatusCode());
 	}
@@ -117,7 +117,7 @@ public class FakeHttpWebConnectionTest {
 		Mockito.when(projectMock.getArtifacts()).thenReturn(artifacts);
 		
 		FakeHttpWebConnection subject = new FakeHttpWebConnection(null, projectMock);
-		WebResponse response = subject.getResponse(new WebRequest(new URL("http://maven.test.dependencies/HelloWorld.js?_dc=12233241234")));
+		WebResponse response = subject.getResponse(new WebRequest(new URL("http://localhost:8234/HelloWorld.js?_dc=12233241234")));
 		
 		Assert.assertEquals(200, response.getStatusCode());
 		String data = response.getContentAsString();
