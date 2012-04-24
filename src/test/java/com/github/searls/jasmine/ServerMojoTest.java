@@ -27,6 +27,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.server.JasmineResourceHandler;
+import com.github.searls.jasmine.server.MavenDependencyResourceHandler;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServerMojoTest {
@@ -83,22 +84,28 @@ public class ServerMojoTest {
 		assertThat(connectorCaptor.getValue(),is(SelectChannelConnector.class));
 		assertThat(connectorCaptor.getValue().getPort(),is(PORT));
 	}
+
+	@Test
+	public void addsMavenHandler() throws Exception {
+		verify(server).setHandler(handlerListCaptor.capture());
+		assertThat(handlerListCaptor.getValue().getHandlers()[0],is(MavenDependencyResourceHandler.class));
+	}
 	
 	@Test
 	public void addsResourceHandler() throws Exception {
 		verify(server).setHandler(handlerListCaptor.capture());
-		ResourceHandler handler = (ResourceHandler) handlerListCaptor.getValue().getHandlers()[0];
+		ResourceHandler handler = (ResourceHandler) handlerListCaptor.getValue().getHandlers()[1];
 		
 		assertThat(handler,is(JasmineResourceHandler.class));
 		assertThat(handler.isDirectoriesListed(),is(true));
 		assertThat(handler.getWelcomeFiles()[0],is(RELATIVE_TARGET_DIR+File.separator+MANUAL_SPEC_RUNNER_NAME));
 		assertThat(handler.getResourceBase(),is(Resource.newResource(BASE_DIR).toString()));
 	}
-	
+
 	@Test
 	public void addsDefaultHandler() throws Exception {
 		verify(server).setHandler(handlerListCaptor.capture());
-		assertThat(handlerListCaptor.getValue().getHandlers()[1],is(DefaultHandler.class));
+		assertThat(handlerListCaptor.getValue().getHandlers()[2],is(DefaultHandler.class));
 	}
 	
 	@Test

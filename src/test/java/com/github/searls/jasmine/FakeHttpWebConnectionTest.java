@@ -1,10 +1,7 @@
 package com.github.searls.jasmine;
 
-import java.io.File;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -27,36 +24,6 @@ import com.gargoylesoftware.htmlunit.WebResponse;
  */
 public class FakeHttpWebConnectionTest {
 
-	@Test
-	public void testForExpectedClasspathEntries() throws Exception {
-		MavenProject projectMock = Mockito.mock(MavenProject.class);
-		
-		List<String> testElements = Arrays.asList(new String[]{"test1file","test2file"});
-		Mockito.when(projectMock.getTestClasspathElements()).thenReturn(testElements);
-		
-		Set<Artifact> artifacts = new HashSet<Artifact>();
-		artifacts.add(mockArtifact(Artifact.SCOPE_TEST, new File("test.jar")));
-		artifacts.add(mockArtifact(Artifact.SCOPE_COMPILE, new File("compile.jar")));
-		artifacts.add(mockArtifact(Artifact.SCOPE_RUNTIME, new File("runtime.jar")));
-		
-		Mockito.when(projectMock.getArtifacts()).thenReturn(artifacts);
-		
-		FakeHttpWebConnection subject = new FakeHttpWebConnection(null, projectMock);
-		
-		URLClassLoader loader = (URLClassLoader) subject.classLoader;
-		URL[] urls = loader.getURLs();
-		Assert.assertEquals(5, urls.length);
-		checkUrl(urls[0], "test1file");
-		checkUrl(urls[1], "test2file");
-
-		// Set order not guaranteed.
-		int index = 2;
-		for(Artifact artifact : artifacts){
-			checkUrl(urls[index], artifact.getFile().getName());
-			index++;
-		}
-	}
-	
 	@Test
 	public void testDelegatesToWrappedForOtherRequests() throws Exception {
 		MavenProject projectMock = Mockito.mock(MavenProject.class);
@@ -156,22 +123,5 @@ public class FakeHttpWebConnectionTest {
 		String data = response.getContentAsString();
 		Assert.assertTrue(data.startsWith("var HelloWorld = function() {"));
 		Assert.assertEquals("application/javascript", response.getContentType());
-	}
-	
-	
-	/** 
-	 * Check that the resultant url contains the expected portion.
-	 * I can't make assumptions on the machine this test is running on, so can't use
-	 * absolute URLs.
-	 */
-	private void checkUrl(URL url, String expectedText){
-		Assert.assertTrue(expectedText + " not found in " + url,  url.getFile().contains(expectedText));
-	}
-	
-	private Artifact mockArtifact(String scope, File file){
-		Artifact a = Mockito.mock(Artifact.class);
-		Mockito.when(a.getScope()).thenReturn(scope);
-		Mockito.when(a.getFile()).thenReturn(file);
-		return a;
 	}
 }
