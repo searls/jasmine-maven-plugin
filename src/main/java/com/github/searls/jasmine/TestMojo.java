@@ -38,7 +38,7 @@ public class TestMojo extends AbstractJasmineMojo {
 	 * <code>http://maven.test.dependencies/foo/bar.js</code> is requested then then Maven Test
 	 * Classpath will be searched for "foo/bar.js".
 	 *
-	 * @parameter default-value="localhost:8234"
+	 * @parameter default-value="localhost"
 	 */
 	protected String fakeServerHostName;
 
