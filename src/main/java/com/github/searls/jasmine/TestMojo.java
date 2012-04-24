@@ -16,6 +16,7 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.WebConnection;
 import com.github.searls.jasmine.format.JasmineResultLogger;
 import com.github.searls.jasmine.model.JasmineResult;
 
@@ -25,9 +26,23 @@ import com.github.searls.jasmine.model.JasmineResult;
  * @goal test
  * @phase test
  * @execute lifecycle="jasmine-lifecycle" phase="process-test-resources"
+ * @requiresDependencyResolution test
  */
 public class TestMojo extends AbstractJasmineMojo {
 
+	/**
+	 * The fake host name that will be used to make Maven Dependency Classpath resources available
+	 * to test scripts.
+	 * 
+	 * The default value is "maven.test.dependencies". If this is used an an URL of the form
+	 * <code>http://maven.test.dependencies/foo/bar.js</code> is requested then then Maven Test
+	 * Classpath will be searched for "foo/bar.js".
+	 *
+	 * @parameter default-value="localhost"
+	 */
+	protected String fakeServerHostName;
+
+	
 	public void run() throws Exception {
 		if(!skipTests) {
 			getLog().info("Executing Jasmine Specs");
@@ -84,6 +99,12 @@ public class TestMojo extends AbstractJasmineMojo {
 		HtmlUnitDriver driver = new HtmlUnitDriver(htmlUnitBrowserVersion) {
 			protected WebClient modifyWebClient(WebClient client) {
 				client.setAjaxController(new NicelyResynchronizingAjaxController());
+				
+				WebConnection connection = client.getWebConnection();
+				FakeHttpWebConnection fakeWebConnection = new FakeHttpWebConnection(connection, getMavenProject());
+				fakeWebConnection.setFakeHost(fakeServerHostName);
+				client.setWebConnection(fakeWebConnection);
+				
 				
 				//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
 				if (!debug) 

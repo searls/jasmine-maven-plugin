@@ -11,6 +11,7 @@ import com.github.searls.jasmine.io.RelativizesFilePaths;
  * @goal bdd
  * @execute lifecycle="jasmine-lifecycle" phase="generate-sources"
  * @requiresDirectInvocation true
+ * @requiresDependencyResolution test
  */
 public class ServerMojo extends AbstractJasmineMojo {
 

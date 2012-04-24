@@ -2,6 +2,8 @@ package com.github.searls.jasmine;
 
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.server.JasmineResourceHandler;
+import com.github.searls.jasmine.server.MavenDependencyResourceHandler;
+
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.*;
 
@@ -49,7 +51,7 @@ public class ResourceHandlerConfigurator {
 		ResourceHandler resourceHandler = createResourceHandler(true, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()});
 
 		HandlerList handlers = new HandlerList();
-		handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
+		handlers.setHandlers(new Handler[]{new MavenDependencyResourceHandler(configuration.getMavenProject()), resourceHandler, new DefaultHandler()});
 		return handlers;
 	}
 
