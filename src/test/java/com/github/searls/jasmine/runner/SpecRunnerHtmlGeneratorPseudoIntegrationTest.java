@@ -48,7 +48,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 	@Before
 	public void setupGeneratorConfiguration() throws IOException{
 		when(generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
-		when(generatorConfiguration.getReporterType()).thenReturn(ReporterType.TrivialReporter);
+		when(generatorConfiguration.getReporterType()).thenReturn(ReporterType.HtmlReporter);
 		when(generatorConfiguration.getRunnerTemplate(DEFAULT_RUNNER_HTML_TEMPLATE_FILE)).thenReturn(new IOUtilsWrapper().toString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE));
 	    subject = new DefaultSpecRunnerHtmlGenerator(generatorConfiguration);
 	}
