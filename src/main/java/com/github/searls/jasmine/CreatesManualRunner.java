@@ -31,7 +31,7 @@ public class CreatesManualRunner {
 		}   else {
 			projectDirScripResolver = new ProjectDirScripResolver(config.getMavenProject().getBasedir(), config.getSources(), config.getSpecs(), config.getPreloadSources());
 		}
-		SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.TrivialReporter, config, projectDirScripResolver);
+		SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.HtmlReporter, config, projectDirScripResolver);
 
 		String newRunnerHtml = generator.generateWitRelativePaths();
 		if(newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
