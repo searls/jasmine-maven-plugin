@@ -9,6 +9,7 @@ import com.github.searls.jasmine.io.scripts.TargetDirScriptResolver;
 import com.github.searls.jasmine.runner.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
@@ -29,7 +30,7 @@ import com.github.searls.jasmine.model.JasmineResult;
 public class TestMojo extends AbstractJasmineMojo {
 
 	public void run() throws Exception {
-		if(!skipTests) {
+		if(!shouldSkip()) {
 			getLog().info("Executing Jasmine Specs");
 			File runnerFile = writeSpecRunnerToOutputDirectory();
 			JasmineResult result = executeSpecs(runnerFile);
@@ -38,6 +39,10 @@ public class TestMojo extends AbstractJasmineMojo {
 		} else {
 			getLog().info("Skipping Jasmine Specs");
 		}
+	}
+	
+	private boolean shouldSkip() {
+	  return skipTests || StringUtils.isNotBlank(test);
 	}
 
 	private File writeSpecRunnerToOutputDirectory() throws IOException {

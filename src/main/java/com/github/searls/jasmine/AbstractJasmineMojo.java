@@ -118,6 +118,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	protected boolean skipTests;
 	
 	/**
+   * @parameter expression="${test}"
+   */
+  protected String test;
+	
+	/**
 	 * @parameter default-value="true" expression="${haltOnFailure}"
 	 */
 	protected boolean haltOnFailure;
