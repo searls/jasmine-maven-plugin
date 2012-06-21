@@ -17,7 +17,7 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 
     public String generate() {
         try {
-            return generateHtml(getConfiguration().getSpecs(), getConfiguration().getSourceDirectory());
+            return generateHtml(getConfiguration().getSpecs(), getConfiguration().getSourceDirectory(), getConfiguration().getSpecDirectory());
         } catch (IOException e) {
             throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
         }
@@ -25,13 +25,13 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 
     public String generateWitRelativePaths() {
         try {
-            return generateHtml(getConfiguration().getSpecsRelativePath(), getConfiguration().getSourceDirectoryRelativePath());
+            return generateHtml(getConfiguration().getSpecsRelativePath(), getConfiguration().getSourceDirectoryRelativePath(), getConfiguration().getSpecDirectoryRelativePath());
         } catch (IOException e) {
             throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
         }
     }
 
-    private String generateHtml(Set<String> specsRelativePath, String sourceDirectory) throws IOException {
+    private String generateHtml(Set<String> specsRelativePath, String sourceDirectory, String specDirectory) throws IOException {
         StringTemplate template = resolveHtmlTemplate();
 
         includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS), template);
@@ -42,6 +42,7 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
         setCustomRunnerConfig(template);
         template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
         template.setAttribute("sourceDir", sourceDirectory);
+        template.setAttribute("specDir", specDirectory);
         template.setAttribute("specs", createArrayOfScripts(specsRelativePath));
         setEncoding(getConfiguration(), template);
 
