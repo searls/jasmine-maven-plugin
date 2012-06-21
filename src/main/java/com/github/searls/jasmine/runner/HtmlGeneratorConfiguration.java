@@ -82,6 +82,10 @@ public class HtmlGeneratorConfiguration {
 		return scriptResolver.getSourceDirectory();
 	}
 
+    public String getSpecDirectory() throws IOException {
+        return scriptResolver.getSpecDirectoryPath();
+    }
+
 	public Set<String> getPreloads() {
 		return scriptResolver.getPreloads();
 	}
@@ -113,8 +117,12 @@ public class HtmlGeneratorConfiguration {
 		return result;
 	}
 
+    public String getSpecDirectoryRelativePath() throws IOException {
+        return scriptResolver.getSpecDirectoryRelativePath();
+    }
+
 	public Set<String> getSpecsRelativePath() throws IOException {
-		return scriptResolver.getSpecsRelativePath	();
+		return scriptResolver.getSpecsRelativePath();
 	}
 
 	public String getSourceDirectoryRelativePath() throws IOException {
