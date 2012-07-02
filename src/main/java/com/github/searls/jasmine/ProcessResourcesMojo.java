@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import com.github.searls.jasmine.coffee.CompilesAllCoffeeInDirectory;
 import com.github.searls.jasmine.io.DirectoryCopier;
+import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 
 /**
  * @goal resources
@@ -25,7 +26,11 @@ public class ProcessResourcesMojo extends AbstractJasmineMojo {
 		if (sources.getDirectory().exists()) {
 			File destination = new File(jasmineTargetDir, srcDirectoryName);
 			directoryCopier.copyDirectory(sources.getDirectory(), destination);
-			compilesAllCoffeeInDirectory.compile(destination);
+			if (SpecRunnerHtmlGeneratorFactory.REQUIRE_JS.equals(getSpecRunnerTemplate())) {
+				// CoffeeScript plugin should be used for translation
+			} else {
+				compilesAllCoffeeInDirectory.compile(destination);
+			}
 		} else {
 			getLog().warn(MISSING_DIR_WARNING);
 		}
