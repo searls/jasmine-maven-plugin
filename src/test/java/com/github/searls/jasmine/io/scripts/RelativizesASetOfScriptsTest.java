@@ -111,7 +111,7 @@ public class RelativizesASetOfScriptsTest {
 		final File file = spy(new File(""));
 		whenNew(File.class).withParameterTypes(String.class).withArguments(fileNameCaptor.capture()).thenAnswer(new Answer<File>(){
 			public File answer(InvocationOnMock invocation) throws Throwable {
-				when(file.toString()).thenReturn((String) invocation.getArguments()[0]);
+				when(file.toString()).thenReturn(invocation.getArguments()[0].toString());
 				return file;
 			}
 		});
