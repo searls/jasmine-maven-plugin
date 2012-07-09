@@ -4,6 +4,7 @@ import static org.apache.commons.lang.StringUtils.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -16,7 +17,7 @@ public class RelativizesASetOfScripts {
 	public Set<String> relativize(File from, Set<String> absoluteScripts) throws IOException {
 		Set<String> relativeScripts = new LinkedHashSet<String>();
 		for (String absoluteScript : absoluteScripts) {
-			File script = new File(normalize(absoluteScript));
+			File script = new File(URI.create(absoluteScript));
 			if(!webUrl(absoluteScript) && script.exists()) {
 				relativeScripts.add(relativizesFilePaths.relativize(from, script));
 			} else {
@@ -24,11 +25,6 @@ public class RelativizesASetOfScripts {
 			}
 		}
 		return relativeScripts;
-	}
-
-	private String normalize(String absoluteScript) {
-		String strip = "file:" + (File.separatorChar == '/' ? "" : "/");
-		return stripStart(absoluteScript,strip);
 	}
 
 	private boolean webUrl(String script) {
