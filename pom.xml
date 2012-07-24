@@ -58,6 +58,16 @@
 
 		<!-- Plugin Dependencies -->
 		<dependency>
+			<groupId>org.codehaus.jackson</groupId>
+			<artifactId>jackson-mapper-asl</artifactId>
+			<version>1.9.4</version>
+		</dependency>
+		<dependency>
+			<groupId>net.awired.jscoverage</groupId>
+			<artifactId>jscoverage</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>		
+		<dependency>
 			<groupId>org.codehaus.plexus</groupId>
 			<artifactId>plexus-utils</artifactId>
 			<version>3.0</version>

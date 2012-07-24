@@ -20,6 +20,7 @@ public class HtmlGeneratorConfiguration {
 	private String sourceDirectoryRelativePath;
     private String scriptLoaderPath;
 	private File customRunnerConfiguration;
+	private boolean coverage;
 
 
 	public HtmlGeneratorConfiguration(ReporterType reporterType, AbstractJasmineMojo configuration, ScriptResolver scriptResolver) throws IOException {
@@ -33,6 +34,7 @@ public class HtmlGeneratorConfiguration {
         this.fileUtilsWrapper = new FileUtilsWrapper();
         this.ioUtilsWrapper  = new IOUtilsWrapper();
         this.scriptLoaderPath = configuration.getScriptLoaderPath();
+        this.coverage = configuration.isCoverage();
 	}
 
 	public Set<String> getAllScripts() throws IOException {
@@ -144,6 +146,10 @@ public class HtmlGeneratorConfiguration {
 
     public String getScriptLoaderPath() {
         return scriptLoaderPath;
+    }
+
+    public boolean isCoverage() {
+        return coverage;
     }
 }
 

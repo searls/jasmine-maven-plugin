@@ -1,8 +1,11 @@
 package com.github.searls.jasmine.runner;
 
+import net.awired.jscoverage.instrumentation.JsInstrumentor;
 import org.antlr.stringtemplate.StringTemplate;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -34,7 +37,14 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 
 	private String generateHtml(Set<String> allScriptsRelativePath) throws IOException {
 		StringTemplate template = resolveHtmlTemplate();
-		includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS), template);
+                List<String> includeDependencies = new ArrayList<String>();
+                includeDependencies.add(JASMINE_JS);
+                includeDependencies.add(JASMINE_HTML_JS);
+                if (getConfiguration().isCoverage()) {
+                    includeDependencies.add(JsInstrumentor.JSCOV_FILE);
+                }
+
+		includeJavaScriptDependencies(includeDependencies, template);
 		applyCssToTemplate(asList(JASMINE_CSS), template);
 		applyScriptTagsToTemplate(SOURCES_TEMPLATE_ATTR_NAME, allScriptsRelativePath, template);
 		template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());

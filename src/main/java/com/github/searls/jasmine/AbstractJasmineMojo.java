@@ -211,6 +211,25 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 	 * @parameter default-value="DEFAULT" expression="${jasmine.specRunnerTemplate}"
 	 */
 	protected String specRunnerTemplate;
+	
+    /**
+     * activate coverage report.
+     * 
+     * @parameter expression="${coverage}" default-value="false"
+     */
+    protected boolean coverage;
+
+    /**
+     * @parameter default-value="coverage.dat"
+     */
+    protected String coverageReportFileName;
+
+    /**
+     * activate coverage report.
+     * 
+     * @parameter expression="${instrumentedDirectoryName}" default-value="instrumented"
+     */
+    protected String instrumentedDirectoryName;
 
     /**
      * Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
@@ -288,4 +307,13 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
     public String getScriptLoaderPath() {
         return scriptLoaderPath;
     }
+    
+    public boolean isCoverage() {
+        return coverage;
+    }
+
+    public String getInstrumentedDirectoryName() {
+        return instrumentedDirectoryName;
+    }
+
 }

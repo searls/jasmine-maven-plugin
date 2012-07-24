@@ -1,10 +1,19 @@
 package com.github.searls.jasmine.runner;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
+import net.awired.jscoverage.result.JsRunResult;
+import net.awired.jscoverage.result.LcovWriter;
+import org.antlr.grammar.v3.ANTLRParser.throwsSpec_return;
 import org.apache.maven.plugin.logging.Log;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
+import org.codehaus.jackson.type.TypeReference;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -21,8 +30,10 @@ public class SpecRunnerExecutor {
 
 	private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
+	private LcovWriter lcovWriter = new LcovWriter();
+	 String jsGetCoverageScript = "JSCOV.storeCurrentRunResult();" + "return JSON.stringify(JSCOV.getStoredRunResult());";
 	
-	public JasmineResult execute(URL runnerUrl, File junitXmlReport, WebDriver driver, int timeout, boolean debug, Log log, String format) {
+	public JasmineResult execute(URL runnerUrl, File junitXmlReport, WebDriver driver, int timeout, boolean debug, Log log, String format, boolean coverage, File coverageReportFile) {
 		try {
 			if (!(driver instanceof JavascriptExecutor)) {
 				throw new RuntimeException("The provided web driver can't execute JavaScript: " + driver.getClass());
@@ -33,6 +44,11 @@ public class SpecRunnerExecutor {
 		    JasmineResult jasmineResult = new JasmineResult();
 		    jasmineResult.setDetails(buildReport(executor,format));
 		    fileUtilsWrapper.writeStringToFile(junitXmlReport, buildJunitXmlReport(executor,debug), "UTF-8");
+                    if (coverage) {
+                        JsRunResult coverageReport = buildCoverageReport(executor);
+                        lcovWriter.write(coverageReportFile, coverageReport);
+                    }
+
 		    driver.quit();
 	    
 		    return jasmineResult;
@@ -84,4 +100,22 @@ public class SpecRunnerExecutor {
 		return (Boolean) driver.executeScript("return (window.reporter === undefined) ? false : window.reporter.finished");
 	}
 	
+	
+	
+    private JsRunResult buildCoverageReport(JavascriptExecutor driver) {
+        Object junitReport = driver.executeScript(jsGetCoverageScript);
+        ObjectMapper mapper = new ObjectMapper();
+        TypeReference<List<JsRunResult>> typeRef = new TypeReference<List<JsRunResult>>() {
+        };
+        try {
+            List<JsRunResult> runResults = mapper.readValue((String) junitReport, typeRef);
+            if (runResults.size() == 0) {
+                throw new IllegalStateException("No coverage report found ");
+            }
+            return runResults.get(0);
+        } catch (Exception e) {
+            throw new IllegalStateException("Cannot parse coverage result", e);
+        }
+    }
+
 }
