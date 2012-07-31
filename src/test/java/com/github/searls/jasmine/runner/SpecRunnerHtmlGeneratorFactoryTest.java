@@ -65,7 +65,7 @@ public class SpecRunnerHtmlGeneratorFactoryTest {
 	public void shouldCreateHtmlGeneratorWhenPassedValidInput() {
 		AbstractJasmineMojo mock = mock(AbstractJasmineMojo.class);
 		when(mock.getSpecRunnerTemplate()).thenReturn("DEFAULT");
-		assertThat(specRunnerHtmlGeneratorFactory.create(ReporterType.TrivialReporter, mock, mock(ScriptResolver.class)), instanceOf(DefaultSpecRunnerHtmlGenerator.class));
+		assertThat(specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock(ScriptResolver.class)), instanceOf(DefaultSpecRunnerHtmlGenerator.class));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class SpecRunnerHtmlGeneratorFactoryTest {
 		ScriptResolver mock1 = mock(ScriptResolver.class);
 		doThrow(new IOException("Foo")).when(mock1).resolveScripts();
 		try {
-			specRunnerHtmlGeneratorFactory.create(ReporterType.TrivialReporter, mock, mock1);
+			specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock1);
 		} catch (InstantiationError e) {
 			assertThat(e.getMessage(), is("Foo"));
 		}

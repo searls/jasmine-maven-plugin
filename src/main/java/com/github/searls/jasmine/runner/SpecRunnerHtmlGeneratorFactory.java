@@ -10,9 +10,9 @@ public class SpecRunnerHtmlGeneratorFactory {
 	public static final String DEFAULT = "DEFAULT";
 	public static final String REQUIRE_JS = "REQUIRE_JS";
 
-	public SpecRunnerHtmlGenerator create(ReporterType trivialReporter, AbstractJasmineMojo config, ScriptResolver projectDirScripResolver) {
+	public SpecRunnerHtmlGenerator create(ReporterType reporterType, AbstractJasmineMojo config, ScriptResolver projectDirScripResolver) {
 		try {
-			return createHtmlGenerator(new HtmlGeneratorConfiguration(trivialReporter, config, projectDirScripResolver));
+			return createHtmlGenerator(new HtmlGeneratorConfiguration(reporterType, config, projectDirScripResolver));
 		} catch (IOException e) {
 			throw new InstantiationError(e.getMessage());
 		}

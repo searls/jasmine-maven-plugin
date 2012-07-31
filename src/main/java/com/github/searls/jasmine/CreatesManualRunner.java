@@ -11,17 +11,17 @@ import org.apache.maven.plugin.logging.Log;
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 
 public class CreatesManualRunner {
-	
+
 	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
 	private AbstractJasmineMojo config;
-	
+
 	private Log log;
 
 	public CreatesManualRunner(AbstractJasmineMojo config) {
 		this.config = config;
 		log = config.getLog();
 	}
-	
+
 	public void create() throws IOException {
 		File runnerDestination = new File(config.jasmineTargetDir,config.manualSpecRunnerHtmlFileName);
 
@@ -31,7 +31,7 @@ public class CreatesManualRunner {
 		}   else {
 			projectDirScripResolver = new ProjectDirScripResolver(config.getMavenProject().getBasedir(), config.getSources(), config.getSpecs(), config.getPreloadSources());
 		}
-		SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.TrivialReporter, config, projectDirScripResolver);
+		SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.HtmlReporter, config, projectDirScripResolver);
 
 		String newRunnerHtml = generator.generateWitRelativePaths();
 		if(newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
@@ -56,11 +56,11 @@ public class CreatesManualRunner {
 	private boolean newRunnerDiffersFromOldRunner(File runnerDestination, String newRunner) throws IOException {
 		return !StringUtils.equals(newRunner, existingRunner(runnerDestination));
 	}
-	
+
 	private void saveRunner(File runnerDestination, String newRunner) throws IOException {
 		fileUtilsWrapper.writeStringToFile(runnerDestination, newRunner, config.sourceEncoding);
 	}
-	
+
 	public void setLog(Log log) {
 		this.log = log;
 	}
