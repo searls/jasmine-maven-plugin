@@ -1,0 +1,32 @@
+<component-set>
+	<components>
+		<component>
+			<role>org.apache.maven.lifecycle.Lifecycle</role>
+			<implementation>org.apache.maven.lifecycle.Lifecycle</implementation>
+			<role-hint>jasmine-lifecycle</role-hint>
+			<configuration>
+				<id>jasmine-lifecycle</id>
+				<phases>
+					<phase>jasmine-process-resources</phase>
+					<phase>jasmine-generate-runner</phase>
+					<phase>jasmine-process-test-resources</phase>
+					<phase>jasmine-test</phase>
+				</phases>
+				<default-phases>
+					<jasmine-process-resources>
+						com.github.searls:jasmine-maven-plugin:resources
+					</jasmine-process-resources>
+					<jasmine-generate-runner>
+						com.github.searls:jasmine-maven-plugin:generateManualRunner
+					</jasmine-generate-runner>
+					<jasmine-process-test-resources>
+						com.github.searls:jasmine-maven-plugin:testResources
+					</jasmine-process-test-resources>
+					<jasmine-test>
+						com.github.searls:jasmine-maven-plugin:test
+					</jasmine-test>
+				</default-phases>
+			</configuration>
+		</component>
+	</components>
+</component-set>
