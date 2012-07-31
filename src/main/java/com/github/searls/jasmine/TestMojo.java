@@ -24,7 +24,7 @@ import com.github.searls.jasmine.model.JasmineResult;
  * @component
  * @goal test
  * @phase test
- * @execute lifecycle="jasmine-lifecycle" phase="process-test-resources"
+ * @execute phase="jasmine-process-test-resources"
  */
 public class TestMojo extends AbstractJasmineMojo {
 
