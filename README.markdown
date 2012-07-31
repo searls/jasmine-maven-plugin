@@ -3,7 +3,7 @@ jasmine-maven-plugin
 
 For information on how to use jasmine-plugin, check out its [documentation page](http://searls.github.com/jasmine-maven-plugin/).
 
-<strong><font color="red">7/31/2012</font></strong> - Heads up! [/searls/jasmine-maven-plugin#lifecycle-extensions](See below for an important note) about a backwards-compatibility-breaking change in versions 1.2.0.0 & later.
+<strong><font color="red">7/31/2012</font></strong> - Heads up! [See below for an important note](https://github.com/searls/jasmine-maven-plugin#lifecycle-extensions) about a backwards-compatibility-breaking change in versions 1.2.0.0 & later.
 
 ## Current Version Info
 
