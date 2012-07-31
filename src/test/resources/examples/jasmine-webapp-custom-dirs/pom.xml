@@ -22,12 +22,12 @@
 						<goals>
 							<goal>test</goal>
 						</goals>
-						<configuration>
-							<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
-							<jsTestSrcDir>${project.basedir}/src/test/jasmine</jsTestSrcDir>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
+					<jsTestSrcDir>${project.basedir}/src/test/jasmine</jsTestSrcDir>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>
