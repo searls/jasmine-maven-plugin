@@ -30,98 +30,98 @@ import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(JasmineResourceHandler.class)
 public class JasmineResourceHandlerTest {
-	private static final String TARGET = "some url";
-	
-	@Mock private DetectsCoffee detectsCoffee;
-	@Mock private HandlesRequestsForCoffee handlesRequestsForCoffee;
-	@Mock private CreatesManualRunner createsManualRunner;
-	
-	@Mock AbstractJasmineMojo config;
-	@Mock Request baseRequest;
-	@Mock HttpServletRequest request;
-	@Mock HttpServletResponse response;
-	@Mock Resource resource;
-	
-	@Mock Log log;
-	
-	@InjectMocks private JasmineResourceHandler subject = new JasmineResourceHandler(mock(AbstractJasmineMojo.class)) {
-		protected Resource getResource(HttpServletRequest request) throws MalformedURLException {
-			return resource;
-		}
-	};
-	
-	@Test
-	public void constructorSetsLoggingLow() throws Exception {
-		whenNew(CreatesManualRunner.class).withArguments(config).thenReturn(createsManualRunner);
-		
-		new JasmineResourceHandler(config);
-		
-		verify(createsManualRunner).setLog((Log) argThat(is(NullLog.class)));
-	}
-	
-	@Test
-	public void whenTargetIsSlashThenCreateManualRunner() throws IOException, ServletException {
-		subject.handle("/", baseRequest,request,response);
-		
-		verify(createsManualRunner).create();
-	}
-	
-	@Test
-	public void whenTargetIsNotSlashThenCreateManualRunner() throws IOException, ServletException {
-		subject.handle("/notSlash", baseRequest,request,response);
-		
-		verify(createsManualRunner,never()).create();
-	}
-	
-	@Test
-	public void whenCoffeeDelegatesToCoffeeHandler() throws IOException, ServletException {
-		when(detectsCoffee.detect(TARGET)).thenReturn(true);
-		when(resource.exists()).thenReturn(true);
-		
-		subject.handle(TARGET, baseRequest,request,response);
+  private static final String TARGET = "some url";
 
-		verify(handlesRequestsForCoffee).handle(baseRequest, response, resource);
-	}
+  @Mock private DetectsCoffee detectsCoffee;
+  @Mock private HandlesRequestsForCoffee handlesRequestsForCoffee;
+  @Mock private CreatesManualRunner createsManualRunner;
 
-	@Test
-	public void whenNotCoffeeDoesNotDelegateToCoffeeHandler() throws IOException, ServletException {
-		when(detectsCoffee.detect(TARGET)).thenReturn(false);
-		when(resource.exists()).thenReturn(true);
-		
-		subject.handle(TARGET, baseRequest,request,response);
+  @Mock AbstractJasmineMojo config;
+  @Mock Request baseRequest;
+  @Mock HttpServletRequest request;
+  @Mock HttpServletResponse response;
+  @Mock Resource resource;
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
-	}
+  @Mock Log log;
 
-	@Test
-	public void whenCoffeeButResourceIsHandledDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
-		when(detectsCoffee.detect(TARGET)).thenReturn(true);
-		when(resource.exists()).thenReturn(true);
-		when(baseRequest.isHandled()).thenReturn(true);
-		
-		subject.handle(TARGET, baseRequest,request,response);
+  @InjectMocks private JasmineResourceHandler subject = new JasmineResourceHandler(mock(AbstractJasmineMojo.class)) {
+    protected Resource getResource(HttpServletRequest request) throws MalformedURLException {
+      return resource;
+    }
+  };
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
-	}
-	
-	@Test
-	public void whenCoffeeButDoesNotExistDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
-		when(detectsCoffee.detect(TARGET)).thenReturn(true);
-		when(resource.exists()).thenReturn(false);
-		
-		subject.handle(TARGET, baseRequest,request,response);
+  @Test
+  public void constructorSetsLoggingLow() throws Exception {
+    whenNew(CreatesManualRunner.class).withArguments(config).thenReturn(createsManualRunner);
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
-	}
+    new JasmineResourceHandler(config);
 
-	@Test
-	public void whenCoffeeButResourceIsNullDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
-		when(detectsCoffee.detect(TARGET)).thenReturn(true);
-		this.resource = null;
-		
-		subject.handle(TARGET, baseRequest,request,response);
+    verify(createsManualRunner).setLog((Log) argThat(is(NullLog.class)));
+  }
 
-		verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
-	}
-	
+  @Test
+  public void whenTargetIsSlashThenCreateManualRunner() throws IOException, ServletException {
+    subject.handle("/", baseRequest,request,response);
+
+    verify(createsManualRunner).create();
+  }
+
+  @Test
+  public void whenTargetIsNotSlashThenCreateManualRunner() throws IOException, ServletException {
+    subject.handle("/notSlash", baseRequest,request,response);
+
+    verify(createsManualRunner,never()).create();
+  }
+
+  @Test
+  public void whenCoffeeDelegatesToCoffeeHandler() throws IOException, ServletException {
+    when(detectsCoffee.detect(TARGET)).thenReturn(true);
+    when(resource.exists()).thenReturn(true);
+
+    subject.handle(TARGET, baseRequest,request,response);
+
+    verify(handlesRequestsForCoffee).handle(baseRequest, response, resource);
+  }
+
+  @Test
+  public void whenNotCoffeeDoesNotDelegateToCoffeeHandler() throws IOException, ServletException {
+    when(detectsCoffee.detect(TARGET)).thenReturn(false);
+    when(resource.exists()).thenReturn(true);
+
+    subject.handle(TARGET, baseRequest,request,response);
+
+    verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+  }
+
+  @Test
+  public void whenCoffeeButResourceIsHandledDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
+    when(detectsCoffee.detect(TARGET)).thenReturn(true);
+    when(resource.exists()).thenReturn(true);
+    when(baseRequest.isHandled()).thenReturn(true);
+
+    subject.handle(TARGET, baseRequest,request,response);
+
+    verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+  }
+
+  @Test
+  public void whenCoffeeButDoesNotExistDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
+    when(detectsCoffee.detect(TARGET)).thenReturn(true);
+    when(resource.exists()).thenReturn(false);
+
+    subject.handle(TARGET, baseRequest,request,response);
+
+    verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+  }
+
+  @Test
+  public void whenCoffeeButResourceIsNullDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
+    when(detectsCoffee.detect(TARGET)).thenReturn(true);
+    this.resource = null;
+
+    subject.handle(TARGET, baseRequest,request,response);
+
+    verify(handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
+  }
+
 }

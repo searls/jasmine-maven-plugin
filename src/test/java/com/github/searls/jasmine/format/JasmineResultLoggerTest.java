@@ -15,37 +15,37 @@ import com.github.searls.jasmine.model.JasmineResult;
 @RunWith(MockitoJUnitRunner.class)
 public class JasmineResultLoggerTest {
 
-	@InjectMocks private JasmineResultLogger subject = new JasmineResultLogger();
-	
-	@Mock private Log log;
-	
-	@Test
-	public void shouldLogHeader() {
-		JasmineResult result = new JasmineResult();
-		
-		subject.log(result);
-		
-		verify(log).info(JasmineResultLogger.HEADER);
-	}
-	
-	@Test
-	public void shouldLogDetails() {
-		String details = "Fake Details";
-		JasmineResult result = new JasmineResult();
-		result.setDetails(details);
-		
-		subject.log(result);
-		
-		verify(log).info(details);
-	}
+  @InjectMocks private JasmineResultLogger subject = new JasmineResultLogger();
 
-	@Test
-	public void setterSetsLogger() {
-		subject.setLog(log);
-		
-		subject.log(new JasmineResult());
-		
-		verify(log, atLeastOnce()).info(anyString());
-	}
-	
+  @Mock private Log log;
+
+  @Test
+  public void shouldLogHeader() {
+    JasmineResult result = new JasmineResult();
+
+    subject.log(result);
+
+    verify(log).info(JasmineResultLogger.HEADER);
+  }
+
+  @Test
+  public void shouldLogDetails() {
+    String details = "Fake Details";
+    JasmineResult result = new JasmineResult();
+    result.setDetails(details);
+
+    subject.log(result);
+
+    verify(log).info(details);
+  }
+
+  @Test
+  public void setterSetsLogger() {
+    subject.setLog(log);
+
+    subject.log(new JasmineResult());
+
+    verify(log, atLeastOnce()).info(anyString());
+  }
+
 }

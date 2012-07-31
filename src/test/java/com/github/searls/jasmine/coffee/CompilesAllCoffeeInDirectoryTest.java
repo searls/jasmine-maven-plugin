@@ -17,24 +17,24 @@ import com.github.searls.jasmine.io.FileUtilsWrapper;
 @RunWith(MockitoJUnitRunner.class)
 public class CompilesAllCoffeeInDirectoryTest {
 
-	@InjectMocks private CompilesAllCoffeeInDirectory subject = new CompilesAllCoffeeInDirectory();
-	
-	@Mock private FileUtilsWrapper fileUtilsWrapper;
-	@Mock private CompilesCoffeeInPlace compilesCoffeeInPlace;
-	
-	@Mock File directory;
-	@Mock File file;
-	@Mock File anotherFile;
-	
-	@Test
-	public void compilesEachFile() throws IOException {
-		when(fileUtilsWrapper.listFiles(directory, CompilesAllCoffeeInDirectory.COFFEE_EXTENSIONS, true)).thenReturn(asList(file,anotherFile));
-		
-		subject.compile(directory);
-		
-		verify(compilesCoffeeInPlace).compile(file);
-		verify(compilesCoffeeInPlace).compile(anotherFile);
-	}
-	
-	
+  @InjectMocks private CompilesAllCoffeeInDirectory subject = new CompilesAllCoffeeInDirectory();
+
+  @Mock private FileUtilsWrapper fileUtilsWrapper;
+  @Mock private CompilesCoffeeInPlace compilesCoffeeInPlace;
+
+  @Mock File directory;
+  @Mock File file;
+  @Mock File anotherFile;
+
+  @Test
+  public void compilesEachFile() throws IOException {
+    when(fileUtilsWrapper.listFiles(directory, CompilesAllCoffeeInDirectory.COFFEE_EXTENSIONS, true)).thenReturn(asList(file,anotherFile));
+
+    subject.compile(directory);
+
+    verify(compilesCoffeeInPlace).compile(file);
+    verify(compilesCoffeeInPlace).compile(anotherFile);
+  }
+
+
 }

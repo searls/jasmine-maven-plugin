@@ -8,13 +8,13 @@ import java.io.IOException;
 import java.util.List;
 
 public class CustomConfigScriptResolver extends ProjectDirScripResolver {
-	public CustomConfigScriptResolver(File basedir, ScriptSearch sources, ScriptSearch specs, List<String> preloadSources) throws IOException {
-		super(basedir, sources, specs, preloadSources);
-	}
+  public CustomConfigScriptResolver(File basedir, ScriptSearch sources, ScriptSearch specs, List<String> preloadSources) throws IOException {
+    super(basedir, sources, specs, preloadSources);
+  }
 
-	@Override
-	public String getSourceDirectoryRelativePath() throws IOException {
-		String relativePath = super.getSourceDirectoryRelativePath();
-		return relativePath.substring(relativePath.lastIndexOf("/"), relativePath.length());
-	}
+  @Override
+  public String getSourceDirectoryRelativePath() throws IOException {
+    String relativePath = super.getSourceDirectoryRelativePath();
+    return relativePath.substring(relativePath.lastIndexOf("/"), relativePath.length());
+  }
 }

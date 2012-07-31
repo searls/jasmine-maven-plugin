@@ -4,8 +4,8 @@ import static org.apache.commons.lang.StringUtils.*;
 
 public class DetectsCoffee {
 
-	public boolean detect(String path) {
-		return endsWith(substringBefore(path,"?"),".coffee");
-	}
+  public boolean detect(String path) {
+    return endsWith(substringBefore(path,"?"),".coffee");
+  }
 
 }

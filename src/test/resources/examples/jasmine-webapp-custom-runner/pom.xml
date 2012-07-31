@@ -1,33 +1,33 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
-		<groupId>com.github.searls</groupId>
-		<artifactId>jasmine-example-superpom</artifactId>
-		<version>1.1.0.1-SNAPSHOT</version>
-	</parent>
-	<artifactId>jasmine-webapp-custom-runner</artifactId>
-	<packaging>war</packaging>
-	<name>Example Webapp using Jasmine Maven Plugin that overrides the default custom runner template</name>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.github.searls</groupId>
+    <artifactId>jasmine-example-superpom</artifactId>
+    <version>1.1.0.1-SNAPSHOT</version>
+  </parent>
+  <artifactId>jasmine-webapp-custom-runner</artifactId>
+  <packaging>war</packaging>
+  <name>Example Webapp using Jasmine Maven Plugin that overrides the default custom runner template</name>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>com.github.searls</groupId>
-				<artifactId>jasmine-maven-plugin</artifactId>
-				<version>${project.version}</version>
-				<extensions>true</extensions>
-				<executions>
-					<execution>
-						<goals>
-							<goal>test</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<customRunnerTemplate>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}templates${file.separator}specrunner.html</customRunnerTemplate>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.searls</groupId>
+        <artifactId>jasmine-maven-plugin</artifactId>
+        <version>${project.version}</version>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <customRunnerTemplate>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}templates${file.separator}specrunner.html</customRunnerTemplate>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

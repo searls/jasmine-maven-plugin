@@ -8,14 +8,14 @@ import com.github.searls.jasmine.io.FileUtilsWrapper;
 
 public class CompilesCoffeeInPlace {
 
-	private CoffeeScript coffeeScript = new CoffeeScript();
-	private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
-	
-	public void compile(File coffeeFile) throws IOException {
-		String coffee = fileUtilsWrapper.readFileToString(coffeeFile);
-		FileWriter javaScriptWriter = new FileWriter(coffeeFile, false);
-		javaScriptWriter.write(coffeeScript.compile(coffee));
-		javaScriptWriter.close();
-	}
-	
+  private CoffeeScript coffeeScript = new CoffeeScript();
+  private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
+
+  public void compile(File coffeeFile) throws IOException {
+    String coffee = fileUtilsWrapper.readFileToString(coffeeFile);
+    FileWriter javaScriptWriter = new FileWriter(coffeeFile, false);
+    javaScriptWriter.write(coffeeScript.compile(coffee));
+    javaScriptWriter.close();
+  }
+
 }

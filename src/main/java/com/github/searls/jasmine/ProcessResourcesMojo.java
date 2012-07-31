@@ -12,23 +12,23 @@ import com.github.searls.jasmine.io.DirectoryCopier;
  */
 public class ProcessResourcesMojo extends AbstractJasmineMojo {
 
-	public static final String MISSING_DIR_WARNING = 
-		"JavaScript source folder was expected but was not found. " +
-		"Set configuration property `jsSrcDir` to the directory containing your JavaScript sources. " +
-		"Skipping jasmine:resources processing.";
-	
-	private DirectoryCopier directoryCopier = new DirectoryCopier();
-	private CompilesAllCoffeeInDirectory compilesAllCoffeeInDirectory = new CompilesAllCoffeeInDirectory();
+  public static final String MISSING_DIR_WARNING =
+    "JavaScript source folder was expected but was not found. " +
+    "Set configuration property `jsSrcDir` to the directory containing your JavaScript sources. " +
+    "Skipping jasmine:resources processing.";
 
-	public void run() throws IOException {
-		getLog().info("Processing JavaScript Sources");
-		if (sources.getDirectory().exists()) {
-			File destination = new File(jasmineTargetDir, srcDirectoryName);
-			directoryCopier.copyDirectory(sources.getDirectory(), destination);
-			compilesAllCoffeeInDirectory.compile(destination);
-		} else {
-			getLog().warn(MISSING_DIR_WARNING);
-		}
-	}
+  private DirectoryCopier directoryCopier = new DirectoryCopier();
+  private CompilesAllCoffeeInDirectory compilesAllCoffeeInDirectory = new CompilesAllCoffeeInDirectory();
+
+  public void run() throws IOException {
+    getLog().info("Processing JavaScript Sources");
+    if (sources.getDirectory().exists()) {
+      File destination = new File(jasmineTargetDir, srcDirectoryName);
+      directoryCopier.copyDirectory(sources.getDirectory(), destination);
+      compilesAllCoffeeInDirectory.compile(destination);
+    } else {
+      getLog().warn(MISSING_DIR_WARNING);
+    }
+  }
 
 }

@@ -21,65 +21,65 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(FileUtils.class)
 public class FileUtilsWrapperTest {
 
-	private FileUtilsWrapper subject = new FileUtilsWrapper();
-	
-	private File file = mock(File.class);
+  private FileUtilsWrapper subject = new FileUtilsWrapper();
 
-	@Before
-	public void powerfullyMockStaticClasses() {
-		mockStatic(FileUtils.class);
-	}
+  private File file = mock(File.class);
 
-	@Test
-	public void delegatesReadingFilesToFileUtils() throws IOException {
-		String expected = "contents";
-		when(FileUtils.readFileToString(file)).thenReturn(expected);
+  @Before
+  public void powerfullyMockStaticClasses() {
+    mockStatic(FileUtils.class);
+  }
 
-		String result = subject.readFileToString(file);
+  @Test
+  public void delegatesReadingFilesToFileUtils() throws IOException {
+    String expected = "contents";
+    when(FileUtils.readFileToString(file)).thenReturn(expected);
 
-		assertThat(result,is(expected));
-	}
-	
-	@Test
-	public void delegatesForcingMkdirToFileUtils() throws IOException {
-		subject.forceMkdir(file);
+    String result = subject.readFileToString(file);
 
-		verifyStatic();
-		FileUtils.forceMkdir(file);
-	}	
-	
-	@Test
-	public void listFilesDelegatesToFileUtils() {
-		Collection<File> expected = new ArrayList<File>();
-		String[] extensions = new String[] {"js"};
-		boolean recursive = true;
-		when(FileUtils.listFiles(file, extensions, recursive)).thenReturn(expected);
-		
-		Collection<File> files = subject.listFiles(file,extensions,recursive);
-		
-		assertThat(files,is(sameInstance(expected)));
-	}
-	
-	@Test
-	public void writeStringToFile() throws IOException {
-		String data = "string";
-		String encoding = "UTF-8";
-		
-		subject.writeStringToFile(file,data,encoding);
-		
-		verifyStatic();
-		FileUtils.writeStringToFile(file, data,encoding);	
-	}
-	
-	@Test
-	public void copyDirectoryShouldDelegate() throws IOException {
-		File srcDir = mock(File.class);
-		File destDir = mock(File.class);
-		IOFileFilter filter = mock(IOFileFilter.class);
-		
-		subject.copyDirectory(srcDir,destDir,filter);
-		
-		verifyStatic();
-		FileUtils.copyDirectory(srcDir, destDir, filter);
-	}
+    assertThat(result,is(expected));
+  }
+
+  @Test
+  public void delegatesForcingMkdirToFileUtils() throws IOException {
+    subject.forceMkdir(file);
+
+    verifyStatic();
+    FileUtils.forceMkdir(file);
+  }
+
+  @Test
+  public void listFilesDelegatesToFileUtils() {
+    Collection<File> expected = new ArrayList<File>();
+    String[] extensions = new String[] {"js"};
+    boolean recursive = true;
+    when(FileUtils.listFiles(file, extensions, recursive)).thenReturn(expected);
+
+    Collection<File> files = subject.listFiles(file,extensions,recursive);
+
+    assertThat(files,is(sameInstance(expected)));
+  }
+
+  @Test
+  public void writeStringToFile() throws IOException {
+    String data = "string";
+    String encoding = "UTF-8";
+
+    subject.writeStringToFile(file,data,encoding);
+
+    verifyStatic();
+    FileUtils.writeStringToFile(file, data,encoding);
+  }
+
+  @Test
+  public void copyDirectoryShouldDelegate() throws IOException {
+    File srcDir = mock(File.class);
+    File destDir = mock(File.class);
+    IOFileFilter filter = mock(IOFileFilter.class);
+
+    subject.copyDirectory(srcDir,destDir,filter);
+
+    verifyStatic();
+    FileUtils.copyDirectory(srcDir, destDir, filter);
+  }
 }

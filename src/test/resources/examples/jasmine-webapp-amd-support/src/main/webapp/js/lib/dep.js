@@ -1,7 +1,7 @@
 define(function() {
-	return {
-		hello: function() {
-			return "Hei!";
-		}
-	}
+  return {
+    hello: function() {
+      return "Hei!";
+    }
+  }
 });

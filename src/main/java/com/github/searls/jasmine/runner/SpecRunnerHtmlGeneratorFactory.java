@@ -7,30 +7,30 @@ import java.io.IOException;
 
 public class SpecRunnerHtmlGeneratorFactory {
 
-	public static final String DEFAULT = "DEFAULT";
-	public static final String REQUIRE_JS = "REQUIRE_JS";
+  public static final String DEFAULT = "DEFAULT";
+  public static final String REQUIRE_JS = "REQUIRE_JS";
 
-	public SpecRunnerHtmlGenerator create(ReporterType reporterType, AbstractJasmineMojo config, ScriptResolver projectDirScripResolver) {
-		try {
-			return createHtmlGenerator(new HtmlGeneratorConfiguration(reporterType, config, projectDirScripResolver));
-		} catch (IOException e) {
-			throw new InstantiationError(e.getMessage());
-		}
-	}
+  public SpecRunnerHtmlGenerator create(ReporterType reporterType, AbstractJasmineMojo config, ScriptResolver projectDirScripResolver) {
+    try {
+      return createHtmlGenerator(new HtmlGeneratorConfiguration(reporterType, config, projectDirScripResolver));
+    } catch (IOException e) {
+      throw new InstantiationError(e.getMessage());
+    }
+  }
 
-	public SpecRunnerHtmlGenerator createHtmlGenerator(HtmlGeneratorConfiguration configuration) throws IllegalArgumentException {
-		SpecRunnerHtmlGenerator instance = null;
-		String strategy = configuration.getSpecRunnerTemplate();
-		if (DEFAULT.equals(strategy)) {
-			instance = new DefaultSpecRunnerHtmlGenerator(configuration);
-		} else if (REQUIRE_JS.equals(strategy)) {
-			instance = new RequireJsSpecRunnerHtmlGenerator(configuration);
-		}
-		if (null == strategy) {
-			throw new IllegalArgumentException("Invalid argument null passed!");
-		} else if (instance == null) {
-			throw new IllegalArgumentException("Invalid strategy, valid strategies are: " + REQUIRE_JS);
-		}
-		return instance;
-	}
+  public SpecRunnerHtmlGenerator createHtmlGenerator(HtmlGeneratorConfiguration configuration) throws IllegalArgumentException {
+    SpecRunnerHtmlGenerator instance = null;
+    String strategy = configuration.getSpecRunnerTemplate();
+    if (DEFAULT.equals(strategy)) {
+      instance = new DefaultSpecRunnerHtmlGenerator(configuration);
+    } else if (REQUIRE_JS.equals(strategy)) {
+      instance = new RequireJsSpecRunnerHtmlGenerator(configuration);
+    }
+    if (null == strategy) {
+      throw new IllegalArgumentException("Invalid argument null passed!");
+    } else if (instance == null) {
+      throw new IllegalArgumentException("Invalid strategy, valid strategies are: " + REQUIRE_JS);
+    }
+    return instance;
+  }
 }

@@ -16,32 +16,32 @@ import org.junit.rules.ExpectedException;
 
 
 public class ConvertsFileToUriStringIntegrationTest {
-	private ConvertsFileToUriString subject = new ConvertsFileToUriString();
-	
-	@Rule public ExpectedException expectedException = ExpectedException.none();
-	
-	@Test
-	public void presentsUrlRepresentationOfFile() throws IOException {
-		String expected = "pants";
-		File file = File.createTempFile("blerg", expected);
-		
-		String result = subject.convert(file);
-		
-		assertThat(result,startsWith("file:"));
-		assertThat(result,endsWith(expected));
-	}
-	
-	@Test
-	@Ignore("Can't mock URI (final) and can't think of a File instance whose URI would throw malformed URL. Untestable??")
-	public void wrapsMalformedUrlExceptionIntoRuntime() {
-		expectedException.expect(RuntimeException.class);
-		expectedException.expect(new TypeSafeMatcher<RuntimeException>() {
-			public boolean matchesSafely(RuntimeException exception) {
-				return exception.getCause() instanceof MalformedURLException;
-			}
-			public void describeTo(Description description) {}
-		});
-		
-		subject.convert(new File("C:\\Program Files\\Acme\\parsers\\acme_full.dtd"));
-	}
+  private ConvertsFileToUriString subject = new ConvertsFileToUriString();
+
+  @Rule public ExpectedException expectedException = ExpectedException.none();
+
+  @Test
+  public void presentsUrlRepresentationOfFile() throws IOException {
+    String expected = "pants";
+    File file = File.createTempFile("blerg", expected);
+
+    String result = subject.convert(file);
+
+    assertThat(result,startsWith("file:"));
+    assertThat(result,endsWith(expected));
+  }
+
+  @Test
+  @Ignore("Can't mock URI (final) and can't think of a File instance whose URI would throw malformed URL. Untestable??")
+  public void wrapsMalformedUrlExceptionIntoRuntime() {
+    expectedException.expect(RuntimeException.class);
+    expectedException.expect(new TypeSafeMatcher<RuntimeException>() {
+      public boolean matchesSafely(RuntimeException exception) {
+        return exception.getCause() instanceof MalformedURLException;
+      }
+      public void describeTo(Description description) {}
+    });
+
+    subject.convert(new File("C:\\Program Files\\Acme\\parsers\\acme_full.dtd"));
+  }
 }

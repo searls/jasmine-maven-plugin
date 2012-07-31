@@ -1,7 +1,7 @@
 define(['jquery'], function($) {
-	return {
-		addDatePickerToElement: function(element) {
-			element.datepicker();
-		}
-	}
+  return {
+    addDatePickerToElement: function(element) {
+      element.datepicker();
+    }
+  }
 });

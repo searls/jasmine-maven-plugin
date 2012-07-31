@@ -7,20 +7,20 @@ import com.github.searls.jasmine.model.JasmineResult;
 
 public class JasmineResultLogger {
 
-	public static final String HEADER="\n"+
-		"-------------------------------------------------------\n"+
-		" J A S M I N E   S P E C S\n"+
-		"-------------------------------------------------------";
-	
-	private Log log;
+  public static final String HEADER="\n"+
+    "-------------------------------------------------------\n"+
+    " J A S M I N E   S P E C S\n"+
+    "-------------------------------------------------------";
 
-	public void setLog(Log log) {
-		this.log = log;
-	}
+  private Log log;
 
-	public void log(JasmineResult result) {
-		log.info(HEADER);		
-		log.info(result.getDetails());
-	}
+  public void setLog(Log log) {
+    this.log = log;
+  }
+
+  public void log(JasmineResult result) {
+    log.info(HEADER);
+    log.info(result.getDetails());
+  }
 
 }

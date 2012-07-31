@@ -8,7 +8,7 @@ end
 
 When /^I load "([^"]*)" in a browser$/ do |url|
   if @process && @process.alive?
-    sleep 2
+    sleep 5
     visit url
   else
     raise "Server not running!"

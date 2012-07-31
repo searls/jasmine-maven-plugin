@@ -6,29 +6,29 @@ import java.util.Set;
 
 public interface ScriptResolver {
 
-	void resolveScripts() throws IOException;
+  void resolveScripts() throws IOException;
 
-	Set<String> getPreloads();
+  Set<String> getPreloads();
 
-	Set<String> getSources();
+  Set<String> getSources();
 
-	Set<String> getSpecs();
+  Set<String> getSpecs();
 
-	Set<String> getAllScripts();
+  Set<String> getAllScripts();
 
-	String getSourceDirectory() throws IOException;
+  String getSourceDirectory() throws IOException;
 
-	String getSpecDirectoryPath() throws MalformedURLException;
+  String getSpecDirectoryPath() throws MalformedURLException;
 
-	Set<String> getSourcesRelativePath() throws IOException;
+  Set<String> getSourcesRelativePath() throws IOException;
 
-	Set<String> getSpecsRelativePath() throws IOException;
+  Set<String> getSpecsRelativePath() throws IOException;
 
-	Set<String> getPreloadsRelativePath() throws IOException;
+  Set<String> getPreloadsRelativePath() throws IOException;
 
-	Set<String> getAllScriptsRelativePath() throws IOException;
+  Set<String> getAllScriptsRelativePath() throws IOException;
 
-	String getSourceDirectoryRelativePath() throws IOException;
+  String getSourceDirectoryRelativePath() throws IOException;
 
-	String getSpecDirectoryRelativePath() throws IOException;
+  String getSpecDirectoryRelativePath() throws IOException;
 }

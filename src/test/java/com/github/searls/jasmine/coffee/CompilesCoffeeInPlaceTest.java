@@ -16,30 +16,28 @@ import com.github.searls.jasmine.io.FileUtilsWrapper;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CompilesCoffeeInPlace.class)
 public class CompilesCoffeeInPlaceTest {
-	
-	private static final String COFFEE = "koohii";
-	private static final String JAVA_SCRIPT = "jawa script";
 
-	@InjectMocks CompilesCoffeeInPlace subject = new CompilesCoffeeInPlace();
-	
-	@Mock private CoffeeScript coffeeScript;
-	@Mock private FileUtilsWrapper fileUtilsWrapper;
-	
-	@Mock private File coffeeFile;
-	@Mock private FileWriter javaScriptWriter;
-	
-	@Test
-	public void writesCompiledScript() throws Exception {
-		when(fileUtilsWrapper.readFileToString(coffeeFile)).thenReturn(COFFEE);
-		whenNew(FileWriter.class).withArguments(coffeeFile,false).thenReturn(javaScriptWriter);
-		when(coffeeScript.compile(COFFEE)).thenReturn(JAVA_SCRIPT);
-		
-		subject.compile(coffeeFile);
+  private static final String COFFEE = "koohii";
+  private static final String JAVA_SCRIPT = "jawa script";
 
-		verify(javaScriptWriter).write(JAVA_SCRIPT);
-		verify(javaScriptWriter).close();
-	}
-	
-	
-	
+  @InjectMocks CompilesCoffeeInPlace subject = new CompilesCoffeeInPlace();
+
+  @Mock private CoffeeScript coffeeScript;
+  @Mock private FileUtilsWrapper fileUtilsWrapper;
+
+  @Mock private File coffeeFile;
+  @Mock private FileWriter javaScriptWriter;
+
+  @Test
+  public void writesCompiledScript() throws Exception {
+    when(fileUtilsWrapper.readFileToString(coffeeFile)).thenReturn(COFFEE);
+    whenNew(FileWriter.class).withArguments(coffeeFile,false).thenReturn(javaScriptWriter);
+    when(coffeeScript.compile(COFFEE)).thenReturn(JAVA_SCRIPT);
+
+    subject.compile(coffeeFile);
+
+    verify(javaScriptWriter).write(JAVA_SCRIPT);
+    verify(javaScriptWriter).close();
+  }
+
 }

@@ -68,7 +68,7 @@ jasmine.Fixtures.prototype.createContainer_ = function(html) {
   $('body').append(container);
 };
 
-jasmine.Fixtures.prototype.getFixtureHtml_ = function(url) {  
+jasmine.Fixtures.prototype.getFixtureHtml_ = function(url) {
   if (typeof this.fixturesCache_[url] == 'undefined') {
     this.loadFixtureIntoCache_(url);
   }
@@ -198,9 +198,9 @@ jasmine.JQuery.matchersClass = {};
       return this.actual.find(selector).size() > 0;
     },
 
-		toBeDisabled: function(selector){
-			return this.actual.attr("disabled") == true;
-		}
+    toBeDisabled: function(selector){
+      return this.actual.attr("disabled") == true;
+    }
   };
 
   var hasProperty = function(actualValue, expectedValue) {
