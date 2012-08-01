@@ -70,7 +70,7 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
     }
     StringBuilder builder = new StringBuilder("[");
     for (String script : scripts) {
-      builder.append("'" + script + "'");
+      builder.append("'/" + script + "'");
       builder.append(", ");
     }
     if (!scripts.isEmpty()) {
