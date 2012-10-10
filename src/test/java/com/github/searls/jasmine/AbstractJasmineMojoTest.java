@@ -6,8 +6,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 import java.io.File;
+import java.util.HashMap;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.codehaus.plexus.util.ReflectionUtils;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -23,6 +25,7 @@ import com.github.searls.jasmine.exception.StringifiesStackTraces;
 public class AbstractJasmineMojoTest {
 
   @InjectMocks @Spy AbstractJasmineMojo subject = new AbstractJasmineMojo() {
+    @Override
     public void run() throws Exception {}
   };
   @Mock private StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
@@ -79,4 +82,13 @@ public class AbstractJasmineMojoTest {
     assertThat(subject.specs.getExcludes(),is(empty()));
   }
 
+  @Test
+  public void systemProperties() throws Exception {
+    HashMap<String, String> systemProperties = new HashMap<String, String>();
+    systemProperties.put("testProperty", "foo");
+    ReflectionUtils.setVariableValueInObject(subject, "systemProperties",
+        systemProperties);
+    subject.execute();
+    assertThat(System.getProperty("testProperty"), is("foo"));
+  }
 }

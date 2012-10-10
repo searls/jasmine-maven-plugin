@@ -2,12 +2,15 @@ package com.github.searls.jasmine;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.openqa.selenium.WebDriver;
 
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import com.github.searls.jasmine.io.ScansDirectory;
@@ -201,6 +204,13 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    */
   protected int serverPort;
 
+  /** List of properties to register in {@link System#getProperties()}.
+   *
+   * @parameter
+   */
+  @SuppressWarnings("rawtypes")
+  private Map systemProperties = new HashMap();
+
   /**
    * Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
    * implementation of the runner generator. Typically this is used when using different script runners.
@@ -228,7 +238,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   public final void execute() throws MojoExecutionException, MojoFailureException {
     sources = new ScriptSearch(jsSrcDir,sourceIncludes,sourceExcludes);
     specs = new ScriptSearch(jsTestSrcDir,specIncludes,specExcludes);
-
+    registerSystemProperties();
     try {
       run();
     } catch(MojoFailureException e) {
@@ -285,7 +295,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
   }
 
-    public String getScriptLoaderPath() {
-        return scriptLoaderPath;
+  public String getScriptLoaderPath() {
+      return scriptLoaderPath;
+  }
+
+  /** Registers system properties in {@link System#getProperties()} so custom
+   * {@link WebDriver}s are able to get context from the current execution.
+   */
+  private void registerSystemProperties() {
+    for (Object key : systemProperties.keySet()) {
+      System.setProperty(String.valueOf(key),
+          String.valueOf(systemProperties.get(key)));
     }
+  }
 }
