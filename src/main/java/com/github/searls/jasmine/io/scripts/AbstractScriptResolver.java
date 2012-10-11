@@ -1,33 +1,74 @@
 package com.github.searls.jasmine.io.scripts;
 
-import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.model.ScriptSearch;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 public abstract class AbstractScriptResolver implements ScriptResolver {
   private Set<String> sources;
   private Set<String> specs;
-  protected File baseDir;
-  protected ScriptSearch scriptSearchSources;
-  protected ScriptSearch scriptSearchSpecs;
-  protected List<String> preloads;
-  protected RelativizesASetOfScripts relativizer = new RelativizesASetOfScripts();
-  protected RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
+  private Set<String> scriptsToPreload;
+  private File baseDir;
+  private ScriptSearch scriptSearchSources;
+  private ScriptSearch scriptSearchSpecs;
+  private List<String> preloads;
+  private List<String> preloadPatterns;
+  private RelativizesASetOfScripts relativizer = new RelativizesASetOfScripts();
+  private RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
 
+  protected AbstractScriptResolver(File projectBaseDir,
+  																	ScriptSearch sources,
+  																	ScriptSearch specs,
+  																	List<String> preloads,
+  																	List<String> preloadPatterns) {
+  	this.preloads = preloads;
+    this.scriptSearchSpecs = specs;
+    this.scriptSearchSources = sources;
+    this.baseDir = projectBaseDir;
+    this.preloadPatterns = preloadPatterns;
+  }
+  
   public void resolveScripts() throws IOException {
     ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources = new ResolvesLocationOfPreloadSources();
     FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
 
-    setScriptsToPreload(new LinkedHashSet<String>(resolvesLocationOfPreloadSources.resolve(preloads, scriptSearchSources.getDirectory(), scriptSearchSpecs.getDirectory())));
-    setSources(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(scriptSearchSources)));
-    setSpecs(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(scriptSearchSpecs)));
-
+    this.scriptsToPreload = new LinkedHashSet<String>(
+    		resolvesLocationOfPreloadSources.resolve(
+    				preloads,
+    				scriptSearchSources.getDirectory(),
+    				scriptSearchSpecs.getDirectory()
+    		)
+    );
+    this.sources = new LinkedHashSet<String>(	findsScriptLocationsInDirectory.find(scriptSearchSources));
+    this.specs = new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(scriptSearchSpecs));
+    
+    if (this.preloadPatterns != null) {
+	    for (String preloadPattern : this.preloadPatterns) {
+	    	Pattern pattern = Pattern.compile(preloadPattern);
+	    	preloadMatches(pattern,this.sources);
+	    	preloadMatches(pattern,this.specs);
+	    }
+    }
+  }
+  
+  private void preloadMatches(Pattern pattern, Set<String> scripts) {
+  	Set<String> toRemove = new HashSet<String>();
+  	
+  	for (String script : scripts) {
+  		if (pattern.matcher(script).matches()) {
+  			this.scriptsToPreload.add(script);
+  			toRemove.add(script);
+  		}
+  	}
+  	scripts.removeAll(toRemove);
   }
 
   public Set<String> getPreloads() {
@@ -84,19 +125,5 @@ public abstract class AbstractScriptResolver implements ScriptResolver {
     allScripts.addAll(sources);
     allScripts.addAll(specs);
     return allScripts;
-  }
-
-  private Set<String> scriptsToPreload;
-
-  public void setScriptsToPreload(Set<String> scriptsToPreload) {
-    this.scriptsToPreload = scriptsToPreload;
-  }
-
-  public void setSources(Set<String> sources) {
-    this.sources = sources;
-  }
-
-  public void setSpecs(Set<String> specs) {
-    this.specs = specs;
   }
 }

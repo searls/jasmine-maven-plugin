@@ -80,6 +80,13 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    * @parameter
    */
   protected List<String> preloadSources;
+  
+  /**
+   * A set of pattern matches to determine what order scripts should be loaded.
+   * 
+   * @parameter
+   */
+  protected List<String> preloadPatterns;
 
   /**
    * It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
@@ -274,6 +281,10 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
   public List<String> getPreloadSources() {
     return preloadSources;
+  }
+  
+  public List<String> getPreloadPatterns() {
+    return preloadPatterns;
   }
 
   public MavenProject getMavenProject() {

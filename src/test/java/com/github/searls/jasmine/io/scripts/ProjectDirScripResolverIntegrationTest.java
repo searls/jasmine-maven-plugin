@@ -48,7 +48,7 @@ public class ProjectDirScripResolverIntegrationTest {
     projectDirScripResolver = new ProjectDirScripResolver(root,
         new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(excludes)),
         new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()),
-        null);
+        null,null);
     projectDirScripResolver.resolveScripts();
   }
 
@@ -89,7 +89,7 @@ public class ProjectDirScripResolverIntegrationTest {
     ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(root,
         new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()),
         new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(new String[]{"vendor/vendor.js"})),
-        null);
+        null,null);
     projectDirScripResolver.resolveScripts();
     Set<String> preloads = projectDirScripResolver.getPreloads();
     assertThat(preloads, hasItem(endsWith("vendor/vendor.js")));
