@@ -5,7 +5,7 @@
   <title>Jasmine Spec Runner</title>
   $cssDependencies$
   $javascriptDependencies$
-  $sources$
+  $allScriptTags$
 </head>
 <body>
   <script type="text/javascript">
