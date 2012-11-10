@@ -1,11 +1,18 @@
 package com.github.searls.jasmine.runner;
 
-import static com.github.searls.jasmine.Matchers.*;
-import static com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator.*;
-import static java.util.Arrays.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static com.github.searls.jasmine.Matchers.containsScriptTagWith;
+import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
+import static com.github.searls.jasmine.Matchers.containsStyleTagWith;
+import static com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator.DEFAULT_RUNNER_HTML_TEMPLATE_FILE;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_CSS;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_HTML_JS;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_JS;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.LinkedHashSet;
@@ -26,6 +33,7 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlMeta;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
@@ -41,6 +49,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   private SpecRunnerHtmlGenerator subject;
 
+  @Mock private ScriptResolver scriptResolver;
   @Mock private HtmlGeneratorConfiguration generatorConfiguration;
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
@@ -49,6 +58,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   public void setupGeneratorConfiguration() throws IOException{
     when(generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(generatorConfiguration.getReporterType()).thenReturn(ReporterType.HtmlReporter);
+    when(generatorConfiguration.getScriptResolver()).thenReturn(scriptResolver);
     when(generatorConfiguration.getRunnerTemplate(DEFAULT_RUNNER_HTML_TEMPLATE_FILE)).thenReturn(new IOUtilsWrapper().toString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE));
     subject = new DefaultSpecRunnerHtmlGenerator(generatorConfiguration);
   }
@@ -121,8 +131,8 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   @Test
   public void containsScriptTagOfSource() throws IOException {
     String expected = scripts.iterator().next();
-
-    when(generatorConfiguration.getAllScripts()).thenReturn(scripts);
+    when(scriptResolver.getAllScripts()).thenReturn(scripts);
+    
     String html = subject.generate();
 
     assertThat(html, containsScriptTagWithSource(expected));

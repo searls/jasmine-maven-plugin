@@ -1,12 +1,14 @@
 package com.github.searls.jasmine.runner;
 
-import org.antlr.stringtemplate.StringTemplate;
-import org.apache.commons.lang.StringUtils;
+import static java.util.Arrays.asList;
 
 import java.io.IOException;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
+import org.antlr.stringtemplate.StringTemplate;
+import org.apache.commons.lang.StringUtils;
+
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
 public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
 
@@ -18,11 +20,14 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 
   public String generate() {
     try {
+    	ScriptResolver resolver = getConfiguration().getScriptResolver();
       return generateHtml(
-      		getConfiguration().getAllScripts(),
-      		getConfiguration().getPreloads(),
-      		getConfiguration().getSources(),
-      		getConfiguration().getSpecs()      		
+      		resolver.getAllScripts(),
+      		resolver.getPreloads(),
+      		resolver.getSources(),
+      		resolver.getSpecs(),
+      		resolver.getSourceDirectory(),
+      		resolver.getSpecDirectoryPath()
       		);
     } catch (IOException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
@@ -31,11 +36,14 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 
   public String generateWitRelativePaths() {
     try {
+    	ScriptResolver resolver = getConfiguration().getScriptResolver();
       return generateHtml(
-      		getConfiguration().getAllScriptsRelativePath(),
-      		getConfiguration().getPreloadsRelativePath(),
-      		getConfiguration().getSourcesRelativePath(),
-      		getConfiguration().getSpecsRelativePath()      		
+      		resolver.getAllScriptsRelativePath(),
+      		resolver.getPreloadsRelativePath(),
+      		resolver.getSourcesRelativePath(),
+      		resolver.getSpecsRelativePath(),
+      		resolver.getSourceDirectoryRelativePath(),
+      		resolver.getSpecDirectoryRelativePath()
       		);
     } catch (IOException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
@@ -45,7 +53,9 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
   private String generateHtml(Set<String> allScripts,
   														 Set<String> preloads,
   														 Set<String> sources,
-  														 Set<String> specs) throws IOException {
+  														 Set<String> specs,
+  														 String sourceDirectory,
+  														 String specDirectory) throws IOException {
     StringTemplate template = resolveHtmlTemplate();
     includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS), template);
     applyCssToTemplate(asList(JASMINE_CSS), template);
@@ -57,6 +67,8 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     template.setAttribute("preloads", createJsonArray(preloads));
     template.setAttribute("sources", createJsonArray(sources));
     template.setAttribute("specs", createJsonArray(specs));
+    template.setAttribute("sourceDir", sourceDirectory);
+    template.setAttribute("specDir", specDirectory);
     template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
     setEncoding(getConfiguration(), template);
 

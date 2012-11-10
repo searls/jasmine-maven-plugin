@@ -1,11 +1,13 @@
 package com.github.searls.jasmine.runner;
 
-import org.antlr.stringtemplate.StringTemplate;
+import static java.util.Arrays.asList;
 
 import java.io.IOException;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
+import org.antlr.stringtemplate.StringTemplate;
+
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
 public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
 
@@ -17,7 +19,8 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 
   public String generate() {
     try {
-      return generateHtml(getConfiguration().getSpecs(), getConfiguration().getSourceDirectory());
+    	ScriptResolver resolver = getConfiguration().getScriptResolver();
+      return generateHtml(resolver.getSpecs(), resolver.getSourceDirectory());
     } catch (IOException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
     }
@@ -25,7 +28,8 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 
   public String generateWitRelativePaths() {
     try {
-      return generateHtml(getConfiguration().getSpecsRelativePath(), getConfiguration().getSourceDirectoryRelativePath());
+    	ScriptResolver resolver = getConfiguration().getScriptResolver();
+      return generateHtml(resolver.getSpecsRelativePath(), resolver.getSourceDirectoryRelativePath());
     } catch (IOException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
     }
