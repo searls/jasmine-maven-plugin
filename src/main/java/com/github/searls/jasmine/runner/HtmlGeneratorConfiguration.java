@@ -34,13 +34,6 @@ public class HtmlGeneratorConfiguration {
     this.scriptLoaderPath = configuration.getScriptLoaderPath();
   }
 
-  public Set<String> getAllScripts() throws IOException {
-    return scriptResolver.getAllScripts();
-  }
-  public Set<String> getAllScriptsRelativePath() throws IOException {
-    return scriptResolver.getAllScriptsRelativePath();
-  }
-
   public String getSourceEncoding() {
     return sourceEncoding;
   }
@@ -73,27 +66,11 @@ public class HtmlGeneratorConfiguration {
     return specRunnerTemplate;
   }
 
-  public Set<String> getSpecs() throws IOException {
-    return scriptResolver.getSpecs();
-  }
-
-  public String getSourceDirectory() throws IOException {
-    return scriptResolver.getSourceDirectory();
-  }
-
-  public Set<String> getPreloads() {
-    return scriptResolver.getPreloads();
+  public ScriptResolver getScriptResolver() {
+  	return this.scriptResolver;
   }
   
-  public Set<String> getSources() {
-  	return scriptResolver.getSources();
-  }
-  
-  public Set<String> getSourcesRelativePath() throws IOException {
-  	return scriptResolver.getSourcesRelativePath();
-  }
-
-    @Override
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -139,7 +116,6 @@ public class HtmlGeneratorConfiguration {
       return null;
     }
   }
-
 
   public void setFileUtilsWrapper(FileUtilsWrapper fileUtilsWrapper) {
       this.fileUtilsWrapper = fileUtilsWrapper;
