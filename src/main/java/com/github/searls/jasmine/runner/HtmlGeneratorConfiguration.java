@@ -17,7 +17,6 @@ public class HtmlGeneratorConfiguration {
   private IOUtilsWrapper ioUtilsWrapper;
   private String specRunnerTemplate;
   private ScriptResolver scriptResolver;
-  private String sourceDirectoryRelativePath;
     private String scriptLoaderPath;
   private File customRunnerConfiguration;
 
@@ -84,6 +83,14 @@ public class HtmlGeneratorConfiguration {
 
   public Set<String> getPreloads() {
     return scriptResolver.getPreloads();
+  }
+  
+  public Set<String> getSources() {
+  	return scriptResolver.getSources();
+  }
+  
+  public Set<String> getSourcesRelativePath() throws IOException {
+  	return scriptResolver.getSourcesRelativePath();
   }
 
     @Override
