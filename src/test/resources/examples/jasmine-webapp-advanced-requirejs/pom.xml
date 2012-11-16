@@ -31,6 +31,9 @@
                     <srcDirectoryName>js</srcDirectoryName>
                     <specDirectoryName>specs</specDirectoryName>
                     <customRunnerConfiguration>${project.basedir}/src/test/resources/customJasmineConfig.txt</customRunnerConfiguration>
+                    <preloadSources>
+                    	<source>require.js</source>
+                    </preloadSources>
                     <specIncludes>
                         <include>appSpec.js</include>
                     </specIncludes>

@@ -37,7 +37,7 @@ public class ServerMojo extends AbstractJasmineMojo {
   }
 
   private void addHandlersToServer() throws IOException {
-    server.setHandler(new ResourceHandlerConfigurator(this, relativizesFilePaths).createHandler(specRunnerTemplate));
+    server.setHandler(new ResourceHandlerConfigurator(this, relativizesFilePaths).createHandler());
   }
 
   private void addConnectorToServer() {

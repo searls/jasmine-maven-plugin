@@ -18,31 +18,8 @@ public class ResourceHandlerConfigurator {
     this.relativizesFilePaths = relativizesFilePaths;
   }
 
-  public Handler createHandler(String specRunnerTemplate) throws IOException {
-    Handler handler;
-    if ("DEFAULT".equals(specRunnerTemplate)) {
-      handler = createDefaultResourceHandler();
-    } else if ("REQUIRE_JS".equals(specRunnerTemplate)) {
-      handler = createContextualizedResourceHandler();
-    } else {
-      throw new UnsupportedOperationException("Unable to create handler for " + specRunnerTemplate + " profile!");
-    }
-    return handler;
-  }
-
-  private Handler createContextualizedResourceHandler() throws IOException {
-    ContextHandlerCollection contexts = new ContextHandlerCollection();
-
-    ContextHandler srcDirContextHandler = contexts.addContext("/" + configuration.srcDirectoryName, "");
-    srcDirContextHandler.setHandler(createResourceHandler(true, configuration.sources.getDirectory().getAbsolutePath(), null));
-
-    ContextHandler specDirContextHandler = contexts.addContext("/" + configuration.specDirectoryName, "");
-    specDirContextHandler.setHandler(createResourceHandler(true, configuration.specs.getDirectory().getAbsolutePath(), null));
-
-    ContextHandler rootContextHandler = contexts.addContext("/", "");
-    rootContextHandler.setHandler(createResourceHandler(false, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()}));
-
-    return contexts;
+  public Handler createHandler() throws IOException {
+    return createDefaultResourceHandler();
   }
 
   private Handler createDefaultResourceHandler() throws IOException {
