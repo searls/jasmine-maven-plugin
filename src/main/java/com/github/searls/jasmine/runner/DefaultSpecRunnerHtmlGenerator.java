@@ -12,8 +12,6 @@ import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
 public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
 
-  public static final String DEFAULT_RUNNER_HTML_TEMPLATE_FILE = "/jasmine-templates/SpecRunner.htmltemplate";
-
   protected DefaultSpecRunnerHtmlGenerator(HtmlGeneratorConfiguration configuration) {
     super(configuration);
   }
@@ -69,17 +67,13 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     template.setAttribute("specs", createJsonArray(specs));
     template.setAttribute("sourceDir", sourceDirectory);
     template.setAttribute("specDir", specDirectory);
+    setCustomRunnerConfig(template);
     template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
     setEncoding(getConfiguration(), template);
 
     return template.toString();
   }
 
-  @Override
-  protected String getDefaultHtmlTemplatePath() {
-    return DEFAULT_RUNNER_HTML_TEMPLATE_FILE;
-  }
-  
   private String createJsonArray(Set<String> scripts) {
     if (null == scripts || scripts.isEmpty()) {
       return null;
@@ -87,9 +81,13 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     StringBuilder builder = new StringBuilder("['");
     builder.append(StringUtils.join(scripts,"', '"));
     builder.append("']");
-    System.out.println(builder.toString());
     return builder.toString();
   }
 
-
+  private void setCustomRunnerConfig(StringTemplate template) throws IOException {
+    String customRunnerConfiguration = getConfiguration().getCustomRunnerConfiguration();
+    if (null != customRunnerConfiguration) {
+      template.setAttribute("customRunnerConfiguration", customRunnerConfiguration);
+    }
+  }
 }

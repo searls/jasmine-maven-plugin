@@ -25,12 +25,8 @@ public class CreatesManualRunner {
   public void create() throws IOException {
     File runnerDestination = new File(config.jasmineTargetDir,config.manualSpecRunnerHtmlFileName);
 
-    ProjectDirScripResolver projectDirScripResolver;
-    if(null != config.customRunnerConfiguration) {
-                 projectDirScripResolver = new CustomConfigScriptResolver(config.getMavenProject().getBasedir(), config.getSources(), config.getSpecs(), config.getPreloadSources());
-    }   else {
-      projectDirScripResolver = new ProjectDirScripResolver(config.getMavenProject().getBasedir(), config.getSources(), config.getSpecs(), config.getPreloadSources());
-    }
+    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config.getMavenProject().getBasedir(), config.getSources(), config.getSpecs(), config.getPreloadSources());
+    
     SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.HtmlReporter, config, projectDirScripResolver);
 
     String newRunnerHtml = generator.generateWitRelativePaths();

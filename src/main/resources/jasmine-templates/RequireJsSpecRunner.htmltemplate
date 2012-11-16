@@ -5,7 +5,7 @@
   <title>Jasmine Spec Runner</title>
   $cssDependencies$
   $javascriptDependencies$
-  <script type="text/javascript" src="$requirejsPath$"></script>
+  $preloadScriptTags$
 </head>
 <body>
   <script type="text/javascript">
@@ -14,19 +14,38 @@
     }
 
     var specs = $specs$;
-
-    require.config({
-        baseUrl: '$sourceDir$'
-        $if(priority)$
-        , priority: $priority$
-        $endif$
-        $if(customRunnerConfiguration)$
-        , $customRunnerConfiguration$
-        $endif$
-        });
-
+				
+    var configuration = {
+      $if(customRunnerConfiguration)$
+      $customRunnerConfiguration$
+      $endif$
+    };
+    
+    if (!configuration.baseUrl) {
+    	configuration.baseUrl = '$sourceDir$';
+    }
+    
+    if (!configuration.paths) {
+    	configuration.paths = {};
+    }
+    
+    if (!configuration.paths.specs) {
+    	var specDir = '$specDir$';
+    	if (!specDir.match(/^file/)) {
+    		specDir = '/'+specDir;
+    	}
+    	configuration.paths.specs = specDir;
+    }
+          
+    require.config(configuration);
+		
     require(specs, function() {
       window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
+      if ('$reporter$' == 'HtmlReporter') {
+        jasmine.getEnv().specFilter = function(spec) {
+          return window.reporter.specFilter(spec);
+        };
+      }
       jasmine.getEnv().execute();
     });
   </script>

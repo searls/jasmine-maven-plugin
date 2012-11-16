@@ -15,6 +15,8 @@ import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
+import com.github.searls.jasmine.runner.SpecRunnerTemplate;
+
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
@@ -85,7 +87,7 @@ public class CreatesManualRunnerTest {
     config.sourceEncoding = SOURCE_ENCODING;
     config.customRunnerTemplate = customRunnerTemplate;
     config.preloadSources = PRELOAD_SOURCES;
-    config.specRunnerTemplate = SPEC_RUNNER_GENERATOR;
+    config.specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
     config.customRunnerTemplate = customRunnerTemplate;
     config.mavenProject = mock(MavenProject.class);
   }

@@ -1,13 +1,13 @@
 package com.github.searls.jasmine.runner;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+
 import com.github.searls.jasmine.AbstractJasmineMojo;
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
 
 public class HtmlGeneratorConfiguration {
   private final String sourceEncoding;
@@ -15,7 +15,7 @@ public class HtmlGeneratorConfiguration {
   private final File customRunnerTemplate;
     private FileUtilsWrapper fileUtilsWrapper;
   private IOUtilsWrapper ioUtilsWrapper;
-  private String specRunnerTemplate;
+  private SpecRunnerTemplate specRunnerTemplate;
   private ScriptResolver scriptResolver;
     private String scriptLoaderPath;
   private File customRunnerConfiguration;
@@ -54,15 +54,20 @@ public class HtmlGeneratorConfiguration {
     return ioUtilsWrapper.toString(defaultHtmlTemplatePath);
   }
 
-  public String getRunnerTemplate(String defaultHtmlTemplatePath) throws IOException {
-    if (null != getCustomRunnerTemplate()) {
+  public String getRunnerTemplate() throws IOException {
+  	
+    if (getCustomRunnerTemplate() != null) {
       return readFileToString(getCustomRunnerTemplate());
     } else {
-      return IOtoString(defaultHtmlTemplatePath);
+    	SpecRunnerTemplate template = getSpecRunnerTemplate();
+    	if (template == null) {
+    		template = SpecRunnerTemplate.DEFAULT;
+    	}
+      return IOtoString(template.getTemplate());
     }
   }
 
-  public String getSpecRunnerTemplate() {
+  public SpecRunnerTemplate getSpecRunnerTemplate() {
     return specRunnerTemplate;
   }
 

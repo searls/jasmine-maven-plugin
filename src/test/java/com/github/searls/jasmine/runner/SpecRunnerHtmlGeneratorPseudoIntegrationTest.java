@@ -3,7 +3,6 @@ package com.github.searls.jasmine.runner;
 import static com.github.searls.jasmine.Matchers.containsScriptTagWith;
 import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
 import static com.github.searls.jasmine.Matchers.containsStyleTagWith;
-import static com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator.DEFAULT_RUNNER_HTML_TEMPLATE_FILE;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_CSS;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_HTML_JS;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_JS;
@@ -59,7 +58,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     when(generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(generatorConfiguration.getReporterType()).thenReturn(ReporterType.HtmlReporter);
     when(generatorConfiguration.getScriptResolver()).thenReturn(scriptResolver);
-    when(generatorConfiguration.getRunnerTemplate(DEFAULT_RUNNER_HTML_TEMPLATE_FILE)).thenReturn(new IOUtilsWrapper().toString(DEFAULT_RUNNER_HTML_TEMPLATE_FILE));
+    when(generatorConfiguration.getRunnerTemplate()).thenReturn(new IOUtilsWrapper().toString(SpecRunnerTemplate.DEFAULT.getTemplate()));
     subject = new DefaultSpecRunnerHtmlGenerator(generatorConfiguration);
   }
 
