@@ -25,9 +25,12 @@ public abstract class AbstractScriptResolver implements ScriptResolver {
     FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
 
     setScriptsToPreload(new LinkedHashSet<String>(resolvesLocationOfPreloadSources.resolve(preloads, scriptSearchSources.getDirectory(), scriptSearchSpecs.getDirectory())));
+    
     setSources(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(scriptSearchSources)));
+    this.sources.removeAll(this.scriptsToPreload);
+    
     setSpecs(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(scriptSearchSpecs)));
-
+    this.specs.removeAll(this.scriptsToPreload);
   }
 
   public Set<String> getPreloads() {
