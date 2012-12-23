@@ -1,0 +1,77 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.github.searls</groupId>
+		<artifactId>jasmine-webapp-war-overlay-example</artifactId>
+		<version>1.2.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>main</artifactId>
+	<packaging>war</packaging>
+	<name>Main project</name>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.searls</groupId>
+			<artifactId>overlay</artifactId>
+			<version>${project.version}</version>
+			<type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.github.searls</groupId>
+				<artifactId>jasmine-maven-plugin</artifactId>
+				<version>${project.version}</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>FIREFOX_3</id>
+						<phase>test</phase>
+						<configuration>
+							<browserVersion>FIREFOX_3</browserVersion>
+							<junitXmlReportFilename>TEST-FIREFOX_3-jasmine.xml</junitXmlReportFilename>
+							<manualSpecRunnerHtmlFilename>ManualSpecRunner.html</manualSpecRunnerHtmlFilename>
+							<specRunnerHtmlFilename>FIREFOX_3-SpecRunner.html</specRunnerHtmlFilename>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>IE_8</id>
+						<phase>test</phase>
+						<configuration>
+							<browserVersion>INTERNET_EXPLORER_8</browserVersion>
+							<junitXmlReportFilename>Test-IE_8-jasmine.xml</junitXmlReportFilename>
+							<manualSpecRunnerHtmlFilename>ManualSpecRunner.html</manualSpecRunnerHtmlFilename>
+							<specRunnerHtmlFilename>IE_8-SpecRunner.html</specRunnerHtmlFilename>
+						</configuration>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<jsSrcDir>src/main/webapp/js</jsSrcDir>
+					<jsTestSrcDir>src/test/webapp/js</jsTestSrcDir>
+					<srcDirectoryName>js</srcDirectoryName>
+					<specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
+					<scriptLoaderPath>lib/require/require.js</scriptLoaderPath>
+					<customRunnerConfiguration>${project.basedir}/src/test/resources/customJasmineConfig.txt</customRunnerConfiguration>
+					<serverPort>8888</serverPort>
+					<format>progress</format>
+					<warOverlayIncludes>
+						<warOverlay>
+							<jsSrcDir>../overlay/src/main/webapp/js</jsSrcDir>
+							<srcDirectoryName>js</srcDirectoryName>
+						</warOverlay>
+					</warOverlayIncludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

@@ -1,12 +1,18 @@
 package com.github.searls.jasmine;
 
-import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.server.JasmineResourceHandler;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.handler.*;
-
 import java.io.File;
 import java.io.IOException;
+
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.DefaultHandler;
+import org.eclipse.jetty.server.handler.HandlerList;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+
+import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.model.OverlayScriptSearch;
+import com.github.searls.jasmine.server.JasmineResourceHandler;
 
 public class ResourceHandlerConfigurator {
 
@@ -39,6 +45,12 @@ public class ResourceHandlerConfigurator {
     ContextHandler specDirContextHandler = contexts.addContext("/" + configuration.specDirectoryName, "");
     specDirContextHandler.setHandler(createResourceHandler(true, configuration.specs.getDirectory().getAbsolutePath(), null));
 
+    ContextHandler warOverlayDirContextHandler;
+    for(OverlayScriptSearch warOverlayScriptSearch:configuration.warOverlays) {
+    	warOverlayDirContextHandler = contexts.addContext("/" + warOverlayScriptSearch.getSrcDirectoryName(), "");
+    	warOverlayDirContextHandler.setHandler(createResourceHandler(true, warOverlayScriptSearch.getDirectory().getAbsolutePath(), null));
+    }
+    
     ContextHandler rootContextHandler = contexts.addContext("/", "");
     rootContextHandler.setHandler(createResourceHandler(false, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()}));
 

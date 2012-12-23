@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import com.github.searls.jasmine.coffee.CompilesAllCoffeeInDirectory;
 import com.github.searls.jasmine.io.DirectoryCopier;
+import com.github.searls.jasmine.model.OverlayScriptSearch;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 /**
  * @goal resources
@@ -23,12 +25,25 @@ public class ProcessResourcesMojo extends AbstractJasmineMojo {
   public void run() throws IOException {
     getLog().info("Processing JavaScript Sources");
     if (sources.getDirectory().exists()) {
-      File destination = new File(jasmineTargetDir, srcDirectoryName);
-      directoryCopier.copyDirectory(sources.getDirectory(), destination);
-      compilesAllCoffeeInDirectory.compile(destination);
+      copySource(sources, srcDirectoryName);
+      copyWarOverlaySources();
     } else {
       getLog().warn(MISSING_DIR_WARNING);
     }
+  }
+  
+  private void copySource(ScriptSearch scriptSearch, String srcDirectoryName) throws IOException {
+      File destination = new File(jasmineTargetDir, srcDirectoryName);
+      directoryCopier.copyDirectory(scriptSearch.getDirectory(), destination);
+      compilesAllCoffeeInDirectory.compile(destination);
+  }
+  
+  private void copyWarOverlaySources() throws IOException {
+	  for(OverlayScriptSearch overlayScriptSearch:warOverlays) {
+		if(overlayScriptSearch.getDirectory().exists()) {
+			copySource(overlayScriptSearch, overlayScriptSearch.getSrcDirectoryName());
+		}
+	  }
   }
 
 }

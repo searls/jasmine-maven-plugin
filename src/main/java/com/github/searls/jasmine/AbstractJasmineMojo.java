@@ -1,6 +1,7 @@
 package com.github.searls.jasmine;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.OverlayScriptSearch;
 import com.github.searls.jasmine.model.ScriptSearch;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo {
@@ -175,7 +177,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    * @parameter
    */
   private List<String> sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
-
+  
   /**
    * @parameter
    */
@@ -190,6 +192,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    * @parameter
    */
   private List<String> specExcludes = Collections.emptyList();
+  
+  /**
+   * @parameter
+   */
+  private List<WarOverlay> warOverlayIncludes = Collections.emptyList();
 
   /**
    * @parameter default-value="${project}"
@@ -222,13 +229,15 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
   protected ScriptSearch sources;
   protected ScriptSearch specs;
+  protected List<OverlayScriptSearch> warOverlays;
 
   protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
   public final void execute() throws MojoExecutionException, MojoFailureException {
     sources = new ScriptSearch(jsSrcDir,sourceIncludes,sourceExcludes);
     specs = new ScriptSearch(jsTestSrcDir,specIncludes,specExcludes);
-
+    warOverlays = createWarOverlayScriptSearches();
+    
     try {
       run();
     } catch(MojoFailureException e) {
@@ -268,7 +277,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
     return specs;
   }
 
-  public String getSpecDirectoryName() {
+  public List<OverlayScriptSearch> getWarOverlays() {
+	return warOverlays;
+}
+
+public String getSpecDirectoryName() {
     return specDirectoryName;
   }
 
@@ -287,5 +300,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
     public String getScriptLoaderPath() {
         return scriptLoaderPath;
+    }
+    
+    private List<OverlayScriptSearch> createWarOverlayScriptSearches() {
+    	
+    	List<OverlayScriptSearch> warOverlayScriptSearches = new ArrayList<OverlayScriptSearch>();
+    	
+    	for(WarOverlay warOverlay: warOverlayIncludes) {
+    		warOverlayScriptSearches.add(new OverlayScriptSearch(warOverlay.getSrcDirectoryName(), warOverlay.getJsSrcDir(), 
+    				warOverlay.getSourceIncludes(), warOverlay.getSourceExcludes()));
+    	}
+    	
+    	return warOverlayScriptSearches;
     }
 }
