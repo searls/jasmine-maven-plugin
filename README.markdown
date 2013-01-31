@@ -13,6 +13,7 @@ If you want to point at snapshot releases of the plugin (note that I don't deplo
 
 ## Maintainers
 * [Justin Searls](http://about.me/searls), [Test Double](http://testdouble.com)
+* [Kyle Lieber](http://kylelieber.com)
 
 ## Contributions
 Pull requests are, of course, very welcome! A few todos, if anyone is interested in tackling them:
