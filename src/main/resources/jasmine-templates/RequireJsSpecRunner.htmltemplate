@@ -26,8 +26,13 @@
         });
 
     require(specs, function() {
-      window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
-      jasmine.getEnv().execute();
+      window.reporter = new jasmine.$reporter$();
+      var env = jasmine.getEnv();
+      env.specFilter = function(spec) {
+        return reporter.specFilter(spec);
+      };
+      env.addReporter(reporter);
+      env.execute();
     });
   </script>
 </body>
