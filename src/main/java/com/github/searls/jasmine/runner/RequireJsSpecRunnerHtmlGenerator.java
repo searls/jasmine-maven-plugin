@@ -17,7 +17,7 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 
   public String generate() {
     try {
-      return generateHtml(getConfiguration().getSpecs(), getConfiguration().getSourceDirectory());
+      return generateHtml(getConfiguration().getSpecs(), getConfiguration().getSourceDirectory(), false);
     } catch (IOException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
     }
@@ -25,24 +25,24 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
 
   public String generateWitRelativePaths() {
     try {
-      return generateHtml(getConfiguration().getSpecsRelativePath(), getConfiguration().getSourceDirectoryRelativePath());
+      return generateHtml(getConfiguration().getSpecsRelativePath(), getConfiguration().getSourceDirectoryRelativePath(), true);
     } catch (IOException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
     }
   }
 
-  private String generateHtml(Set<String> specsRelativePath, String sourceDirectory) throws IOException {
+  private String generateHtml(Set<String> specsRelativePath, String sourceDirectory, boolean relativePaths) throws IOException {
     StringTemplate template = resolveHtmlTemplate();
 
     includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS), template);
     applyCssToTemplate(asList(JASMINE_CSS), template);
     Set<String> preloads = getConfiguration().getPreloadsRelativePath();
-    template.setAttribute("priority", createArrayOfScripts(preloads));
+    template.setAttribute("priority", createArrayOfScripts(preloads, relativePaths));
     template.setAttribute("requirejsPath", resolveRequirejsPath(sourceDirectory));
     setCustomRunnerConfig(template);
     template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
     template.setAttribute("sourceDir", sourceDirectory);
-    template.setAttribute("specs", createArrayOfScripts(specsRelativePath));
+    template.setAttribute("specs", createArrayOfScripts(specsRelativePath, relativePaths));
     setEncoding(getConfiguration(), template);
 
     return template.toString();
@@ -64,13 +64,17 @@ public class RequireJsSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGene
     }
   }
 
-  private String createArrayOfScripts(Set<String> scripts) throws IOException {
+  private String createArrayOfScripts(Set<String> scripts, boolean relativePaths) throws IOException {
     if (null == scripts || scripts.isEmpty()) {
       return null;
     }
     StringBuilder builder = new StringBuilder("[");
     for (String script : scripts) {
-      builder.append("'" + script + "'");
+      String prefix = "'";
+      if(relativePaths) {
+          prefix += "/";
+      }
+      builder.append(prefix + script + "'");
       builder.append(", ");
     }
     if (!scripts.isEmpty()) {
