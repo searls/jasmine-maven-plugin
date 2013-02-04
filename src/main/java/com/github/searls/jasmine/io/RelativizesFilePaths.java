@@ -1,13 +1,13 @@
 package com.github.searls.jasmine.io;
 
-import static org.apache.commons.lang.StringEscapeUtils.*;
+import static org.apache.commons.lang3.StringEscapeUtils.*;
 import java.io.File;
 import java.io.IOException;
 
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import static org.apache.commons.lang.StringUtils.*;
+import static org.apache.commons.lang3.StringUtils.*;
 
 @SuppressWarnings("unused")
 public class RelativizesFilePaths {

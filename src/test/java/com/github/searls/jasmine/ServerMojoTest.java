@@ -1,6 +1,8 @@
 package com.github.searls.jasmine;
 
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -80,7 +82,7 @@ public class ServerMojoTest {
   @Test
   public void addsConnector() throws Exception {
     verify(server).addConnector(connectorCaptor.capture());
-    assertThat(connectorCaptor.getValue(),is(SelectChannelConnector.class));
+    assertThat(connectorCaptor.getValue(),isA(SelectChannelConnector.class));
     assertThat(connectorCaptor.getValue().getPort(),is(PORT));
   }
 
@@ -89,7 +91,7 @@ public class ServerMojoTest {
     verify(server).setHandler(handlerListCaptor.capture());
     ResourceHandler handler = (ResourceHandler) handlerListCaptor.getValue().getHandlers()[0];
 
-    assertThat(handler,is(JasmineResourceHandler.class));
+    assertThat(handler,is(instanceOf(JasmineResourceHandler.class)));
     assertThat(handler.isDirectoriesListed(),is(true));
     assertThat(handler.getWelcomeFiles()[0],is(RELATIVE_TARGET_DIR+File.separator+MANUAL_SPEC_RUNNER_NAME));
     assertThat(handler.getResourceBase(),is(Resource.newResource(BASE_DIR).toString()));
@@ -98,7 +100,7 @@ public class ServerMojoTest {
   @Test
   public void addsDefaultHandler() throws Exception {
     verify(server).setHandler(handlerListCaptor.capture());
-    assertThat(handlerListCaptor.getValue().getHandlers()[1],is(DefaultHandler.class));
+    assertThat(handlerListCaptor.getValue().getHandlers()[1],is(instanceOf(DefaultHandler.class)));
   }
 
   @Test

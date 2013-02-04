@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.gargoylesoftware.htmlunit.ScriptResult;
@@ -36,7 +36,7 @@ public class CoffeeScript {
   private IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
   public String compile(String coffee) throws IOException {
-    String escapedCoffee = StringEscapeUtils.escapeJavaScript(coffee);
+    String escapedCoffee = StringEscapeUtils.escapeEcmaScript(coffee);
     return cache.containsKey(escapedCoffee) ? cache.get(escapedCoffee) : compileAndCache(escapedCoffee);
   }
 

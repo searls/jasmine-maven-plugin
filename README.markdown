@@ -7,7 +7,7 @@ For information on how to use jasmine-plugin, check out its [documentation page]
 
 ## Current Version Info
 
-The plugin's version numbering will mirror the version of Jasmine that backs it (with a version number tacked on at the end that tracks changes to the plugin within a Jasmine release). The latest version of the plugin points to Jasmine 1.2.0, so its version number is **1.2.0.0**.
+The plugin's version numbering will mirror the version of Jasmine that backs it (with a version number tacked on at the end that tracks changes to the plugin within a Jasmine release). The latest version of the plugin points to Jasmine 1.3.1, so its version number is **1.3.1.0**.
 
 If you want to point at snapshot releases of the plugin (note that I don't deploy them often), they're hosted on the [Sonatype OSS snapshot repository](https://oss.sonatype.org/service/local/repositories/snapshots).
 
@@ -58,7 +58,7 @@ The solution is to add `<extensions>true</extensions>` to your POM, like this:
       <plugin>
         <groupId>com.github.searls</groupId>
         <artifactId>jasmine-maven-plugin</artifactId>
-        <version>1.2.0.0</version>
+        <version>1.3.1.0</version>
 
         <extensions>true</extensions>
 

@@ -1,7 +1,7 @@
 package com.github.searls.jasmine.io;
 
 import static org.mockito.Matchers.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 import static org.powermock.api.mockito.PowerMockito.*;
 

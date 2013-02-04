@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.searls.jasmine.io.scripts.ProjectDirScripResolver;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator;
 import com.github.searls.jasmine.runner.ReporterType;
@@ -18,7 +17,6 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
