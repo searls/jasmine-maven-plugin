@@ -1,7 +1,6 @@
 package com.github.searls.jasmine.io.scripts;
 
 import java.io.IOException;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;

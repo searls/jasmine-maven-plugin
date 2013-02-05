@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
@@ -19,8 +20,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
-
-import edu.emory.mathcs.backport.java.util.Collections;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindsScriptLocationsInDirectoryTest {
@@ -45,7 +44,7 @@ public class FindsScriptLocationsInDirectoryTest {
   public void returnsEmptyWhenDirectoryDoesNotExist() throws IOException {
     List<String> result = subject.find(new ScriptSearch(new File("No way does this file exist"),null,null));
 
-    assertThat(result,is(Collections.emptyList()));
+    assertThat(result,is((List<String>)new ArrayList<String>()));
   }
 
   @Test

@@ -1,8 +1,13 @@
 package com.github.searls.jasmine.server;
 
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isA;
+import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.argThat;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -49,14 +54,14 @@ public class JasmineResourceHandlerTest {
       return resource;
     }
   };
-
+  
   @Test
   public void constructorSetsLoggingLow() throws Exception {
     whenNew(CreatesManualRunner.class).withArguments(config).thenReturn(createsManualRunner);
 
     new JasmineResourceHandler(config);
 
-    verify(createsManualRunner).setLog((Log) argThat(is(NullLog.class)));
+    verify(createsManualRunner).setLog((Log) argThat(isA(NullLog.class)));
   }
 
   @Test

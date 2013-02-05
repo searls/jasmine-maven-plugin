@@ -1,6 +1,5 @@
 package com.github.searls.jasmine;
 
-import static com.github.searls.jasmine.Matchers.*;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;

@@ -1,10 +1,11 @@
 package com.github.searls.jasmine.io.scripts;
 
 import static java.util.Arrays.*;
-import static org.apache.commons.lang.StringUtils.*;
-import static org.hamcrest.Matchers.*;
+import static org.apache.commons.lang3.StringUtils.*;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
@@ -53,7 +54,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("alpha", "beta"));
   }
 
@@ -66,7 +67,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("panda"));
   }
 
@@ -78,7 +79,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("http://google.com"));
   }
 
@@ -90,7 +91,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("https://google.com"));
   }
 
@@ -102,7 +103,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("file:///dusseldorf"));
 
   }

@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import com.github.searls.jasmine.io.scripts.ProjectDirScripResolver;
 import com.github.searls.jasmine.runner.*;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;

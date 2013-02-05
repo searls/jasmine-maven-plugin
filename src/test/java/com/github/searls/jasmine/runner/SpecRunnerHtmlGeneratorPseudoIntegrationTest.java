@@ -133,7 +133,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     webConnection.setDefaultResponse(html);
     WebClient webClient = new WebClient();
     webClient.setWebConnection(webConnection);
-    webClient.setThrowExceptionOnScriptError(false);
+    webClient.getOptions().setThrowExceptionOnScriptError(false);
     webClient.setIncorrectnessListener(new IncorrectnessListener() {
       public void notify(String arg0, Object arg1) {
       }

@@ -8,7 +8,7 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Map;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Test;
 
 public class CoffeeScriptIntegrationTest {
@@ -43,7 +43,7 @@ public class CoffeeScriptIntegrationTest {
   public void itReliesOnTheCache() throws Exception {
     String expected = "win";
     subject.compile(COFFEE);
-    injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeJavaScript(COFFEE), expected));
+    injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeEcmaScript(COFFEE), expected));
 
     String result = subject.compile(COFFEE);
 

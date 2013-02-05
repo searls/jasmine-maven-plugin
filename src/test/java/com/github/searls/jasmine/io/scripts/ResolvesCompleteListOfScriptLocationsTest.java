@@ -1,8 +1,10 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static com.github.searls.jasmine.Matchers.*;
 import static java.util.Arrays.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -92,7 +94,7 @@ public class ResolvesCompleteListOfScriptLocationsTest {
   public void reallyShouldUseALinkedHashSetImplementation() throws IOException {
     Set<String> result = subject.resolve(sources, specs, null);
 
-    assertThat(result,is(LinkedHashSet.class));
+    assertThat(result,is(instanceOf(LinkedHashSet.class)));
   }
 
   private File anyFile() {
