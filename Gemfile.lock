@@ -32,6 +32,7 @@ GEM
     rack (1.4.1)
     rack-test (0.6.1)
       rack (>= 1.0)
+    rake (10.0.3)
     relish (0.5.3)
       archive-tar-minitar (>= 0.5.2)
       json (>= 1.4.6)
@@ -63,5 +64,6 @@ DEPENDENCIES
   capybara
   cucumber
   nokogiri
+  rake
   relish
   rspec
