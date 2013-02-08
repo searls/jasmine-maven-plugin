@@ -4,7 +4,7 @@ gem 'cucumber'
 gem 'rspec'
 gem 'nokogiri'
 gem 'relish'
-gem 'capybara'
+gem 'capybara', '~> 2.0.2'
 gem 'rake'
 
 #gem 'ruby-debug19'
