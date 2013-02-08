@@ -1,8 +1,8 @@
 
 When /^I run "([^"]*)" in a new process$/ do |command|
-  @process = ChildProcess.build command
+  @process = ChildProcess.send(:build,*command.split(' '))
   @process.start
-  sleep 3
+  sleep 10 
 end
 
 
@@ -18,3 +18,4 @@ end
 Then /page should contain "([^"]*)"$/ do |expected|
   page.should have_content(expected)
 end
+

@@ -1,14 +1,16 @@
 package com.github.searls.jasmine.coffee;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.apache.commons.lang.StringEscapeUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 public class CoffeeScriptIntegrationTest {
@@ -30,7 +32,16 @@ public class CoffeeScriptIntegrationTest {
     "  });\n\n" +
     "}).call(this);\n";
 
-  private CoffeeScript subject = new CoffeeScript();
+  private CoffeeScript subject;
+  
+  private Map<String,String> mockCache;
+  
+  @Before
+  public void before() throws Exception {
+  	subject = new CoffeeScript();
+  	mockCache = Collections.synchronizedMap(new WeakHashMap<String,String>());
+  	injectFakeCache(mockCache);
+  }
 
   @Test
   public void itCompiles() throws IOException {
@@ -40,10 +51,10 @@ public class CoffeeScriptIntegrationTest {
   }
 
   @Test
-  public void itReliesOnTheCache() throws Exception {
+  public void itReliesOnTheCache() throws IOException {
     String expected = "win";
     subject.compile(COFFEE);
-    injectFakeCache(Collections.singletonMap(StringEscapeUtils.escapeJavaScript(COFFEE), expected));
+    mockCache.put(StringEscapeUtils.escapeJavaScript(COFFEE), expected);
 
     String result = subject.compile(COFFEE);
 
