@@ -1,6 +1,8 @@
 jasmine-maven-plugin
 ====================
 
+[![Build Status](https://secure.travis-ci.org/searls/jasmine-maven-plugin.png)](http://travis-ci.org/searls/jasmine-maven-plugin)
+
 For information on how to use jasmine-plugin, check out its [documentation page](http://searls.github.com/jasmine-maven-plugin/).
 
 <strong><font color="red">7/31/2012</font></strong> - Heads up! [See below for an important note](https://github.com/searls/jasmine-maven-plugin#lifecycle-extensions) about a backwards-compatibility-breaking change in versions 1.2.0.0 & later.
