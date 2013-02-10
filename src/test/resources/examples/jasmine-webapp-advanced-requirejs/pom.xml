@@ -28,9 +28,10 @@
                     <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
                     <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
                     <jsTestSrcDir>${project.basedir}/src/test/specs</jsTestSrcDir>
-                    <srcDirectoryName>js</srcDirectoryName>
-                    <specDirectoryName>specs</specDirectoryName>
                     <customRunnerConfiguration>${project.basedir}/src/test/resources/customJasmineConfig.txt</customRunnerConfiguration>
+                    <preloadSources>
+                    	<source>require.js</source>
+                    </preloadSources>
                     <specIncludes>
                         <include>appSpec.js</include>
                     </specIncludes>

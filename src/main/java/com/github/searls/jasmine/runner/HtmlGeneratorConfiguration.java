@@ -1,13 +1,13 @@
 package com.github.searls.jasmine.runner;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Set;
+
 import com.github.searls.jasmine.AbstractJasmineMojo;
 import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Set;
 
 public class HtmlGeneratorConfiguration {
   private final String sourceEncoding;
@@ -15,11 +15,12 @@ public class HtmlGeneratorConfiguration {
   private final File customRunnerTemplate;
     private FileUtilsWrapper fileUtilsWrapper;
   private IOUtilsWrapper ioUtilsWrapper;
-  private String specRunnerTemplate;
-  private ScriptResolver scriptResolver;
-  private String sourceDirectoryRelativePath;
-    private String scriptLoaderPath;
-  private File customRunnerConfiguration;
+  private final SpecRunnerTemplate specRunnerTemplate;
+  private final ScriptResolver scriptResolver;
+    private final String scriptLoaderPath;
+  private final File customRunnerConfiguration;
+  private final String srcDirectoryName;
+	private final String specDirectoryName;
 
 
   public HtmlGeneratorConfiguration(ReporterType reporterType, AbstractJasmineMojo configuration, ScriptResolver scriptResolver) throws IOException {
@@ -33,13 +34,8 @@ public class HtmlGeneratorConfiguration {
     this.fileUtilsWrapper = new FileUtilsWrapper();
     this.ioUtilsWrapper  = new IOUtilsWrapper();
     this.scriptLoaderPath = configuration.getScriptLoaderPath();
-  }
-
-  public Set<String> getAllScripts() throws IOException {
-    return scriptResolver.getAllScripts();
-  }
-  public Set<String> getAllScriptsRelativePath() throws IOException {
-    return scriptResolver.getAllScriptsRelativePath();
+    this.srcDirectoryName = configuration.getSrcDirectoryName();
+    this.specDirectoryName = configuration.getSpecDirectoryName();
   }
 
   public String getSourceEncoding() {
@@ -62,31 +58,28 @@ public class HtmlGeneratorConfiguration {
     return ioUtilsWrapper.toString(defaultHtmlTemplatePath);
   }
 
-  public String getRunnerTemplate(String defaultHtmlTemplatePath) throws IOException {
-    if (null != getCustomRunnerTemplate()) {
+  public String getRunnerTemplate() throws IOException {
+  	
+    if (getCustomRunnerTemplate() != null) {
       return readFileToString(getCustomRunnerTemplate());
     } else {
-      return IOtoString(defaultHtmlTemplatePath);
+    	SpecRunnerTemplate template = getSpecRunnerTemplate();
+    	if (template == null) {
+    		template = SpecRunnerTemplate.DEFAULT;
+    	}
+      return IOtoString(template.getTemplate());
     }
   }
 
-  public String getSpecRunnerTemplate() {
+  public SpecRunnerTemplate getSpecRunnerTemplate() {
     return specRunnerTemplate;
   }
 
-  public Set<String> getSpecs() throws IOException {
-    return scriptResolver.getSpecs();
+  public ScriptResolver getScriptResolver() {
+  	return this.scriptResolver;
   }
-
-  public String getSourceDirectory() throws IOException {
-    return scriptResolver.getSourceDirectory();
-  }
-
-  public Set<String> getPreloads() {
-    return scriptResolver.getPreloads();
-  }
-
-    @Override
+  
+  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
@@ -114,7 +107,7 @@ public class HtmlGeneratorConfiguration {
   }
 
   public Set<String> getSpecsRelativePath() throws IOException {
-    return scriptResolver.getSpecsRelativePath  ();
+    return scriptResolver.getSpecsRelativePath();
   }
 
   public String getSourceDirectoryRelativePath() throws IOException {
@@ -133,7 +126,6 @@ public class HtmlGeneratorConfiguration {
     }
   }
 
-
   public void setFileUtilsWrapper(FileUtilsWrapper fileUtilsWrapper) {
       this.fileUtilsWrapper = fileUtilsWrapper;
   }
@@ -144,6 +136,14 @@ public class HtmlGeneratorConfiguration {
 
   public String getScriptLoaderPath() {
       return scriptLoaderPath;
+  }
+  
+  public String getSrcDirectoryName() {
+  	return this.srcDirectoryName;
+  }
+  
+  public String getSpecDirectoryName() {
+  	return this.specDirectoryName;
   }
 }
 
