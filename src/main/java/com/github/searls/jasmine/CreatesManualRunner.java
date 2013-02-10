@@ -12,8 +12,8 @@ import com.github.searls.jasmine.io.FileUtilsWrapper;
 
 public class CreatesManualRunner {
 
-  private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
-  private AbstractJasmineMojo config;
+  private final FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
+  private final AbstractJasmineMojo config;
 
   private Log log;
 
@@ -25,24 +25,8 @@ public class CreatesManualRunner {
   public void create() throws IOException {
     File runnerDestination = new File(config.jasmineTargetDir,config.manualSpecRunnerHtmlFileName);
 
-    ProjectDirScripResolver projectDirScripResolver;
-    if(null != config.customRunnerConfiguration) {
-      projectDirScripResolver = new CustomConfigScriptResolver(
-      		config.getMavenProject().getBasedir(),
-      		config.getSources(),
-      		config.getSpecs(),
-      		config.getPreloadSources(),
-      		config.getPreloadPatterns()
-      );
-    }   else {
-      projectDirScripResolver = new ProjectDirScripResolver(
-      		config.getMavenProject().getBasedir(),
-      		config.getSources(),
-      		config.getSpecs(),
-      		config.getPreloadSources(),
-      		config.getPreloadPatterns()
-      );
-    }
+    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
+    
     SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.HtmlReporter, config, projectDirScripResolver);
 
     String newRunnerHtml = generator.generateWitRelativePaths();

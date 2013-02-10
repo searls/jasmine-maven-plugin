@@ -5,7 +5,7 @@
   <title>Jasmine Spec Runner</title>
   $cssDependencies$
   $javascriptDependencies$
-  $sources$
+  $allScriptTags$
 </head>
 <body>
   <script type="text/javascript">
@@ -15,6 +15,11 @@
 
     var executeJasmineSpecs = function(){
       window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
+      if ('$reporter$' == 'HtmlReporter') {
+        jasmine.getEnv().specFilter = function(spec) {
+          return window.reporter.specFilter(spec);
+        };
+      }
       jasmine.getEnv().execute();
     };
 

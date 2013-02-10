@@ -27,7 +27,7 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
   }
 
   protected StringTemplate resolveHtmlTemplate() throws IOException {
-    String htmlTemplate = configuration.getRunnerTemplate(getDefaultHtmlTemplatePath());
+    String htmlTemplate = configuration.getRunnerTemplate();
     return new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
   }
 
@@ -52,8 +52,6 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
   public HtmlGeneratorConfiguration getConfiguration() {
     return configuration;
   }
-
-  protected abstract String getDefaultHtmlTemplatePath();
 
   protected void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Set<String> scripts, StringTemplate template) throws IOException {
     template.setAttribute(sourcesTemplateAttrName, formatsScriptTags.format(scripts));

@@ -29,8 +29,8 @@
                     <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
                     <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
                     <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
-                    <scriptLoaderPath>lib/require.js</scriptLoaderPath>
                     <preloadSources>
+                    		<source>lib/require.js</source>
                         <source>lib/jasmine.fooMatcher.js</source>
                     </preloadSources>
                 </configuration>

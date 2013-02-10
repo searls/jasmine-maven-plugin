@@ -3,6 +3,7 @@ package com.github.searls.jasmine.io.scripts;
 import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 import org.apache.commons.io.FileUtils;
+import org.apache.maven.project.MavenProject;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -10,20 +11,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Set;
-
-import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.startsWith;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.internal.matchers.IsCollectionContaining.hasItem;
+import com.github.searls.jasmine.AbstractJasmineMojo;
+import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 public class ProjectDirScripResolverIntegrationTest {
-  private String[] excludes = new String[]{"vendor/vendor.js"};
+  private final String[] excludes = new String[]{"vendor/vendor.js"};
 
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
@@ -45,10 +38,16 @@ public class ProjectDirScripResolverIntegrationTest {
   }
 
   private void initScriptResolver() throws IOException {
-    projectDirScripResolver = new ProjectDirScripResolver(root,
-        new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(excludes)),
-        new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()),
-        null,null);
+  	MavenProject project = mock(MavenProject.class);
+  	when(project.getBasedir()).thenReturn(root);
+  	AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
+  	when(config.getMavenProject()).thenReturn(project);
+    when(config.getPreloadSources()).thenReturn(null);
+    when(config.getSrcDirectoryName()).thenReturn("src");
+    when(config.getSpecDirectoryName()).thenReturn("spec");
+    when(config.getSources()).thenReturn(new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(excludes)));
+    when(config.getSpecs()).thenReturn(new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
+    projectDirScripResolver = new ProjectDirScripResolver(config);
     projectDirScripResolver.resolveScripts();
   }
 
@@ -86,10 +85,16 @@ public class ProjectDirScripResolverIntegrationTest {
   @Test
   @Ignore //TODO: Uhm, not sure if this should work?
   public void shouldResolvePreloads() throws Exception {
-    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(root,
-        new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()),
-        new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(new String[]{"vendor/vendor.js"})),
-        null,null);
+  	MavenProject project = mock(MavenProject.class);
+  	when(project.getBasedir()).thenReturn(root);
+  	AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
+  	when(config.getMavenProject()).thenReturn(project);
+    when(config.getPreloadSources()).thenReturn(null);
+    when(config.getSrcDirectoryName()).thenReturn("src");
+    when(config.getSpecDirectoryName()).thenReturn("spec");
+    when(config.getSources()).thenReturn(new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
+    when(config.getSpecs()).thenReturn(new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(new String[]{"vendor/vendor.js"})));
+    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
     projectDirScripResolver.resolveScripts();
     Set<String> preloads = projectDirScripResolver.getPreloads();
     assertThat(preloads, hasItem(endsWith("vendor/vendor.js")));
@@ -116,7 +121,7 @@ public class ProjectDirScripResolverIntegrationTest {
 
   @Test
   public void shouldReturnSourcesDirectory() throws Exception {
-    assertThat(projectDirScripResolver.getSourceDirectory(), Matchers.endsWith("root/src/main/webapp/js/"));
+    assertThat(projectDirScripResolver.getSourceDirectory(), Matchers.endsWith("src"));
   }
 
   @Test
@@ -126,7 +131,7 @@ public class ProjectDirScripResolverIntegrationTest {
 
   @Test
   public void shouldReturnSpecDirectory() throws Exception {
-    assertThat(projectDirScripResolver.getSpecDirectoryPath(), Matchers.endsWith("root/src/test/javascript/"));
+    assertThat(projectDirScripResolver.getSpecDirectoryPath(), Matchers.endsWith("spec"));
   }
 
   @Test
