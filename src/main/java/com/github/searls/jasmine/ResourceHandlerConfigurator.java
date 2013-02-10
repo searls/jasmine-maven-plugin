@@ -1,36 +1,27 @@
 package com.github.searls.jasmine;
 
-import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.server.JasmineResourceHandler;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.handler.*;
-
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+
+import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.server.JasmineResourceHandler;
+
 public class ResourceHandlerConfigurator {
 
-  private AbstractJasmineMojo configuration;
-  private RelativizesFilePaths relativizesFilePaths;
+  private final AbstractJasmineMojo configuration;
+  private final RelativizesFilePaths relativizesFilePaths;
 
   public ResourceHandlerConfigurator(AbstractJasmineMojo configuration, RelativizesFilePaths relativizesFilePaths) {
     this.configuration = configuration;
     this.relativizesFilePaths = relativizesFilePaths;
   }
 
-  public Handler createHandler(String specRunnerTemplate) throws IOException {
-    Handler handler;
-    if ("DEFAULT".equals(specRunnerTemplate)) {
-      handler = createDefaultResourceHandler();
-    } else if ("REQUIRE_JS".equals(specRunnerTemplate)) {
-      handler = createContextualizedResourceHandler();
-    } else {
-      throw new UnsupportedOperationException("Unable to create handler for " + specRunnerTemplate + " profile!");
-    }
-    return handler;
-  }
-
-  private Handler createContextualizedResourceHandler() throws IOException {
+  public Handler createHandler() throws IOException {
     ContextHandlerCollection contexts = new ContextHandlerCollection();
 
     ContextHandler srcDirContextHandler = contexts.addContext("/" + configuration.srcDirectoryName, "");
@@ -43,14 +34,6 @@ public class ResourceHandlerConfigurator {
     rootContextHandler.setHandler(createResourceHandler(false, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()}));
 
     return contexts;
-  }
-
-  private Handler createDefaultResourceHandler() throws IOException {
-    ResourceHandler resourceHandler = createResourceHandler(true, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()});
-
-    HandlerList handlers = new HandlerList();
-    handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
-    return handlers;
   }
 
   private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String[] welcomeFiles) throws IOException {

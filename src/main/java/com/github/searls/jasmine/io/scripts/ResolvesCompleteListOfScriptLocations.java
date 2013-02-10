@@ -20,11 +20,14 @@ public class ResolvesCompleteListOfScriptLocations {
 
   public Set<String> resolve(ScriptSearch sources, ScriptSearch specs, List<String> preloadSources) throws IOException {
     this.preloadScripts = new LinkedHashSet<String>(resolvesLocationOfPreloadSources.resolve(preloadSources, sources.getDirectory(), specs.getDirectory()));
+    
     this.sources = new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(sources));
+    this.sources.removeAll(this.preloadScripts);
+
     this.specs = new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(specs));
+    this.specs.removeAll(this.preloadScripts);
 
     allScripts = new LinkedHashSet<String>();
-
     allScripts.addAll(this.preloadScripts);
     allScripts.addAll(this.sources);
     allScripts.addAll(this.specs);

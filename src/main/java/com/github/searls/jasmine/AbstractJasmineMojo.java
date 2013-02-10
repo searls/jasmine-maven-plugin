@@ -12,6 +12,7 @@ import org.apache.maven.project.MavenProject;
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo {
 
@@ -210,7 +211,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    *
    * @parameter default-value="DEFAULT" expression="${jasmine.specRunnerTemplate}"
    */
-  protected String specRunnerTemplate;
+  protected SpecRunnerTemplate specRunnerTemplate;
 
     /**
      * Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
@@ -248,7 +249,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
     return customRunnerTemplate;
   }
 
-  public String getSpecRunnerTemplate() {
+  public SpecRunnerTemplate getSpecRunnerTemplate() {
     return specRunnerTemplate;
   }
 
