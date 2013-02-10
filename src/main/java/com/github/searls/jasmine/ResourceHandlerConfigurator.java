@@ -1,17 +1,20 @@
 package com.github.searls.jasmine;
 
-import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.server.JasmineResourceHandler;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.handler.*;
-
 import java.io.File;
 import java.io.IOException;
 
+import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.handler.ContextHandler;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+
+import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.server.JasmineResourceHandler;
+
 public class ResourceHandlerConfigurator {
 
-  private AbstractJasmineMojo configuration;
-  private RelativizesFilePaths relativizesFilePaths;
+  private final AbstractJasmineMojo configuration;
+  private final RelativizesFilePaths relativizesFilePaths;
 
   public ResourceHandlerConfigurator(AbstractJasmineMojo configuration, RelativizesFilePaths relativizesFilePaths) {
     this.configuration = configuration;
@@ -19,15 +22,18 @@ public class ResourceHandlerConfigurator {
   }
 
   public Handler createHandler() throws IOException {
-    return createDefaultResourceHandler();
-  }
+    ContextHandlerCollection contexts = new ContextHandlerCollection();
 
-  private Handler createDefaultResourceHandler() throws IOException {
-    ResourceHandler resourceHandler = createResourceHandler(true, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()});
+    ContextHandler srcDirContextHandler = contexts.addContext("/" + configuration.srcDirectoryName, "");
+    srcDirContextHandler.setHandler(createResourceHandler(true, configuration.sources.getDirectory().getAbsolutePath(), null));
 
-    HandlerList handlers = new HandlerList();
-    handlers.setHandlers(new Handler[]{resourceHandler, new DefaultHandler()});
-    return handlers;
+    ContextHandler specDirContextHandler = contexts.addContext("/" + configuration.specDirectoryName, "");
+    specDirContextHandler.setHandler(createResourceHandler(true, configuration.specs.getDirectory().getAbsolutePath(), null));
+
+    ContextHandler rootContextHandler = contexts.addContext("/", "");
+    rootContextHandler.setHandler(createResourceHandler(false, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()}));
+
+    return contexts;
   }
 
   private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String[] welcomeFiles) throws IOException {

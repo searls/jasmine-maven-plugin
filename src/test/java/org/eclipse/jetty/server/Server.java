@@ -14,4 +14,9 @@ public class Server {
   public void setHandler(Handler handler) {}
 
   public Container getContainer() { return null; }
+  
+  public interface Graceful extends Handler
+  {
+      public void setShutdown(boolean shutdown);
+  }
 }

@@ -3,17 +3,19 @@ package com.github.searls.jasmine;
 import java.io.File;
 import java.io.IOException;
 
-import com.github.searls.jasmine.io.scripts.ProjectDirScripResolver;
-import com.github.searls.jasmine.runner.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;
+import com.github.searls.jasmine.io.scripts.ProjectDirScripResolver;
+import com.github.searls.jasmine.runner.ReporterType;
+import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
+import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 
 public class CreatesManualRunner {
 
-  private FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
-  private AbstractJasmineMojo config;
+  private final FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
+  private final AbstractJasmineMojo config;
 
   private Log log;
 
@@ -25,7 +27,7 @@ public class CreatesManualRunner {
   public void create() throws IOException {
     File runnerDestination = new File(config.jasmineTargetDir,config.manualSpecRunnerHtmlFileName);
 
-    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config.getMavenProject().getBasedir(), config.getSources(), config.getSpecs(), config.getPreloadSources());
+    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
     
     SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.HtmlReporter, config, projectDirScripResolver);
 

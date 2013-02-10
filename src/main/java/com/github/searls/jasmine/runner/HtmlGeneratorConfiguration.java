@@ -15,10 +15,12 @@ public class HtmlGeneratorConfiguration {
   private final File customRunnerTemplate;
     private FileUtilsWrapper fileUtilsWrapper;
   private IOUtilsWrapper ioUtilsWrapper;
-  private SpecRunnerTemplate specRunnerTemplate;
-  private ScriptResolver scriptResolver;
-    private String scriptLoaderPath;
-  private File customRunnerConfiguration;
+  private final SpecRunnerTemplate specRunnerTemplate;
+  private final ScriptResolver scriptResolver;
+    private final String scriptLoaderPath;
+  private final File customRunnerConfiguration;
+  private final String srcDirectoryName;
+	private final String specDirectoryName;
 
 
   public HtmlGeneratorConfiguration(ReporterType reporterType, AbstractJasmineMojo configuration, ScriptResolver scriptResolver) throws IOException {
@@ -32,6 +34,8 @@ public class HtmlGeneratorConfiguration {
     this.fileUtilsWrapper = new FileUtilsWrapper();
     this.ioUtilsWrapper  = new IOUtilsWrapper();
     this.scriptLoaderPath = configuration.getScriptLoaderPath();
+    this.srcDirectoryName = configuration.getSrcDirectoryName();
+    this.specDirectoryName = configuration.getSpecDirectoryName();
   }
 
   public String getSourceEncoding() {
@@ -103,7 +107,7 @@ public class HtmlGeneratorConfiguration {
   }
 
   public Set<String> getSpecsRelativePath() throws IOException {
-    return scriptResolver.getSpecsRelativePath  ();
+    return scriptResolver.getSpecsRelativePath();
   }
 
   public String getSourceDirectoryRelativePath() throws IOException {
@@ -132,6 +136,14 @@ public class HtmlGeneratorConfiguration {
 
   public String getScriptLoaderPath() {
       return scriptLoaderPath;
+  }
+  
+  public String getSrcDirectoryName() {
+  	return this.srcDirectoryName;
+  }
+  
+  public String getSpecDirectoryName() {
+  	return this.specDirectoryName;
   }
 }
 

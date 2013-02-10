@@ -5,10 +5,11 @@
         <groupId>com.github.searls</groupId>
         <artifactId>jasmine-example-superpom</artifactId>
         <version>1.2.0.1-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
     </parent>
     <artifactId>jasmine-webapp-amd-support</artifactId>
     <packaging>war</packaging>
-    <name>Example Webapp with advanced require.js configuration</name>
+    <name>Example Webapp using Jasmine Maven Plugin using custom directories</name>
 
     <build>
         <plugins>
@@ -25,16 +26,15 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <debug>true</debug>
                     <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
                     <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
-                    <jsTestSrcDir>${project.basedir}/src/test/specs</jsTestSrcDir>
-                    <customRunnerConfiguration>${project.basedir}/src/test/resources/customJasmineConfig.txt</customRunnerConfiguration>
+                    <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
+                    <scriptLoaderPath>lib/require.js</scriptLoaderPath>
+                    <customRunnerTemplate>src/test/config/legacy.htmltemplate</customRunnerTemplate>
                     <preloadSources>
-                    	<source>require.js</source>
+                        <source>lib/jasmine.fooMatcher.js</source>
                     </preloadSources>
-                    <specIncludes>
-                        <include>appSpec.js</include>
-                    </specIncludes>
                 </configuration>
             </plugin>
         </plugins>

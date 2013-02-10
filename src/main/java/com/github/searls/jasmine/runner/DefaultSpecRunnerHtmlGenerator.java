@@ -40,8 +40,8 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
       		resolver.getPreloadsRelativePath(),
       		resolver.getSourcesRelativePath(),
       		resolver.getSpecsRelativePath(),
-      		resolver.getSourceDirectoryRelativePath(),
-      		resolver.getSpecDirectoryRelativePath()
+      		resolver.getSourceDirectory(),
+      		resolver.getSpecDirectoryPath()
       		);
     } catch (IOException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
@@ -61,16 +61,23 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     applyScriptTagsToTemplate("preloadScriptTags", preloads, template);
     applyScriptTagsToTemplate("sourceScriptTags", sources, template);
     applyScriptTagsToTemplate("specScriptTags", specs, template);
-    template.setAttribute("allScripts", createJsonArray(allScripts));
-    template.setAttribute("preloads", createJsonArray(preloads));
-    template.setAttribute("sources", createJsonArray(sources));
-    template.setAttribute("specs", createJsonArray(specs));
+    template.setAttribute("allScriptsList", createJsonArray(allScripts));
+    template.setAttribute("preloadsList", createJsonArray(preloads));
+    template.setAttribute("sourcesList", createJsonArray(sources));
+    template.setAttribute("specsList", createJsonArray(specs));
     template.setAttribute("sourceDir", sourceDirectory);
     template.setAttribute("specDir", specDirectory);
+    
     setCustomRunnerConfig(template);
     template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
     setEncoding(getConfiguration(), template);
 
+    // these fields are being preserved for backwards compatibility
+    applyScriptTagsToTemplate("sources", allScripts, template);
+    template.setAttribute("specs", createJsonArray(specs));
+    template.setAttribute("priority", createJsonArray(preloads));
+    template.setAttribute("requirejsPath", resolveRequirejsPath(sourceDirectory));
+    
     return template.toString();
   }
 
@@ -88,6 +95,15 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     String customRunnerConfiguration = getConfiguration().getCustomRunnerConfiguration();
     if (null != customRunnerConfiguration) {
       template.setAttribute("customRunnerConfiguration", customRunnerConfiguration);
+    }
+  }
+  
+  private String resolveRequirejsPath(String sourceDirectory) {
+    String scriptLoaderPath = getConfiguration().getScriptLoaderPath();
+    if(null == scriptLoaderPath) {
+      return String.format("%s/require.js", sourceDirectory);
+    } else {
+      return String.format("%s/%s", sourceDirectory, scriptLoaderPath);
     }
   }
 }

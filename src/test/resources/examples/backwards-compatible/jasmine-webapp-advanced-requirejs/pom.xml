@@ -5,6 +5,7 @@
         <groupId>com.github.searls</groupId>
         <artifactId>jasmine-example-superpom</artifactId>
         <version>1.2.0.1-SNAPSHOT</version>
+        <relativePath>../../</relativePath>
     </parent>
     <artifactId>jasmine-webapp-amd-support</artifactId>
     <packaging>war</packaging>
@@ -28,10 +29,10 @@
                     <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
                     <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
                     <jsTestSrcDir>${project.basedir}/src/test/specs</jsTestSrcDir>
+                    <srcDirectoryName>js</srcDirectoryName>
+                    <specDirectoryName>specs</specDirectoryName>
                     <customRunnerConfiguration>${project.basedir}/src/test/resources/customJasmineConfig.txt</customRunnerConfiguration>
-                    <preloadSources>
-                    	<source>require.js</source>
-                    </preloadSources>
+                    <customRunnerTemplate>src/test/config/legacy.htmltemplate</customRunnerTemplate>
                     <specIncludes>
                         <include>appSpec.js</include>
                     </specIncludes>

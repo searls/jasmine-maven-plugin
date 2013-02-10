@@ -5,6 +5,7 @@
     <groupId>com.github.searls</groupId>
     <artifactId>jasmine-example-superpom</artifactId>
     <version>1.2.0.1-SNAPSHOT</version>
+    <relativePath>../../</relativePath>
   </parent>
   <artifactId>jasmine-webapp-passing</artifactId>
   <packaging>war</packaging>
@@ -15,7 +16,7 @@
       <plugin>
         <groupId>com.github.searls</groupId>
         <artifactId>jasmine-maven-plugin</artifactId>
-        <version>${project.version}</version> 
+        <version>${project.version}</version>
         <extensions>true</extensions>
         <executions>
           <execution>
@@ -24,6 +25,9 @@
             </goals>
           </execution>
         </executions>
+        <configuration>
+        	<customRunnerTemplate>src/test/config/legacy.htmltemplate</customRunnerTemplate>
+        </configuration>
       </plugin>
     </plugins>
   </build>
