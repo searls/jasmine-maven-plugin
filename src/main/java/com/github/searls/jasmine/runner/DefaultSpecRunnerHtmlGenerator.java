@@ -5,8 +5,8 @@ import static java.util.Arrays.asList;
 import java.io.IOException;
 import java.util.Set;
 
-import org.antlr.stringtemplate.StringTemplate;
 import org.apache.commons.lang3.StringUtils;
+import org.stringtemplate.v4.ST;
 
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
@@ -54,31 +54,31 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
   														 Set<String> specs,
   														 String sourceDirectory,
   														 String specDirectory) throws IOException {
-    StringTemplate template = resolveHtmlTemplate();
+    ST template = resolveHtmlTemplate();
     includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS), template);
     applyCssToTemplate(asList(JASMINE_CSS), template);
     applyScriptTagsToTemplate("allScriptTags", allScripts, template);
     applyScriptTagsToTemplate("preloadScriptTags", preloads, template);
     applyScriptTagsToTemplate("sourceScriptTags", sources, template);
     applyScriptTagsToTemplate("specScriptTags", specs, template);
-    template.setAttribute("allScriptsList", createJsonArray(allScripts));
-    template.setAttribute("preloadsList", createJsonArray(preloads));
-    template.setAttribute("sourcesList", createJsonArray(sources));
-    template.setAttribute("specsList", createJsonArray(specs));
-    template.setAttribute("sourceDir", sourceDirectory);
-    template.setAttribute("specDir", specDirectory);
+    template.add("allScriptsList", createJsonArray(allScripts));
+    template.add("preloadsList", createJsonArray(preloads));
+    template.add("sourcesList", createJsonArray(sources));
+    template.add("specsList", createJsonArray(specs));
+    template.add("sourceDir", sourceDirectory);
+    template.add("specDir", specDirectory);
     
     setCustomRunnerConfig(template);
-    template.setAttribute(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
+    template.add(REPORTER_ATTR_NAME, getConfiguration().getReporterType().name());
     setEncoding(getConfiguration(), template);
 
     // these fields are being preserved for backwards compatibility
     applyScriptTagsToTemplate("sources", allScripts, template);
-    template.setAttribute("specs", createJsonArray(specs));
-    template.setAttribute("priority", createJsonArray(preloads));
-    template.setAttribute("requirejsPath", resolveRequirejsPath(sourceDirectory));
+    template.add("specs", createJsonArray(specs));
+    template.add("priority", createJsonArray(preloads));
+    template.add("requirejsPath", resolveRequirejsPath(sourceDirectory));
     
-    return template.toString();
+    return template.render();
   }
 
   private String createJsonArray(Set<String> scripts) {
@@ -91,10 +91,10 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     return builder.toString();
   }
 
-  private void setCustomRunnerConfig(StringTemplate template) throws IOException {
+  private void setCustomRunnerConfig(ST template) throws IOException {
     String customRunnerConfiguration = getConfiguration().getCustomRunnerConfiguration();
     if (null != customRunnerConfiguration) {
-      template.setAttribute("customRunnerConfiguration", customRunnerConfiguration);
+      template.add("customRunnerConfiguration", customRunnerConfiguration);
     }
   }
   

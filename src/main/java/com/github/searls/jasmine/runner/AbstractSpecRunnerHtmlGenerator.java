@@ -4,9 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import org.antlr.stringtemplate.StringTemplate;
-import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.codehaus.plexus.util.StringUtils;
+import org.stringtemplate.v4.ST;
 
 import com.github.searls.jasmine.format.FormatsScriptTags;
 
@@ -16,45 +15,45 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
   private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
   protected static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
   protected static final String REPORTER_ATTR_NAME = "reporter";
-  private HtmlGeneratorConfiguration configuration;
-  private FormatsScriptTags formatsScriptTags = new FormatsScriptTags();
+  private final HtmlGeneratorConfiguration configuration;
+  private final FormatsScriptTags formatsScriptTags = new FormatsScriptTags();
 
   protected AbstractSpecRunnerHtmlGenerator(HtmlGeneratorConfiguration configuration) {
     this.configuration = configuration;
   }
 
-  protected void setEncoding(HtmlGeneratorConfiguration htmlGeneratorConfiguration, StringTemplate template) {
-    template.setAttribute(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
+  protected void setEncoding(HtmlGeneratorConfiguration htmlGeneratorConfiguration, ST template) {
+    template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
   }
 
-  protected StringTemplate resolveHtmlTemplate() throws IOException {
+  protected ST resolveHtmlTemplate() throws IOException {
     String htmlTemplate = configuration.getRunnerTemplate();
-    return new StringTemplate(htmlTemplate, DefaultTemplateLexer.class);
+    return new ST(htmlTemplate,'$','$');
   }
 
-  protected void includeJavaScriptDependencies(List<String> dependencies, StringTemplate template) throws IOException {
+  protected void includeJavaScriptDependencies(List<String> dependencies, ST template) throws IOException {
     StringBuilder js = new StringBuilder();
     for (String jsFile : dependencies) {
       if(jsFile != null) {
         js.append("<script type=\"text/javascript\">").append(configuration.IOtoString(jsFile)).append("</script>");
       }
     }
-    template.setAttribute(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
+    template.add(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
   }
 
-  protected void applyCssToTemplate(List<String> styles, StringTemplate template) throws IOException {
+  protected void applyCssToTemplate(List<String> styles, ST template) throws IOException {
     StringBuilder css = new StringBuilder();
     for (String cssFile : styles) {
       css.append("<style type=\"text/css\">").append(configuration.IOtoString(cssFile)).append("</style>");
     }
-    template.setAttribute(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());
+    template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());
   }
 
   public HtmlGeneratorConfiguration getConfiguration() {
     return configuration;
   }
 
-  protected void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Set<String> scripts, StringTemplate template) throws IOException {
-    template.setAttribute(sourcesTemplateAttrName, formatsScriptTags.format(scripts));
+  protected void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Set<String> scripts, ST template) throws IOException {
+    template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));
   }
 }
