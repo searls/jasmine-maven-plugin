@@ -1,7 +1,19 @@
 package com.github.searls.jasmine.io.scripts;
 
-import com.github.searls.jasmine.io.ScansDirectory;
-import com.github.searls.jasmine.model.ScriptSearch;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.internal.matchers.IsCollectionContaining.hasItem;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Set;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.project.MavenProject;
 import org.hamcrest.Matchers;
@@ -38,6 +50,12 @@ public class ProjectDirScripResolverIntegrationTest {
   }
 
   private void initScriptResolver() throws IOException {
+<<<<<<< HEAD
+    projectDirScripResolver = new ProjectDirScripResolver(root,
+        new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(excludes)),
+        new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()),
+        null,null);
+=======
   	MavenProject project = mock(MavenProject.class);
   	when(project.getBasedir()).thenReturn(root);
   	AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
@@ -48,6 +66,7 @@ public class ProjectDirScripResolverIntegrationTest {
     when(config.getSources()).thenReturn(new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(excludes)));
     when(config.getSpecs()).thenReturn(new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
     projectDirScripResolver = new ProjectDirScripResolver(config);
+>>>>>>> 1155aab4fc29975d43d35074a7cd6b80f177cbff
     projectDirScripResolver.resolveScripts();
   }
 
@@ -85,6 +104,12 @@ public class ProjectDirScripResolverIntegrationTest {
   @Test
   @Ignore //TODO: Uhm, not sure if this should work?
   public void shouldResolvePreloads() throws Exception {
+<<<<<<< HEAD
+    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(root,
+        new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()),
+        new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(new String[]{"vendor/vendor.js"})),
+        null,null);
+=======
   	MavenProject project = mock(MavenProject.class);
   	when(project.getBasedir()).thenReturn(root);
   	AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
@@ -95,6 +120,7 @@ public class ProjectDirScripResolverIntegrationTest {
     when(config.getSources()).thenReturn(new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
     when(config.getSpecs()).thenReturn(new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(new String[]{"vendor/vendor.js"})));
     ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
+>>>>>>> 1155aab4fc29975d43d35074a7cd6b80f177cbff
     projectDirScripResolver.resolveScripts();
     Set<String> preloads = projectDirScripResolver.getPreloads();
     assertThat(preloads, hasItem(endsWith("vendor/vendor.js")));
