@@ -12,3 +12,4 @@ rerun.txt
 *.ipr
 *.iws
 .bundle
+*.versionsBackup
