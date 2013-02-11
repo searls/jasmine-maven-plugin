@@ -1,7 +1,8 @@
 package com.github.searls.jasmine.exception;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
+
 import org.junit.Test;
 
 public class StringifiesStackTracesTest {

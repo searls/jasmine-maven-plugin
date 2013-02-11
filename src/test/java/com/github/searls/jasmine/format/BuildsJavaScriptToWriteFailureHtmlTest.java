@@ -1,18 +1,18 @@
 package com.github.searls.jasmine.format;
 
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Test;
 
 
 public class BuildsJavaScriptToWriteFailureHtmlTest {
 
-  private static final String LEFT = "document.write(\""+StringEscapeUtils.escapeJavaScript("<div class=\"suite spec failed\">");
-  private static final String RIGHT = StringEscapeUtils.escapeJavaScript("</div>")+"\")";
+  private static final String LEFT = "document.write(\""+StringEscapeUtils.escapeEcmaScript("<div class=\"suite spec failed\">");
+  private static final String RIGHT = StringEscapeUtils.escapeEcmaScript("</div>")+"\")";
 
-  private BuildsJavaScriptToWriteFailureHtml subject = new BuildsJavaScriptToWriteFailureHtml();
+  private final BuildsJavaScriptToWriteFailureHtml subject = new BuildsJavaScriptToWriteFailureHtml();
 
   @Test
   public void whenNothingIsPassedYouGetAnEmptyDiv() {

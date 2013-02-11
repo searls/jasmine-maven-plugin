@@ -1,9 +1,12 @@
 package com.github.searls.jasmine.coffee;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
+
 import java.io.File;
 import java.io.FileWriter;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

@@ -1,9 +1,10 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static java.util.Arrays.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,14 +1,14 @@
 package com.github.searls.jasmine.io.scripts;
 
-import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.model.ScriptSearch;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 public abstract class AbstractScriptResolver implements ScriptResolver {
   private Set<String> sources;

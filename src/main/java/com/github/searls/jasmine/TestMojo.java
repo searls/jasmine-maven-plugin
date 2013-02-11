@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 
-import com.github.searls.jasmine.io.scripts.TargetDirScriptResolver;
-import com.github.searls.jasmine.runner.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.MojoFailureException;
 import org.openqa.selenium.WebDriver;
@@ -17,7 +15,12 @@ import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.github.searls.jasmine.format.JasmineResultLogger;
+import com.github.searls.jasmine.io.scripts.TargetDirScriptResolver;
 import com.github.searls.jasmine.model.JasmineResult;
+import com.github.searls.jasmine.runner.ReporterType;
+import com.github.searls.jasmine.runner.SpecRunnerExecutor;
+import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
+import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 
 
 /**

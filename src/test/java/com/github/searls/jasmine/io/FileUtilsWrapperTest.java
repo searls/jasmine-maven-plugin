@@ -1,8 +1,12 @@
 package com.github.searls.jasmine.io;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.junit.Assert.assertThat;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.File;
 import java.io.IOException;

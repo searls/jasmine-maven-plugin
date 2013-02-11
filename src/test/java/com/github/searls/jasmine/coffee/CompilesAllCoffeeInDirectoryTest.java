@@ -1,7 +1,8 @@
 package com.github.searls.jasmine.coffee;
 
-import static java.util.Arrays.*;
-import static org.mockito.Mockito.*;
+import static java.util.Arrays.asList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;

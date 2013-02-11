@@ -1,11 +1,15 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static java.util.Arrays.*;
-import static org.apache.commons.lang.StringUtils.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 import java.io.File;
@@ -13,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -33,7 +38,7 @@ import com.github.searls.jasmine.io.RelativizesFilePaths;
 public class RelativizesASetOfScriptsTest {
 
   @InjectMocks
-  private RelativizesASetOfScripts subject = new RelativizesASetOfScripts();
+  private final RelativizesASetOfScripts subject = new RelativizesASetOfScripts();
 
   @Mock
   private RelativizesFilePaths relativizesFilePaths;
@@ -48,12 +53,12 @@ public class RelativizesASetOfScriptsTest {
   public void loopsThroughStringsAndRelativizes() throws Exception {
     stubbingForFiles(true);
     HashSet<String> sources = new HashSet<String>(asList("a", "b"));
-    when(relativizesFilePaths.relativize(eq(from), (File) argThat(is(fileNamed("a"))))).thenReturn("alpha");
-    when(relativizesFilePaths.relativize(eq(from), (File) argThat(is(fileNamed("b"))))).thenReturn("beta");
+    when(relativizesFilePaths.relativize(eq(from), argThat(is(fileNamed("a"))))).thenReturn("alpha");
+    when(relativizesFilePaths.relativize(eq(from), argThat(is(fileNamed("b"))))).thenReturn("beta");
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("alpha", "beta"));
   }
 
@@ -62,11 +67,11 @@ public class RelativizesASetOfScriptsTest {
     stubbingForFiles(true);
     String name = stripFile("file:/c:/panda");
     HashSet<String> sources = new HashSet<String>(asList(name));
-    when(relativizesFilePaths.relativize(eq(from), (File) argThat(is(fileNamed(name))))).thenReturn("panda");
+    when(relativizesFilePaths.relativize(eq(from), argThat(is(fileNamed(name))))).thenReturn("panda");
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("panda"));
   }
 
@@ -78,7 +83,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("http://google.com"));
   }
 
@@ -90,7 +95,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("https://google.com"));
   }
 
@@ -102,7 +107,7 @@ public class RelativizesASetOfScriptsTest {
 
     Set<String> result = subject.relativize(from, sources);
 
-    assertThat(result, is(LinkedHashSet.class));
+    assertThat(result, is(instanceOf(LinkedHashSet.class)));
     assertThat(result, hasItems("file:///dusseldorf"));
 
   }
@@ -121,7 +126,8 @@ public class RelativizesASetOfScriptsTest {
 
   private static TypeSafeMatcher<File> fileNamed(final String name) {
     return new TypeSafeMatcher<File>() {
-      public boolean matchesSafely(File file) {
+      @Override
+			public boolean matchesSafely(File file) {
         return name.equals(file.toString());
       }
       public void describeTo(Description description) {}
@@ -130,6 +136,6 @@ public class RelativizesASetOfScriptsTest {
 
   private String stripFile(String absoluteScript) {
     String strip = "file:" + (File.separatorChar == '/' ? "" : "/");
-    return stripStart(absoluteScript,strip);
+    return StringUtils.stripStart(absoluteScript,strip);
   }
 }

@@ -1,9 +1,11 @@
 package com.github.searls.jasmine.io;
 
-import static org.mockito.Matchers.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.powermock.api.mockito.PowerMockito.*;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isA;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,8 +20,8 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(IOUtils.class)
 public class IOUtilsWrapperIntegrationTest {
-  private IOUtilsWrapper subject = new IOUtilsWrapper();
-  private InputStream inputStream = mock(InputStream.class);
+  private final IOUtilsWrapper subject = new IOUtilsWrapper();
+  private final InputStream inputStream = mock(InputStream.class);
 
   @Before
   public void powerfullyMockStaticClasses() {

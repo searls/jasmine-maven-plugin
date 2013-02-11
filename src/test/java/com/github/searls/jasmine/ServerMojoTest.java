@@ -1,5 +1,6 @@
 package com.github.searls.jasmine;
 
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
@@ -90,7 +91,7 @@ public class ServerMojoTest {
   @Test
   public void addsConnector() throws Exception {
     verify(server).addConnector(connectorCaptor.capture());
-    assertThat(connectorCaptor.getValue(),is(SelectChannelConnector.class));
+    assertThat(connectorCaptor.getValue(),is(instanceOf(SelectChannelConnector.class)));
     assertThat(connectorCaptor.getValue().getPort(),is(PORT));
   }
 
@@ -112,7 +113,7 @@ public class ServerMojoTest {
   																				 String expectedWelcomeFiles) throws MalformedURLException, IOException {
   	ResourceHandler handler = (ResourceHandler) ctxHandler.getHandlers()[0];
 
-  	assertThat(handler,is(JasmineResourceHandler.class));
+  	assertThat(handler,is(instanceOf(JasmineResourceHandler.class)));
     assertThat(handler.isDirectoriesListed(),is(expectDirectoriesListed));
     assertThat(handler.getResourceBase(),is(Resource.newResource(expectedBase).toString()));
     if (expectedWelcomeFiles != null) {
@@ -127,9 +128,9 @@ public class ServerMojoTest {
     verify(server).setHandler(handlerListCaptor.capture());
     Handler[] handlers = handlerListCaptor.getValue().getHandlers();
     assertThat(handlers.length,is(3));
-    assertThat(handlers[0],is(ContextHandler.class));
-    assertThat(handlers[1],is(ContextHandler.class));
-    assertThat(handlers[2],is(ContextHandler.class));
+    assertThat(handlers[0],is(instanceOf(ContextHandler.class)));
+    assertThat(handlers[1],is(instanceOf(ContextHandler.class)));
+    assertThat(handlers[2],is(instanceOf(ContextHandler.class)));
   }
 
   @Test

@@ -1,6 +1,6 @@
 package com.github.searls.jasmine.io;
 
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 
 import java.io.File;
 import java.util.ArrayList;

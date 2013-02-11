@@ -1,15 +1,19 @@
 package com.github.searls.jasmine.runner;
 
-import com.github.searls.jasmine.AbstractJasmineMojo;
-import com.github.searls.jasmine.io.FileUtilsWrapper;
-import com.github.searls.jasmine.io.IOUtilsWrapper;
-import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import org.junit.Test;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.mockito.Mockito.*;
+import org.junit.Test;
+
+import com.github.searls.jasmine.AbstractJasmineMojo;
+import com.github.searls.jasmine.io.FileUtilsWrapper;
+import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
 public class HtmlGeneratorConfigurationTest {
   HtmlGeneratorConfiguration generatorConfiguration;
