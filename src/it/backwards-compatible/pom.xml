@@ -1,0 +1,20 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.searls</groupId>
+        <artifactId>jasmine-example-superpom</artifactId>
+        <version>@project.version@</version>
+        <relativePath>../</relativePath>
+    </parent>
+    <artifactId>jasmine-backwards-compatible</artifactId>
+    <packaging>pom</packaging>
+    <name>Parent POM of all backwards-compatible it cases.</name>
+
+	<modules>
+		<module>jasmine-webapp-advanced-requirejs</module>
+		<module>jasmine-webapp-amd-support</module>
+		<module>jasmine-webapp-passing</module>
+	</modules>
+
+</project>
