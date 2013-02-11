@@ -30,6 +30,12 @@
       <organization>Test Double</organization>
       <organizationUrl>http://testdouble.com</organizationUrl>
     </developer>
+    <developer>
+      <id>klieber</id>
+      <name>Kyle Lieber</name>
+      <email>klieber.github@mailnull.com</email>
+			<url>http://kylelieber.com</url>
+    </developer>
   </developers>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
@@ -38,7 +44,6 @@
   </scm>
 
   <properties>
-    <jasmine.version>1.0.2</jasmine.version>
     <powermock.version>1.4.6</powermock.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
