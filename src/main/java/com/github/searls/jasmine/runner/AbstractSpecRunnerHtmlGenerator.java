@@ -1,13 +1,14 @@
 package com.github.searls.jasmine.runner;
 
-import com.github.searls.jasmine.format.FormatsScriptTags;
+import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+
 import org.antlr.stringtemplate.StringTemplate;
 import org.antlr.stringtemplate.language.DefaultTemplateLexer;
 import org.codehaus.plexus.util.StringUtils;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Set;
+import com.github.searls.jasmine.format.FormatsScriptTags;
 
 public abstract class AbstractSpecRunnerHtmlGenerator {
   private static final String SOURCE_ENCODING = "sourceEncoding";

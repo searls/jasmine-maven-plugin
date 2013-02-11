@@ -1,7 +1,8 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;

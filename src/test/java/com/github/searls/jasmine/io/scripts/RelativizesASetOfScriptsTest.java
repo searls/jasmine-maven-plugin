@@ -1,7 +1,6 @@
 package com.github.searls.jasmine.io.scripts;
 
 import static java.util.Arrays.asList;
-import static org.apache.commons.lang.StringUtils.stripStart;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
@@ -18,6 +17,7 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
@@ -136,6 +136,6 @@ public class RelativizesASetOfScriptsTest {
 
   private String stripFile(String absoluteScript) {
     String strip = "file:" + (File.separatorChar == '/' ? "" : "/");
-    return stripStart(absoluteScript,strip);
+    return StringUtils.stripStart(absoluteScript,strip);
   }
 }

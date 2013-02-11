@@ -1,10 +1,10 @@
 package com.github.searls.jasmine.io.scripts;
 
-import com.github.searls.jasmine.AbstractJasmineMojo;
-import com.github.searls.jasmine.model.ScriptSearch;
-
 import java.io.File;
 import java.io.IOException;
+
+import com.github.searls.jasmine.AbstractJasmineMojo;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 public class TargetDirScriptResolver extends AbstractScriptResolver {
 

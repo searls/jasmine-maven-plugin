@@ -1,13 +1,12 @@
 package com.github.searls.jasmine.coffee;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
-
-import com.github.searls.jasmine.coffee.DetectsCoffee;
 
 public class DetectsCoffeeTest {
 

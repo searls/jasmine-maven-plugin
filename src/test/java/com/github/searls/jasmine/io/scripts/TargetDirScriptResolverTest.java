@@ -1,13 +1,9 @@
 package com.github.searls.jasmine.io.scripts;
 
-import com.github.searls.jasmine.AbstractJasmineMojo;
-import com.github.searls.jasmine.io.ScansDirectory;
-import com.github.searls.jasmine.model.ScriptSearch;
-import org.apache.commons.io.FileUtils;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,10 +12,15 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import org.apache.commons.io.FileUtils;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+
+import com.github.searls.jasmine.AbstractJasmineMojo;
+import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.ScriptSearch;
 
 //├── src
 //│   ├── main

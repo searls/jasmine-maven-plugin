@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.antlr.stringtemplate.StringTemplate;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 

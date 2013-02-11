@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -54,7 +54,7 @@ public class CoffeeScriptIntegrationTest {
   public void itReliesOnTheCache() throws IOException {
     String expected = "win";
     subject.compile(COFFEE);
-    mockCache.put(StringEscapeUtils.escapeJavaScript(COFFEE), expected);
+    mockCache.put(StringEscapeUtils.escapeEcmaScript(COFFEE), expected);
 
     String result = subject.compile(COFFEE);
 
