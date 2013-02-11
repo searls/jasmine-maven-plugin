@@ -45,7 +45,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    *
    *   Some valid examples: FIREFOX_3_6, INTERNET_EXPLORER_6, INTERNET_EXPLORER_7, INTERNET_EXPLORER_8
    *
-   * @parameter default-value="FIREFOX_3"
+   * @parameter default-value="FIREFOX_3_6"
    */
   protected String browserVersion;
 

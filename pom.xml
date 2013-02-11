@@ -73,11 +73,6 @@
       <version>2.4</version>
     </dependency>
     <dependency>
-      <groupId>xml-apis</groupId>
-      <artifactId>xml-apis</artifactId>
-      <version>2.0.2</version>
-    </dependency>
-    <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.1.1</version>
@@ -85,7 +80,7 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>2.25.0</version>
+      <version>2.29.1</version>
     </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
@@ -95,12 +90,12 @@
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-server</artifactId>
-      <version>7.4.2.v20110526</version>
+      <version>8.1.9.v20130131</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
       <artifactId>jetty-util</artifactId>
-      <version>7.4.2.v20110526</version>
+      <version>8.1.9.v20130131</version>
     </dependency>
     <dependency>
       <groupId>backport-util-concurrent</groupId>
