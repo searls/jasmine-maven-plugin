@@ -34,7 +34,7 @@
       <id>klieber</id>
       <name>Kyle Lieber</name>
       <email>klieber.github@mailnull.com</email>
-			<url>http://kylelieber.com</url>
+      <url>http://kylelieber.com</url>
     </developer>
   </developers>
   <scm>
@@ -232,6 +232,24 @@
             <include>**/*IntegrationTest.java</include>
           </includes>
         </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <version>1.8</version>
+        <configuration>
+          <cloneProjectsTo>${project.build.directory}/it</cloneProjectsTo>
+          <localRepositoryPath>${project.build.directory}/local-repo</localRepositoryPath>
+          <postBuildHookScript>verify</postBuildHookScript> <!-- no extension .groovy or .bsh required -->
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-test</id>
+            <goals>
+              <goal>install</goal>
+              <goal>run</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
