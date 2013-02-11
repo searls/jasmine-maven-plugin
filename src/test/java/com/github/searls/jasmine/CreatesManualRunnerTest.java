@@ -1,6 +1,9 @@
 package com.github.searls.jasmine;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.when;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
@@ -10,17 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.searls.jasmine.io.scripts.ProjectDirScripResolver;
-import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator;
-import com.github.searls.jasmine.runner.ReporterType;
-import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
-import com.github.searls.jasmine.runner.SpecRunnerTemplate;
-
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,7 +24,12 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.runner.DefaultSpecRunnerHtmlGenerator;
+import com.github.searls.jasmine.runner.ReporterType;
+import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
+import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(CreatesManualRunner.class)

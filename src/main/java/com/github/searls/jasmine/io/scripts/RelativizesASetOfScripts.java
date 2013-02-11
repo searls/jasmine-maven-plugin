@@ -1,17 +1,17 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static org.apache.commons.lang.StringUtils.*;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 
 public class RelativizesASetOfScripts {
 
-  private RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
+  private final RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
 
   public Set<String> relativize(File from, Set<String> absoluteScripts) throws IOException {
     Set<String> relativeScripts = new LinkedHashSet<String>();
@@ -28,11 +28,11 @@ public class RelativizesASetOfScripts {
 
   private String normalize(String absoluteScript) {
     String strip = "file:" + (File.separatorChar == '/' ? "" : "/");
-    return stripStart(absoluteScript,strip);
+    return StringUtils.stripStart(absoluteScript,strip);
   }
 
   private boolean webUrl(String script) {
-    return startsWithAny(script,new String[]{"http:","https:"});
+    return StringUtils.startsWithAny(script,new String[]{"http:","https:"});
   }
 
 }

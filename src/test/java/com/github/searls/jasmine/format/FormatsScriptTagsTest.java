@@ -1,8 +1,8 @@
 package com.github.searls.jasmine.format;
 
-import static java.util.Arrays.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import java.util.HashSet;
 

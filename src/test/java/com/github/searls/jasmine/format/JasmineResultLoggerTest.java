@@ -1,6 +1,8 @@
 package com.github.searls.jasmine.format;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Test;

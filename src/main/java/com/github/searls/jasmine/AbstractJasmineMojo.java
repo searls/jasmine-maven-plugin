@@ -19,12 +19,12 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   /** Properties in order of most-to-least interesting for client projects to override **/
 
   /**
-   * @parameter default-value="${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript" expression="${jsSrcDir}"
+   * @parameter default-value="${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript" property="jsSrcDir"
    */
   private File jsSrcDir;
 
   /**
-   * @parameter default-value="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript" expression="${jsTestSrcDir}"
+   * @parameter default-value="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript" property="jsTestSrcDir"
    */
   private File jsTestSrcDir;
 
@@ -45,7 +45,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    *
    *   Some valid examples: FIREFOX_3_6, INTERNET_EXPLORER_6, INTERNET_EXPLORER_7, INTERNET_EXPLORER_8
    *
-   * @parameter default-value="FIREFOX_3"
+   * @parameter default-value="FIREFOX_3_6"
    */
   protected String browserVersion;
 
@@ -60,7 +60,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   protected String format;
 
   /**
-   * @parameter default-value="js" expression="${packageJavaScriptPath}"
+   * @parameter default-value="js" property="packageJavaScriptPath"
    */
   protected String packageJavaScriptPath;
 
@@ -114,12 +114,12 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
 
   /**
-   * @parameter expression="${skipTests}"
+   * @parameter property="skipTests"
    */
   protected boolean skipTests;
 
   /**
-   * @parameter default-value="true" expression="${haltOnFailure}"
+   * @parameter default-value="true" property="haltOnFailure"
    */
   protected boolean haltOnFailure;
 
@@ -175,22 +175,22 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   /**
    * @parameter
    */
-  private List<String> sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
+  private final List<String> sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
   /**
    * @parameter
    */
-  private List<String> sourceExcludes = Collections.emptyList();
+  private final List<String> sourceExcludes = Collections.emptyList();
 
   /**
    * @parameter
    */
-  private List<String> specIncludes = ScansDirectory.DEFAULT_INCLUDES;
+  private final List<String> specIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
   /**
    * @parameter
    */
-  private List<String> specExcludes = Collections.emptyList();
+  private final List<String> specExcludes = Collections.emptyList();
 
   /**
    * @parameter default-value="${project}"
@@ -198,7 +198,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   protected MavenProject mavenProject;
 
   /**
-   * @parameter default-value="8234" expression="${jasmine.serverPort}"
+   * @parameter default-value="8234" property="jasmine.serverPort"
    */
   protected int serverPort;
 
@@ -209,7 +209,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    *
    *   Some valid examples: REQUIRE_JS
    *
-   * @parameter default-value="DEFAULT" expression="${jasmine.specRunnerTemplate}"
+   * @parameter default-value="DEFAULT" property="jasmine.specRunnerTemplate"
    */
   protected SpecRunnerTemplate specRunnerTemplate;
 
