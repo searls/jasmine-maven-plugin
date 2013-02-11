@@ -1,9 +1,11 @@
 package com.github.searls.jasmine;
 
-import static com.github.searls.jasmine.Matchers.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static com.github.searls.jasmine.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 
@@ -23,9 +25,10 @@ import com.github.searls.jasmine.exception.StringifiesStackTraces;
 public class AbstractJasmineMojoTest {
 
   @InjectMocks @Spy AbstractJasmineMojo subject = new AbstractJasmineMojo() {
-    public void run() throws Exception {}
+    @Override
+		public void run() throws Exception {}
   };
-  @Mock private StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
+  @Mock private final StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
   @Rule public ExpectedException expectedException = ExpectedException.none();
 

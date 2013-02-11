@@ -1,10 +1,13 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static com.github.searls.jasmine.Matchers.*;
-import static java.util.Arrays.*;
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static com.github.searls.jasmine.Matchers.empty;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +26,7 @@ import com.github.searls.jasmine.model.ScriptSearch;
 @RunWith(MockitoJUnitRunner.class)
 public class ResolvesCompleteListOfScriptLocationsTest {
 
-  @InjectMocks private ResolvesCompleteListOfScriptLocations subject = new ResolvesCompleteListOfScriptLocations();
+  @InjectMocks private final ResolvesCompleteListOfScriptLocations subject = new ResolvesCompleteListOfScriptLocations();
 
   @Mock private FindsScriptLocationsInDirectory findsScriptLocationsInDirectory;
   @Mock private ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources;
@@ -92,7 +95,7 @@ public class ResolvesCompleteListOfScriptLocationsTest {
   public void reallyShouldUseALinkedHashSetImplementation() throws IOException {
     Set<String> result = subject.resolve(sources, specs, null);
 
-    assertThat(result,is(LinkedHashSet.class));
+    assertThat(result,is(instanceOf(LinkedHashSet.class)));
   }
 
   private File anyFile() {
