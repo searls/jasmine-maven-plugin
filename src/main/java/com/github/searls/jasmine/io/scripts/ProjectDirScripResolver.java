@@ -26,7 +26,7 @@ public class ProjectDirScripResolver extends AbstractScriptResolver {
   }
 
   @Override
-	public String getSpecDirectoryPath() throws MalformedURLException {
+	public String getSpecDirectory() throws MalformedURLException {
     return this.specDirectoryName;
   }
 }

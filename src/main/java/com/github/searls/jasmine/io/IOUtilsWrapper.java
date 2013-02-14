@@ -7,12 +7,12 @@ import org.apache.commons.io.IOUtils;
 
 public class IOUtilsWrapper {
 
-  public String toString(InputStream inputStream) throws IOException {
-    return IOUtils.toString(inputStream);
-  }
+	public String toString(InputStream inputStream) throws IOException {
+		return IOUtils.toString(inputStream);
+	}
 
-  public String toString(String name) throws IOException {
-    return toString(getClass().getResourceAsStream(name));
-  }
+	public String toString(String name) throws IOException {
+		return this.toString(this.getClass().getResourceAsStream(name));
+	}
 
 }

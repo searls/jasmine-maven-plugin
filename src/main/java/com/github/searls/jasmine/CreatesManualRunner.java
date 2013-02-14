@@ -3,10 +3,10 @@ package com.github.searls.jasmine;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
 
-import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ProjectDirScripResolver;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
@@ -14,52 +14,54 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 
 public class CreatesManualRunner {
 
-  private final FileUtilsWrapper fileUtilsWrapper = new FileUtilsWrapper();
-  private final AbstractJasmineMojo config;
+	private final AbstractJasmineMojo config;
 
-  private Log log;
+	private Log log;
+	private final String runnerFileName;
+	private final ReporterType reporterType;
 
-  public CreatesManualRunner(AbstractJasmineMojo config) {
-    this.config = config;
-    log = config.getLog();
-  }
+	public CreatesManualRunner(AbstractJasmineMojo config, String runnerFileName, ReporterType reporterType) {
+		this.config = config;
+		this.runnerFileName = runnerFileName;
+		this.reporterType = reporterType;
+		this.log = config.getLog();
+	}
 
-  public void create() throws IOException {
-    File runnerDestination = new File(config.jasmineTargetDir,config.manualSpecRunnerHtmlFileName);
+	public void create() throws IOException {
+		File runnerDestination = new File(this.config.jasmineTargetDir,this.runnerFileName);
+		ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(this.config);
 
-    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
-    
-    SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.HtmlReporter, config, projectDirScripResolver);
+		SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(this.reporterType, this.config, projectDirScripResolver);
 
-    String newRunnerHtml = generator.generateWitRelativePaths();
-    if(newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
-      saveRunner(runnerDestination, newRunnerHtml);
-    } else {
-      log.info("Skipping spec runner generation, because an identical spec runner already exists.");
-    }
-  }
+		String newRunnerHtml = generator.generate();
+		if(this.newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
+			this.saveRunner(runnerDestination, newRunnerHtml);
+		} else {
+			this.log.info("Skipping spec runner generation, because an identical spec runner already exists.");
+		}
+	}
 
-  private String existingRunner(File destination) throws IOException {
-    String existingRunner = null;
-    try {
-      if(destination.exists()) {
-        existingRunner = fileUtilsWrapper.readFileToString(destination);
-      }
-    } catch(Exception e) {
-      log.warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
-    }
-    return existingRunner;
-  }
+	private String existingRunner(File destination) throws IOException {
+		String existingRunner = null;
+		try {
+			if(destination.exists()) {
+				existingRunner = FileUtils.readFileToString(destination);
+			}
+		} catch(Exception e) {
+			this.log.warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
+		}
+		return existingRunner;
+	}
 
-  private boolean newRunnerDiffersFromOldRunner(File runnerDestination, String newRunner) throws IOException {
-    return !StringUtils.equals(newRunner, existingRunner(runnerDestination));
-  }
+	private boolean newRunnerDiffersFromOldRunner(File runnerDestination, String newRunner) throws IOException {
+		return !StringUtils.equals(newRunner, this.existingRunner(runnerDestination));
+	}
 
-  private void saveRunner(File runnerDestination, String newRunner) throws IOException {
-    fileUtilsWrapper.writeStringToFile(runnerDestination, newRunner, config.sourceEncoding);
-  }
+	private void saveRunner(File runnerDestination, String newRunner) throws IOException {
+		FileUtils.writeStringToFile(runnerDestination, newRunner, this.config.sourceEncoding);
+	}
 
-  public void setLog(Log log) {
-    this.log = log;
-  }
+	public void setLog(Log log) {
+		this.log = log;
+	}
 }
