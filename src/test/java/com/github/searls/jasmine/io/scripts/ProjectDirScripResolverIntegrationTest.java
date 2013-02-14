@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.project.MavenProject;
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -46,7 +47,6 @@ public class ProjectDirScripResolverIntegrationTest {
     testFolder = createFile(root, "src/test/javascript", "spec.js").getParentFile();
 
     initScriptResolver();
-
   }
 
   private void initScriptResolver() throws IOException {
@@ -66,31 +66,36 @@ public class ProjectDirScripResolverIntegrationTest {
   @Test
   public void shouldResolveSources() throws Exception {
     Set<String> sources = projectDirScripResolver.getSources();
-    assertThat(sources, hasItem(endsWith("root/src/main/webapp/js/src.js")));
-    assertThat(sources, hasItem(endsWith("root/src/main/webapp/js/lib/dep.js")));
+    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("root/src/main/webapp/js/src.js"));
+	assertThat(sources, matcher1);
+	Matcher<Iterable<? super String>> matcher2 = hasItem(endsWith("root/src/main/webapp/js/lib/dep.js"));
+    assertThat(sources, matcher2);
     assertEquals(2, sources.size());
   }
 
   @Test
   public void shouldResolveRelativeSources() throws Exception {
     Set<String> sources = projectDirScripResolver.getSourcesRelativePath();
-    assertThat(sources, hasItem(startsWith("src/main/webapp/js/src.js")));
-    assertThat(sources, hasItem(startsWith("src/main/webapp/js/lib/dep.js")));
+    Matcher<Iterable<? super String>> matcher1 = hasItem(startsWith("src/main/webapp/js/src.js"));
+    assertThat(sources, matcher1);
+    Matcher<Iterable<? super String>> matcher2 = hasItem(startsWith("src/main/webapp/js/lib/dep.js"));
+    assertThat(sources, matcher2);
     assertEquals(2, sources.size());
   }
 
   @Test
   public void shouldResolveSpecs() throws Exception {
     Set<String> specs = projectDirScripResolver.getSpecs();
-    assertThat(specs, hasItem(endsWith("root/src/test/javascript/spec.js")));
+    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("root/src/test/javascript/spec.js"));
+    assertThat(specs, matcher1);
     assertEquals(1, specs.size());
   }
 
   @Test
   public void shouldResolveRelativeSpecs() throws Exception {
-
     Set<String> specs = projectDirScripResolver.getSpecsRelativePath();
-    assertThat(specs, hasItem(startsWith("src/test/javascript/spec.js")));
+    Matcher<Iterable<? super String>> matcher1 = hasItem(startsWith("src/test/javascript/spec.js"));
+    assertThat(specs, matcher1);
     assertEquals(1, specs.size());
   }
 
@@ -109,25 +114,32 @@ public class ProjectDirScripResolverIntegrationTest {
     ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
     projectDirScripResolver.resolveScripts();
     Set<String> preloads = projectDirScripResolver.getPreloads();
-    assertThat(preloads, hasItem(endsWith("vendor/vendor.js")));
+    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("vendor/vendor.js"));
+    assertThat(preloads, matcher1);
     assertEquals(1, preloads.size());
   }
 
   @Test
   public void shouldResolveAllScripts() throws Exception {
     Set<String> sources = projectDirScripResolver.getAllScripts();
-    assertThat(sources, hasItem(endsWith("root/src/main/webapp/js/src.js")));
-    assertThat(sources, hasItem(endsWith("root/src/main/webapp/js/lib/dep.js")));
-    assertThat(sources, hasItem(endsWith("root/src/test/javascript/spec.js")));
+    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("root/src/main/webapp/js/src.js"));
+    assertThat(sources,matcher1);
+	Matcher<Iterable<? super String>> matcher2 = hasItem(endsWith("root/src/main/webapp/js/lib/dep.js"));
+    assertThat(sources, matcher2);
+    Matcher<Iterable<? super String>> matcher3 = hasItem(endsWith("root/src/test/javascript/spec.js"));
+    assertThat(sources, matcher3);
     assertEquals(3, sources.size());
   }
 
   @Test
   public void shouldResolveAllScriptsRelativePath() throws Exception {
     Set<String> sources = projectDirScripResolver.getAllScriptsRelativePath();
-    assertThat(sources, hasItem(startsWith("src/main/webapp/js/src.js")));
-    assertThat(sources, hasItem(startsWith("src/main/webapp/js/lib/dep.js")));
-    assertThat(sources, hasItem(startsWith("src/test/javascript/spec.js")));
+    Matcher<Iterable<? super String>> matcher1 = hasItem(startsWith("src/main/webapp/js/src.js"));
+    assertThat(sources, matcher1);
+    Matcher<Iterable<? super String>> matcher2 = hasItem(startsWith("src/main/webapp/js/lib/dep.js"));
+    assertThat(sources, matcher2);
+    Matcher<Iterable<? super String>> matcher3 = hasItem(startsWith("src/test/javascript/spec.js"));
+    assertThat(sources, matcher3);
     assertEquals(3, sources.size());
   }
 
