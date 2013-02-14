@@ -17,7 +17,6 @@
         <groupId>com.github.searls</groupId>
         <artifactId>jasmine-maven-plugin</artifactId>
         <version>${project.version}</version>
-        <extensions>true</extensions>
         <executions>
           <execution>
             <goals>

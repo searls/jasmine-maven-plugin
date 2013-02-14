@@ -36,112 +36,112 @@ import com.github.searls.jasmine.server.JasmineResourceHandler;
 @RunWith(MockitoJUnitRunner.class)
 public class ServerMojoTest {
 
-  private static final String SPECS_DIR = "spec dir";
-  private static final String SOURCE_DIR = "source dir";
-  private static final int PORT = 8923;
-  private static final String RELATIVE_TARGET_DIR = "some dir";
-  private static final String MANUAL_SPEC_RUNNER_NAME = "nacho specs";
-  private static final String BASE_DIR = "my-base-dir";
+	private static final String SPECS_DIR = "spec dir";
+	private static final String SOURCE_DIR = "source dir";
+	private static final int PORT = 8923;
+	private static final String RELATIVE_TARGET_DIR = "some dir";
+	private static final String MANUAL_SPEC_RUNNER_NAME = "nacho specs";
+	private static final String BASE_DIR = "my-base-dir";
 
-  @InjectMocks private final ServerMojo subject = new ServerMojo();
+	@InjectMocks private final ServerMojo subject = new ServerMojo();
 
-  @Mock private Log log;
-  @Mock private MavenProject mavenProject;
-  @Mock private final Server server = new Server();
-  @Mock private RelativizesFilePaths relativizesFilePaths;
-  @Mock private File baseDir;
-  @Mock private File targetDir;
-  @Mock private File sourceDir;
-  @Mock private File specDir;
-  @Mock private ScriptSearch sources;
-  @Mock private ScriptSearch specs;
+	@Mock private Log log;
+	@Mock private MavenProject mavenProject;
+	@Mock private final Server server = new Server();
+	@Mock private RelativizesFilePaths relativizesFilePaths;
+	@Mock private File baseDir;
+	@Mock private File targetDir;
+	@Mock private File sourceDir;
+	@Mock private File specDir;
+	@Mock private ScriptSearch sources;
+	@Mock private ScriptSearch specs;
 
 
 
-  @Captor private ArgumentCaptor<SelectChannelConnector> connectorCaptor;
-  @Captor private ArgumentCaptor<ContextHandlerCollection> handlerListCaptor;
+	@Captor private ArgumentCaptor<SelectChannelConnector> connectorCaptor;
+	@Captor private ArgumentCaptor<ContextHandlerCollection> handlerListCaptor;
 
-  @Before
-  public void arrangeAndAct() throws Exception {
-    subject.sources = sources;
-    subject.specs = specs;
-    subject.setLog(log);
-    subject.serverPort = PORT;
-    subject.jasmineTargetDir = targetDir;
-    subject.manualSpecRunnerHtmlFileName = MANUAL_SPEC_RUNNER_NAME;
-    subject.specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
-    when(sourceDir.getAbsolutePath()).thenReturn(SOURCE_DIR);
-    when(specDir.getAbsolutePath()).thenReturn(SPECS_DIR);
-    when(sources.getDirectory()).thenReturn(sourceDir);
-    when(specs.getDirectory()).thenReturn(specDir);
-    when(baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
-    when(mavenProject.getBasedir()).thenReturn(baseDir);
-    when(relativizesFilePaths.relativize(baseDir,targetDir)).thenReturn(RELATIVE_TARGET_DIR);
-    when(relativizesFilePaths.relativize(baseDir,sources.getDirectory())).thenReturn(SOURCE_DIR);
-    when(relativizesFilePaths.relativize(baseDir,specs.getDirectory())).thenReturn(SPECS_DIR);
+	@Before
+	public void arrangeAndAct() throws Exception {
+		this.subject.sources = this.sources;
+		this.subject.specs = this.specs;
+		this.subject.setLog(this.log);
+		this.subject.serverPort = PORT;
+		this.subject.jasmineTargetDir = this.targetDir;
+		this.subject.manualSpecRunnerHtmlFileName = MANUAL_SPEC_RUNNER_NAME;
+		this.subject.specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
+		when(this.sourceDir.getAbsolutePath()).thenReturn(SOURCE_DIR);
+		when(this.specDir.getAbsolutePath()).thenReturn(SPECS_DIR);
+		when(this.sources.getDirectory()).thenReturn(this.sourceDir);
+		when(this.specs.getDirectory()).thenReturn(this.specDir);
+		when(this.baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
+		when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
+		when(this.relativizesFilePaths.relativize(this.baseDir,this.targetDir)).thenReturn(RELATIVE_TARGET_DIR);
+		when(this.relativizesFilePaths.relativize(this.baseDir,this.sources.getDirectory())).thenReturn(SOURCE_DIR);
+		when(this.relativizesFilePaths.relativize(this.baseDir,this.specs.getDirectory())).thenReturn(SPECS_DIR);
 
-    subject.run();
-  }
+		this.subject.run();
+	}
 
-  @Test
-  public void logsInstructions() {
-    verify(log).info(String.format(ServerMojo.INSTRUCTION_FORMAT, PORT, SOURCE_DIR, SPECS_DIR));
-  }
+	@Test
+	public void logsInstructions() {
+		verify(this.log).info(String.format(ServerMojo.INSTRUCTION_FORMAT, PORT, SOURCE_DIR, SPECS_DIR));
+	}
 
-  @Test
-  public void addsConnector() throws Exception {
-    verify(server).addConnector(connectorCaptor.capture());
-    assertThat(connectorCaptor.getValue(),is(instanceOf(SelectChannelConnector.class)));
-    assertThat(connectorCaptor.getValue().getPort(),is(PORT));
-  }
+	@Test
+	public void addsConnector() throws Exception {
+		verify(this.server).addConnector(this.connectorCaptor.capture());
+		assertThat(this.connectorCaptor.getValue(),is(instanceOf(SelectChannelConnector.class)));
+		assertThat(this.connectorCaptor.getValue().getPort(),is(PORT));
+	}
 
-  @Test
-  public void addsResourceHandler() throws Exception {
-    verify(server).setHandler(handlerListCaptor.capture());
-    
-    Handler[] handlers = handlerListCaptor.getValue().getHandlers();
-    assertThat(handlers.length,is(3));
-    
-    checkContextResourceHandler((ContextHandler) handlers[0], SOURCE_DIR, true, null);
-    checkContextResourceHandler((ContextHandler) handlers[1], SPECS_DIR, true, null);
-    checkContextResourceHandler((ContextHandler) handlers[2], BASE_DIR, false, RELATIVE_TARGET_DIR+File.separator+MANUAL_SPEC_RUNNER_NAME);
-  }
-  
-  private void checkContextResourceHandler(ContextHandler ctxHandler,
-  																				 String expectedBase,
-  																				 boolean expectDirectoriesListed,
-  																				 String expectedWelcomeFiles) throws MalformedURLException, IOException {
-  	ResourceHandler handler = (ResourceHandler) ctxHandler.getHandlers()[0];
+	@Test
+	public void addsResourceHandler() throws Exception {
+		verify(this.server).setHandler(this.handlerListCaptor.capture());
 
-  	assertThat(handler,is(instanceOf(JasmineResourceHandler.class)));
-    assertThat(handler.isDirectoriesListed(),is(expectDirectoriesListed));
-    assertThat(handler.getResourceBase(),is(Resource.newResource(expectedBase).toString()));
-    if (expectedWelcomeFiles != null) {
-    	assertThat(handler.getWelcomeFiles()[0],is(expectedWelcomeFiles));
-    } else {
-    	assertThat(handler.getWelcomeFiles()[0],is("index.html"));
-    }
-  }
+		Handler[] handlers = this.handlerListCaptor.getValue().getHandlers();
+		assertThat(handlers.length,is(3));
 
-  @Test
-  public void addsContextHandlers() throws Exception {
-    verify(server).setHandler(handlerListCaptor.capture());
-    Handler[] handlers = handlerListCaptor.getValue().getHandlers();
-    assertThat(handlers.length,is(3));
-    assertThat(handlers[0],is(instanceOf(ContextHandler.class)));
-    assertThat(handlers[1],is(instanceOf(ContextHandler.class)));
-    assertThat(handlers[2],is(instanceOf(ContextHandler.class)));
-  }
+		this.checkContextResourceHandler((ContextHandler) handlers[0], SOURCE_DIR, true, null);
+		this.checkContextResourceHandler((ContextHandler) handlers[1], SPECS_DIR, true, null);
+		this.checkContextResourceHandler((ContextHandler) handlers[2], BASE_DIR, false, RELATIVE_TARGET_DIR+File.separator+MANUAL_SPEC_RUNNER_NAME);
+	}
 
-  @Test
-  public void startsTheServer() throws Exception {
-    verify(server).start();
-  }
+	private void checkContextResourceHandler(ContextHandler ctxHandler,
+	                                         String expectedBase,
+	                                         boolean expectDirectoriesListed,
+	                                         String expectedWelcomeFiles) throws MalformedURLException, IOException {
+		ResourceHandler handler = (ResourceHandler) ctxHandler.getHandlers()[0];
 
-  @Test
-  public void joinsTheServer() throws Exception {
-    verify(server).join();
-  }
+		assertThat(handler,is(instanceOf(JasmineResourceHandler.class)));
+		assertThat(handler.isDirectoriesListed(),is(expectDirectoriesListed));
+		assertThat(handler.getResourceBase(),is(Resource.newResource(expectedBase).toString()));
+		if (expectedWelcomeFiles != null) {
+			assertThat(handler.getWelcomeFiles()[0],is(expectedWelcomeFiles));
+		} else {
+			assertThat(handler.getWelcomeFiles()[0],is("index.html"));
+		}
+	}
+
+	@Test
+	public void addsContextHandlers() throws Exception {
+		verify(this.server).setHandler(this.handlerListCaptor.capture());
+		Handler[] handlers = this.handlerListCaptor.getValue().getHandlers();
+		assertThat(handlers.length,is(3));
+		assertThat(handlers[0],is(instanceOf(ContextHandler.class)));
+		assertThat(handlers[1],is(instanceOf(ContextHandler.class)));
+		assertThat(handlers[2],is(instanceOf(ContextHandler.class)));
+	}
+
+	@Test
+	public void startsTheServer() throws Exception {
+		verify(this.server).start();
+	}
+
+	@Test
+	public void joinsTheServer() throws Exception {
+		verify(this.server).join();
+	}
 
 
 

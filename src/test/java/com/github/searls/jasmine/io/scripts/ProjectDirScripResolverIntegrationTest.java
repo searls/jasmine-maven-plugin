@@ -1,7 +1,6 @@
 package com.github.searls.jasmine.io.scripts;
 
 import static org.hamcrest.Matchers.endsWith;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
@@ -18,6 +17,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.maven.project.MavenProject;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
@@ -29,145 +29,110 @@ import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 
 public class ProjectDirScripResolverIntegrationTest {
-  private final String[] excludes = new String[]{"vendor/vendor.js"};
+	private final String[] excludes = new String[]{"vendor/vendor.js"};
 
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
-  private File root;
-  private File sourceFolder;
-  private File testFolder;
-  private ProjectDirScripResolver projectDirScripResolver;
+	@Rule
+	public TemporaryFolder tempFolder = new TemporaryFolder();
+	private File root;
+	private File sourceFolder;
+	private File testFolder;
+	private ProjectDirScripResolver projectDirScripResolver;
 
-  @Before
-  public void initFolders() throws IOException {
-    root = tempFolder.newFolder("root");
-    sourceFolder = createFile(root, "src/main/webapp/js", "src.js").getParentFile();
-    createFile(root, "src/main/webapp/js/lib", "dep.js");
-    createFile(root, "src/main/webapp/js/vendor", "vendor.js");
-    testFolder = createFile(root, "src/test/javascript", "spec.js").getParentFile();
+	@Before
+	public void initFolders() throws IOException {
+		this.root = this.tempFolder.newFolder("root");
+		this.sourceFolder = this.createFile(this.root, "src/main/webapp/js", "src.js").getParentFile();
+		this.createFile(this.root, "src/main/webapp/js/lib", "dep.js");
+		this.createFile(this.root, "src/main/webapp/js/vendor", "vendor.js");
+		this.testFolder = this.createFile(this.root, "src/test/javascript", "spec.js").getParentFile();
 
-    initScriptResolver();
-  }
+		this.initScriptResolver();
 
-  private void initScriptResolver() throws IOException {
-  	MavenProject project = mock(MavenProject.class);
-  	when(project.getBasedir()).thenReturn(root);
-  	AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
-  	when(config.getMavenProject()).thenReturn(project);
-    when(config.getPreloadSources()).thenReturn(null);
-    when(config.getSrcDirectoryName()).thenReturn("src");
-    when(config.getSpecDirectoryName()).thenReturn("spec");
-    when(config.getSources()).thenReturn(new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(excludes)));
-    when(config.getSpecs()).thenReturn(new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
-    projectDirScripResolver = new ProjectDirScripResolver(config);
-    projectDirScripResolver.resolveScripts();
-  }
+	}
 
-  @Test
-  public void shouldResolveSources() throws Exception {
-    Set<String> sources = projectDirScripResolver.getSources();
-    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("root/src/main/webapp/js/src.js"));
-	assertThat(sources, matcher1);
-	Matcher<Iterable<? super String>> matcher2 = hasItem(endsWith("root/src/main/webapp/js/lib/dep.js"));
-    assertThat(sources, matcher2);
-    assertEquals(2, sources.size());
-  }
+	private void initScriptResolver() throws IOException {
+		MavenProject project = mock(MavenProject.class);
+		when(project.getBasedir()).thenReturn(this.root);
+		AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
+		when(config.getMavenProject()).thenReturn(project);
+		when(config.getPreloadSources()).thenReturn(null);
+		when(config.getSrcDirectoryName()).thenReturn("src");
+		when(config.getSpecDirectoryName()).thenReturn("spec");
+		when(config.getSources()).thenReturn(new ScriptSearch(this.sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(this.excludes)));
+		when(config.getSpecs()).thenReturn(new ScriptSearch(this.testFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
+		this.projectDirScripResolver = new ProjectDirScripResolver(config);
+		this.projectDirScripResolver.resolveScripts();
+	}
 
-  @Test
-  public void shouldResolveRelativeSources() throws Exception {
-    Set<String> sources = projectDirScripResolver.getSourcesRelativePath();
-    Matcher<Iterable<? super String>> matcher1 = hasItem(startsWith("src/main/webapp/js/src.js"));
-    assertThat(sources, matcher1);
-    Matcher<Iterable<? super String>> matcher2 = hasItem(startsWith("src/main/webapp/js/lib/dep.js"));
-    assertThat(sources, matcher2);
-    assertEquals(2, sources.size());
-  }
+	@Test
+	public void shouldResolveSources() throws Exception {
+		Set<String> sources = this.projectDirScripResolver.getSources();
+		assertHasItemStartingWith(sources, "src/main/webapp/js/src.js");
+		assertHasItemStartingWith(sources, "src/main/webapp/js/lib/dep.js");
+		assertEquals(2, sources.size());
+	}
 
-  @Test
-  public void shouldResolveSpecs() throws Exception {
-    Set<String> specs = projectDirScripResolver.getSpecs();
-    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("root/src/test/javascript/spec.js"));
-    assertThat(specs, matcher1);
-    assertEquals(1, specs.size());
-  }
+	@Test
+	public void shouldResolveSpecs() throws Exception {
 
-  @Test
-  public void shouldResolveRelativeSpecs() throws Exception {
-    Set<String> specs = projectDirScripResolver.getSpecsRelativePath();
-    Matcher<Iterable<? super String>> matcher1 = hasItem(startsWith("src/test/javascript/spec.js"));
-    assertThat(specs, matcher1);
-    assertEquals(1, specs.size());
-  }
+		Set<String> specs = this.projectDirScripResolver.getSpecs();
+		assertHasItemStartingWith(specs, "src/test/javascript/spec.js");
+		assertEquals(1, specs.size());
+	}
 
-  @Test
-  @Ignore //TODO: Uhm, not sure if this should work?
-  public void shouldResolvePreloads() throws Exception {
-  	MavenProject project = mock(MavenProject.class);
-  	when(project.getBasedir()).thenReturn(root);
-  	AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
-  	when(config.getMavenProject()).thenReturn(project);
-    when(config.getPreloadSources()).thenReturn(null);
-    when(config.getSrcDirectoryName()).thenReturn("src");
-    when(config.getSpecDirectoryName()).thenReturn("spec");
-    when(config.getSources()).thenReturn(new ScriptSearch(sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
-    when(config.getSpecs()).thenReturn(new ScriptSearch(testFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(new String[]{"vendor/vendor.js"})));
-    ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
-    projectDirScripResolver.resolveScripts();
-    Set<String> preloads = projectDirScripResolver.getPreloads();
-    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("vendor/vendor.js"));
-    assertThat(preloads, matcher1);
-    assertEquals(1, preloads.size());
-  }
+	@Test
+	@Ignore //TODO: Uhm, not sure if this should work?
+	public void shouldResolvePreloads() throws Exception {
+		MavenProject project = mock(MavenProject.class);
+		when(project.getBasedir()).thenReturn(this.root);
+		AbstractJasmineMojo config = mock(AbstractJasmineMojo.class);
+		when(config.getMavenProject()).thenReturn(project);
+		when(config.getPreloadSources()).thenReturn(null);
+		when(config.getSrcDirectoryName()).thenReturn("src");
+		when(config.getSpecDirectoryName()).thenReturn("spec");
+		when(config.getSources()).thenReturn(new ScriptSearch(this.sourceFolder, ScansDirectory.DEFAULT_INCLUDES, Collections.<String>emptyList()));
+		when(config.getSpecs()).thenReturn(new ScriptSearch(this.testFolder, ScansDirectory.DEFAULT_INCLUDES, Arrays.asList(new String[]{"vendor/vendor.js"})));
+		ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(config);
+		projectDirScripResolver.resolveScripts();
+		Set<String> preloads = projectDirScripResolver.getPreloads();
+		assertHasItemEndingWith(preloads, "vendor/vendor.js");
+		assertEquals(1, preloads.size());
+	}
 
-  @Test
-  public void shouldResolveAllScripts() throws Exception {
-    Set<String> sources = projectDirScripResolver.getAllScripts();
-    Matcher<Iterable<? super String>> matcher1 = hasItem(endsWith("root/src/main/webapp/js/src.js"));
-    assertThat(sources,matcher1);
-	Matcher<Iterable<? super String>> matcher2 = hasItem(endsWith("root/src/main/webapp/js/lib/dep.js"));
-    assertThat(sources, matcher2);
-    Matcher<Iterable<? super String>> matcher3 = hasItem(endsWith("root/src/test/javascript/spec.js"));
-    assertThat(sources, matcher3);
-    assertEquals(3, sources.size());
-  }
+	@Test
+	public void shouldResolveAllScripts() throws Exception {
+		Set<String> sources = this.projectDirScripResolver.getAllScripts();
+		assertHasItemStartingWith(sources, "src/main/webapp/js/src.js");
+		assertHasItemStartingWith(sources, "src/main/webapp/js/lib/dep.js");
+		assertHasItemStartingWith(sources, "src/test/javascript/spec.js");
+		assertEquals(3, sources.size());
+	}
 
-  @Test
-  public void shouldResolveAllScriptsRelativePath() throws Exception {
-    Set<String> sources = projectDirScripResolver.getAllScriptsRelativePath();
-    Matcher<Iterable<? super String>> matcher1 = hasItem(startsWith("src/main/webapp/js/src.js"));
-    assertThat(sources, matcher1);
-    Matcher<Iterable<? super String>> matcher2 = hasItem(startsWith("src/main/webapp/js/lib/dep.js"));
-    assertThat(sources, matcher2);
-    Matcher<Iterable<? super String>> matcher3 = hasItem(startsWith("src/test/javascript/spec.js"));
-    assertThat(sources, matcher3);
-    assertEquals(3, sources.size());
-  }
+	@Test
+	public void shouldReturnSourcesDirectory() throws Exception {
+		assertThat(this.projectDirScripResolver.getSourceDirectory(), Matchers.endsWith("src"));
+	}
 
-  @Test
-  public void shouldReturnSourcesDirectory() throws Exception {
-    assertThat(projectDirScripResolver.getSourceDirectory(), Matchers.endsWith("src"));
-  }
+	@Test
+	public void shouldReturnSpecDirectory() throws Exception {
+		assertThat(this.projectDirScripResolver.getSpecDirectory(), Matchers.endsWith("spec"));
+	}
 
-  @Test
-  public void shouldReturnSourcesDirectoryRelativePath() throws Exception {
-    assertThat(projectDirScripResolver.getSourceDirectoryRelativePath(), Matchers.startsWith("src/main/webapp/js"));
-  }
+	private File createFile(File root, String dir, String filename) throws IOException {
+		File directory = new File(root, dir);
+		directory.mkdirs();
+		File newFile = new File(directory, filename);
+		FileUtils.touch(newFile);
+		return newFile;
+	}
 
-  @Test
-  public void shouldReturnSpecDirectory() throws Exception {
-    assertThat(projectDirScripResolver.getSpecDirectoryPath(), Matchers.endsWith("spec"));
-  }
+	private static void assertHasItemEndingWith(Set<String> set, String endWith) {
+		Matcher<Iterable<? super String>> hasItem = Matchers.hasItem(endsWith(endWith));
+		Assert.assertThat(set, hasItem);
+	}
 
-  @Test
-  public void shouldReturnSpecDirectoryRelativePath() throws Exception {
-    assertThat(projectDirScripResolver.getSpecDirectoryRelativePath(), Matchers.startsWith("src/test/javascript"));
-  }
-
-  private File createFile(File root, String dir, String filename) throws IOException {
-    File directory = new File(root, dir);
-    directory.mkdirs();
-    File newFile = new File(directory, filename);
-    FileUtils.touch(newFile);
-    return newFile;
-  }
+	private static void assertHasItemStartingWith(Set<String> set, String startWith) {
+		Matcher<Iterable<? super String>> hasItem = Matchers.hasItem(startsWith(startWith));
+		Assert.assertThat(set, hasItem);
+	}
 }

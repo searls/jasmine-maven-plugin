@@ -11,95 +11,78 @@ import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.ScriptSearch;
 
 public abstract class AbstractScriptResolver implements ScriptResolver {
-  private Set<String> sources;
-  private Set<String> specs;
-  protected File baseDir;
-  protected ScriptSearch scriptSearchSources;
-  protected ScriptSearch scriptSearchSpecs;
-  protected List<String> preloads;
-  protected RelativizesASetOfScripts relativizer = new RelativizesASetOfScripts();
-  protected RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
+	private Set<String> sources;
+	private Set<String> specs;
+	protected File baseDir;
+	protected ScriptSearch scriptSearchSources;
+	protected ScriptSearch scriptSearchSpecs;
+	protected List<String> preloads;
+	protected RelativizesASetOfScripts relativizer = new RelativizesASetOfScripts();
+	protected RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
 
-  public void resolveScripts() throws IOException {
-    ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources = new ResolvesLocationOfPreloadSources();
-    FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
+	@Override
+	public void resolveScripts() throws IOException {
+		ResolvesLocationOfPreloadSources resolvesLocationOfPreloadSources = new ResolvesLocationOfPreloadSources();
+		FindsScriptLocationsInDirectory findsScriptLocationsInDirectory = new FindsScriptLocationsInDirectory();
 
-    setScriptsToPreload(new LinkedHashSet<String>(resolvesLocationOfPreloadSources.resolve(preloads, scriptSearchSources.getDirectory(), scriptSearchSpecs.getDirectory())));
-    
-    setSources(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(scriptSearchSources)));
-    this.sources.removeAll(this.scriptsToPreload);
-    
-    setSpecs(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(scriptSearchSpecs)));
-    this.specs.removeAll(this.scriptsToPreload);
-  }
+		this.setScriptsToPreload(new LinkedHashSet<String>(resolvesLocationOfPreloadSources.resolve(this.preloads, this.scriptSearchSources.getDirectory(), this.scriptSearchSpecs.getDirectory())));
 
-  public Set<String> getPreloads() {
-    return this.scriptsToPreload;
-  }
+		this.setSources(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(this.scriptSearchSources)));
+		this.sources.removeAll(this.scriptsToPreload);
 
-  public Set<String> getSources() {
-    return this.sources;
-  }
+		this.setSpecs(new LinkedHashSet<String>(findsScriptLocationsInDirectory.find(this.scriptSearchSpecs)));
+		this.specs.removeAll(this.scriptsToPreload);
+	}
 
-  public Set<String> getSpecs() {
-    return this.specs;
-  }
+	@Override
+	public String getSourceDirectory() throws IOException {
+		return this.scriptSearchSources.getDirectory().toURI().toURL().toString();
+	}
 
-  public Set<String> getAllScripts() {
-    return addAllScripts(scriptsToPreload, sources, specs);
-  }
+	@Override
+	public String getSpecDirectory() throws MalformedURLException {
+		return this.scriptSearchSpecs.getDirectory().toURI().toURL().toString();
+	}
 
-  public String getSourceDirectory() throws IOException {
-    return scriptSearchSources.getDirectory().toURI().toURL().toString();
-  }
+	@Override
+	public Set<String> getSources() throws IOException {
+		return this.relativizer.relativize(this.baseDir, this.sources);
+	}
 
-  public String getSpecDirectoryPath() throws MalformedURLException {
-    return scriptSearchSpecs.getDirectory().toURI().toURL().toString();
-  }
+	@Override
+	public Set<String> getSpecs() throws IOException {
+		return this.relativizer.relativize(this.baseDir, this.specs);
+	}
 
-  public Set<String> getSourcesRelativePath() throws IOException {
-    return relativizer.relativize(baseDir, this.sources);
-  }
+	@Override
+	public Set<String> getPreloads() throws IOException {
+		return this.relativizer.relativize(this.baseDir, this.scriptsToPreload);
+	}
 
-  public Set<String> getSpecsRelativePath() throws IOException {
-    return relativizer.relativize(baseDir, this.specs);
-  }
+	@Override
+	public Set<String> getAllScripts() throws IOException {
+		return this.addAllScripts(this.getPreloads(), this.getSources(), this.getSpecs());
+	}
 
-  public Set<String> getPreloadsRelativePath() throws IOException {
-    return relativizer.relativize(baseDir, this.scriptsToPreload);
-  }
+	private Set<String> addAllScripts(Set<String> preloadedSources, Set<String> sources, Set<String> specs) {
+		LinkedHashSet<String> allScripts = new LinkedHashSet<String>();
+		allScripts.addAll(preloadedSources);
+		allScripts.addAll(sources);
+		allScripts.addAll(specs);
+		return allScripts;
+	}
 
-  public Set<String> getAllScriptsRelativePath() throws IOException {
-    return addAllScripts(getPreloadsRelativePath(), getSourcesRelativePath(), getSpecsRelativePath());
-  }
+	private Set<String> scriptsToPreload;
 
-  public String getSourceDirectoryRelativePath() throws IOException {
-    return relativizesFilePaths.relativize(baseDir, scriptSearchSources.getDirectory());
-  }
+	public void setScriptsToPreload(Set<String> scriptsToPreload) {
+		this.scriptsToPreload = scriptsToPreload;
+	}
 
-  public String getSpecDirectoryRelativePath() throws IOException {
-    return relativizesFilePaths.relativize(baseDir, scriptSearchSpecs.getDirectory());
-  }
+	public void setSources(Set<String> sources) {
+		this.sources = sources;
+	}
 
-  private Set<String> addAllScripts(Set<String> preloadedSources, Set<String> sources, Set<String> specs) {
-    LinkedHashSet<String> allScripts = new LinkedHashSet<String>();
-    allScripts.addAll(preloadedSources);
-    allScripts.addAll(sources);
-    allScripts.addAll(specs);
-    return allScripts;
-  }
-
-  private Set<String> scriptsToPreload;
-
-  public void setScriptsToPreload(Set<String> scriptsToPreload) {
-    this.scriptsToPreload = scriptsToPreload;
-  }
-
-  public void setSources(Set<String> sources) {
-    this.sources = sources;
-  }
-
-  public void setSpecs(Set<String> specs) {
-    this.specs = specs;
-  }
+	public void setSpecs(Set<String> specs) {
+		this.specs = specs;
+	}
 }
