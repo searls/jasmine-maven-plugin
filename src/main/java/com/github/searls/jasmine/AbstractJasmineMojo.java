@@ -34,9 +34,20 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    *
    *   Some valid examples: org.openqa.selenium.htmlunit.HtmlUnitDriver, org.openqa.selenium.firefox.FirefoxDriver, org.openqa.selenium.ie.InternetExplorerDriver
    *
+   * If the remoteWebDriverUrl property is included this property will be ignored.
+   *
    * @parameter default-value="org.openqa.selenium.htmlunit.HtmlUnitDriver"
    */
   protected String webDriverClassName;
+
+  /**
+   * A URL used to create a RemoteWebDriver.  If this property is included, webDriverClassName will be ignored.
+   *
+   * See http://phantomjs.org/release-1.8.html for an example of RemoteWebDriver use.
+   *
+   * @parameter
+   */
+  protected String remoteWebDriverUrl;
 
   /**
    * Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
