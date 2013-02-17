@@ -24,6 +24,8 @@ Pull requests are, of course, very welcome! A few todos, if anyone is interested
 * Parse & format ignored tests (currently only passing & failing tests are parsed)
 * A facility that automatically executes the other goals if only `test` or `preparePackage` is configured to run.
 
+See https://github.com/searls/jasmine-maven-plugin/wiki/Contributing-to-the-project (work in progress).
+
 ## Acknowledgments
 * Thanks to Pivotal Labs for authoring and publishing [Jasmine](http://github.com/pivotal/jasmine)
 * Thanks to christian.nelson and sivoh1, owners of the [javascript-test-maven-plugin](http://code.google.com/p/javascript-test-maven-plugin/) project, which provided a similar implementation from which to glean several valuable lessons.
