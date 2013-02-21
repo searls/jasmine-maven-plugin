@@ -25,12 +25,15 @@ public class ResourceHandlerConfigurator {
     ContextHandlerCollection contexts = new ContextHandlerCollection();
 
     ContextHandler srcDirContextHandler = contexts.addContext("/" + configuration.srcDirectoryName, "");
+    srcDirContextHandler.setAliases(true);
     srcDirContextHandler.setHandler(createResourceHandler(true, configuration.sources.getDirectory().getAbsolutePath(), null));
 
     ContextHandler specDirContextHandler = contexts.addContext("/" + configuration.specDirectoryName, "");
+    specDirContextHandler.setAliases(true);
     specDirContextHandler.setHandler(createResourceHandler(true, configuration.specs.getDirectory().getAbsolutePath(), null));
 
     ContextHandler rootContextHandler = contexts.addContext("/", "");
+    rootContextHandler.setAliases(true);
     rootContextHandler.setHandler(createResourceHandler(false, configuration.mavenProject.getBasedir().getAbsolutePath(), new String[]{manualSpecRunnerPath()}));
 
     return contexts;

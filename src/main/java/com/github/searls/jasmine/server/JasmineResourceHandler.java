@@ -25,6 +25,7 @@ public class JasmineResourceHandler extends ResourceHandler {
   public JasmineResourceHandler(AbstractJasmineMojo config) {
     createsManualRunner = new CreatesManualRunner(config);
     createsManualRunner.setLog(new NullLog());
+    setAliases(true);
   }
 
   @Override
