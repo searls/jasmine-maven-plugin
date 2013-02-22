@@ -27,7 +27,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.searls.jasmine.AbstractJasmineMojo;
-import com.github.searls.jasmine.CreatesManualRunner;
+import com.github.searls.jasmine.CreatesRunner;
 import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.coffee.DetectsCoffee;
 import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
@@ -41,7 +41,7 @@ public class JasmineResourceHandlerTest {
 
 	@Mock private DetectsCoffee detectsCoffee;
 	@Mock private HandlesRequestsForCoffee handlesRequestsForCoffee;
-	@Mock private CreatesManualRunner createsManualRunner;
+	@Mock private CreatesRunner createsManualRunner;
 
 	@Mock AbstractJasmineMojo config;
 	@Mock Request baseRequest;
@@ -60,7 +60,7 @@ public class JasmineResourceHandlerTest {
 
 	@Test
 	public void constructorSetsLoggingLow() throws Exception {
-		whenNew(CreatesManualRunner.class).withArguments(this.config,RUNNER_FILE_NAME,ReporterType.HtmlReporter).thenReturn(this.createsManualRunner);
+		whenNew(CreatesRunner.class).withArguments(this.config,RUNNER_FILE_NAME,ReporterType.HtmlReporter).thenReturn(this.createsManualRunner);
 
 		new JasmineResourceHandler(this.config,RUNNER_FILE_NAME,ReporterType.HtmlReporter);
 

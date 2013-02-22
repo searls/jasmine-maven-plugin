@@ -34,8 +34,8 @@ import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CreatesManualRunner.class,FileUtils.class})
-public class CreatesManualRunnerTest {
+@PrepareForTest({CreatesRunner.class,FileUtils.class})
+public class CreatesRunnerTest {
 
 	private static final String SOURCE_DIR = "sauces";
 	private static final String SPEC_DIR = "specks";
@@ -47,7 +47,7 @@ public class CreatesManualRunnerTest {
 	private final AbstractJasmineMojo config = new AbstractJasmineMojo(){
 		@Override public void run() throws Exception {}};
 
-		@InjectMocks private final CreatesManualRunner subject = new CreatesManualRunner(this.config,MANUAL_RUNNER_NAME,ReporterType.HtmlReporter);
+		@InjectMocks private final CreatesRunner subject = new CreatesRunner(this.config,MANUAL_RUNNER_NAME,ReporterType.HtmlReporter);
 
 		@Mock private DefaultSpecRunnerHtmlGenerator specRunnerHtmlGenerator;
 

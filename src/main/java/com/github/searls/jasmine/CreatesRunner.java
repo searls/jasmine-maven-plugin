@@ -14,7 +14,7 @@ import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
 import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
 
-public class CreatesManualRunner {
+public class CreatesRunner {
 
   private final AbstractJasmineMojo config;
 
@@ -22,7 +22,7 @@ public class CreatesManualRunner {
   private final String runnerFileName;
   private final ReporterType reporterType;
 
-  public CreatesManualRunner(AbstractJasmineMojo config, String runnerFileName, ReporterType reporterType) {
+  public CreatesRunner(AbstractJasmineMojo config, String runnerFileName, ReporterType reporterType) {
     this.config = config;
     this.runnerFileName = runnerFileName;
     this.reporterType = reporterType;
@@ -31,7 +31,6 @@ public class CreatesManualRunner {
 
   public void create() throws IOException {
     File runnerDestination = new File(this.config.jasmineTargetDir,this.runnerFileName);
-    //ProjectDirScripResolver projectDirScripResolver = new ProjectDirScripResolver(this.config);
     ScriptResolver resolver = new BasicScriptResolver(
         config.getSources(),
         config.getSpecs(),

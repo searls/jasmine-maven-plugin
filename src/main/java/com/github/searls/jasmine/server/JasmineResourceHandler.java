@@ -11,7 +11,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
 import com.github.searls.jasmine.AbstractJasmineMojo;
-import com.github.searls.jasmine.CreatesManualRunner;
+import com.github.searls.jasmine.CreatesRunner;
 import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.coffee.DetectsCoffee;
 import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
@@ -21,10 +21,10 @@ public class JasmineResourceHandler extends ResourceHandler {
 
 	private final DetectsCoffee detectsCoffee = new DetectsCoffee();
 	private final HandlesRequestsForCoffee handlesRequestsForCoffee = new HandlesRequestsForCoffee();
-	private final CreatesManualRunner createsManualRunner;
+	private final CreatesRunner createsManualRunner;
 
 	public JasmineResourceHandler(AbstractJasmineMojo config, String runnerFileName, ReporterType reporterType) {
-		this.createsManualRunner = new CreatesManualRunner(config, runnerFileName,reporterType);
+		this.createsManualRunner = new CreatesRunner(config, runnerFileName,reporterType);
 		this.createsManualRunner.setLog(new NullLog());
 	}
 
