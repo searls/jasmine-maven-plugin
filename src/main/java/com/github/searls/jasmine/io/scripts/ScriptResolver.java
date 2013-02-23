@@ -1,34 +1,18 @@
 package com.github.searls.jasmine.io.scripts;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Set;
 
 public interface ScriptResolver {
 
-  void resolveScripts() throws IOException;
+  String getSourceDirectory() throws ScriptResolverException;
 
-  Set<String> getPreloads();
+  String getSpecDirectory() throws ScriptResolverException;
 
-  Set<String> getSources();
+  Set<String> getSources() throws ScriptResolverException;
 
-  Set<String> getSpecs();
+  Set<String> getSpecs() throws ScriptResolverException;
 
-  Set<String> getAllScripts();
+  Set<String> getPreloads() throws ScriptResolverException;
 
-  String getSourceDirectory() throws IOException;
-
-  String getSpecDirectoryPath() throws MalformedURLException;
-
-  Set<String> getSourcesRelativePath() throws IOException;
-
-  Set<String> getSpecsRelativePath() throws IOException;
-
-  Set<String> getPreloadsRelativePath() throws IOException;
-
-  Set<String> getAllScriptsRelativePath() throws IOException;
-
-  String getSourceDirectoryRelativePath() throws IOException;
-
-  String getSpecDirectoryRelativePath() throws IOException;
+  Set<String> getAllScripts() throws ScriptResolverException;
 }

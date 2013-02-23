@@ -16,6 +16,8 @@ import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo {
 
+  private static final String ERROR_FILE_DNE = "Invalid value for parameter '%s'. File does not exist: %s";
+
   /** Properties in order of most-to-least interesting for client projects to override **/
 
   /**
@@ -213,80 +215,94 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
    */
   protected SpecRunnerTemplate specRunnerTemplate;
 
-    /**
-     * Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
-     * the selected spcRunnerTemplate. I.e require.js is used when REQUIRE_JS is selected as specRunnerTemplate.
-     *
-     * @parameter
-     */
-    protected String scriptLoaderPath;
+  /**
+   * Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
+   * the selected spcRunnerTemplate. I.e require.js is used when REQUIRE_JS is selected as specRunnerTemplate.
+   *
+   * @parameter
+   */
+  protected String scriptLoaderPath;
 
   protected ScriptSearch sources;
   protected ScriptSearch specs;
 
   protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
+  @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
-    sources = new ScriptSearch(jsSrcDir,sourceIncludes,sourceExcludes);
-    specs = new ScriptSearch(jsTestSrcDir,specIncludes,specExcludes);
+    validateParameters();
+
+    this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);
+    this.specs = new ScriptSearch(this.jsTestSrcDir,this.specIncludes,this.specExcludes);
 
     try {
-      run();
+      this.run();
     } catch(MojoFailureException e) {
       throw e;
     } catch(Exception e) {
-      throw new MojoExecutionException("The jasmine-maven-plugin encountered an exception: \n"+stringifiesStackTraces.stringify(e),e);
+      throw new MojoExecutionException("The jasmine-maven-plugin encountered an exception: \n"+this.stringifiesStackTraces.stringify(e),e);
     }
   }
 
   public abstract void run() throws Exception;
 
   public String getSourceEncoding() {
-    return sourceEncoding;
+    return this.sourceEncoding;
   }
 
   public File getCustomRunnerTemplate() {
-    return customRunnerTemplate;
+    return this.customRunnerTemplate;
   }
 
   public SpecRunnerTemplate getSpecRunnerTemplate() {
-    return specRunnerTemplate;
+    return this.specRunnerTemplate;
   }
 
   public File getJasmineTargetDir() {
-    return jasmineTargetDir;
+    return this.jasmineTargetDir;
   }
 
   public String getSrcDirectoryName() {
-    return srcDirectoryName;
+    return this.srcDirectoryName;
   }
 
   public ScriptSearch getSources() {
-    return sources;
+    return this.sources;
   }
 
   public ScriptSearch getSpecs() {
-    return specs;
+    return this.specs;
   }
 
   public String getSpecDirectoryName() {
-    return specDirectoryName;
+    return this.specDirectoryName;
   }
 
   public List<String> getPreloadSources() {
-    return preloadSources;
+    return this.preloadSources;
   }
 
   public MavenProject getMavenProject() {
-    return mavenProject;
+    return this.mavenProject;
   }
 
   public File getCustomRunnerConfiguration() {
-    return customRunnerConfiguration;
+    return this.customRunnerConfiguration;
 
   }
 
-    public String getScriptLoaderPath() {
-        return scriptLoaderPath;
+  public String getScriptLoaderPath() {
+    return this.scriptLoaderPath;
+  }
+
+  private void validateParameters() throws MojoExecutionException {
+    this.fileExists("customRunnerConfiguration",this.customRunnerConfiguration);
+    this.fileExists("customRunnerTemplate",this.customRunnerTemplate);
+  }
+
+  private void fileExists(String parameter, File file) throws MojoExecutionException {
+    if (file != null && (!file.exists() || !file.canRead())) {
+      throw new MojoExecutionException(String.format(ERROR_FILE_DNE,parameter,file));
     }
+  }
 }

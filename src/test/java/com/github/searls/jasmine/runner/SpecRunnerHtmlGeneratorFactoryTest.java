@@ -3,7 +3,6 @@ package com.github.searls.jasmine.runner;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +46,7 @@ public class SpecRunnerHtmlGeneratorFactoryTest {
     AbstractJasmineMojo mock = mock(AbstractJasmineMojo.class);
     when(mock.getSpecRunnerTemplate()).thenReturn(SpecRunnerTemplate.DEFAULT);
     ScriptResolver mock1 = mock(ScriptResolver.class);
-    doThrow(new IOException("Foo")).when(mock1).resolveScripts();
+    // doThrow(new IOException("Foo")).when(mock1).resolveScripts();
     try {
       specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock1);
     } catch (InstantiationError e) {
