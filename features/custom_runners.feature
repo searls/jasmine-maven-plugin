@@ -23,4 +23,4 @@ Feature: using a custom runner template
     Given I am currently in the "jasmine-webapp-custom-runner-missing" project
     When I run "mvn clean test"
     Then the build should fail
-    And I should see "Caused by: \njava.io.FileNotFoundException: File '.*/src/test/resources/templates/specrunner.htmlfail' does not exist"
+    And I should see "Invalid value for parameter 'customRunnerTemplate'. File does not exist: .*/src/test/resources/templates/specrunner.htmlfail"
