@@ -99,6 +99,15 @@ public class TestMojo extends AbstractServerMojo {
 				return client;
 			};
 		};
+		
+		// setup proxy if specified
+		String proxyHost = System.getProperty("http.proxyHost");
+		String proxyPort = System.getProperty("http.proxyPort");
+		if (proxyHost != null && proxyPort != null) {
+			getLog().debug("Setting proxy " + proxyHost + ":" + proxyPort);
+			driver.setProxy(proxyHost, Integer.parseInt(proxyPort));
+		}
+		
 		driver.setJavascriptEnabled(true);
 		return driver;
 	}
