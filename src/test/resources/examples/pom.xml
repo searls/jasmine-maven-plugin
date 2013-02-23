@@ -8,6 +8,15 @@
   <packaging>pom</packaging>
   <name>jasmine-maven-plugin Example Projects</name>
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.github.searls</groupId>
+          <artifactId>jasmine-maven-plugin</artifactId>
+          <version>${project.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

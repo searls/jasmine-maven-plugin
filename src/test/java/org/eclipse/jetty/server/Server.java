@@ -5,18 +5,20 @@ import org.eclipse.jetty.util.component.Container;
 //Link Seam for jetty server.
 public class Server {
 
-  public void addConnector(Connector connector) {}
+	public void addConnector(Connector connector) {}
 
-  public void start() {}
+	public void start() {}
 
-  public void join() {}
+	public void stop() {}
 
-  public void setHandler(Handler handler) {}
+	public void join() {}
 
-  public Container getContainer() { return null; }
-  
-  public interface Graceful extends Handler
-  {
-      public void setShutdown(boolean shutdown);
-  }
+	public void setHandler(Handler handler) {}
+
+	public Container getContainer() { return null; }
+
+	public interface Graceful extends Handler
+	{
+		public void setShutdown(boolean shutdown);
+	}
 }
