@@ -81,9 +81,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 
   private void setCustomRunnerConfig(ST template) throws IOException {
     String customRunnerConfiguration = this.getConfiguration().getCustomRunnerConfiguration();
-    if (null != customRunnerConfiguration) {
-      template.add("customRunnerConfiguration", customRunnerConfiguration);
-    }
+    template.add("customRunnerConfiguration", customRunnerConfiguration);
   }
 
   private String resolveRequirejsPath(String sourceDirectory) {
