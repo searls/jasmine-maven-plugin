@@ -15,20 +15,19 @@
       <plugin>
         <groupId>com.github.searls</groupId>
         <artifactId>jasmine-maven-plugin</artifactId>
-        <version>${project.version}</version>
         <extensions>true</extensions>
         <executions>
           <execution>
             <goals>
               <goal>test</goal>
             </goals>
-            <configuration>
-              <preloadSources>
-                <source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js</source>
-              </preloadSources>
-            </configuration>
           </execution>
         </executions>
+        <configuration>
+          <preloadSources>
+            <source>https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js</source>
+          </preloadSources>
+        </configuration>
       </plugin>
     </plugins>
   </build>

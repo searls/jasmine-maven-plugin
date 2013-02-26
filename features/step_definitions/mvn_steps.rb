@@ -4,7 +4,7 @@ Given /^I am currently in the "([^"]*)" project$/ do |project_name|
 end
 
 When /^I run "([^"]*)"$/ do |command|
-  @output = `#{command}`
+  @output = `#{command} 2>&1`
 end
 
 Then /^the build should fail$/ do

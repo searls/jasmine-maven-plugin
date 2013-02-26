@@ -13,3 +13,5 @@ rerun.txt
 *.iws
 .bundle
 *.versionsBackup
+*.orig
+*~

@@ -1,82 +1,118 @@
 package com.github.searls.jasmine;
 
-import com.github.searls.jasmine.driver.WebDriverFactory;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.apache.maven.plugin.MojoFailureException;
+import org.eclipse.jetty.server.Server;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.IncorrectnessListener;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.WebClient;
 import com.github.searls.jasmine.format.JasmineResultLogger;
-import com.github.searls.jasmine.io.scripts.TargetDirScriptResolver;
 import com.github.searls.jasmine.model.JasmineResult;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerExecutor;
-import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
-import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
-import org.apache.commons.io.FileUtils;
-import org.apache.maven.plugin.MojoFailureException;
-import org.openqa.selenium.WebDriver;
 
-import java.io.File;
-import java.io.IOException;
 
 /**
  * @component
  * @goal test
  * @phase test
- * @execute phase="jasmine-process-test-resources"
+ * 
  */
-public class TestMojo extends AbstractJasmineMojo {
+public class TestMojo extends AbstractServerMojo {
 
-  public void run() throws Exception {
-    if(!skipTests) {
-      getLog().info("Executing Jasmine Specs");
-      File runnerFile = writeSpecRunnerToOutputDirectory();
-      JasmineResult result = executeSpecs(runnerFile);
-      logResults(result);
-      throwAnySpecFailures(result);
-    } else {
-      getLog().info("Skipping Jasmine Specs");
-    }
-  }
+	@Override
+	protected void executeJasmine(Server server) throws Exception {
+		if(!this.skipTests) {
+			try {
+				server.start();
+				this.getLog().info("Executing Jasmine Specs");
+				JasmineResult result = this.executeSpecs(new URL("http://localhost:"+this.getPort()));
+				this.logResults(result);
+				this.throwAnySpecFailures(result);
+			} finally {
+				server.stop();
+			}
+		} else {
+			this.getLog().info("Skipping Jasmine Specs");
+		}
+	}
 
-  private File writeSpecRunnerToOutputDirectory() throws IOException {
+	@Override
+	protected ReporterType getReporterType() {
+		return ReporterType.JsApiReporter;
+	}
 
-    SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.JsApiReporter, this, new TargetDirScriptResolver(this));
+	@Override
+	protected String getSpecRunnerFilename() {
+		return this.specRunnerHtmlFileName;
+	}
 
-    String html = generator.generate();
+	private JasmineResult executeSpecs(URL runner) throws MalformedURLException {
+		WebDriver driver = this.createDriver();
+		JasmineResult result = new SpecRunnerExecutor().execute(
+				runner,
+				new File(this.jasmineTargetDir,this.junitXmlReportFileName),
+				driver,
+				this.timeout, this.debug, this.getLog(), this.format);
+		return result;
+	}
 
-    getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);
-    File runnerFile = new File(jasmineTargetDir,specRunnerHtmlFileName);
-    FileUtils.writeStringToFile(runnerFile, html);
-    return runnerFile;
-  }
+	private WebDriver createDriver() {
+		if (!HtmlUnitDriver.class.getName().equals(this.webDriverClassName)) {
+			try {
+				@SuppressWarnings("unchecked")
+				Class<? extends WebDriver> klass = (Class<? extends WebDriver>) Class.forName(this.webDriverClassName);
+				Constructor<? extends WebDriver> ctor = klass.getConstructor();
+				return ctor.newInstance();
+			} catch (Exception e) {
+				throw new RuntimeException("Couldn't instantiate webDriverClassName", e);
+			}
+		}
 
-  private JasmineResult executeSpecs(File runnerFile) throws Exception {
-    return new SpecRunnerExecutor().execute(
-        runnerFile.toURI().toURL(),
-        new File(jasmineTargetDir, junitXmlReportFileName),
-        createDriver(),
-        timeout,
-        debug,
-        getLog(),
-        format
-    );
-  }
+		// We have extra configuration to do to the HtmlUnitDriver
+		BrowserVersion htmlUnitBrowserVersion;
+		try {
+			htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(this.browserVersion).get(BrowserVersion.class);
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+		HtmlUnitDriver driver = new HtmlUnitDriver(htmlUnitBrowserVersion) {
+			@Override
+			protected WebClient modifyWebClient(WebClient client) {
+				client.setAjaxController(new NicelyResynchronizingAjaxController());
 
-  private WebDriver createDriver() throws Exception {
-    WebDriverFactory factory = new WebDriverFactory();
-    factory.setWebDriverCapabilities(webDriverCapabilities);
-    factory.setWebDriverClassName(webDriverClassName);
-    factory.setDebug(debug);
-    factory.setBrowserVersion(browserVersion);
-    return factory.createWebDriver();
-  }
+				//Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
+				if (!TestMojo.this.debug)
+					client.setIncorrectnessListener(new IncorrectnessListener() {
+						@Override
+						public void notify(String arg0, Object arg1) {}
+					});
 
-  private void logResults(JasmineResult result) {
-    JasmineResultLogger resultLogger = new JasmineResultLogger();
-    resultLogger.setLog(getLog());
-    resultLogger.log(result);
-  }
+				return client;
+			};
+		};
+		driver.setJavascriptEnabled(true);
+		return driver;
+	}
 
-  private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
-    if(haltOnFailure && !result.didPass()) {
-      throw new MojoFailureException("There were Jasmine spec failures.");
-    }
-  }
+
+	private void logResults(JasmineResult result) {
+		JasmineResultLogger resultLogger = new JasmineResultLogger();
+		resultLogger.setLog(this.getLog());
+		resultLogger.log(result);
+	}
+
+	private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
+		if(this.haltOnFailure && !result.didPass()) {
+			throw new MojoFailureException("There were Jasmine spec failures.");
+		}
+	}
 }

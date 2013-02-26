@@ -2,62 +2,57 @@ package com.github.searls.jasmine;
 
 import java.io.IOException;
 
+import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
-import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.runner.ReporterType;
 
 /**
  * @goal bdd
- * @execute phase="jasmine-generate-runner"
+ * 
  * @requiresDirectInvocation true
  */
-public class ServerMojo extends AbstractJasmineMojo {
+public class ServerMojo extends AbstractServerMojo {
 
-  public static final String INSTRUCTION_FORMAT =
-    "\n\n" +
-    "Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n" +
-    "  http://localhost:%s"+
-    "\n\n" +
-    "The server will monitor these two directories for scripts that you add, remove, and change:\n\n" +
-    "  source directory: %s\n\n"+
-    "  spec directory: %s"+
-    "\n\n"+
-    "Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.";
+	public static final String INSTRUCTION_FORMAT =
+			"\n\n" +
+					"Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n" +
+					"  http://localhost:%s"+
+					"\n\n" +
+					"The server will monitor these two directories for scripts that you add, remove, and change:\n\n" +
+					"  source directory: %s\n\n"+
+					"  spec directory: %s"+
+					"\n\n"+
+					"Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.";
 
-  private Server server = new Server();
 
-  private RelativizesFilePaths relativizesFilePaths = new RelativizesFilePaths();
+	@Override
+	protected void configure(Connector connector) {
+		connector.setPort(this.serverPort);
+	}
 
-  @Override
-  public void run() throws Exception {
-    addConnectorToServer();
-        addHandlersToServer();
-        startServer();
-  }
+	private String buildServerInstructions() throws IOException {
+		return String.format(
+				INSTRUCTION_FORMAT,
+				this.serverPort,
+				this.getRelativePath(this.sources.getDirectory()),
+				this.getRelativePath(this.specs.getDirectory()));
+	}
 
-  private void addHandlersToServer() throws IOException {
-    server.setHandler(new ResourceHandlerConfigurator(this, relativizesFilePaths).createHandler());
-  }
+	@Override
+	protected void executeJasmine(Server server) throws Exception {
+		server.start();
+		this.getLog().info(this.buildServerInstructions());
+		server.join();
+	}
 
-  private void addConnectorToServer() {
-    SelectChannelConnector connector = new SelectChannelConnector();
-    connector.setPort(serverPort);
-    server.addConnector(connector);
-  }
+	@Override
+	protected ReporterType getReporterType() {
+		return ReporterType.HtmlReporter;
+	}
 
-  private void startServer() throws Exception {
-    server.start();
-        getLog().info(buildServerInstructions());
-    server.join();
-  }
-
-  private String buildServerInstructions() throws IOException {
-    return String.format(
-        INSTRUCTION_FORMAT,
-        serverPort,
-        relativizesFilePaths.relativize(mavenProject.getBasedir(), sources.getDirectory()),
-        relativizesFilePaths.relativize(mavenProject.getBasedir(), specs.getDirectory()));
-  }
-
+	@Override
+	protected String getSpecRunnerFilename() {
+		return this.manualSpecRunnerHtmlFileName;
+	}
 }

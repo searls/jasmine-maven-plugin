@@ -90,7 +90,7 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>2.29.1</version>
+      <version>2.30.0</version>
     </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
@@ -185,8 +185,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.0</version>
         <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
+          <source>1.6</source>
+          <target>1.6</target>
         </configuration>
       </plugin>
       <plugin>
@@ -237,6 +237,28 @@
             <include>**/*IntegrationTest.java</include>
           </includes>
         </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.6.2.201302030002</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+              <goal>report</goal>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <check>
+                <classRatio>85</classRatio>
+                <instructionRatio>50</instructionRatio>
+                <methodRatio>60</methodRatio>
+                <lineRatio>50</lineRatio>
+              </check>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
