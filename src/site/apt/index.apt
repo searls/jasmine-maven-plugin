@@ -1,0 +1,20 @@
+ ------
+ Introduction
+ ------
+ ------
+
+Jasmine Maven Plugin
+
+Describe the Jasmine Maven Plugin
+
+* Goals Overview
+
+ All the goals available can be found on the {{{plugin-info.html}goals page}}.
+
+ []
+
+* Usage
+
+ Instructions on how to use the Jasmine maven Plugin can be found on the {{{usage.html}usage page}}.
+
+ []
