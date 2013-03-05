@@ -33,6 +33,18 @@ public class Matchers {
 			}
 		};
 	}
+    public static Matcher<String> containsScriptTagWithAttribute(final String script, final String attribute) {
+        return new TypeSafeMatcher<String>() {
+            @Override
+            public boolean matchesSafely(String html) {
+                return html.contains("<script type=\"text/javascript\" "+attribute+">" + script + "</script>");
+            }
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("contains <script/> tag with contents '"+script+"'");
+            }
+        };
+    }
 	public static Matcher<String> containsScriptTagWithSource(final String src) {
 		return new TypeSafeMatcher<String>() {
 			@Override

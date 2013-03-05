@@ -20,6 +20,7 @@ public class HtmlGeneratorConfiguration {
   private final File customRunnerConfiguration;
   private final String srcDirectoryName;
   private final String specDirectoryName;
+  private final String blanketDirectoryName;
 
 
   public HtmlGeneratorConfiguration(ReporterType reporterType, AbstractJasmineMojo configuration, ScriptResolver scriptResolver) throws IOException {
@@ -33,6 +34,7 @@ public class HtmlGeneratorConfiguration {
     this.scriptLoaderPath = configuration.getScriptLoaderPath();
     this.srcDirectoryName = configuration.getSrcDirectoryName();
     this.specDirectoryName = configuration.getSpecDirectoryName();
+    this.blanketDirectoryName = configuration.getBlanketDirectoryName();
   }
 
   public String getSourceEncoding() {
@@ -125,6 +127,10 @@ public class HtmlGeneratorConfiguration {
 
   public String getSpecDirectoryName() {
     return this.specDirectoryName;
+  }
+
+  public String getBlanketDirectoryName() {
+    return this.blanketDirectoryName;
   }
 }
 

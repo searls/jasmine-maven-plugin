@@ -5,6 +5,5 @@ public interface SpecRunnerHtmlGenerator {
 	String  JASMINE_JS = "/vendor/js/jasmine.js";
 	String  JASMINE_HTML_JS = "/vendor/js/jasmine-html.js";
 	String  JASMINE_CSS = "/vendor/css/jasmine.css";
-
 	String generate();
 }

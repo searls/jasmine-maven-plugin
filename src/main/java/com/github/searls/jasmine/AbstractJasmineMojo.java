@@ -165,6 +165,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   protected String specDirectoryName;
 
   /**
+   * @parameter default-value=""
+   */
+  protected String blanketDirectoryName;
+
+  /**
    * @parameter default-value="src"
    */
   protected String srcDirectoryName;
@@ -276,6 +281,10 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
   public String getSpecDirectoryName() {
     return this.specDirectoryName;
+  }
+
+  public String getBlanketDirectoryName(){
+      return this.blanketDirectoryName;
   }
 
   public List<String> getPreloadSources() {

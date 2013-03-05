@@ -1,11 +1,11 @@
 package com.github.searls.jasmine.runner;
 
-import static com.github.searls.jasmine.Matchers.containsScriptTagWith;
-import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
-import static com.github.searls.jasmine.Matchers.containsStyleTagWith;
+import static com.github.searls.jasmine.Matchers.*;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_CSS;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_HTML_JS;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_JS;
+import static com.github.searls.jasmine.runner.AbstractSpecRunnerHtmlGenerator.BLANKET_SRC;
+import static com.github.searls.jasmine.runner.AbstractSpecRunnerHtmlGenerator.BLANKET_ADAPTER_SRC;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -40,6 +40,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
   private static final String SOURCE_ENCODING = "as9du20asd xanadu";
+  private static final String BLANKET_PATH = "api";
 
   private final Set<String> scripts = new LinkedHashSet<String>(asList("A"));
 
@@ -116,6 +117,19 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     String html = this.subject.generate();
 
     assertThat(html, containsScriptTagWith(expected));
+  }
+
+  @Test
+  public void populatesBlanketHtmlSource() throws Exception {
+      when(this.generatorConfiguration.getBlanketDirectoryName()).thenReturn(BLANKET_PATH);
+      when(this.generatorConfiguration.IOtoString(eq(BLANKET_SRC))).thenReturn("blanketsrc()");
+      when(this.generatorConfiguration.IOtoString(eq(BLANKET_ADAPTER_SRC))).thenReturn("blanketadaptersrc()");
+
+      String html = this.subject.generate();
+
+
+      assertThat(html, containsScriptTagWith("blanketadaptersrc()"));
+      assertThat(html, containsScriptTagWithAttribute("blanketsrc()", "data-cover-only=\"" + BLANKET_PATH + "\""));
   }
 
   @Test
