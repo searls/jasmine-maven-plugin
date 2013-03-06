@@ -123,12 +123,9 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   public void populatesBlanketHtmlSource() throws Exception {
       when(this.generatorConfiguration.getBlanketDirectoryName()).thenReturn(BLANKET_PATH);
       when(this.generatorConfiguration.IOtoString(eq(BLANKET_SRC))).thenReturn("blanketsrc()");
-      when(this.generatorConfiguration.IOtoString(eq(BLANKET_ADAPTER_SRC))).thenReturn("blanketadaptersrc()");
 
       String html = this.subject.generate();
 
-
-      assertThat(html, containsScriptTagWith("blanketadaptersrc()"));
       assertThat(html, containsScriptTagWithAttribute("blanketsrc()", "data-cover-only=\"" + BLANKET_PATH + "\""));
   }
 

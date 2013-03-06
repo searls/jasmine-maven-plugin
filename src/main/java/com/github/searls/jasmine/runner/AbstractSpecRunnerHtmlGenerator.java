@@ -18,7 +18,7 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
   private final HtmlGeneratorConfiguration configuration;
   private final FormatsScriptTags formatsScriptTags = new FormatsScriptTags();
 
-  public static final String BLANKET_SRC = "/vendor/js/blanket.min.js";
+  public static final String BLANKET_SRC = "/vendor/js/blanket_jasmine.js";
   public static final String BLANKET_ADAPTER_SRC = "/vendor/js/jasmine-blanket.js";
 
   protected AbstractSpecRunnerHtmlGenerator(HtmlGeneratorConfiguration configuration) {
@@ -49,10 +49,6 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
               .append("\"")
               .append(">")
               .append(configuration.IOtoString(BLANKET_SRC))
-              .append("</script>").append("\n");
-
-      js.append("<script type=\"text/javascript\">")
-              .append(configuration.IOtoString(BLANKET_ADAPTER_SRC))
               .append("</script>").append("\n");
     }
     template.add(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
