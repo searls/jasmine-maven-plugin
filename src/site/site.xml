@@ -24,6 +24,6 @@
       <item name="Release Notes" href="github-report.html"/>
    </menu>
 
-   <menu ref="modules" />
+   <menu ref="reports"/>
   </body>
 </project>
