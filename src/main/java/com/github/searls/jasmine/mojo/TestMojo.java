@@ -62,9 +62,7 @@ public class TestMojo extends AbstractJasmineMojo {
         this.relativizesFilePaths,
         this.specRunnerHtmlFileName,
         ReporterType.JsApiReporter);
-    System.out.println("configurator: " + configurator);
     ServerManager manager = new ServerManager(configurator);
-    System.out.println("manager: " + manager);
     return manager;
   }
 
