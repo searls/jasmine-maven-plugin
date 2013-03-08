@@ -16,9 +16,9 @@ import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.github.searls.jasmine.AbstractJasmineMojo;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
+import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FileUtils.class)

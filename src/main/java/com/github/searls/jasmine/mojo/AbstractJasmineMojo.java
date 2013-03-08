@@ -1,4 +1,4 @@
-package com.github.searls.jasmine;
+package com.github.searls.jasmine.mojo;
 
 import java.io.File;
 import java.util.Collections;
@@ -9,12 +9,13 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 
+import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
-public abstract class AbstractJasmineMojo extends AbstractMojo {
+public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {
 
   private static final String ERROR_FILE_DNE = "Invalid value for parameter '%s'. File does not exist: %s";
 
@@ -175,6 +176,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   protected String sourceEncoding;
 
   /**
+   * @parameter default-value="false" property="keepServerAlive"
+   */
+  protected boolean keepServerAlive;
+
+  /**
    * @parameter
    */
   private final List<String> sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
@@ -246,38 +252,47 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
 
   public abstract void run() throws Exception;
 
+  @Override
   public String getSourceEncoding() {
     return this.sourceEncoding;
   }
 
+  @Override
   public File getCustomRunnerTemplate() {
     return this.customRunnerTemplate;
   }
 
+  @Override
   public SpecRunnerTemplate getSpecRunnerTemplate() {
     return this.specRunnerTemplate;
   }
 
+  @Override
   public File getJasmineTargetDir() {
     return this.jasmineTargetDir;
   }
 
+  @Override
   public String getSrcDirectoryName() {
     return this.srcDirectoryName;
   }
 
+  @Override
   public ScriptSearch getSources() {
     return this.sources;
   }
 
+  @Override
   public ScriptSearch getSpecs() {
     return this.specs;
   }
 
+  @Override
   public String getSpecDirectoryName() {
     return this.specDirectoryName;
   }
 
+  @Override
   public List<String> getPreloadSources() {
     return this.preloadSources;
   }
@@ -286,13 +301,20 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
     return this.mavenProject;
   }
 
+  @Override
   public File getCustomRunnerConfiguration() {
     return this.customRunnerConfiguration;
 
   }
 
+  @Override
   public String getScriptLoaderPath() {
     return this.scriptLoaderPath;
+  }
+
+  @Override
+  public File getBasedir() {
+    return this.mavenProject.getBasedir();
   }
 
   private void validateParameters() throws MojoExecutionException {

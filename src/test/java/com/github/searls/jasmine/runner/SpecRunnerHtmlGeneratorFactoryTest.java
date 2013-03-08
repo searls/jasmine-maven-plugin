@@ -11,8 +11,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.github.searls.jasmine.AbstractJasmineMojo;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
+import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
 
 public class SpecRunnerHtmlGeneratorFactoryTest {
 

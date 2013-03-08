@@ -15,7 +15,7 @@ public class ScansDirectory {
 
   public final static List<String> DEFAULT_INCLUDES = asList("**"+File.separator+"*.js","**"+File.separator+"*.coffee");
 
-  private DirectoryScanner directoryScanner = new DirectoryScanner();
+  private final DirectoryScanner directoryScanner = new DirectoryScanner();
 
   public List<String> scan(File directory, List<String> includes, List<String> excludes) {
     Set<String> set = new LinkedHashSet<String>();

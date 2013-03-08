@@ -1,4 +1,4 @@
-package com.github.searls.jasmine;
+package com.github.searls.jasmine.mojo;
 
 import static com.github.searls.jasmine.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
@@ -20,6 +20,7 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractJasmineMojoTest {
