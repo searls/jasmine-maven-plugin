@@ -34,9 +34,42 @@
       <id>klieber</id>
       <name>Kyle Lieber</name>
       <email>klieber.github@mailnull.com</email>
-			<url>http://kylelieber.com</url>
+      <url>http://kylelieber.com</url>
     </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Erik Bakstad</name>
+      <email>erik.bakstad@gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>Luiz Ribeiro</name>
+      <email>luizfar@gmail.com</email>
+      <url>http://luizfar.wordpress.com</url> 
+    </contributor>
+    <contributor>
+      <name>Dan Freeman</name>
+    </contributor>
+    <contributor>
+      <name>dfabulich</name>
+    </contributor>
+    <contributor>
+      <name>David Padbury</name>
+      <email>david@davidpadbury.com</email>
+      <url>http://davidpadbury.com</url> 
+    </contributor>
+    <contributor>
+      <name>Conny Kreyßel</name>
+      <url>http://www.kreyssel.org</url> 
+    </contributor>
+    <contributor>
+      <name>sfry</name>
+    </contributor>
+    <contributor>
+      <name>hikaruworld</name>
+      <url>http://prepro.wordpress.com</url> 
+    </contributor>
+  </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
     <connection>scm:git:https://github.com/searls/jasmine-maven-plugin.git</connection>
@@ -46,7 +79,10 @@
     <system>github</system>
     <url>https://github.com/searls/jasmine-maven-plugin/issues</url>
   </issueManagement>
-
+  <ciManagement>
+    <system>travis-ci</system>
+    <url>https://travis-ci.org/searls/jasmine-maven-plugin</url>
+  </ciManagement>
   <properties>
     <powermock.version>1.4.6</powermock.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
