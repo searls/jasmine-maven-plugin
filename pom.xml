@@ -65,7 +65,7 @@
       <artifactId>maven-core</artifactId>
       <version>3.0.4</version>
     </dependency>
-
+    
     <!-- Plugin Dependencies -->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -244,13 +244,16 @@
               <goal>report</goal>
               <goal>check</goal>
             </goals>
-            <configuration>
+         <configuration>
               <check>
-                <classRatio>85</classRatio>
-                <instructionRatio>50</instructionRatio>
-                <methodRatio>60</methodRatio>
-                <lineRatio>50</lineRatio>
+                <classRatio>88</classRatio>
+                <instructionRatio>70</instructionRatio>
+                <methodRatio>64</methodRatio>
+                <lineRatio>68</lineRatio>
               </check>
+              <excludes>
+                <exclude>com/github/searls/jasmine/mojo/HelpMojo*</exclude>
+              </excludes>
             </configuration>
           </execution>
         </executions>
