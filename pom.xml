@@ -105,6 +105,12 @@
       <artifactId>maven-core</artifactId>
       <version>3.0.4</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>3.2</version>
+      <scope>provided</scope>
+    </dependency>
     
     <!-- Plugin Dependencies -->
     <dependency>
@@ -130,7 +136,7 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>2.30.0</version>
+      <version>2.31.0</version>
     </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
@@ -204,6 +210,13 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
           <version>3.2</version>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.doxia</groupId>
+              <artifactId>doxia-module-markdown</artifactId>
+              <version>1.3</version>
+            </dependency>
+          </dependencies>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -214,8 +227,16 @@
         <version>3.2</version>
         <configuration>
           <goalPrefix>jasmine</goalPrefix>
+          <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
+          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
         <executions>
+          <execution>
+            <id>mojo-descriptor</id>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
           <execution>
             <id>generated-helpmojo</id>
             <goals>
@@ -247,7 +268,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -290,7 +310,6 @@
           <execution>
             <goals>
               <goal>prepare-agent</goal>
-              <goal>report</goal>
               <goal>check</goal>
             </goals>
          <configuration>
@@ -332,6 +351,23 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
         <version>2.6</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>index</report>
+              <report>summary</report>
+              <report>project-team</report>
+              <report>plugins</report>
+              <report>cim</report>
+              <report>issue-tracking</report>
+              <report>scm</report>
+              <report>license</report>
+              <report>plugin-management</report>
+              <report>distribution-management</report>
+              <report>dependencies</report>
+            </reports>
+          </reportSet>
+        </reportSets> 
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -353,6 +389,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
         <version>2.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.6.2.201302030002</version>
       </plugin>
     </plugins>
   </reporting>

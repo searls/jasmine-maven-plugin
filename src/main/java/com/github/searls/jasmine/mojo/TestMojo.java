@@ -6,6 +6,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
@@ -22,10 +24,9 @@ import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
 
 /**
- * @component
- * @goal test
- * @phase test
+ * Execute specs using Selenium Web Driver. Uses HtmlUnitDriver for head-less execution by default.
  */
+@Mojo(name="test",defaultPhase=LifecyclePhase.TEST)
 public class TestMojo extends AbstractJasmineMojo {
 
   private final RelativizesFilePaths relativizesFilePaths;
