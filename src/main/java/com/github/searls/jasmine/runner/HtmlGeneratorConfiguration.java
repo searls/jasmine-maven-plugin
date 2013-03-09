@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.apache.commons.io.FileUtils;
 
-import com.github.searls.jasmine.AbstractJasmineMojo;
+import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
@@ -21,8 +21,7 @@ public class HtmlGeneratorConfiguration {
   private final String srcDirectoryName;
   private final String specDirectoryName;
 
-
-  public HtmlGeneratorConfiguration(ReporterType reporterType, AbstractJasmineMojo configuration, ScriptResolver scriptResolver) throws IOException {
+  public HtmlGeneratorConfiguration(ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {
     this.sourceEncoding = configuration.getSourceEncoding();
     this.reporterType = reporterType;
     this.customRunnerTemplate = configuration.getCustomRunnerTemplate();
