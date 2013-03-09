@@ -16,14 +16,19 @@
     </fluidoSkin>
   </custom>
   <body>
+    
    <menu name="Overview">
       <item name="Introduction" href="index.html"/>
       <item name="Goals" href="plugin-info.html"/>
       <item name="Usage" href="usage.html"/>
-      <item name="FAQ" href="faq.html"/>
-      <item name="Release Notes" href="github-report.html"/>
    </menu>
-
+   
+   <menu name="Examples">
+      <item name="Spec Runner Templates" href="spec-runner-templates.html" />
+      <item name="AMD Support" href="amd-support.html" />
+   </menu>
+    
    <menu ref="reports"/>
+
   </body>
 </project>
