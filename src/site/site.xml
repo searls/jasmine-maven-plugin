@@ -26,9 +26,16 @@
    <menu name="Examples">
       <item name="Spec Runner Templates" href="spec-runner-templates.html" />
       <item name="AMD Support" href="amd-support.html" />
+      <item name="Code Coverage" href="code-coverage.html" />
    </menu>
     
    <menu ref="reports"/>
+
+   <menu name="External Links">
+     <item name="Jasmine Docs" href="http://github.com/pivotal/jasmine/wiki" />
+     <item name="CoffeeScript Docs" href="http://jashkenas.github.com/coffee-script/" />
+     <item name="Try Jasmine in your browser" href="http://try-jasmine.heroku.com/" />
+   </menu>
 
   </body>
 </project>

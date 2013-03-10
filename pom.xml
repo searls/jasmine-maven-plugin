@@ -210,6 +210,9 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
           <version>3.2</version>
+          <configuration>
+            <skipDeploy>true</skipDeploy>
+          </configuration>
           <dependencies>
             <dependency>
               <groupId>org.apache.maven.doxia</groupId>
@@ -326,9 +329,27 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>0.7</version>
+        <configuration>
+          <message>Creating site for ${project.version}</message>
+          <server>github</server>
+          <dryRun>true</dryRun>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <phase>site-deploy</phase>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
-<reporting>
+  <reporting>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -357,14 +378,13 @@
               <report>index</report>
               <report>summary</report>
               <report>project-team</report>
-              <report>plugins</report>
-              <report>cim</report>
+              <report>license</report>
               <report>issue-tracking</report>
               <report>scm</report>
-              <report>license</report>
-              <report>plugin-management</report>
+              <report>cim</report>
               <report>distribution-management</report>
               <report>dependencies</report>
+              <report>plugins</report>
             </reports>
           </reportSet>
         </reportSets> 
@@ -374,7 +394,7 @@
         <artifactId>maven-changes-plugin</artifactId>
         <version>2.8</version>
         <configuration>
-          <columnNames>Summary,Assignee,Status,Type,Fix Version</columnNames>
+          <columnNames>Id,Summary,Reporter,Assignee,Status,Type,Created,Fix Version</columnNames>
           <onlyCurrentVersion>true</onlyCurrentVersion>
         </configuration>
         <reportSets>
@@ -389,6 +409,11 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
         <version>2.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.14</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
