@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.mojo;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -394,7 +395,22 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
   @Override
   public List<String> getPreloadSources() {
+    this.addRequireJsIfNecessary(); // This is temporary until the scriptLoaderPath parameter is removed
     return this.preloadSources;
+  }
+
+  private void addRequireJsIfNecessary() {
+    String scriptLoaderPath = this.getScriptLoaderPath() == null ? "require.js" : this.getScriptLoaderPath();
+    String requireJsPath = String.format("%s/%s", this.jsSrcDir, scriptLoaderPath);
+    if (SpecRunnerTemplate.REQUIRE_JS.equals(this.specRunnerTemplate)) {
+      File requireJsFile = new File(requireJsPath);
+      if (requireJsFile.exists()) {
+        if (this.preloadSources == null) {
+          this.preloadSources = new ArrayList<String>();
+        }
+        this.preloadSources.add(requireJsPath);
+      }
+    }
   }
 
   public MavenProject getMavenProject() {
