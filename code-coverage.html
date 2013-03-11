@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="Date-Revision-yyyymmdd" content="20130310" />
     <meta http-equiv="Content-Language" content="en" />
-    <title>jasmine-maven-plugin - Introduction</title>
+    <title>jasmine-maven-plugin - </title>
     <link rel="stylesheet" href="./css/apache-maven-fluido-1.3.0.min.css" />
     <link rel="stylesheet" href="./css/site.css" />
     <link rel="stylesheet" href="./css/print.css" media="print" />
@@ -68,10 +68,12 @@
                 <ul class="nav nav-list">
                     <li class="nav-header">Overview</li>
                                 
-      <li class="active">
+      <li>
     
-            <a href="#"><i class="none"></i>Introduction</a>
-          </li>
+                          <a href="index.html" title="Introduction">
+          <i class="none"></i>
+        Introduction</a>
+            </li>
                   
       <li>
     
@@ -102,90 +104,18 @@
         AMD Support</a>
             </li>
                   
-      <li>
+      <li class="active">
     
-                          <a href="code-coverage.html" title="Code Coverage">
-          <i class="none"></i>
-        Code Coverage</a>
-            </li>
+            <a href="#"><i class="none"></i>Code Coverage</a>
+          </li>
                               <li class="nav-header">Project Documentation</li>
-                                                                                                                                                                                                                                                              
+                                                                                                                                                                                                                                                    
       <li>
     
                           <a href="project-info.html" title="Project Information">
-          <i class="icon-chevron-down"></i>
+          <i class="icon-chevron-right"></i>
         Project Information</a>
-                    <ul class="nav nav-list">
-                      
-      <li class="active">
-    
-            <a href="#"><i class="none"></i>About</a>
-          </li>
-                      
-      <li>
-    
-                          <a href="project-summary.html" title="Project Summary">
-          <i class="none"></i>
-        Project Summary</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="team-list.html" title="Project Team">
-          <i class="none"></i>
-        Project Team</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="license.html" title="Project License">
-          <i class="none"></i>
-        Project License</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="issue-tracking.html" title="Issue Tracking">
-          <i class="none"></i>
-        Issue Tracking</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="source-repository.html" title="Source Repository">
-          <i class="none"></i>
-        Source Repository</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="integration.html" title="Continuous Integration">
-          <i class="none"></i>
-        Continuous Integration</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="distribution-management.html" title="Distribution Management">
-          <i class="none"></i>
-        Distribution Management</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="dependencies.html" title="Dependencies">
-          <i class="none"></i>
-        Dependencies</a>
-            </li>
-                      
-      <li>
-    
-                          <a href="plugins.html" title="Project Plugins">
-          <i class="none"></i>
-        Project Plugins</a>
-            </li>
-              </ul>
-        </li>
+                  </li>
                                                                                                                                                                                                   
       <li>
     
@@ -235,7 +165,46 @@
                 
         <div id="bodyColumn"  class="span9" >
                                   
-            <div class="section"><h2>Jasmine Maven Plugin<a name="Jasmine_Maven_Plugin"></a></h2><div class="section"><h3>What do we have here?<a name="What_do_we_have_here"></a></h3><p>As one might intuit, the jasmine-maven-plugin is a Maven plugin for the JavaScript testing framework, Jasmine.</p><p>If you're using Maven, you're probably writing Java (but, hey, you could be using it for any JVM-language). And if you're anything like me, you're here to figure out how to treat your client-side code with the same degree of professionalism that you already show server-side code. Maybe that means you want a painless way to test-drive your JavaScript. Maybe you're trying to figure out how to incorporate JavaScript tests on your continuous integration server without requiring any browser shenanigans.</p></div><div class="section"><h3>The good news<a name="The_good_news"></a></h3><ul><li>it helps you practice TDD/BDD as you write JavaScript</li><li>it can run as part of your build with no added configuration on your part</li><li>it has full-on support for the burgeoning CoffeeScript language! Any files with a &quot;.coffee&quot; extension will be compiled just in time for your specs to run</li></ul></div></div>
+            <h1>Integrating with Saga Code Coverage</h1><p>It is possible to configure your build to run Jasmine tests with the jasmine-maven-plugin and measure code coverage using the fantastic <a class="externalLink" href="http://timurstrekalov.github.com/saga/">saga-maven-plugin</a>.</p><p>Note: Starting with version <tt>1.3.1.0</tt> of the jasmine-maven-plugin you will need to use the new <tt>keepServerAlive</tt> parameter to keep the web server running and you must use version <tt>1.4.0</tt> of the saga-maven-plugin in order to have saga consume your tests.</p><p>Here is an example configuration:</p>
+<div class="source"><pre class="prettyprint">&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;com.github.searls&lt;/groupId&gt;
+      &lt;artifactId&gt;jasmine-maven-plugin&lt;/artifactId&gt;
+      &lt;version&gt;${project.version}&lt;/version&gt;
+      &lt;executions&gt;
+        &lt;execution&gt;
+          &lt;goals&gt;
+            &lt;goal&gt;test&lt;/goal&gt;
+          &lt;/goals&gt;
+          &lt;configuration&gt;
+      	    &lt;keepServerAlive&gt;true&lt;/keepServerAlive&gt;
+          &lt;/configuration&gt;
+        &lt;/execution&gt;
+      &lt;/executions&gt;
+    &lt;/plugin&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;com.github.timurstrekalov&lt;/groupId&gt;
+      &lt;artifactId&gt;saga-maven-plugin&lt;/artifactId&gt;
+      &lt;version&gt;1.4.0&lt;/version&gt;
+      &lt;executions&gt;
+        &lt;execution&gt;
+          &lt;goals&gt;
+            &lt;goal&gt;coverage&lt;/goal&gt;
+          &lt;/goals&gt;
+        &lt;/execution&gt;
+      &lt;/executions&gt;
+      &lt;configuration&gt;
+        &lt;baseDir&gt;http://localhost:${jasmine.serverPort}&lt;/baseDir&gt;
+        &lt;outputDir&gt;${project.build.directory}/coverage&lt;/outputDir&gt;
+        &lt;noInstrumentPatterns&gt;
+          &lt;pattern&gt;.*/spec/.*&lt;/pattern&gt; &lt;!-- Don't instrument specs --&gt;
+        &lt;/noInstrumentPatterns&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+  &lt;/plugins&gt;
+&lt;/build&gt;
+</pre></div><p>Then running <tt>mvn verify</tt> should create your coverage reports in <tt>${project.build.directory}/coverage</tt>.</p>
                   </div>
             </div>
           </div>
