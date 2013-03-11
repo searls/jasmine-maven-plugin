@@ -5,6 +5,7 @@ import static java.util.Arrays.asList;
 import java.io.IOException;
 import java.util.Set;
 
+import com.google.common.base.Objects;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 
@@ -52,7 +53,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     template.add("allScriptsList", this.createJsonArray(allScripts));
     template.add("preloadsList", this.createJsonArray(preloads));
     template.add("sourcesList", this.createJsonArray(sources));
-    template.add("specsList", this.createJsonArray(specs));
+    template.add("specsList", Objects.firstNonNull(this.createJsonArray(specs), "[]"));
     template.add("sourceDir", sourceDirectory);
     template.add("specDir", specDirectory);
 
