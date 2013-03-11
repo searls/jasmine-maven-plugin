@@ -3,15 +3,17 @@ package com.github.searls.jasmine.mojo;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.maven.plugins.annotations.Mojo;
+
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
 
 /**
- * @goal bdd
- * @requiresDirectInvocation true
+ * Execute specs in a web browser. Monitors your sources/specs for changes as you develop.
  */
+@Mojo(name="bdd",requiresDirectInvocation=true)
 public class ServerMojo extends AbstractJasmineMojo {
 
   public static final String INSTRUCTION_FORMAT =

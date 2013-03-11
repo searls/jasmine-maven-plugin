@@ -34,15 +34,55 @@
       <id>klieber</id>
       <name>Kyle Lieber</name>
       <email>klieber.github@mailnull.com</email>
-			<url>http://kylelieber.com</url>
+      <url>http://kylelieber.com</url>
     </developer>
   </developers>
+  <contributors>
+    <contributor>
+      <name>Erik Bakstad</name>
+      <email>erik.bakstad@gmail.com</email>
+    </contributor>
+    <contributor>
+      <name>Luiz Ribeiro</name>
+      <email>luizfar@gmail.com</email>
+      <url>http://luizfar.wordpress.com</url> 
+    </contributor>
+    <contributor>
+      <name>Dan Freeman</name>
+    </contributor>
+    <contributor>
+      <name>dfabulich</name>
+    </contributor>
+    <contributor>
+      <name>David Padbury</name>
+      <email>david@davidpadbury.com</email>
+      <url>http://davidpadbury.com</url> 
+    </contributor>
+    <contributor>
+      <name>Conny Kreyßel</name>
+      <url>http://www.kreyssel.org</url> 
+    </contributor>
+    <contributor>
+      <name>sfry</name>
+    </contributor>
+    <contributor>
+      <name>hikaruworld</name>
+      <url>http://prepro.wordpress.com</url> 
+    </contributor>
+  </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
     <connection>scm:git:https://github.com/searls/jasmine-maven-plugin.git</connection>
     <developerConnection>scm:git:https://searls@github.com/searls/jasmine-maven-plugin.git</developerConnection>
   </scm>
-
+  <issueManagement>
+    <system>github</system>
+    <url>https://github.com/searls/jasmine-maven-plugin/issues</url>
+  </issueManagement>
+  <ciManagement>
+    <system>travis-ci</system>
+    <url>https://travis-ci.org/searls/jasmine-maven-plugin</url>
+  </ciManagement>
   <properties>
     <powermock.version>1.4.6</powermock.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -64,6 +104,12 @@
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
       <version>3.0.4</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.maven.plugin-tools</groupId>
+      <artifactId>maven-plugin-annotations</artifactId>
+      <version>3.2</version>
+      <scope>provided</scope>
     </dependency>
     
     <!-- Plugin Dependencies -->
@@ -90,7 +136,7 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>2.30.0</version>
+      <version>2.31.0</version>
     </dependency>
     <dependency>
       <groupId>org.antlr</groupId>
@@ -158,6 +204,25 @@
   </dependencies>
 
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-site-plugin</artifactId>
+          <version>3.2</version>
+          <configuration>
+            <skipDeploy>true</skipDeploy>
+          </configuration>
+          <dependencies>
+            <dependency>
+              <groupId>org.apache.maven.doxia</groupId>
+              <artifactId>doxia-module-markdown</artifactId>
+              <version>1.3</version>
+            </dependency>
+          </dependencies>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -165,8 +230,16 @@
         <version>3.2</version>
         <configuration>
           <goalPrefix>jasmine</goalPrefix>
+          <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
+          <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
         </configuration>
         <executions>
+          <execution>
+            <id>mojo-descriptor</id>
+            <goals>
+              <goal>descriptor</goal>
+            </goals>
+          </execution>
           <execution>
             <id>generated-helpmojo</id>
             <goals>
@@ -198,7 +271,6 @@
           </execution>
         </executions>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -241,7 +313,6 @@
           <execution>
             <goals>
               <goal>prepare-agent</goal>
-              <goal>report</goal>
               <goal>check</goal>
             </goals>
          <configuration>
@@ -258,8 +329,98 @@
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>com.github.github</groupId>
+        <artifactId>site-maven-plugin</artifactId>
+        <version>0.7</version>
+        <configuration>
+          <message>Creating site for ${project.version}</message>
+          <server>github</server>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>site</goal>
+            </goals>
+            <phase>site-deploy</phase>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.8</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-plugin-plugin</artifactId>
+        <version>3.2</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <version>2.6</version>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>index</report>
+              <report>summary</report>
+              <report>project-team</report>
+              <report>license</report>
+              <report>issue-tracking</report>
+              <report>scm</report>
+              <report>cim</report>
+              <report>distribution-management</report>
+              <report>dependencies</report>
+              <report>plugins</report>
+            </reports>
+          </reportSet>
+        </reportSets> 
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-changes-plugin</artifactId>
+        <version>2.8</version>
+        <configuration>
+          <columnNames>Id,Summary,Reporter,Assignee,Status,Type,Created,Fix Version</columnNames>
+          <onlyCurrentVersion>true</onlyCurrentVersion>
+        </configuration>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>github-report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jxr-plugin</artifactId>
+        <version>2.3</version>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+        <version>2.14</version>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.6.2.201302030002</version>
+      </plugin>
+    </plugins>
+  </reporting>
   <profiles>
     <profile>
       <id>release-sign-artifacts</id>
