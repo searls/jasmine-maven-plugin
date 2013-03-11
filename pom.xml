@@ -336,7 +336,6 @@
         <configuration>
           <message>Creating site for ${project.version}</message>
           <server>github</server>
-          <dryRun>true</dryRun>
         </configuration>
         <executions>
           <execution>
