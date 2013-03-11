@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
@@ -19,215 +20,314 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
   private static final String ERROR_FILE_DNE = "Invalid value for parameter '%s'. File does not exist: %s";
 
-  /** Properties in order of most-to-least interesting for client projects to override **/
+  // Properties in order of most-to-least interesting for client projects to override
 
   /**
-   * @parameter default-value="${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript" property="jsSrcDir"
+   * Directory storing your JavaScript.
+   * @since 1.1.0
    */
+  @Parameter(
+      property="jsSrcDir",
+      defaultValue="${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript")
   private File jsSrcDir;
 
   /**
-   * @parameter default-value="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript" property="jsTestSrcDir"
+   * Directory storying your Jasmine Specs.
+   * @since 1.1.0
    */
+  @Parameter(
+      property="jsTestSrcDir",
+      defaultValue="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript")
   private File jsTestSrcDir;
 
   /**
    * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
-   * The plugin uses HtmlUnit by default.
+   * The plugin uses <a href="http://htmlunit.sourceforge.net/">HtmlUnit</a> by default.
    *
-   *   Some valid examples: org.openqa.selenium.htmlunit.HtmlUnitDriver, org.openqa.selenium.firefox.FirefoxDriver, org.openqa.selenium.ie.InternetExplorerDriver
-   *
-   * @parameter default-value="org.openqa.selenium.htmlunit.HtmlUnitDriver"
+   * <p>Some valid examples:</p>
+   * <ul>
+   *   <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
+   *   <li>org.openqa.selenium.firefox.FirefoxDriver</li>
+   *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
+   * </ul>
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="org.openqa.selenium.htmlunit.HtmlUnitDriver")
   protected String webDriverClassName;
 
   /**
-   * Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
-   * This maps 1-to-1 with the public static
-   *   instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.
+   * <p>Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
+   * This maps 1-to-1 with the public static instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.</p>
    *
-   *   Some valid examples: FIREFOX_3_6, INTERNET_EXPLORER_6, INTERNET_EXPLORER_7, INTERNET_EXPLORER_8
+   * <p>Some valid examples: CHROME, FIREFOX_3_6, INTERNET_EXPLORER_7, INTERNET_EXPLORER_8, INTERNET_EXPLORER_9</p>
    *
-   * @parameter default-value="FIREFOX_3_6"
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="FIREFOX_3_6")
   protected String browserVersion;
 
   /**
-   * Determines the format that jasmine:test will print to console.
-   *   Valid options:
-   *     "documentation" - (default) - print specs in a nested format
-   *    "progress" - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')
+   * <p>Determines the format that jasmine:test will print to console.</p>
+   * <p>Valid options:</p>
+   * <ul>
+   *   <li>"documentation" - (default) - print specs in a nested format</li>
+   *   <li>"progress" - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')</li>
+   * </ul>
    *
-   * @parameter default-value="documentation"
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="documentation")
   protected String format;
 
   /**
-   * @parameter default-value="js" property="packageJavaScriptPath"
-   */
-  protected String packageJavaScriptPath;
-
-  /**
-   * JavaScript sources (typically vendor/lib dependencies) that need to be loaded
+   * <p>JavaScript sources (typically vendor/lib dependencies) that need to be loaded
    * before other sources (and specs) in a particular order. Each source will first be
-   * searched for relative to ${jsSrcDir}, then ${jsTestSrcDir}, then (if it's not found in either)
-   * it will be included exactly as it appears in your POM.
+   * searched for relative to <code>${jsSrcDir}</code>, then <code>${jsTestSrcDir}</code>,
+   * then (if it's not found in either) it will be included exactly as it appears in your POM.</p>
    *
-   * Therefore, if jquery.js is in `${jsSrcDir}/vendor`, you would configure:
-   *
-   *    &lt;preloadSources&gt;
-   *      &lt;source&gt;vendor/z.js&lt;/source&gt;
-   *    &lt;/preloadSources&gt;
-   *
-   * And z.js would load before all the other sources and specs.
-   *
-   * @parameter
+   * <p>Therefore, if jquery.js is in <code>${jsSrcDir}/vendor</code>, you would configure:</p>
+   * <pre>
+   * &lt;preloadSources&gt;
+   *   &lt;source&gt;vendor/jquery.js&lt;/source&gt;
+   * &lt;/preloadSources&gt;
+   * </pre>
+   * 
+   * <p>And jquery.js would load before all the other sources and specs.</p>
+   * 
+   * @since 1.1.0
    */
+  @Parameter
   protected List<String> preloadSources;
 
   /**
-   * It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
-   *   and as a result the generated SpecRunner HTML files are set up in a way that you can't run
-   *   your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
-   *   and make the changes you need. The default template is stored in `src/main/resources/jasmine-templates/SpecRunner.htmltemplate`,
-   *   and the required template strings are tokenized in "$*$" patterns.
+   * <p>It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
+   * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
+   * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
+   * and make the changes you need. The default template is stored in <code>src/main/resources/jasmine-templates/SpecRunner.htmltemplate</code>,
+   * and the required template strings are tokenized in "$*$" patterns.</p>
    *
-   * Example usage:
-   *  &lt;customRunnerTemplate&gt;${project.basedir}/src/test/resources/myCustomRunner.template&lt;/customRunnerTemplate&gt;
+   * <p>Example usage:</p>
+   * <pre>
+   * &lt;customRunnerTemplate&gt;${project.basedir}/src/test/resources/myCustomRunner.template&lt;/customRunnerTemplate&gt;
+   * </pre>
    *
-   * @parameter
+   * @since 1.1.0
    */
+  @Parameter
   protected File customRunnerTemplate;
 
   /**
-   * Sometimes you want to have full control over how scriptloaders are configured. In order to interpolate custom configuration
-   * into the generated runnerTemplate, specify a file containing the additional config.
+   * <p>Sometimes you want to have full control over how scriptloaders are configured. In order to interpolate custom configuration
+   * into the generated runnerTemplate, specify a file containing the additional config.</p>
    *
-   *    * Example usage:
-   *  &lt;customRunnerConfiguration&gt;${project.basedir}/src/test/resources/myCustomConfig.txt&lt;/customRunnerConfiguration&gt;
+   * <p>Example usage:</p>
+   * <pre>
+   * &lt;customRunnerConfiguration&gt;${project.basedir}/src/test/resources/myCustomConfig.txt&lt;/customRunnerConfiguration&gt;
+   * </pre>
    *
-   * @parameter
+   * @since 1.1.0
    */
+  @Parameter
   protected File customRunnerConfiguration;
 
   /**
-   * @parameter default-value="${project.build.directory}${file.separator}jasmine"
+   * Target directory for files created by the plugin.
+   * 
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="${project.build.directory}${file.separator}jasmine")
   protected File jasmineTargetDir;
 
 
   /**
-   * @parameter property="skipTests"
+   * Skip the tests.
+   * 
+   * @since 1.1.0
    */
+  @Parameter(property="skipTests")
   protected boolean skipTests;
 
   /**
-   * @parameter default-value="true" property="haltOnFailure"
+   * Halt the build on test failure.
+   * 
+   * @since 1.1.0
    */
+  @Parameter(property="haltOnFailure", defaultValue="true")
   protected boolean haltOnFailure;
 
   /**
    * Timeout for spec execution in seconds.
-   *
-   * @parameter default-value=300
+   * 
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="300")
   protected int timeout;
 
   /**
    * True to increase HtmlUnit output and attempt reporting on specs even if a timeout occurred.
    *
-   * @parameter default-value=false
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="false")
   protected boolean debug;
 
   /**
-   * @parameter default-value="${project.build.directory}${file.separator}${project.build.finalName}"
+   * The name of the Spec Runner file.
+   *
+   * @since 1.1.0
    */
-  protected File packageDir;
-
-  /**
-   * @parameter default-value="SpecRunner.html"
-   */
+  @Parameter(defaultValue="SpecRunner.html")
   protected String specRunnerHtmlFileName;
 
   /**
-   * @parameter default-value="ManualSpecRunner.html"
+   * The name of the Manual Spec Runner.
+   *
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="ManualSpecRunner.html")
   protected String manualSpecRunnerHtmlFileName;
 
   /**
-   * @parameter default-value="TEST-jasmine.xml"
+   * The name of the generated JUnit XML report.
+   * 
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="TEST-jasmine.xml")
   protected String junitXmlReportFileName;
 
   /**
-   * @parameter default-value="spec"
+   * The name of the directory the specs will be deployed to on the server.
+   * 
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="spec")
   protected String specDirectoryName;
 
   /**
-   * @parameter default-value="src"
+   * The name of the directory the sources will be deployed to on the server.
+   * 
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="src")
   protected String srcDirectoryName;
 
   /**
-   * @parameter default-value="${project.build.sourceEncoding}"
+   * The source encoding.
+   * 
+   * @since 1.1.0
    */
+  @Parameter(defaultValue="${project.build.sourceEncoding}")
   protected String sourceEncoding;
 
   /**
-   * @parameter default-value="false" property="keepServerAlive"
+   * Keep the server alive after the <code>jasmine:test</code> goal exists.
+   * Useful if you need to run further analysis on your tests, like collecting code coverage.
+   * 
+   * @since 1.3.1.0
    */
+  @Parameter(property="keepServerAlive", defaultValue="false")
   protected boolean keepServerAlive;
 
   /**
-   * @parameter
+   * &lt;sourceIncludes&gt;
+   *   &lt;include&gt;vendor/&#42;&#42;/&#42;.js&lt;/include&gt;
+   *   &lt;include&gt;myBootstrapFile.js&lt;/include&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
+   * &lt;/sourceIncludes&gt;
+   * </pre>
+   * 
+   * <p>Default <code>sourceIncludes</code>:</p>
+   * <pre>
+   * &lt;sourceIncludes&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
+   * &lt;/sourceIncludes&gt;
+   * </pre>
+   * 
+   * @since 1.1.0
    */
+  @Parameter
   private final List<String> sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
   /**
-   * @parameter
+   * <p>Just like <code>sourceIncludes</code>, but will exclude anything matching the provided patterns.</p>
+   * <p>There are no <code>sourceExcludes</code> by default.</p>
+   * 
+   * @since 1.1.0
    */
+  @Parameter
   private final List<String> sourceExcludes = Collections.emptyList();
 
   /**
-   * @parameter
+   * <p>I often find myself needing control of the spec include order
+   * when I have some global spec helpers or spec-scoped dependencies, like:</p>
+   * <pre>
+   * &lt;specIncludes&gt;
+   *   &lt;include&gt;jasmine-jquery.js&lt;/include&gt;
+   *   &lt;include&gt;spec-helper.js&lt;/include&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
+   * &lt;/specIncludes&gt;
+   * </pre>
+   * 
+   * <p>Default <code>specIncludes</code>:</p>
+   * <pre>
+   * &lt;specIncludes&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
+   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
+   * &lt;/specIncludes&gt;
+   * </pre>
+   * 
+   * @since 1.1.0
    */
+  @Parameter
   private final List<String> specIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
   /**
-   * @parameter
+   * <p>Just like <code>specIncludes</code>, but will exclude anything matching the provided patterns.</p>
+   * <p>There are no <code>specExcludes</code> by default.</p>
+   * 
+   * @since 1.1.0
    */
+  @Parameter
   private final List<String> specExcludes = Collections.emptyList();
 
   /**
-   * @parameter default-value="${project}"
+   * <p>Used by the <code>jasmine:bdd</code> goal to specify port to run the server under.</p>
+   * 
+   * <p>The <code>jasmine:test</code> goal always uses a random available port so this property is ignored.</p>
+   * 
+   * @since 1.1.0
    */
-  protected MavenProject mavenProject;
-
-  /**
-   * @parameter default-value="8234" property="jasmine.serverPort"
-   */
+  @Parameter(property="jasmine.serverPort", defaultValue="8234")
   protected int serverPort;
 
   /**
-   * Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
-   * implementation of the runner generator. Typically this is used when using different script runners.
+   * <p>Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
+   * implementation of the runner generator. Typically this is used when using different script runners.</p>
    *
-   *
-   *   Some valid examples: REQUIRE_JS
-   *
-   * @parameter default-value="DEFAULT" property="jasmine.specRunnerTemplate"
+   * <p>Some valid examples: DEFAULT, REQUIRE_JS</p>
+   * 
+   * @since 1.1.0
    */
+  @Parameter(property="jasmine.specRunnerTemplate", defaultValue="DEFAULT")
   protected SpecRunnerTemplate specRunnerTemplate;
 
   /**
-   * Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
-   * the selected spcRunnerTemplate. I.e require.js is used when REQUIRE_JS is selected as specRunnerTemplate.
+   * <p>Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
+   * the selected spcRunnerTemplate. I.e require.js is used when REQUIRE_JS is selected as specRunnerTemplate.</p>
    *
-   * @parameter
+   * @since 1.1.0
+   * @deprecated Specify script loader path using the <code>preloadSources</code> parameter instead.
    */
+  @Parameter
+  @Deprecated
   protected String scriptLoaderPath;
+
+  @Parameter(defaultValue="${project}", readonly=true)
+
+  protected MavenProject mavenProject;
 
   protected ScriptSearch sources;
   protected ScriptSearch specs;
@@ -304,9 +404,9 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Override
   public File getCustomRunnerConfiguration() {
     return this.customRunnerConfiguration;
-
   }
 
+  @Deprecated
   @Override
   public String getScriptLoaderPath() {
     return this.scriptLoaderPath;
