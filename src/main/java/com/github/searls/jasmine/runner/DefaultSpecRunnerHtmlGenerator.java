@@ -71,7 +71,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 
   private String createJsonArray(Set<String> scripts) {
     if (null == scripts || scripts.isEmpty()) {
-      return null;
+      return "[]";
     }
     StringBuilder builder = new StringBuilder("['");
     builder.append(StringUtils.join(scripts,"', '"));
