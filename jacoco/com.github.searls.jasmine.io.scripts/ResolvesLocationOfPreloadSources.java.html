@@ -13,22 +13,22 @@ import com.github.searls.jasmine.collections.CollectionHelper;
 
   public List&lt;String&gt; resolve(List&lt;String&gt; preloadSources, File sourceDir, File specDir) {
 <span class="fc" id="L15">    List&lt;String&gt; sources = new ArrayList&lt;String&gt;();</span>
-<span class="fc bfc" id="L16" title="All 2 branches covered.">    for (String source : collectionHelper.list(preloadSources)) {</span>
-<span class="fc bfc" id="L17" title="All 6 branches covered.">      if(fileCouldNotBeAdded(new File(sourceDir, source),sources)</span>
+<span class="pc bpc" id="L16" title="1 of 2 branches missed.">    for (String source : collectionHelper.list(preloadSources)) {</span>
+<span class="nc bnc" id="L17" title="All 6 branches missed.">      if(fileCouldNotBeAdded(new File(sourceDir, source),sources)</span>
         &amp;&amp; fileCouldNotBeAdded(new File(specDir, source),sources)
           &amp;&amp; fileCouldNotBeAdded(new File(source),sources)) {
-<span class="fc" id="L20">        sources.add(source);</span>
+<span class="nc" id="L20">        sources.add(source);</span>
       }
-<span class="fc" id="L22">    }</span>
+<span class="nc" id="L22">    }</span>
 <span class="fc" id="L23">    return sources;</span>
   }
 
   private boolean fileCouldNotBeAdded(File file, List&lt;String&gt; sourcePaths) {
-<span class="fc" id="L27">    boolean canAdd = file.exists();</span>
-<span class="fc bfc" id="L28" title="All 2 branches covered.">    if (canAdd) {</span>
-<span class="fc" id="L29">      sourcePaths.add(convertsFileToUriString.convert(file));</span>
+<span class="nc" id="L27">    boolean canAdd = file.exists();</span>
+<span class="nc bnc" id="L28" title="All 2 branches missed.">    if (canAdd) {</span>
+<span class="nc" id="L29">      sourcePaths.add(convertsFileToUriString.convert(file));</span>
     }
-<span class="fc bfc" id="L31" title="All 2 branches covered.">    return !canAdd;</span>
+<span class="nc bnc" id="L31" title="All 2 branches missed.">    return !canAdd;</span>
   }
 
 }
