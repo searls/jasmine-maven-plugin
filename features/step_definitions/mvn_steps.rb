@@ -1,6 +1,6 @@
 Given /^I am currently in the "([^"]*)" project$/ do |project_name|
   Dir.chdir PWD
-  Dir.chdir("src/test/resources/examples/"+project_name)
+  Dir.chdir("target/test-classes/examples/"+project_name)
 end
 
 When /^I run "([^"]*)"$/ do |command|
