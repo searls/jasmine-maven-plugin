@@ -12,7 +12,7 @@ Here is an example configuration:
     <plugin>
       <groupId>com.github.searls</groupId>
       <artifactId>jasmine-maven-plugin</artifactId>
-      <version>${project.version}</version>
+      <version>${jasmine-plugin-version}</version>
       <executions>
         <execution>
           <goals>

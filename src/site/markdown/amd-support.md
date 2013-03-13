@@ -95,7 +95,8 @@ For instance, say you would prefer to use [testr.js](https://github.com/mattfysh
       });
 
       testr.config({
-        specBaseUrl: '$specDir$'
+        specBaseUrl: '$specDir$',
+        autoLoad: true
       });
     $endif$
     
