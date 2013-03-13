@@ -13,11 +13,6 @@
       document.body.appendChild(document.createTextNode("Warning: opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
     }
     
-    //Don't do live updates when running through HTMLUnit
-    if(typeof Packages !== "undefined"){
-		jasmine.getEnv().updateInterval = Number.MAX_VALUE;
-    }
-    
 
     var executeJasmineSpecs = function(){
       window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
@@ -26,6 +21,12 @@
           return window.reporter.specFilter(spec);
         };
       }
+      
+	  //Don't do live updates when running through HTMLUnit
+      if ('$reporter$' == 'JsApiReporter'){
+		jasmine.getEnv().updateInterval = Number.MAX_VALUE;
+      }
+      
       jasmine.getEnv().execute();
     };
 
