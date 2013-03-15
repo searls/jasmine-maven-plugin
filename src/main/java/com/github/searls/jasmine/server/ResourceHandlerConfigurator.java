@@ -35,6 +35,9 @@ public class ResourceHandlerConfigurator {
     ContextHandler specDirContextHandler = contexts.addContext("/" + this.configuration.getSpecDirectoryName(), "");
     specDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSpecs().getDirectory().getAbsolutePath(), null));
 
+    ContextHandler libDirContextHandler = contexts.addContext("/"+ this.configuration.getLibDirectoryName(), "");
+    libDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getLibsDirectory().getAbsolutePath(), null));
+
     ContextHandler rootContextHandler = contexts.addContext("/", "");
     rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));
 

@@ -41,6 +41,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
       defaultValue="${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript")
   private File jsTestSrcDir;
 
+  @Parameter(
+    property="jsLibSrcDir",
+    defaultValue="${project.basedir}${file.separator}src${file.separator}main${file.separator}webapp${file.separator}js${file.separator}lib")
+  protected File libsDirectory;
+
   /**
    * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
    * The plugin uses <a href="http://htmlunit.sourceforge.net/">HtmlUnit</a> by default.
@@ -213,6 +218,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   protected String srcDirectoryName;
 
   /**
+   * The name of the directory the third party libraries will be deployed to on the server
+   *
+   * @since 1.3.1.1
+   */
+  @Parameter(defaultValue="lib")
+  protected String libDirectoryName;
+
+  /**
    * The source encoding.
    * 
    * @since 1.1.0
@@ -379,6 +392,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   }
 
   @Override
+  public String getLibDirectoryName() {
+    return this.libDirectoryName;
+  }
+
+  @Override
   public ScriptSearch getSources() {
     return this.sources;
   }
@@ -386,6 +404,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Override
   public ScriptSearch getSpecs() {
     return this.specs;
+  }
+
+  @Override
+  public File getLibsDirectory() {
+    return this.libsDirectory;
   }
 
   @Override
