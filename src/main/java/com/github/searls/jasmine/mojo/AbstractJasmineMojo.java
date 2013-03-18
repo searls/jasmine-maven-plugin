@@ -326,8 +326,16 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Deprecated
   protected String scriptLoaderPath;
 
-  @Parameter(defaultValue="${project}", readonly=true)
+  /**
+   * <p>Automatically refresh the test runner at the given interval (specified in seconds) when using the <code>jasmine:bdd</code> goal.</p>
+   * <p>A value of <code>0</code> disables the automatic refresh (which is the default).</p>
+   * 
+   * @since 1.3.1.1
+   */
+  @Parameter(property="jasmine.autoRefreshInterval", defaultValue="0")
+  protected int autoRefreshInterval;
 
+  @Parameter(defaultValue="${project}", readonly=true)
   protected MavenProject mavenProject;
 
   protected ScriptSearch sources;
@@ -411,6 +419,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
         this.preloadSources.add(requireJsPath);
       }
     }
+  }
+
+  @Override
+  public int getAutoRefreshInterval() {
+    return this.autoRefreshInterval;
   }
 
   public MavenProject getMavenProject() {

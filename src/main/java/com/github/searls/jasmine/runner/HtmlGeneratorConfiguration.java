@@ -20,6 +20,8 @@ public class HtmlGeneratorConfiguration {
   private final File customRunnerConfiguration;
   private final String srcDirectoryName;
   private final String specDirectoryName;
+  private final int autoRefreshInterval;
+  private final boolean autoRefresh;
 
   public HtmlGeneratorConfiguration(ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {
     this.sourceEncoding = configuration.getSourceEncoding();
@@ -32,6 +34,8 @@ public class HtmlGeneratorConfiguration {
     this.scriptLoaderPath = configuration.getScriptLoaderPath();
     this.srcDirectoryName = configuration.getSrcDirectoryName();
     this.specDirectoryName = configuration.getSpecDirectoryName();
+    this.autoRefreshInterval = configuration.getAutoRefreshInterval();
+    this.autoRefresh = this.autoRefreshInterval > 0 && ReporterType.HtmlReporter.equals(reporterType);
   }
 
   public String getSourceEncoding() {
@@ -124,6 +128,14 @@ public class HtmlGeneratorConfiguration {
 
   public String getSpecDirectoryName() {
     return this.specDirectoryName;
+  }
+
+  public int getAutoRefreshInterval() {
+    return this.autoRefreshInterval;
+  }
+
+  public boolean getAutoRefresh() {
+    return this.autoRefresh;
   }
 }
 
