@@ -146,4 +146,10 @@ public class AbstractJasmineMojoTest {
   public void testGetMavenProject() {
     assertThat(subject.getMavenProject(), is(mavenProject));
   }
+
+  @Test
+  public void testGetAutoRefreshInterval() {
+    subject.autoRefreshInterval = 5;
+    assertThat(subject.getAutoRefreshInterval(), is(5));
+  }
 }

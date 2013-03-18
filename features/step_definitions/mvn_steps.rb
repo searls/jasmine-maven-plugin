@@ -27,6 +27,10 @@ Then /^the file "([^"]*)" should contain "(.*)"$/ do |file_name,content|
   load_file(file_name).should match content
 end
 
+Then /^the file "([^"]*)" should not contain "(.*)"$/ do |file_name,content|
+  load_file(file_name).should_not match content
+end
+
 Then /^the file "([^"]*)" should have XML "(.*)"$/ do |file_name, xpath|
   Nokogiri::XML.parse(load_file(file_name)).xpath(xpath).length.should be >= 1
 end
