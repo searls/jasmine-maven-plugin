@@ -56,6 +56,9 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     template.add("sourceDir", sourceDirectory);
     template.add("specDir", specDirectory);
 
+    template.add("autoRefresh", this.getConfiguration().getAutoRefresh());
+    template.add("autoRefreshInterval", this.getConfiguration().getAutoRefreshInterval());
+
     this.setCustomRunnerConfig(template);
     template.add(REPORTER_ATTR_NAME, this.getConfiguration().getReporterType().name());
     this.setEncoding(this.getConfiguration(), template);

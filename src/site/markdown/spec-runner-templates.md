@@ -30,6 +30,8 @@ The following variables are available for use in your custom template:
  * **sourceDir** : the path to the sources when deployed to the jetty server. Should be the same as the `srcDirectoryName` parameter.
  * **specDir** : the path to the specs when deployed to the jetty server. Should be the same as the `specDirectoryName` parameter.
  * **customRunnerConfiguration** : this renders the contents of the file specified by the `customRunnerConfiguration` parameter. Use this is you want to provide a way for adding some external customization to you template. It is most likely not that useful though if you are already writing a custom template.
+ * **autoRefresh** : this is a boolean indicating whether or not the page should be refreshed automatically at an interval. It will be true with the `autoRefreshInterval` plugin parameter is greater than 0 and the `jasmine:bdd` goal is being used.
+ * **autoRefreshInterval** : the interval at which the page should be automatically refreshed. Should be the same as the `autoRefreshInterval` parameter.
 
 These variables were used in older versions of the plugin and have been kept for backwards compatibility. They should be considered deprecated and will be removed in a later version of the plugin.
 

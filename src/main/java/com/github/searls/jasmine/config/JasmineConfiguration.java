@@ -30,4 +30,6 @@ public interface JasmineConfiguration {
   File getCustomRunnerConfiguration();
 
   String getScriptLoaderPath();
+
+  int getAutoRefreshInterval();
 }
