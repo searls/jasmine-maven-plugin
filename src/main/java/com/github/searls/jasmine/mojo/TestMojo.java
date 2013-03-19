@@ -1,62 +1,77 @@
-package com.github.searls.jasmine;
+package com.github.searls.jasmine.mojo;
 
 import com.github.searls.jasmine.driver.WebDriverFactory;
 import com.github.searls.jasmine.format.JasmineResultLogger;
-import com.github.searls.jasmine.io.scripts.TargetDirScriptResolver;
+import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.JasmineResult;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerExecutor;
-import com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator;
-import com.github.searls.jasmine.runner.SpecRunnerHtmlGeneratorFactory;
-import org.apache.commons.io.FileUtils;
+import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
+import com.github.searls.jasmine.server.ServerManager;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
 import org.openqa.selenium.WebDriver;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.URL;
 
 /**
- * @component
- * @goal test
- * @phase test
- * @execute phase="jasmine-process-test-resources"
+ * Execute specs using Selenium Web Driver. Uses HtmlUnitDriver for head-less execution by default.
  */
+@Mojo(name = "test", defaultPhase = LifecyclePhase.TEST)
 public class TestMojo extends AbstractJasmineMojo {
 
+  private final RelativizesFilePaths relativizesFilePaths;
+
+  public TestMojo() {
+    this.relativizesFilePaths = new RelativizesFilePaths();
+  }
+
+  @Override
   public void run() throws Exception {
-    if(!skipTests) {
-      getLog().info("Executing Jasmine Specs");
-      File runnerFile = writeSpecRunnerToOutputDirectory();
-      JasmineResult result = executeSpecs(runnerFile);
-      logResults(result);
-      throwAnySpecFailures(result);
+    if (!this.skipTests) {
+      ServerManager serverManager = this.getServerManager();
+      System.out.println(serverManager);
+      try {
+        int port = serverManager.start();
+        setPortProperty(port);
+        this.getLog().info("Executing Jasmine Specs");
+        JasmineResult result = this.executeSpecs(new URL("http://localhost:" + port));
+        this.logResults(result);
+        this.throwAnySpecFailures(result);
+      } finally {
+        if (!keepServerAlive) {
+          serverManager.stop();
+        }
+      }
     } else {
-      getLog().info("Skipping Jasmine Specs");
+      this.getLog().info("Skipping Jasmine Specs");
     }
   }
 
-  private File writeSpecRunnerToOutputDirectory() throws IOException {
-
-    SpecRunnerHtmlGenerator generator = new SpecRunnerHtmlGeneratorFactory().create(ReporterType.JsApiReporter, this, new TargetDirScriptResolver(this));
-
-    String html = generator.generate();
-
-    getLog().debug("Writing out Spec Runner HTML " + html + " to directory " + jasmineTargetDir);
-    File runnerFile = new File(jasmineTargetDir,specRunnerHtmlFileName);
-    FileUtils.writeStringToFile(runnerFile, html);
-    return runnerFile;
+  private ServerManager getServerManager() {
+    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(
+        this,
+        this.relativizesFilePaths,
+        this.specRunnerHtmlFileName,
+        ReporterType.JsApiReporter);
+    ServerManager manager = new ServerManager(configurator);
+    return manager;
   }
 
-  private JasmineResult executeSpecs(File runnerFile) throws Exception {
-    return new SpecRunnerExecutor().execute(
-        runnerFile.toURI().toURL(),
-        new File(jasmineTargetDir, junitXmlReportFileName),
-        createDriver(),
-        timeout,
-        debug,
-        getLog(),
-        format
-    );
+  private void setPortProperty(int port) {
+    this.mavenProject.getProperties().setProperty("jasmine.serverPort", String.valueOf(port));
+  }
+
+  private JasmineResult executeSpecs(URL runner) throws Exception {
+    WebDriver driver = this.createDriver();
+    JasmineResult result = new SpecRunnerExecutor().execute(
+        runner,
+        new File(this.jasmineTargetDir, this.junitXmlReportFileName),
+        driver,
+        this.timeout, this.debug, this.getLog(), this.format);
+    return result;
   }
 
   private WebDriver createDriver() throws Exception {
@@ -70,12 +85,12 @@ public class TestMojo extends AbstractJasmineMojo {
 
   private void logResults(JasmineResult result) {
     JasmineResultLogger resultLogger = new JasmineResultLogger();
-    resultLogger.setLog(getLog());
+    resultLogger.setLog(this.getLog());
     resultLogger.log(result);
   }
 
   private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
-    if(haltOnFailure && !result.didPass()) {
+    if (this.haltOnFailure && !result.didPass()) {
       throw new MojoFailureException("There were Jasmine spec failures.");
     }
   }

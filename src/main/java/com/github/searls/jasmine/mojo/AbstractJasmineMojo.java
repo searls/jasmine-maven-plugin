@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -42,19 +43,37 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   private File jsTestSrcDir;
 
   /**
-   * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
-   * The plugin uses <a href="http://htmlunit.sourceforge.net/">HtmlUnit</a> by default.
-   *
-   * <p>Some valid examples:</p>
+   * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more
+   * details.  The plugin uses HtmlUnit by default.
+   * <p/>
+   * Some valid examples:
    * <ul>
-   *   <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
-   *   <li>org.openqa.selenium.firefox.FirefoxDriver</li>
-   *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
+   * <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
+   * <li>org.openqa.selenium.phantomjs.PhantomJSDriver</li>
+   * <li>org.openqa.selenium.firefox.FirefoxDriver</li>
+   * <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
    * </ul>
+   * <p/>
+   * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
+   *
    * @since 1.1.0
    */
   @Parameter(defaultValue="org.openqa.selenium.htmlunit.HtmlUnitDriver")
   protected String webDriverClassName;
+
+  /**
+   * Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.
+   * <p/>
+   * This property will be ignored if org.openqa.selenium.htmlunit.HtmlUnitDriver is used; use the browserVersion
+   * property instead.
+   * <p/>
+   * For org.openqa.selenium.phantomjs.PhantomJSDriver, include "phantomjs.binary.path" if phantomJS is not in the
+   * system command path of the build machine.
+   *
+   * @since 1.3.1
+   */
+  @Parameter
+  protected Map<String, String> webDriverCapabilities;
 
   /**
    * <p>Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
