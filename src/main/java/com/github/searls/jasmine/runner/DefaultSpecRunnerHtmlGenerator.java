@@ -1,14 +1,15 @@
 package com.github.searls.jasmine.runner;
 
-import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import com.github.searls.jasmine.io.scripts.ScriptResolverException;
-import org.apache.commons.lang3.StringUtils;
-import org.stringtemplate.v4.ST;
+import static java.util.Arrays.asList;
 
 import java.io.IOException;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
+import org.apache.commons.lang3.StringUtils;
+import org.stringtemplate.v4.ST;
+
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
+import com.github.searls.jasmine.io.scripts.ScriptResolverException;
 
 public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
 
@@ -27,7 +28,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
           resolver.getSpecs(),
           resolver.getSourceDirectory(),
           resolver.getSpecDirectory()
-      );
+          );
     } catch (ScriptResolverException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
     } catch (IOException e) {
@@ -76,7 +77,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
       return "[]";
     }
     StringBuilder builder = new StringBuilder("['");
-    builder.append(StringUtils.join(scripts, "', '"));
+    builder.append(StringUtils.join(scripts,"', '"));
     builder.append("']");
     return builder.toString();
   }
@@ -88,7 +89,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 
   private String resolveRequirejsPath(String sourceDirectory) {
     String scriptLoaderPath = this.getConfiguration().getScriptLoaderPath();
-    if (null == scriptLoaderPath) {
+    if(null == scriptLoaderPath) {
       return String.format("%s/require.js", sourceDirectory);
     } else {
       return String.format("%s/%s", sourceDirectory, scriptLoaderPath);
