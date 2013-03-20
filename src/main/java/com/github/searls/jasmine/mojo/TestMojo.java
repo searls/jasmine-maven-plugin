@@ -1,5 +1,13 @@
 package com.github.searls.jasmine.mojo;
 
+import java.io.File;
+import java.net.URL;
+
+import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.openqa.selenium.WebDriver;
+
 import com.github.searls.jasmine.driver.WebDriverFactory;
 import com.github.searls.jasmine.format.JasmineResultLogger;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
@@ -8,18 +16,11 @@ import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerExecutor;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
-import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.LifecyclePhase;
-import org.apache.maven.plugins.annotations.Mojo;
-import org.openqa.selenium.WebDriver;
-
-import java.io.File;
-import java.net.URL;
 
 /**
  * Execute specs using Selenium Web Driver. Uses HtmlUnitDriver for head-less execution by default.
  */
-@Mojo(name = "test", defaultPhase = LifecyclePhase.TEST)
+@Mojo(name="test",defaultPhase=LifecyclePhase.TEST)
 public class TestMojo extends AbstractJasmineMojo {
 
   private final RelativizesFilePaths relativizesFilePaths;
@@ -30,14 +31,14 @@ public class TestMojo extends AbstractJasmineMojo {
 
   @Override
   public void run() throws Exception {
-    if (!this.skipTests) {
+    if(!this.skipTests) {
       ServerManager serverManager = this.getServerManager();
       System.out.println(serverManager);
       try {
         int port = serverManager.start();
         setPortProperty(port);
         this.getLog().info("Executing Jasmine Specs");
-        JasmineResult result = this.executeSpecs(new URL("http://localhost:" + port));
+        JasmineResult result = this.executeSpecs(new URL("http://localhost:"+port));
         this.logResults(result);
         this.throwAnySpecFailures(result);
       } finally {
@@ -63,12 +64,11 @@ public class TestMojo extends AbstractJasmineMojo {
   private void setPortProperty(int port) {
     this.mavenProject.getProperties().setProperty("jasmine.serverPort", String.valueOf(port));
   }
-
   private JasmineResult executeSpecs(URL runner) throws Exception {
     WebDriver driver = this.createDriver();
     JasmineResult result = new SpecRunnerExecutor().execute(
         runner,
-        new File(this.jasmineTargetDir, this.junitXmlReportFileName),
+        new File(this.jasmineTargetDir,this.junitXmlReportFileName),
         driver,
         this.timeout, this.debug, this.getLog(), this.format);
     return result;
@@ -90,7 +90,7 @@ public class TestMojo extends AbstractJasmineMojo {
   }
 
   private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
-    if (this.haltOnFailure && !result.didPass()) {
+    if(this.haltOnFailure && !result.didPass()) {
       throw new MojoFailureException("There were Jasmine spec failures.");
     }
   }

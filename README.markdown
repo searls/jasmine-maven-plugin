@@ -33,10 +33,6 @@ If you have any problems, please [check the project issues](https://github.com/s
 
 Pull requests are, of course, very welcome! Please read our [contributing to the project](https://github.com/searls/jasmine-maven-plugin/wiki/Contributing-to-the-project) guide first. Then head over to the [open issues](https://github.com/searls/jasmine-maven-plugin/issues) to see what we need help with. Make sure you let us know if you intend to work on something. Also, check out the [milestones](https://github.com/searls/jasmine-maven-plugin/issues/milestones) to see what is planned for future releases.
 
-See https://github.com/searls/jasmine-maven-plugin/wiki/Contributing-to-the-project (work in progress).
-
-See https://github.com/searls/jasmine-maven-plugin/wiki/Contributing-to-the-project (work in progress).
-
 ## Acknowledgments
 * Thanks to Pivotal Labs for authoring and publishing [Jasmine](http://github.com/pivotal/jasmine)
 * Thanks to christian.nelson and sivoh1, owners of the [javascript-test-maven-plugin](http://code.google.com/p/javascript-test-maven-plugin/) project, which provided a similar implementation from which to glean several valuable lessons.

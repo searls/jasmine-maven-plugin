@@ -43,15 +43,15 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   private File jsTestSrcDir;
 
   /**
-   * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more
-   * details.  The plugin uses HtmlUnit by default.
-   * <p/>
-   * Some valid examples:
+   * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
+   * The plugin uses <a href="http://htmlunit.sourceforge.net/">HtmlUnit</a> by default.
+   *
+   * <p>Some valid examples:</p>
    * <ul>
-   * <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
-   * <li>org.openqa.selenium.phantomjs.PhantomJSDriver</li>
-   * <li>org.openqa.selenium.firefox.FirefoxDriver</li>
-   * <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
+   *   <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
+   *   <li>org.openqa.selenium.phantomjs.PhantomJSDriver</li>
+   *   <li>org.openqa.selenium.firefox.FirefoxDriver</li>
+   *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
    * </ul>
    * <p/>
    * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
