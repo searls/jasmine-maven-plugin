@@ -1,20 +1,14 @@
 package com.github.searls.jasmine.mojo;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.gargoylesoftware.htmlunit.IncorrectnessListener;
-import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
-import com.gargoylesoftware.htmlunit.WebClient;
+import com.github.searls.jasmine.driver.WebDriverFactory;
 import com.github.searls.jasmine.format.JasmineResultLogger;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.JasmineResult;
@@ -70,7 +64,7 @@ public class TestMojo extends AbstractJasmineMojo {
   private void setPortProperty(int port) {
     this.mavenProject.getProperties().setProperty("jasmine.serverPort", String.valueOf(port));
   }
-  private JasmineResult executeSpecs(URL runner) throws MalformedURLException {
+  private JasmineResult executeSpecs(URL runner) throws Exception {
     WebDriver driver = this.createDriver();
     JasmineResult result = new SpecRunnerExecutor().execute(
         runner,
@@ -80,42 +74,13 @@ public class TestMojo extends AbstractJasmineMojo {
     return result;
   }
 
-  private WebDriver createDriver() {
-    if (!HtmlUnitDriver.class.getName().equals(this.webDriverClassName)) {
-      try {
-        @SuppressWarnings("unchecked")
-        Class<? extends WebDriver> klass = (Class<? extends WebDriver>) Class.forName(this.webDriverClassName);
-        Constructor<? extends WebDriver> ctor = klass.getConstructor();
-        return ctor.newInstance();
-      } catch (Exception e) {
-        throw new RuntimeException("Couldn't instantiate webDriverClassName", e);
-      }
-    }
-
-    // We have extra configuration to do to the HtmlUnitDriver
-    BrowserVersion htmlUnitBrowserVersion;
-    try {
-      htmlUnitBrowserVersion = (BrowserVersion) BrowserVersion.class.getField(this.browserVersion).get(BrowserVersion.class);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    HtmlUnitDriver driver = new HtmlUnitDriver(htmlUnitBrowserVersion) {
-      @Override
-      protected WebClient modifyWebClient(WebClient client) {
-        client.setAjaxController(new NicelyResynchronizingAjaxController());
-
-        //Disables stuff like this "com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'."
-        if (!TestMojo.this.debug)
-          client.setIncorrectnessListener(new IncorrectnessListener() {
-            @Override
-            public void notify(String arg0, Object arg1) {}
-          });
-
-        return client;
-      };
-    };
-    driver.setJavascriptEnabled(true);
-    return driver;
+  private WebDriver createDriver() throws Exception {
+    WebDriverFactory factory = new WebDriverFactory();
+    factory.setWebDriverCapabilities(webDriverCapabilities);
+    factory.setWebDriverClassName(webDriverClassName);
+    factory.setDebug(debug);
+    factory.setBrowserVersion(browserVersion);
+    return factory.createWebDriver();
   }
 
   private void logResults(JasmineResult result) {
