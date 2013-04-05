@@ -14,7 +14,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.ScriptSearch;
-import com.github.searls.jasmine.runner.ReporterType;
+import com.github.searls.jasmine.runner.CreatesRunner;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceHandlerConfiguratorTest {
@@ -47,17 +47,21 @@ public class ResourceHandlerConfiguratorTest {
   @Mock
   private ScriptSearch specs;
 
+  @Mock
+  private CreatesRunner createsRunner;
+
   @Before
   public void before() {
     this.configurator = new ResourceHandlerConfigurator(
         configuration,
         relativizesFilePaths,
-        WELCOME_FILE,
-        ReporterType.HtmlReporter);
+        createsRunner);
   }
 
   @Test
   public void testCreateHandler() throws IOException {
+    when(createsRunner.getRunnerFile()).thenReturn(WELCOME_FILE);
+
     when(sourceDirectory.getAbsolutePath()).thenReturn(SOURCE_DIRECTORY);
     when(specDirectory.getAbsolutePath()).thenReturn(SPEC_DIRECTORY);
     when(baseDirectory.getAbsolutePath()).thenReturn(BASE_DIRECTORY);

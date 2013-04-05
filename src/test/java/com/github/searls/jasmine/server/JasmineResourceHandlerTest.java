@@ -1,11 +1,6 @@
 package com.github.searls.jasmine.server;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertSame;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -25,27 +20,20 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.modules.junit4.PowerMockRunner;
-import org.powermock.reflect.Whitebox;
 
-import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.coffee.DetectsCoffee;
 import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
-import com.github.searls.jasmine.config.JasmineConfiguration;
-import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
 import com.github.searls.jasmine.runner.CreatesRunner;
-import com.github.searls.jasmine.runner.ReporterType;
 
 @RunWith(PowerMockRunner.class)
 //@PrepareForTest(JasmineResourceHandler.class)
 public class JasmineResourceHandlerTest {
   private static final String TARGET = "some url";
-  private static final String RUNNER_FILE_NAME = "runnerfile.html";
 
   @Mock private DetectsCoffee detectsCoffee;
   @Mock private HandlesRequestsForCoffee handlesRequestsForCoffee;
-  @Mock private CreatesRunner createsManualRunner;
+  @Mock private CreatesRunner createsRunner;
 
-  @Mock AbstractJasmineMojo config;
   @Mock Request baseRequest;
   @Mock HttpServletRequest request;
   @Mock HttpServletResponse response;
@@ -53,36 +41,31 @@ public class JasmineResourceHandlerTest {
 
   @Mock Log log;
 
-  @InjectMocks private final JasmineResourceHandler subject = new JasmineResourceHandler(mock(AbstractJasmineMojo.class),"",ReporterType.HtmlReporter) {
+  @InjectMocks private final JasmineResourceHandler subject = new JasmineResourceHandler(createsRunner) {
     @Override
     protected Resource getResource(HttpServletRequest request) throws MalformedURLException {
       return JasmineResourceHandlerTest.this.resource;
     }
   };
 
-  @Test
-  public void constructorSetsLoggingLow() throws Exception {
-    JasmineResourceHandler handler = new JasmineResourceHandler(this.config,RUNNER_FILE_NAME,ReporterType.HtmlReporter);
-    CreatesRunner runner = Whitebox.getInternalState(handler, CreatesRunner.class);
-
-    assertThat(Whitebox.getInternalState(runner, Log.class), is(instanceOf(NullLog.class)));
-    assertSame(this.config, Whitebox.getInternalState(runner, JasmineConfiguration.class));
-    assertSame(RUNNER_FILE_NAME, Whitebox.getInternalState(runner, String.class));
-    assertSame(ReporterType.HtmlReporter, Whitebox.getInternalState(runner, ReporterType.class));
-  }
+  //  @Test
+  //  public void constructorSetsLoggingLow() throws Exception {
+  //    new JasmineResourceHandler(createsRunner);
+  //    assertThat(Whitebox.getInternalState(createsRunner, Log.class), is(instanceOf(NullLog.class)));
+  //  }
 
   @Test
   public void whenTargetIsSlashThenCreateManualRunner() throws IOException, ServletException {
     this.subject.handle("/", this.baseRequest,this.request,this.response);
 
-    verify(this.createsManualRunner).create();
+    verify(this.createsRunner).create();
   }
 
   @Test
   public void whenTargetIsNotSlashThenCreateManualRunner() throws IOException, ServletException {
     this.subject.handle("/notSlash", this.baseRequest,this.request,this.response);
 
-    verify(this.createsManualRunner,never()).create();
+    verify(this.createsRunner,never()).create();
   }
 
   @Test

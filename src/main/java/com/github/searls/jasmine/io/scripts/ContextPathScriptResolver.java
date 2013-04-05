@@ -6,25 +6,39 @@ import java.util.Set;
 public class ContextPathScriptResolver implements ScriptResolver {
 
   private final ScriptResolver scriptResolver;
+  private final String baseContextPath;
   private final String sourceContextPath;
   private final String specContextPath;
 
   public ContextPathScriptResolver(ScriptResolver scriptResolver,
                                    String sourceContextPath,
                                    String specContextPath) {
+    this(scriptResolver, "", sourceContextPath, specContextPath);
+  }
+
+  public ContextPathScriptResolver(ScriptResolver scriptResolver,
+                                   String baseContextPath,
+                                   String sourceContextPath,
+                                   String specContextPath) {
     this.scriptResolver = scriptResolver;
+    this.baseContextPath = baseContextPath;
     this.sourceContextPath = sourceContextPath;
     this.specContextPath = specContextPath;
   }
 
   @Override
-  public String getSourceDirectory() throws ScriptResolverException {
+  public String getSourceDirectory() {
     return this.sourceContextPath;
   }
 
   @Override
-  public String getSpecDirectory() throws ScriptResolverException {
+  public String getSpecDirectory() {
     return this.specContextPath;
+  }
+
+  @Override
+  public String getBaseDirectory() {
+    return this.baseContextPath;
   }
 
   @Override
@@ -54,6 +68,10 @@ public class ContextPathScriptResolver implements ScriptResolver {
         this.scriptResolver.getSpecDirectory(),
         this.specContextPath,
         scripts);
+    scripts = relativeToContextPath(
+        this.scriptResolver.getBaseDirectory(),
+        this.baseContextPath,
+        scripts);
     return scripts;
   }
 
@@ -69,7 +87,7 @@ public class ContextPathScriptResolver implements ScriptResolver {
   private Set<String> relativeToContextPath(String realPath, String contextPath, Set<String> absoluteScripts) {
     Set<String> relativeScripts = new LinkedHashSet<String>();
     for (String absoluteScript : absoluteScripts) {
-      relativeScripts.add(absoluteScript.replaceFirst(realPath, contextPath));
+      relativeScripts.add(absoluteScript.replace(realPath, contextPath));
     }
     return relativeScripts;
   }

@@ -30,6 +30,9 @@ public class BasicScriptResolverTest {
   private ScriptSearch specScriptSearch;
 
   @Mock
+  private File baseDirectory;
+
+  @Mock
   private File sourceDirectory;
 
   @Mock
@@ -60,7 +63,7 @@ public class BasicScriptResolverTest {
     when(this.sourceScriptSearch.getDirectory()).thenReturn(sourceDirectory);
     when(this.specScriptSearch.getDirectory()).thenReturn(specDirectory);
 
-    this.resolver = new BasicScriptResolver(sourceScriptSearch, specScriptSearch, preloadList);
+    this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
     assertEquals(SOURCE_DIRECTORY,this.resolver.getSourceDirectory());
   }
@@ -75,7 +78,7 @@ public class BasicScriptResolverTest {
     when(this.sourceScriptSearch.getDirectory()).thenReturn(sourceDirectory);
     when(this.specScriptSearch.getDirectory()).thenReturn(specDirectory);
 
-    this.resolver = new BasicScriptResolver(sourceScriptSearch, specScriptSearch, preloadList);
+    this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
     assertEquals(SPEC_DIRECTORY,this.resolver.getSpecDirectory());
   }

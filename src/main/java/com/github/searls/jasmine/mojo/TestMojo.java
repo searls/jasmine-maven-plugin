@@ -4,14 +4,17 @@ import java.io.File;
 import java.net.URL;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.openqa.selenium.WebDriver;
 
+import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.driver.WebDriverFactory;
 import com.github.searls.jasmine.format.JasmineResultLogger;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.JasmineResult;
+import com.github.searls.jasmine.runner.CreatesRunner;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerExecutor;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
@@ -33,7 +36,6 @@ public class TestMojo extends AbstractJasmineMojo {
   public void run() throws Exception {
     if(!this.skipTests) {
       ServerManager serverManager = this.getServerManager();
-      System.out.println(serverManager);
       try {
         int port = serverManager.start();
         setPortProperty(port);
@@ -52,13 +54,20 @@ public class TestMojo extends AbstractJasmineMojo {
   }
 
   private ServerManager getServerManager() {
+    Log log = this.debug ? this.getLog() : new NullLog();
+
+    CreatesRunner createsRunner = new CreatesRunner(
+        this,
+        log,
+        this.specRunnerHtmlFileName,
+        ReporterType.JsApiReporter);
+
     ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(
         this,
         this.relativizesFilePaths,
-        this.specRunnerHtmlFileName,
-        ReporterType.JsApiReporter);
-    ServerManager manager = new ServerManager(configurator);
-    return manager;
+        createsRunner);
+
+    return new ServerManager(configurator);
   }
 
   private void setPortProperty(int port) {

@@ -58,13 +58,12 @@ public class CreatesRunnerTest {
   public void before() {
     mockStatic(FileUtils.class);
 
-    when(this.config.getLog()).thenReturn(this.log);
     when(this.config.getSources()).thenReturn(this.sources);
     when(this.config.getSpecs()).thenReturn(this.specs);
     when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.config.getJasmineTargetDir()).thenReturn(this.jasmineTargetDir);
 
-    subject = new CreatesRunner(this.config,MANUAL_RUNNER_NAME,ReporterType.HtmlReporter);
+    subject = new CreatesRunner(this.config,this.log,MANUAL_RUNNER_NAME,ReporterType.HtmlReporter);
   }
 
   @Before

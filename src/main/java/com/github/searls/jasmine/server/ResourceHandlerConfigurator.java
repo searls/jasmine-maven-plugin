@@ -10,20 +10,18 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.runner.ReporterType;
+import com.github.searls.jasmine.runner.CreatesRunner;
 
 public class ResourceHandlerConfigurator {
 
   private final JasmineConfiguration configuration;
   private final RelativizesFilePaths relativizesFilePaths;
-  private final String welcome;
-  private final ReporterType reporterType;
+  private final CreatesRunner createsRunner;
 
-  public ResourceHandlerConfigurator(JasmineConfiguration configuration, RelativizesFilePaths relativizesFilePaths, String welcome, ReporterType reporterType) {
+  public ResourceHandlerConfigurator(JasmineConfiguration configuration, RelativizesFilePaths relativizesFilePaths, CreatesRunner createsRunner) {
     this.configuration = configuration;
     this.relativizesFilePaths = relativizesFilePaths;
-    this.welcome = welcome;
-    this.reporterType = reporterType;
+    this.createsRunner = createsRunner;
   }
 
   public Handler createHandler() throws IOException  {
@@ -42,7 +40,7 @@ public class ResourceHandlerConfigurator {
   }
 
   private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String[] welcomeFiles) {
-    ResourceHandler resourceHandler = new JasmineResourceHandler(this.configuration, this.welcome,this.reporterType);
+    ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner);
     resourceHandler.setDirectoriesListed(directory);
     if (welcomeFiles != null) {
       resourceHandler.setWelcomeFiles(welcomeFiles);
@@ -52,6 +50,6 @@ public class ResourceHandlerConfigurator {
   }
 
   private String getWelcomeFilePath() throws IOException {
-    return this.relativizesFilePaths.relativize(this.configuration.getBasedir(), this.configuration.getJasmineTargetDir()) + File.separator + this.welcome;
+    return this.relativizesFilePaths.relativize(this.configuration.getBasedir(), this.configuration.getJasmineTargetDir()) + File.separator + createsRunner.getRunnerFile();
   }
 }

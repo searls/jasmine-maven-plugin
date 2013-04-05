@@ -7,6 +7,8 @@ public interface ScriptResolver {
   String getSourceDirectory() throws ScriptResolverException;
 
   String getSpecDirectory() throws ScriptResolverException;
+  
+  String getBaseDirectory() throws ScriptResolverException;
 
   Set<String> getSources() throws ScriptResolverException;
 

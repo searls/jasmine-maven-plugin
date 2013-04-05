@@ -10,12 +10,9 @@ import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.util.resource.Resource;
 
-import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.coffee.DetectsCoffee;
 import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
-import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.runner.CreatesRunner;
-import com.github.searls.jasmine.runner.ReporterType;
 
 public class JasmineResourceHandler extends ResourceHandler {
 
@@ -23,9 +20,8 @@ public class JasmineResourceHandler extends ResourceHandler {
   private final HandlesRequestsForCoffee handlesRequestsForCoffee = new HandlesRequestsForCoffee();
   private final CreatesRunner createsRunner;
 
-  public JasmineResourceHandler(JasmineConfiguration config, String runnerFileName, ReporterType reporterType) {
-    this.createsRunner = new CreatesRunner(config, runnerFileName,reporterType);
-    this.createsRunner.setLog(new NullLog());
+  public JasmineResourceHandler(CreatesRunner createsRunner) {
+    this.createsRunner = createsRunner;
   }
 
   @Override
