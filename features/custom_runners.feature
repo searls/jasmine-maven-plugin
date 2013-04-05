@@ -9,6 +9,20 @@ Feature: using a custom runner template
     When I run "mvn clean test"
     Then the build should succeed
     And the file "target/jasmine/SpecRunner.html" should contain "Copyright Acme, Inc."
+  
+  Scenario: using a custom runner from the classpath
+  
+    Given I am currently in the "jasmine-webapp-custom-runner-classpath" project
+    When I run "mvn clean install"
+    Then the build should succeed
+    And the file "jasmine-webapp/target/jasmine/SpecRunner.html" should contain "Copyright Acme, Inc."
+    
+  Scenario: using a custom runner from a remote url
+  
+    Given I am currently in the "jasmine-webapp-custom-runner-remote" project
+    When I run "mvn clean test"
+    Then the build should succeed
+    And the file "target/jasmine/SpecRunner.html" should contain "Copyright Acme, Inc."
     
   @server
   Scenario: using a custom runner with a footer and jQuery in it and running in browser test

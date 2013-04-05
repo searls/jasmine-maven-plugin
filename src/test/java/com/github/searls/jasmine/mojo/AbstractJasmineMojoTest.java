@@ -5,13 +5,18 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.io.InputStream;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.resource.ResourceManager;
+import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -29,6 +34,7 @@ public class AbstractJasmineMojoTest {
 
   private static final String ENCODING = "UTF-8";
   private static final String SCRIPT_LOADER_PATH = "scriptloaderpath";
+  private static final String PARENT_PROJECT_PATH = "/parent/project/path";
 
   @InjectMocks @Spy
   private final AbstractJasmineMojo subject = new AbstractJasmineMojo() {
@@ -40,11 +46,9 @@ public class AbstractJasmineMojoTest {
 
   @Rule public ExpectedException expectedException = ExpectedException.none();
 
-  @Mock
-  private File customRunnerConfiguration;
+  private static final String CUSTOM_RUNNER_CONFIG = "customRunnerConfiguration";
 
-  @Mock
-  private File customRunnerTemplate;
+  private static final String CUSTOM_RUNNER_TEMPLATE = "customRunnerTemplate";
 
   @Mock
   private File baseDir;
@@ -52,15 +56,20 @@ public class AbstractJasmineMojoTest {
   @Mock
   private MavenProject mavenProject;
 
+  @Mock
+  private File projectFile;
+
+  @Mock
+  private File parentProjectFile;
+
+  @Mock
+  private ResourceManager locator;
+
   @Before
   public void before() {
     subject.sourceEncoding = ENCODING;
     subject.scriptLoaderPath = null;
-
-    when(customRunnerConfiguration.exists()).thenReturn(true);
-    when(customRunnerConfiguration.canRead()).thenReturn(true);
-    when(customRunnerTemplate.exists()).thenReturn(true);
-    when(customRunnerTemplate.canRead()).thenReturn(true);
+    subject.locator = locator;
   }
 
   @Test
@@ -121,13 +130,37 @@ public class AbstractJasmineMojoTest {
   }
 
   @Test
-  public void testGetCustomRunnerConfiguration() {
-    assertThat(subject.getCustomRunnerConfiguration(), is(this.customRunnerConfiguration));
+  public void testGetCustomRunnerConfiguration() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException {
+    InputStream customRunnerConfigurationStream = mock(InputStream.class);
+    subject.customRunnerConfiguration = CUSTOM_RUNNER_CONFIG;
+    when(mavenProject.getFile()).thenReturn(projectFile);
+    when(projectFile.getParentFile()).thenReturn(parentProjectFile);
+    when(parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
+    when(locator.getResourceAsInputStream(CUSTOM_RUNNER_CONFIG)).thenReturn(customRunnerConfigurationStream);
+    subject.execute();
+    assertThat(subject.getCustomRunnerConfiguration(), is(customRunnerConfigurationStream));
   }
 
   @Test
-  public void testGetCustomRunnerTemplate() {
-    assertThat(subject.getCustomRunnerTemplate(), is(this.customRunnerTemplate));
+  public void testGetCustomRunnerTemplate() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException {
+    InputStream customRunnerTemplateStream = mock(InputStream.class);
+    subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
+    when(mavenProject.getFile()).thenReturn(projectFile);
+    when(projectFile.getParentFile()).thenReturn(parentProjectFile);
+    when(parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
+    when(locator.getResourceAsInputStream(CUSTOM_RUNNER_TEMPLATE)).thenReturn(customRunnerTemplateStream);
+    subject.execute();
+    assertThat(subject.getCustomRunnerTemplate(), is(customRunnerTemplateStream));
+  }
+
+  @Test(expected=MojoExecutionException.class)
+  public void testGetCustomRunnerTemplateNotFound() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException {
+    subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
+    when(mavenProject.getFile()).thenReturn(projectFile);
+    when(projectFile.getParentFile()).thenReturn(parentProjectFile);
+    when(parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
+    when(locator.getResourceAsInputStream(CUSTOM_RUNNER_TEMPLATE)).thenThrow(new ResourceNotFoundException(CUSTOM_RUNNER_TEMPLATE));
+    subject.execute();
   }
 
   @Test
