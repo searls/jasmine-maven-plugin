@@ -23,6 +23,7 @@ public class ResourceHandlerConfiguratorTest {
   private static final String SOURCE_DIRECTORY = "sourcedir";
   private static final String SPEC_DIRECTORY = "specdir";
   private static final String BASE_DIRECTORY = "basedir";
+  private static final String LIB_DIRECTORY = "libdir";
 
   private ResourceHandlerConfigurator configurator;
 
@@ -40,6 +41,9 @@ public class ResourceHandlerConfiguratorTest {
 
   @Mock
   private File baseDirectory;
+
+  @Mock
+  private File libDirectory;
 
   @Mock
   private ScriptSearch sources;
@@ -61,12 +65,14 @@ public class ResourceHandlerConfiguratorTest {
     when(sourceDirectory.getAbsolutePath()).thenReturn(SOURCE_DIRECTORY);
     when(specDirectory.getAbsolutePath()).thenReturn(SPEC_DIRECTORY);
     when(baseDirectory.getAbsolutePath()).thenReturn(BASE_DIRECTORY);
+    when(libDirectory.getAbsolutePath()).thenReturn(LIB_DIRECTORY);
 
     when(sources.getDirectory()).thenReturn(sourceDirectory);
     when(specs.getDirectory()).thenReturn(specDirectory);
 
     when(configuration.getSpecs()).thenReturn(specs);
     when(configuration.getSources()).thenReturn(sources);
+    when(configuration.getLibsDirectory()).thenReturn(libDirectory);
     when(configuration.getBasedir()).thenReturn(baseDirectory);
 
     this.configurator.createHandler();

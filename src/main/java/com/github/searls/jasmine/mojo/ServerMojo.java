@@ -23,7 +23,8 @@ public class ServerMojo extends AbstractJasmineMojo {
           "\n\n" +
           "The server will monitor these two directories for scripts that you add, remove, and change:\n\n" +
           "  source directory: %s\n\n"+
-          "  spec directory: %s"+
+          "  spec directory: %s\n\n"+
+          "  lib directory: %s"+
           "\n\n"+
           "Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.";
 
@@ -38,7 +39,8 @@ public class ServerMojo extends AbstractJasmineMojo {
         INSTRUCTION_FORMAT,
         this.serverPort,
         this.getRelativePath(this.sources.getDirectory()),
-        this.getRelativePath(this.specs.getDirectory()));
+        this.getRelativePath(this.specs.getDirectory()),
+        this.getRelativePath(this.getLibsDirectory()));
   }
 
   @Override

@@ -14,9 +14,11 @@ public interface JasmineConfiguration {
 
   String getSrcDirectoryName();
   String getSpecDirectoryName();
+  String getLibDirectoryName();
 
   ScriptSearch getSources();
   ScriptSearch getSpecs();
+  File getLibsDirectory();
 
   List<String> getPreloadSources();
 

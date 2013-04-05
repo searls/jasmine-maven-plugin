@@ -29,6 +29,7 @@ public class ServerMojoTest {
 
   private static final String SPECS_DIR = "spec dir";
   private static final String SOURCE_DIR = "source dir";
+  private static final String LIBS_DIR = "lib dir";
   private static final int PORT = 8923;
   private static final String RELATIVE_TARGET_DIR = "some dir";
   private static final String MANUAL_SPEC_RUNNER_NAME = "nacho specs";
@@ -43,8 +44,10 @@ public class ServerMojoTest {
   @Mock private File targetDir;
   @Mock private File sourceDir;
   @Mock private File specDir;
+  @Mock private File libDir;
   @Mock private ScriptSearch sources;
   @Mock private ScriptSearch specs;
+  @Mock private File libs;
   @Mock private ResourceHandlerConfigurator configurator;
   @Mock private ServerManager serverManager;
 
@@ -52,6 +55,7 @@ public class ServerMojoTest {
   public void arrangeAndAct() throws Exception {
     this.subject.sources = this.sources;
     this.subject.specs = this.specs;
+    this.subject.libsDirectory = this.libs;
     this.subject.setLog(this.log);
     this.subject.serverPort = PORT;
     this.subject.jasmineTargetDir = this.targetDir;
@@ -59,13 +63,15 @@ public class ServerMojoTest {
     this.subject.specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
     when(this.sourceDir.getAbsolutePath()).thenReturn(SOURCE_DIR);
     when(this.specDir.getAbsolutePath()).thenReturn(SPECS_DIR);
+    when(this.libDir.getAbsolutePath()).thenReturn(LIBS_DIR);
     when(this.sources.getDirectory()).thenReturn(this.sourceDir);
     when(this.specs.getDirectory()).thenReturn(this.specDir);
     when(this.baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
     when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
-    when(this.relativizesFilePaths.relativize(this.baseDir,this.targetDir)).thenReturn(RELATIVE_TARGET_DIR);
+    when(this.relativizesFilePaths.relativize(this.baseDir, this.targetDir)).thenReturn(RELATIVE_TARGET_DIR);
     when(this.relativizesFilePaths.relativize(this.baseDir,this.sources.getDirectory())).thenReturn(SOURCE_DIR);
     when(this.relativizesFilePaths.relativize(this.baseDir,this.specs.getDirectory())).thenReturn(SPECS_DIR);
+    when(this.relativizesFilePaths.relativize(this.baseDir,this.libs)).thenReturn(LIBS_DIR);
 
     whenNew(ResourceHandlerConfigurator.class).withArguments(
         this.subject,
@@ -80,7 +86,7 @@ public class ServerMojoTest {
 
   @Test
   public void logsInstructions() {
-    verify(this.log).info(String.format(ServerMojo.INSTRUCTION_FORMAT, PORT, SOURCE_DIR, SPECS_DIR));
+    verify(this.log).info(String.format(ServerMojo.INSTRUCTION_FORMAT, PORT, SOURCE_DIR, SPECS_DIR, LIBS_DIR));
   }
 
   @Test
