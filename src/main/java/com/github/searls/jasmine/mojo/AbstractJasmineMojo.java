@@ -127,8 +127,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * <p>It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
    * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
    * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
-   * and make the changes you need. The default template is stored in <code>src/main/resources/jasmine-templates/SpecRunner.htmltemplate</code>,
-   * and the required template strings are tokenized in "$*$" patterns.</p>
+   * and make the changes you need.</p>
+   * 
+   * <p>Potential values are a filesystem path, a URL, or a classpath resource. The default template is
+   * stored in <code>src/main/resources/jasmine-templates/SpecRunner.htmltemplate</code>, and the
+   * required template strings are tokenized in "$*$" patterns.</p>
    *
    * <p>Example usage:</p>
    * <pre>
@@ -141,8 +144,9 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   protected String customRunnerTemplate;
 
   /**
-   * <p>Sometimes you want to have full control over how scriptloaders are configured. In order to interpolate custom configuration
-   * into the generated runnerTemplate, specify a file containing the additional config.</p>
+   * <p>Sometimes you want to have full control over how scriptloaders are configured. In order to
+   * interpolate custom configuration into the generated runnerTemplate, specify a file containing
+   * the additional config. Potential values are a filesystem path, a URL, or a classpath resource.</p>
    *
    * <p>Example usage:</p>
    * <pre>
