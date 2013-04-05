@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.mojo;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,8 +10,11 @@ import java.util.Map;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.codehaus.plexus.resource.ResourceManager;
+import org.codehaus.plexus.resource.loader.FileResourceLoader;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
@@ -123,8 +127,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * <p>It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
    * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
    * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
-   * and make the changes you need. The default template is stored in <code>src/main/resources/jasmine-templates/SpecRunner.htmltemplate</code>,
-   * and the required template strings are tokenized in "$*$" patterns.</p>
+   * and make the changes you need.</p>
+   * 
+   * <p>Potential values are a filesystem path, a URL, or a classpath resource. The default template is
+   * stored in <code>src/main/resources/jasmine-templates/SpecRunner.htmltemplate</code>, and the
+   * required template strings are tokenized in "$*$" patterns.</p>
    *
    * <p>Example usage:</p>
    * <pre>
@@ -134,11 +141,12 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter
-  protected File customRunnerTemplate;
+  protected String customRunnerTemplate;
 
   /**
-   * <p>Sometimes you want to have full control over how scriptloaders are configured. In order to interpolate custom configuration
-   * into the generated runnerTemplate, specify a file containing the additional config.</p>
+   * <p>Sometimes you want to have full control over how scriptloaders are configured. In order to
+   * interpolate custom configuration into the generated runnerTemplate, specify a file containing
+   * the additional config. Potential values are a filesystem path, a URL, or a classpath resource.</p>
    *
    * <p>Example usage:</p>
    * <pre>
@@ -148,7 +156,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter
-  protected File customRunnerConfiguration;
+  protected String customRunnerConfiguration;
 
   /**
    * Target directory for files created by the plugin.
@@ -357,14 +365,20 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Parameter(defaultValue="${project}", readonly=true)
   protected MavenProject mavenProject;
 
+  @Component
+  protected ResourceManager locator;
+
   protected ScriptSearch sources;
   protected ScriptSearch specs;
 
   protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
+  private InputStream customRunnerTemplateStream;
+  private InputStream customRunnerConfigurationStream;
+
   @Override
   public final void execute() throws MojoExecutionException, MojoFailureException {
-    validateParameters();
+    loadResources();
 
     this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);
     this.specs = new ScriptSearch(this.jsTestSrcDir,this.specIncludes,this.specExcludes);
@@ -386,8 +400,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   }
 
   @Override
-  public File getCustomRunnerTemplate() {
-    return this.customRunnerTemplate;
+  public InputStream getCustomRunnerTemplate() {
+    return this.customRunnerTemplateStream;
   }
 
   @Override
@@ -450,8 +464,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   }
 
   @Override
-  public File getCustomRunnerConfiguration() {
-    return this.customRunnerConfiguration;
+  public InputStream getCustomRunnerConfiguration() {
+    return this.customRunnerConfigurationStream;
   }
 
   @Deprecated
@@ -465,14 +479,30 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
     return this.mavenProject.getBasedir();
   }
 
-  private void validateParameters() throws MojoExecutionException {
-    this.fileExists("customRunnerConfiguration",this.customRunnerConfiguration);
-    this.fileExists("customRunnerTemplate",this.customRunnerTemplate);
+  private void loadResources() throws MojoExecutionException {
+    this.customRunnerTemplateStream = this.getResourceAsInputStream("customRunnerTemplate", this.customRunnerTemplate);
+    this.customRunnerConfigurationStream = this.getResourceAsInputStream("customRunnerConfiguration", this.customRunnerConfiguration);
   }
 
-  private void fileExists(String parameter, File file) throws MojoExecutionException {
-    if (file != null && (!file.exists() || !file.canRead())) {
-      throw new MojoExecutionException(String.format(ERROR_FILE_DNE,parameter,file));
+  private InputStream getResourceAsInputStream(String parameter, String resourceLocation) throws MojoExecutionException {
+    InputStream inputStream = null;
+    if (resourceLocation != null) {
+      locator.addSearchPath( "url", "" );
+      locator.addSearchPath( FileResourceLoader.ID, mavenProject.getFile().getParentFile().getAbsolutePath() );
+
+      ClassLoader origLoader = Thread.currentThread().getContextClassLoader();
+      try {
+        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+        try {
+          inputStream = locator.getResourceAsInputStream(resourceLocation);
+        } catch (Exception e) {
+          throw new MojoExecutionException(String.format(ERROR_FILE_DNE,parameter,resourceLocation));
+        }
+      }
+      finally {
+        Thread.currentThread().setContextClassLoader( origLoader );
+      }
     }
+    return inputStream;
   }
 }

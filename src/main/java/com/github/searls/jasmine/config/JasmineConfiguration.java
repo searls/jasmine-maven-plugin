@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.config;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
@@ -26,8 +27,8 @@ public interface JasmineConfiguration {
 
   SpecRunnerTemplate getSpecRunnerTemplate();
 
-  File getCustomRunnerTemplate();
-  File getCustomRunnerConfiguration();
+  InputStream getCustomRunnerTemplate();
+  InputStream getCustomRunnerConfiguration();
 
   String getScriptLoaderPath();
 
