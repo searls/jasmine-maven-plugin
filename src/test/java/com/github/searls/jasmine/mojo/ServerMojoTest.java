@@ -18,6 +18,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.runner.CreatesRunner;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
@@ -45,6 +46,7 @@ public class ServerMojoTest {
   @Mock private File specDir;
   @Mock private ScriptSearch sources;
   @Mock private ScriptSearch specs;
+  @Mock private CreatesRunner createsRunner;
   @Mock private ResourceHandlerConfigurator configurator;
   @Mock private ServerManager serverManager;
 
@@ -57,6 +59,7 @@ public class ServerMojoTest {
     this.subject.jasmineTargetDir = this.targetDir;
     this.subject.manualSpecRunnerHtmlFileName = MANUAL_SPEC_RUNNER_NAME;
     this.subject.specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
+    this.subject.debug = true;
     when(this.sourceDir.getAbsolutePath()).thenReturn(SOURCE_DIR);
     when(this.specDir.getAbsolutePath()).thenReturn(SPECS_DIR);
     when(this.sources.getDirectory()).thenReturn(this.sourceDir);
@@ -67,11 +70,16 @@ public class ServerMojoTest {
     when(this.relativizesFilePaths.relativize(this.baseDir,this.sources.getDirectory())).thenReturn(SOURCE_DIR);
     when(this.relativizesFilePaths.relativize(this.baseDir,this.specs.getDirectory())).thenReturn(SPECS_DIR);
 
+    whenNew(CreatesRunner.class).withArguments(
+        this.subject,
+        this.log,
+        MANUAL_SPEC_RUNNER_NAME,
+        ReporterType.HtmlReporter).thenReturn(createsRunner);
+
     whenNew(ResourceHandlerConfigurator.class).withArguments(
         this.subject,
         this.relativizesFilePaths,
-        MANUAL_SPEC_RUNNER_NAME,
-        ReporterType.HtmlReporter).thenReturn(configurator);
+        createsRunner).thenReturn(configurator);
 
     whenNew(ServerManager.class).withArguments(configurator).thenReturn(serverManager);
 

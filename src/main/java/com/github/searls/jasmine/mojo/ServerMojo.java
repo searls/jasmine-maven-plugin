@@ -3,9 +3,12 @@ package com.github.searls.jasmine.mojo;
 import java.io.File;
 import java.io.IOException;
 
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 
+import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.runner.CreatesRunner;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
@@ -43,14 +46,28 @@ public class ServerMojo extends AbstractJasmineMojo {
 
   @Override
   public void run() throws Exception {
-    ServerManager serverManager = new ServerManager(new ResourceHandlerConfigurator(
-        this,
-        this.relativizesFilePaths,
-        this.manualSpecRunnerHtmlFileName,
-        ReporterType.HtmlReporter));
+    ServerManager serverManager = this.getServerManager();
+
     serverManager.start(this.serverPort);
     this.getLog().info(this.buildServerInstructions());
     serverManager.join();
+  }
+
+  private ServerManager getServerManager() {
+    Log log = this.debug ? this.getLog() : new NullLog();
+
+    CreatesRunner createsRunner = new CreatesRunner(
+        this,
+        log,
+        this.manualSpecRunnerHtmlFileName,
+        ReporterType.HtmlReporter);
+
+    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(
+        this,
+        this.relativizesFilePaths,
+        createsRunner);
+
+    return new ServerManager(configurator);
   }
 
   private String getRelativePath(File absolutePath) throws IOException {

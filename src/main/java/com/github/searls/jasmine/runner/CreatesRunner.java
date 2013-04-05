@@ -16,20 +16,25 @@ public class CreatesRunner {
 
   private final JasmineConfiguration config;
 
-  private Log log;
+  private final Log log;
   private final String runnerFileName;
   private final ReporterType reporterType;
 
-  public CreatesRunner(JasmineConfiguration config, String runnerFileName, ReporterType reporterType) {
+  public CreatesRunner(JasmineConfiguration config, Log log, String runnerFileName, ReporterType reporterType) {
     this.config = config;
     this.runnerFileName = runnerFileName;
     this.reporterType = reporterType;
-    this.log = config.getLog();
+    this.log = log;
+  }
+
+  public String getRunnerFile() {
+    return this.runnerFileName;
   }
 
   public void create() throws IOException {
     File runnerDestination = new File(this.config.getJasmineTargetDir(),this.runnerFileName);
     ScriptResolver resolver = new BasicScriptResolver(
+        config.getBasedir(),
         config.getSources(),
         config.getSpecs(),
         config.getPreloadSources());
@@ -54,7 +59,7 @@ public class CreatesRunner {
       if(destination.exists()) {
         existingRunner = FileUtils.readFileToString(destination);
       }
-    } catch(Exception e) {
+    } catch(IOException e) {
       this.log.warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
     }
     return existingRunner;
@@ -66,9 +71,5 @@ public class CreatesRunner {
 
   private void saveRunner(File runnerDestination, String newRunner) throws IOException {
     FileUtils.writeStringToFile(runnerDestination, newRunner, this.config.getSourceEncoding());
-  }
-
-  public void setLog(Log log) {
-    this.log = log;
   }
 }
