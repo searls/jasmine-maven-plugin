@@ -15,11 +15,13 @@ import org.mockito.runners.MockitoJUnitRunner;
 @RunWith(MockitoJUnitRunner.class)
 public class ContextPathScriptResolverTest {
 
+  private static final String ROOT_CONTEXT_PATH = "";
   private static final String SOURCE_CONTEXT_PATH = "src";
   private static final String SPEC_CONTEXT_PATH = "spec";
 
-  private static final String SOURCE_DIRECTORY = "/the/source/directory/";
-  private static final String SPEC_DIRECTORY = "/the/spec/directory/";
+  private static final String BASE_DIRECTORY = "/the/base/directory";
+  private static final String SOURCE_DIRECTORY = "/the/source/directory";
+  private static final String SPEC_DIRECTORY = "/the/spec/directory";
 
   @Mock
   private ScriptResolver scriptResolver;
@@ -28,7 +30,7 @@ public class ContextPathScriptResolverTest {
 
   @Before
   public void before() {
-    this.contextPathScriptResolver = new ContextPathScriptResolver(scriptResolver, SOURCE_CONTEXT_PATH, SPEC_CONTEXT_PATH);
+    this.contextPathScriptResolver = new ContextPathScriptResolver(scriptResolver, ROOT_CONTEXT_PATH, SOURCE_CONTEXT_PATH, SPEC_CONTEXT_PATH);
   }
 
   @Test
@@ -68,15 +70,18 @@ public class ContextPathScriptResolverTest {
   @Test
   public void testGetPreloads() throws ScriptResolverException {
     Set<String> preloads = new HashSet<String>();
+    preloads.add(BASE_DIRECTORY+"/lib/baseScript");
     preloads.add(SPEC_DIRECTORY+"/specScript");
     preloads.add(SOURCE_DIRECTORY+"/sourceScript");
     preloads.add("http://example.org/script.js");
 
+    when(this.scriptResolver.getBaseDirectory()).thenReturn(BASE_DIRECTORY);
     when(this.scriptResolver.getSourceDirectory()).thenReturn(SOURCE_DIRECTORY);
     when(this.scriptResolver.getSpecDirectory()).thenReturn(SPEC_DIRECTORY);
     when(this.scriptResolver.getPreloads()).thenReturn(preloads);
 
     Set<String> expected = new HashSet<String>();
+    expected.add(ROOT_CONTEXT_PATH+"/lib/baseScript");
     expected.add(SPEC_CONTEXT_PATH+"/specScript");
     expected.add(SOURCE_CONTEXT_PATH+"/sourceScript");
     expected.add("http://example.org/script.js");

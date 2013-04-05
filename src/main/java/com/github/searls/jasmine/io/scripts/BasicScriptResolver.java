@@ -14,6 +14,7 @@ public class BasicScriptResolver implements ScriptResolver {
   private static final ResolvesLocationOfPreloadSources RESOLVES_PRELOAD_SOURCES = new ResolvesLocationOfPreloadSources();
   private static final FindsScriptLocationsInDirectory FINDS_SCRIPT_LOCATIONS = new FindsScriptLocationsInDirectory();
 
+  private final File baseDirectory;
   private final ScriptSearch sourceScriptSearch;
   private final ScriptSearch specScriptSearch;
   private final List<String> preloadList;
@@ -22,9 +23,11 @@ public class BasicScriptResolver implements ScriptResolver {
   private Set<String> specs;
   private Set<String> preloads;
 
-  public BasicScriptResolver(ScriptSearch sourceScriptSearch,
+  public BasicScriptResolver(File baseDirectory,
+                             ScriptSearch sourceScriptSearch,
                              ScriptSearch specScriptSearch,
                              List<String> preloadList) {
+    this.baseDirectory = baseDirectory;
     this.sourceScriptSearch = sourceScriptSearch;
     this.specScriptSearch = specScriptSearch;
     this.preloadList = preloadList;
@@ -51,6 +54,11 @@ public class BasicScriptResolver implements ScriptResolver {
   @Override
   public String getSpecDirectory() {
     return directoryToString(this.specScriptSearch.getDirectory());
+  }
+
+  @Override
+  public String getBaseDirectory() {
+    return directoryToString(this.baseDirectory);
   }
 
   @Override
