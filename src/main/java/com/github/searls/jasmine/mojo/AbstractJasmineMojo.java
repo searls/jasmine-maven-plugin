@@ -74,7 +74,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * For org.openqa.selenium.phantomjs.PhantomJSDriver, include "phantomjs.binary.path" if phantomJS is not in the
    * system command path of the build machine.
    *
-   * @since 1.3.1
+   * @since 1.3.1.1
    */
   @Parameter
   protected Map<String, String> webDriverCapabilities;

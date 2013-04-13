@@ -27,6 +27,7 @@
       <item name="Spec Runner Templates" href="spec-runner-templates.html" />
       <item name="AMD Support" href="amd-support.html" />
       <item name="Code Coverage" href="code-coverage.html" />
+      <item name="Using with PhantomJS" href="phantomjs.html" />
    </menu>
     
    <menu ref="reports"/>
