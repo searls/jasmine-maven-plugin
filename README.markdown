@@ -5,6 +5,13 @@ jasmine-maven-plugin
 
 For information on how to use jasmine-plugin, check out its [documentation page](http://searls.github.com/jasmine-maven-plugin/).
 
+<strong>4/13/2013</strong> - 1.3.1.1 has just been released and should be available in Maven Central soon. You can find full list of fixes/enhancements [here](http://searls.github.com/jasmine-maven-plugin/github-report.html). This is a quick summary:
+ * Added support for using [PhantomJS](http://phantomjs.org/) through [GhostDriver](https://github.com/detro/ghostdriver). For configuration examples see [here](http://searls.github.io/jasmine-maven-plugin/phantomjs.html).
+ * Allow passing filesystem path, a URL, or a classpath resource for `customRunnerTemplate` and `customRunnerConfiguration` parameters.
+ * Fixed a few bugs with path generation in the spec runner. See [#169](https://github.com/searls/jasmine-maven-plugin/issues/169) and [#170](https://github.com/searls/jasmine-maven-plugin/issues/170) for details.
+ * Added [autoRefreshInterval](http://searls.github.io/jasmine-maven-plugin/bdd-mojo.html#autoRefreshInterval) parameter to the `jasmine:bdd` goal. When this parameter is set the spec runner will automatically refresh at the set interval.
+ 
+http://searls.github.io/jasmine-maven-plugin/phantomjs.html
 <strong>3/12/2013</strong> - 1.3.1.0 has been released and is now available in Maven Central. You can find the full list of fixes/enhancements [here](http://searls.github.com/jasmine-maven-plugin/github-report.html). This is a quick summary:
  * Published a full maven site for the plugin that includes documentation of all available parameters.  Check it out [here](http://searls.github.com/jasmine-maven-plugin).
  * Removed the deprecated `jasmine:preparePackage` goal. Please migrate to [wro4j](http://code.google.com/p/wro4j/) for such functionality.
