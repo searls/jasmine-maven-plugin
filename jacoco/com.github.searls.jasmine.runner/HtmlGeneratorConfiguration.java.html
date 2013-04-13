@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>HtmlGeneratorConfiguration.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.html" class="el_package">com.github.searls.jasmine.runner</a> &gt; <span class="el_source">HtmlGeneratorConfiguration.java</span></div><h1>HtmlGeneratorConfiguration.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.runner;
 
-import java.io.File;
 import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
+import java.io.InputStream;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
@@ -12,118 +10,126 @@ import com.github.searls.jasmine.io.scripts.ScriptResolver;
 public class HtmlGeneratorConfiguration {
   private final String sourceEncoding;
   private final ReporterType reporterType;
-  private final File customRunnerTemplate;
-  private IOUtilsWrapper ioUtilsWrapper;
+  private final InputStream customRunnerTemplate;
+  private final IOUtilsWrapper ioUtilsWrapper;
   private final SpecRunnerTemplate specRunnerTemplate;
   private final ScriptResolver scriptResolver;
   private final String scriptLoaderPath;
-  private final File customRunnerConfiguration;
+  private final InputStream customRunnerConfiguration;
   private final String srcDirectoryName;
   private final String specDirectoryName;
+  private final int autoRefreshInterval;
+  private final boolean autoRefresh;
 
-<span class="fc" id="L24">  public HtmlGeneratorConfiguration(ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {</span>
-<span class="fc" id="L25">    this.sourceEncoding = configuration.getSourceEncoding();</span>
-<span class="fc" id="L26">    this.reporterType = reporterType;</span>
-<span class="fc" id="L27">    this.customRunnerTemplate = configuration.getCustomRunnerTemplate();</span>
-<span class="fc" id="L28">    this.specRunnerTemplate = configuration.getSpecRunnerTemplate();</span>
-<span class="fc" id="L29">    this.scriptResolver = scriptResolver;</span>
-<span class="fc" id="L30">    this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();</span>
-<span class="fc" id="L31">    this.ioUtilsWrapper  = new IOUtilsWrapper();</span>
-<span class="fc" id="L32">    this.scriptLoaderPath = configuration.getScriptLoaderPath();</span>
-<span class="fc" id="L33">    this.srcDirectoryName = configuration.getSrcDirectoryName();</span>
-<span class="fc" id="L34">    this.specDirectoryName = configuration.getSpecDirectoryName();</span>
-<span class="fc" id="L35">  }</span>
+  public HtmlGeneratorConfiguration(ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {
+<span class="fc" id="L25">    this(new IOUtilsWrapper(), reporterType, configuration, scriptResolver);</span>
+<span class="fc" id="L26">  }</span>
+
+<span class="fc" id="L28">  public HtmlGeneratorConfiguration(IOUtilsWrapper ioUtilsWrapper, ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {</span>
+<span class="fc" id="L29">    this.ioUtilsWrapper  = ioUtilsWrapper;</span>
+<span class="fc" id="L30">    this.sourceEncoding = configuration.getSourceEncoding();</span>
+<span class="fc" id="L31">    this.reporterType = reporterType;</span>
+<span class="fc" id="L32">    this.customRunnerTemplate = configuration.getCustomRunnerTemplate();</span>
+<span class="fc" id="L33">    this.specRunnerTemplate = configuration.getSpecRunnerTemplate();</span>
+<span class="fc" id="L34">    this.scriptResolver = scriptResolver;</span>
+<span class="fc" id="L35">    this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();</span>
+<span class="fc" id="L36">    this.scriptLoaderPath = configuration.getScriptLoaderPath();</span>
+<span class="fc" id="L37">    this.srcDirectoryName = configuration.getSrcDirectoryName();</span>
+<span class="fc" id="L38">    this.specDirectoryName = configuration.getSpecDirectoryName();</span>
+<span class="fc" id="L39">    this.autoRefreshInterval = configuration.getAutoRefreshInterval();</span>
+<span class="pc bpc" id="L40" title="3 of 4 branches missed.">    this.autoRefresh = this.autoRefreshInterval &gt; 0 &amp;&amp; ReporterType.HtmlReporter.equals(reporterType);</span>
+<span class="fc" id="L41">  }</span>
 
   public String getSourceEncoding() {
-<span class="nc" id="L38">    return this.sourceEncoding;</span>
+<span class="nc" id="L44">    return this.sourceEncoding;</span>
   }
 
   public ReporterType getReporterType() {
-<span class="nc" id="L42">    return this.reporterType;</span>
+<span class="fc" id="L48">    return this.reporterType;</span>
   }
 
-  public File getCustomRunnerTemplate() {
-<span class="fc" id="L46">    return this.customRunnerTemplate;</span>
+  public InputStream getCustomRunnerTemplate() {
+<span class="fc" id="L52">    return this.customRunnerTemplate;</span>
   }
 
-  public String readFileToString(File customRunnerTemplate) throws IOException {
-<span class="fc" id="L50">    return FileUtils.readFileToString(customRunnerTemplate);</span>
+  public String readFileToString(InputStream customRunnerTemplate) throws IOException {
+<span class="fc" id="L56">    return ioUtilsWrapper.toString(customRunnerTemplate);</span>
   }
 
   public String IOtoString(String defaultHtmlTemplatePath) throws IOException {
-<span class="fc" id="L54">    return this.ioUtilsWrapper.toString(defaultHtmlTemplatePath);</span>
+<span class="fc" id="L60">    return this.ioUtilsWrapper.toString(defaultHtmlTemplatePath);</span>
   }
 
   public String getRunnerTemplate() throws IOException {
 
-<span class="fc bfc" id="L59" title="All 2 branches covered.">    if (this.getCustomRunnerTemplate() != null) {</span>
-<span class="fc" id="L60">      return this.readFileToString(this.getCustomRunnerTemplate());</span>
+<span class="fc bfc" id="L65" title="All 2 branches covered.">    if (this.getCustomRunnerTemplate() != null) {</span>
+<span class="fc" id="L66">      return this.readFileToString(this.getCustomRunnerTemplate());</span>
     } else {
-<span class="fc" id="L62">      SpecRunnerTemplate template = this.getSpecRunnerTemplate();</span>
-<span class="fc bfc" id="L63" title="All 2 branches covered.">      if (template == null) {</span>
-<span class="fc" id="L64">        template = SpecRunnerTemplate.DEFAULT;</span>
+<span class="fc" id="L68">      SpecRunnerTemplate template = this.getSpecRunnerTemplate();</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">      if (template == null) {</span>
+<span class="fc" id="L70">        template = SpecRunnerTemplate.DEFAULT;</span>
       }
-<span class="fc" id="L66">      return this.IOtoString(template.getTemplate());</span>
+<span class="fc" id="L72">      return this.IOtoString(template.getTemplate());</span>
     }
   }
 
   public SpecRunnerTemplate getSpecRunnerTemplate() {
-<span class="fc" id="L71">    return this.specRunnerTemplate;</span>
+<span class="fc" id="L77">    return this.specRunnerTemplate;</span>
   }
 
   public ScriptResolver getScriptResolver() {
-<span class="nc" id="L75">    return this.scriptResolver;</span>
+<span class="nc" id="L81">    return this.scriptResolver;</span>
   }
 
   @Override
   public boolean equals(Object o) {
-<span class="nc bnc" id="L80" title="All 2 branches missed.">    if (this == o) return true;</span>
-<span class="nc bnc" id="L81" title="All 4 branches missed.">    if (o == null || this.getClass() != o.getClass()) return false;</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">    if (this == o) return true;</span>
+<span class="nc bnc" id="L87" title="All 4 branches missed.">    if (o == null || this.getClass() != o.getClass()) return false;</span>
 
-<span class="nc" id="L83">    HtmlGeneratorConfiguration that = (HtmlGeneratorConfiguration) o;</span>
+<span class="nc" id="L89">    HtmlGeneratorConfiguration that = (HtmlGeneratorConfiguration) o;</span>
 
-<span class="nc bnc" id="L85" title="All 6 branches missed.">    if (this.customRunnerTemplate != null ? !this.customRunnerTemplate.equals(that.customRunnerTemplate) : that.customRunnerTemplate != null)</span>
-<span class="nc" id="L86">      return false;</span>
-<span class="nc bnc" id="L87" title="All 2 branches missed.">    if (this.reporterType != that.reporterType) return false;</span>
-<span class="nc bnc" id="L88" title="All 6 branches missed.">    if (this.sourceEncoding != null ? !this.sourceEncoding.equals(that.sourceEncoding) : that.sourceEncoding != null)</span>
-<span class="nc" id="L89">      return false;</span>
-<span class="nc bnc" id="L90" title="All 6 branches missed.">    if (this.specRunnerTemplate != null ? !this.specRunnerTemplate.equals(that.specRunnerTemplate) : that.specRunnerTemplate != null)</span>
-<span class="nc" id="L91">      return false;</span>
+<span class="nc bnc" id="L91" title="All 6 branches missed.">    if (this.customRunnerTemplate != null ? !this.customRunnerTemplate.equals(that.customRunnerTemplate) : that.customRunnerTemplate != null)</span>
+<span class="nc" id="L92">      return false;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">    if (this.reporterType != that.reporterType) return false;</span>
+<span class="nc bnc" id="L94" title="All 6 branches missed.">    if (this.sourceEncoding != null ? !this.sourceEncoding.equals(that.sourceEncoding) : that.sourceEncoding != null)</span>
+<span class="nc" id="L95">      return false;</span>
+<span class="nc bnc" id="L96" title="All 6 branches missed.">    if (this.specRunnerTemplate != null ? !this.specRunnerTemplate.equals(that.specRunnerTemplate) : that.specRunnerTemplate != null)</span>
+<span class="nc" id="L97">      return false;</span>
 
-<span class="nc" id="L93">    return true;</span>
+<span class="nc" id="L99">    return true;</span>
   }
 
   @Override
   public int hashCode() {
-<span class="nc bnc" id="L98" title="All 2 branches missed.">    int result = this.sourceEncoding != null ? this.sourceEncoding.hashCode() : 0;</span>
-<span class="nc bnc" id="L99" title="All 2 branches missed.">    result = 31 * result + (this.reporterType != null ? this.reporterType.hashCode() : 0);</span>
-<span class="nc bnc" id="L100" title="All 2 branches missed.">    result = 31 * result + (this.customRunnerTemplate != null ? this.customRunnerTemplate.hashCode() : 0);</span>
-<span class="nc bnc" id="L101" title="All 2 branches missed.">    result = 31 * result + (this.specRunnerTemplate != null ? this.specRunnerTemplate.hashCode() : 0);</span>
-<span class="nc" id="L102">    return result;</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">    int result = this.sourceEncoding != null ? this.sourceEncoding.hashCode() : 0;</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">    result = 31 * result + (this.reporterType != null ? this.reporterType.hashCode() : 0);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">    result = 31 * result + (this.customRunnerTemplate != null ? this.customRunnerTemplate.hashCode() : 0);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">    result = 31 * result + (this.specRunnerTemplate != null ? this.specRunnerTemplate.hashCode() : 0);</span>
+<span class="nc" id="L108">    return result;</span>
   }
 
   public String getCustomRunnerConfiguration() throws IOException {
-<span class="nc bnc" id="L106" title="All 2 branches missed.">    if(null != this.customRunnerConfiguration) {</span>
-<span class="nc" id="L107">      return FileUtils.readFileToString(this.customRunnerConfiguration);</span>
-    }  else {
-<span class="nc" id="L109">      return null;</span>
-    }
+<span class="nc bnc" id="L112" title="All 2 branches missed.">    return this.customRunnerConfiguration == null ? null : ioUtilsWrapper.toString(this.customRunnerConfiguration);</span>
   }
 
-  public void setIoUtilsWrapper(IOUtilsWrapper ioUtilsWrapper) {
-<span class="fc" id="L114">    this.ioUtilsWrapper = ioUtilsWrapper;</span>
-<span class="fc" id="L115">  }</span>
-
   public String getScriptLoaderPath() {
-<span class="nc" id="L118">    return this.scriptLoaderPath;</span>
+<span class="nc" id="L116">    return this.scriptLoaderPath;</span>
   }
 
   public String getSrcDirectoryName() {
-<span class="nc" id="L122">    return this.srcDirectoryName;</span>
+<span class="nc" id="L120">    return this.srcDirectoryName;</span>
   }
 
   public String getSpecDirectoryName() {
-<span class="nc" id="L126">    return this.specDirectoryName;</span>
+<span class="nc" id="L124">    return this.specDirectoryName;</span>
+  }
+
+  public int getAutoRefreshInterval() {
+<span class="nc" id="L128">    return this.autoRefreshInterval;</span>
+  }
+
+  public boolean getAutoRefresh() {
+<span class="nc" id="L132">    return this.autoRefresh;</span>
   }
 }
 

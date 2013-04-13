@@ -56,40 +56,43 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 <span class="nc" id="L56">    template.add(&quot;sourceDir&quot;, sourceDirectory);</span>
 <span class="nc" id="L57">    template.add(&quot;specDir&quot;, specDirectory);</span>
 
-<span class="nc" id="L59">    this.setCustomRunnerConfig(template);</span>
-<span class="nc" id="L60">    template.add(REPORTER_ATTR_NAME, this.getConfiguration().getReporterType().name());</span>
-<span class="nc" id="L61">    this.setEncoding(this.getConfiguration(), template);</span>
+<span class="nc" id="L59">    template.add(&quot;autoRefresh&quot;, this.getConfiguration().getAutoRefresh());</span>
+<span class="nc" id="L60">    template.add(&quot;autoRefreshInterval&quot;, this.getConfiguration().getAutoRefreshInterval());</span>
+
+<span class="nc" id="L62">    this.setCustomRunnerConfig(template);</span>
+<span class="nc" id="L63">    template.add(REPORTER_ATTR_NAME, this.getConfiguration().getReporterType().name());</span>
+<span class="nc" id="L64">    this.setEncoding(this.getConfiguration(), template);</span>
 
     // these fields are being preserved for backwards compatibility
-<span class="nc" id="L64">    this.applyScriptTagsToTemplate(&quot;sources&quot;, allScripts, template);</span>
-<span class="nc" id="L65">    template.add(&quot;specs&quot;, this.createJsonArray(specs));</span>
-<span class="nc" id="L66">    template.add(&quot;priority&quot;, this.createJsonArray(preloads));</span>
-<span class="nc" id="L67">    template.add(&quot;requirejsPath&quot;, this.resolveRequirejsPath(sourceDirectory));</span>
+<span class="nc" id="L67">    this.applyScriptTagsToTemplate(&quot;sources&quot;, allScripts, template);</span>
+<span class="nc" id="L68">    template.add(&quot;specs&quot;, this.createJsonArray(specs));</span>
+<span class="nc" id="L69">    template.add(&quot;priority&quot;, this.createJsonArray(preloads));</span>
+<span class="nc" id="L70">    template.add(&quot;requirejsPath&quot;, this.resolveRequirejsPath(sourceDirectory));</span>
 
-<span class="nc" id="L69">    return template.render();</span>
+<span class="nc" id="L72">    return template.render();</span>
   }
 
   private String createJsonArray(Set&lt;String&gt; scripts) {
-<span class="nc bnc" id="L73" title="All 4 branches missed.">    if (null == scripts || scripts.isEmpty()) {</span>
-<span class="nc" id="L74">      return &quot;[]&quot;;</span>
+<span class="nc bnc" id="L76" title="All 4 branches missed.">    if (null == scripts || scripts.isEmpty()) {</span>
+<span class="nc" id="L77">      return &quot;[]&quot;;</span>
     }
-<span class="nc" id="L76">    StringBuilder builder = new StringBuilder(&quot;['&quot;);</span>
-<span class="nc" id="L77">    builder.append(StringUtils.join(scripts,&quot;', '&quot;));</span>
-<span class="nc" id="L78">    builder.append(&quot;']&quot;);</span>
-<span class="nc" id="L79">    return builder.toString();</span>
+<span class="nc" id="L79">    StringBuilder builder = new StringBuilder(&quot;['&quot;);</span>
+<span class="nc" id="L80">    builder.append(StringUtils.join(scripts,&quot;', '&quot;));</span>
+<span class="nc" id="L81">    builder.append(&quot;']&quot;);</span>
+<span class="nc" id="L82">    return builder.toString();</span>
   }
 
   private void setCustomRunnerConfig(ST template) throws IOException {
-<span class="nc" id="L83">    String customRunnerConfiguration = this.getConfiguration().getCustomRunnerConfiguration();</span>
-<span class="nc" id="L84">    template.add(&quot;customRunnerConfiguration&quot;, customRunnerConfiguration);</span>
-<span class="nc" id="L85">  }</span>
+<span class="nc" id="L86">    String customRunnerConfiguration = this.getConfiguration().getCustomRunnerConfiguration();</span>
+<span class="nc" id="L87">    template.add(&quot;customRunnerConfiguration&quot;, customRunnerConfiguration);</span>
+<span class="nc" id="L88">  }</span>
 
   private String resolveRequirejsPath(String sourceDirectory) {
-<span class="nc" id="L88">    String scriptLoaderPath = this.getConfiguration().getScriptLoaderPath();</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">    if(null == scriptLoaderPath) {</span>
-<span class="nc" id="L90">      return String.format(&quot;%s/require.js&quot;, sourceDirectory);</span>
+<span class="nc" id="L91">    String scriptLoaderPath = this.getConfiguration().getScriptLoaderPath();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">    if(null == scriptLoaderPath) {</span>
+<span class="nc" id="L93">      return String.format(&quot;%s/require.js&quot;, sourceDirectory);</span>
     } else {
-<span class="nc" id="L92">      return String.format(&quot;%s/%s&quot;, sourceDirectory, scriptLoaderPath);</span>
+<span class="nc" id="L95">      return String.format(&quot;%s/%s&quot;, sourceDirectory, scriptLoaderPath);</span>
     }
   }
 }

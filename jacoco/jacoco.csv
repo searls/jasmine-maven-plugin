@@ -5,27 +5,25 @@ jasmine-maven-plugin,com.github.searls.jasmine.coffee,CoffeeScript,41,20,2,0,6,4
 jasmine-maven-plugin,com.github.searls.jasmine.coffee,HandlesRequestsForCoffee,7,87,0,0,2,20,0,5,0,5
 jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,FindsScriptLocationsInDirectory,0,54,0,4,0,9,0,4,0,2
 jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,ConvertsFileToUriString,11,3,0,0,3,1,1,1,1,1
-jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,BasicScriptResolver,30,87,0,0,8,17,4,6,4,6
-jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,ContextPathScriptResolver,21,88,0,2,5,18,1,8,1,7
+jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,BasicScriptResolver,35,90,0,0,9,18,5,6,5,6
+jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,ContextPathScriptResolver,24,107,0,2,6,22,2,9,2,8
 jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,ResolvesLocationOfPreloadSources,53,28,11,1,7,6,7,2,1,2
 jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,ScriptResolverException,16,0,0,0,8,0,4,0,4,0
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,HelpMojo,875,0,106,0,151,0,69,0,16,0
-jasmine-maven-plugin,com.github.searls.jasmine.mojo,ServerMojo,68,0,0,0,10,0,4,0,4,0
-jasmine-maven-plugin,com.github.searls.jasmine.mojo,TestMojo.new HtmlUnitDriver() {...},24,0,2,0,5,0,3,0,2,0
-jasmine-maven-plugin,com.github.searls.jasmine.mojo,TestMojo.1.new IncorrectnessListener() {...},7,0,0,0,2,0,2,0,2,0
-jasmine-maven-plugin,com.github.searls.jasmine.mojo,AbstractJasmineMojo,88,107,11,3,18,27,15,10,8,10
-jasmine-maven-plugin,com.github.searls.jasmine.mojo,TestMojo,182,16,11,1,39,6,12,2,6,2
-jasmine-maven-plugin,com.github.searls.jasmine.server,ResourceHandlerConfigurator,0,135,0,2,0,21,0,5,0,4
+jasmine-maven-plugin,com.github.searls.jasmine.mojo,ServerMojo,90,0,2,0,14,0,6,0,5,0
+jasmine-maven-plugin,com.github.searls.jasmine.mojo,AbstractJasmineMojo,72,166,8,2,17,39,12,12,8,11
+jasmine-maven-plugin,com.github.searls.jasmine.mojo,TestMojo,163,16,11,1,32,6,12,2,6,2
+jasmine-maven-plugin,com.github.searls.jasmine.server,ResourceHandlerConfigurator,0,129,0,2,0,20,0,5,0,4
 jasmine-maven-plugin,com.github.searls.jasmine.server,ServerManager,0,56,0,0,0,19,0,7,0,7
-jasmine-maven-plugin,com.github.searls.jasmine.server,JasmineResourceHandler,0,82,0,12,0,17,0,10,0,4
-jasmine-maven-plugin,com.github.searls.jasmine,NullLog,20,3,0,0,16,1,16,1,16,1
+jasmine-maven-plugin,com.github.searls.jasmine.server,JasmineResourceHandler,0,71,0,12,0,16,0,10,0,4
+jasmine-maven-plugin,com.github.searls.jasmine,NullLog,23,0,0,0,17,0,17,0,17,0
 jasmine-maven-plugin,com.github.searls.jasmine.collections,CollectionHelper,2,7,1,1,0,2,1,2,0,2
-jasmine-maven-plugin,com.github.searls.jasmine.runner,DefaultSpecRunnerHtmlGenerator,228,4,6,0,40,2,8,1,5,1
+jasmine-maven-plugin,com.github.searls.jasmine.runner,DefaultSpecRunnerHtmlGenerator,244,4,6,0,42,2,8,1,5,1
 jasmine-maven-plugin,com.github.searls.jasmine.runner,AbstractSpecRunnerHtmlGenerator,104,11,8,0,20,4,10,1,6,1
-jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,149,80,36,4,25,24,27,9,9,7
+jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,159,98,39,5,24,27,30,10,10,8
 jasmine-maven-plugin,com.github.searls.jasmine.runner,ReporterType,9,39,0,0,0,2,2,2,2,2
 jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor,48,122,4,2,9,21,4,6,1,6
-jasmine-maven-plugin,com.github.searls.jasmine.runner,CreatesRunner,94,20,6,0,19,8,7,2,4,2
+jasmine-maven-plugin,com.github.searls.jasmine.runner,CreatesRunner,115,0,6,0,26,0,9,0,6,0
 jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerTemplate,9,37,0,0,0,7,2,3,2,3
 jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor.new Predicate() {...},0,16,0,0,0,2,0,2,0,2
 jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerHtmlGeneratorFactory,7,17,0,0,2,3,0,3,0,3
@@ -38,3 +36,6 @@ jasmine-maven-plugin,com.github.searls.jasmine.format,BuildsJavaScriptToWriteFai
 jasmine-maven-plugin,com.github.searls.jasmine.format,JasmineResultLogger,0,17,0,0,0,6,0,3,0,3
 jasmine-maven-plugin,com.github.searls.jasmine.model,ScriptSearch,0,21,0,0,0,8,0,4,0,4
 jasmine-maven-plugin,com.github.searls.jasmine.model,JasmineResult,0,30,0,0,0,7,0,6,0,6
+jasmine-maven-plugin,com.github.searls.jasmine.driver,QuietHtmlUnitDriver.new IncorrectnessListener() {...},1,6,0,0,1,1,1,1,1,1
+jasmine-maven-plugin,com.github.searls.jasmine.driver,QuietHtmlUnitDriver,0,26,0,2,0,8,0,3,0,2
+jasmine-maven-plugin,com.github.searls.jasmine.driver,WebDriverFactory,4,126,0,6,2,30,1,15,1,12

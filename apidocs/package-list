@@ -2,6 +2,7 @@ com.github.searls.jasmine
 com.github.searls.jasmine.coffee
 com.github.searls.jasmine.collections
 com.github.searls.jasmine.config
+com.github.searls.jasmine.driver
 com.github.searls.jasmine.exception
 com.github.searls.jasmine.format
 com.github.searls.jasmine.io
