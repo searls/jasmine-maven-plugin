@@ -69,6 +69,13 @@
       <name>hikaruworld</name>
       <url>http://prepro.wordpress.com</url> 
     </contributor>
+    <contributor>
+      <name>Daniel Tabuenca</name>
+      <email>dtabuenc@gmail.com</email> 
+    </contributor>
+    <contributor>
+      <name>johnomalley</name>
+    </contributor>
   </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
