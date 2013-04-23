@@ -1,136 +1,133 @@
 package com.github.searls.jasmine.runner;
 
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+
+import org.apache.commons.io.FileUtils;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 
 public class HtmlGeneratorConfiguration {
-  private final String sourceEncoding;
-  private final ReporterType reporterType;
-  private final InputStream customRunnerTemplate;
-  private final IOUtilsWrapper ioUtilsWrapper;
-  private final SpecRunnerTemplate specRunnerTemplate;
-  private final ScriptResolver scriptResolver;
-  private final String scriptLoaderPath;
-  private final InputStream customRunnerConfiguration;
-  private final String srcDirectoryName;
-  private final String specDirectoryName;
-  private final int autoRefreshInterval;
-  private final boolean autoRefresh;
+	private final String sourceEncoding;
+	private final ReporterType reporterType;
+	private final File customRunnerTemplate;
+	private final File customRunnerConfiguration;
+	private final IOUtilsWrapper ioUtilsWrapper;
+	private final SpecRunnerTemplate specRunnerTemplate;
+	private final ScriptResolver scriptResolver;
+	private final String scriptLoaderPath;
+	private final String srcDirectoryName;
+	private final String specDirectoryName;
+	private final int autoRefreshInterval;
+	private final boolean autoRefresh;
 
-  public HtmlGeneratorConfiguration(ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {
-    this(new IOUtilsWrapper(), reporterType, configuration, scriptResolver);
-  }
+	public HtmlGeneratorConfiguration(ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {
+		this(new IOUtilsWrapper(), reporterType, configuration, scriptResolver);
+	}
 
-  public HtmlGeneratorConfiguration(IOUtilsWrapper ioUtilsWrapper, ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {
-    this.ioUtilsWrapper  = ioUtilsWrapper;
-    this.sourceEncoding = configuration.getSourceEncoding();
-    this.reporterType = reporterType;
-    this.customRunnerTemplate = configuration.getCustomRunnerTemplate();
-    this.specRunnerTemplate = configuration.getSpecRunnerTemplate();
-    this.scriptResolver = scriptResolver;
-    this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();
-    this.scriptLoaderPath = configuration.getScriptLoaderPath();
-    this.srcDirectoryName = configuration.getSrcDirectoryName();
-    this.specDirectoryName = configuration.getSpecDirectoryName();
-    this.autoRefreshInterval = configuration.getAutoRefreshInterval();
-    this.autoRefresh = this.autoRefreshInterval > 0 && ReporterType.HtmlReporter.equals(reporterType);
-  }
+	public HtmlGeneratorConfiguration(IOUtilsWrapper ioUtilsWrapper, ReporterType reporterType, JasmineConfiguration configuration, ScriptResolver scriptResolver) throws IOException {
+		this.ioUtilsWrapper  = ioUtilsWrapper;
+		this.sourceEncoding = configuration.getSourceEncoding();
+		this.reporterType = reporterType;
+		this.customRunnerTemplate = configuration.getCustomRunnerTemplate();
+		this.specRunnerTemplate = configuration.getSpecRunnerTemplate();
+		this.scriptResolver = scriptResolver;
+		this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();
+		this.scriptLoaderPath = configuration.getScriptLoaderPath();
+		this.srcDirectoryName = configuration.getSrcDirectoryName();
+		this.specDirectoryName = configuration.getSpecDirectoryName();
+		this.autoRefreshInterval = configuration.getAutoRefreshInterval();
+		this.autoRefresh = this.autoRefreshInterval > 0 && ReporterType.HtmlReporter.equals(reporterType);
+	}
 
-  public String getSourceEncoding() {
-    return this.sourceEncoding;
-  }
+	public String getSourceEncoding() {
+		return this.sourceEncoding;
+	}
 
-  public ReporterType getReporterType() {
-    return this.reporterType;
-  }
+	public ReporterType getReporterType() {
+		return this.reporterType;
+	}
 
-  public InputStream getCustomRunnerTemplate() {
-    return this.customRunnerTemplate;
-  }
+	public File getCustomRunnerTemplate() {
+		return this.customRunnerTemplate;
+	}
 
-  public String readFileToString(InputStream customRunnerTemplate) throws IOException {
-    return ioUtilsWrapper.toString(customRunnerTemplate);
-  }
+	public String IOtoString(String defaultHtmlTemplatePath) throws IOException {
+		return this.ioUtilsWrapper.toString(defaultHtmlTemplatePath);
+	}
 
-  public String IOtoString(String defaultHtmlTemplatePath) throws IOException {
-    return this.ioUtilsWrapper.toString(defaultHtmlTemplatePath);
-  }
+	public String getRunnerTemplate() throws IOException {
+		if (this.getCustomRunnerTemplate() != null) {
+			return FileUtils.readFileToString(this.getCustomRunnerTemplate());
+		} else {
+			SpecRunnerTemplate template = this.getSpecRunnerTemplate();
+			if (template == null) {
+				template = SpecRunnerTemplate.DEFAULT;
+			}
+			return this.IOtoString(template.getTemplate());
+		}
+	}
 
-  public String getRunnerTemplate() throws IOException {
+	public SpecRunnerTemplate getSpecRunnerTemplate() {
+		return this.specRunnerTemplate;
+	}
 
-    if (this.getCustomRunnerTemplate() != null) {
-      return this.readFileToString(this.getCustomRunnerTemplate());
-    } else {
-      SpecRunnerTemplate template = this.getSpecRunnerTemplate();
-      if (template == null) {
-        template = SpecRunnerTemplate.DEFAULT;
-      }
-      return this.IOtoString(template.getTemplate());
-    }
-  }
+	public ScriptResolver getScriptResolver() {
+		return this.scriptResolver;
+	}
 
-  public SpecRunnerTemplate getSpecRunnerTemplate() {
-    return this.specRunnerTemplate;
-  }
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || this.getClass() != o.getClass()) return false;
 
-  public ScriptResolver getScriptResolver() {
-    return this.scriptResolver;
-  }
+		HtmlGeneratorConfiguration that = (HtmlGeneratorConfiguration) o;
 
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || this.getClass() != o.getClass()) return false;
+		if (this.customRunnerTemplate != null ? !this.customRunnerTemplate.equals(that.customRunnerTemplate) : that.customRunnerTemplate != null)
+			return false;
+		if (this.reporterType != that.reporterType) return false;
+		if (this.sourceEncoding != null ? !this.sourceEncoding.equals(that.sourceEncoding) : that.sourceEncoding != null)
+			return false;
+		if (this.specRunnerTemplate != null ? !this.specRunnerTemplate.equals(that.specRunnerTemplate) : that.specRunnerTemplate != null)
+			return false;
 
-    HtmlGeneratorConfiguration that = (HtmlGeneratorConfiguration) o;
+		return true;
+	}
 
-    if (this.customRunnerTemplate != null ? !this.customRunnerTemplate.equals(that.customRunnerTemplate) : that.customRunnerTemplate != null)
-      return false;
-    if (this.reporterType != that.reporterType) return false;
-    if (this.sourceEncoding != null ? !this.sourceEncoding.equals(that.sourceEncoding) : that.sourceEncoding != null)
-      return false;
-    if (this.specRunnerTemplate != null ? !this.specRunnerTemplate.equals(that.specRunnerTemplate) : that.specRunnerTemplate != null)
-      return false;
+	@Override
+	public int hashCode() {
+		int result = this.sourceEncoding != null ? this.sourceEncoding.hashCode() : 0;
+		result = 31 * result + (this.reporterType != null ? this.reporterType.hashCode() : 0);
+		result = 31 * result + (this.customRunnerTemplate != null ? this.customRunnerTemplate.hashCode() : 0);
+		result = 31 * result + (this.specRunnerTemplate != null ? this.specRunnerTemplate.hashCode() : 0);
+		return result;
+	}
 
-    return true;
-  }
+	public String getCustomRunnerConfiguration() throws IOException {
+		return this.customRunnerConfiguration == null ? null : FileUtils.readFileToString(this.customRunnerConfiguration);
+	}
 
-  @Override
-  public int hashCode() {
-    int result = this.sourceEncoding != null ? this.sourceEncoding.hashCode() : 0;
-    result = 31 * result + (this.reporterType != null ? this.reporterType.hashCode() : 0);
-    result = 31 * result + (this.customRunnerTemplate != null ? this.customRunnerTemplate.hashCode() : 0);
-    result = 31 * result + (this.specRunnerTemplate != null ? this.specRunnerTemplate.hashCode() : 0);
-    return result;
-  }
+	public String getScriptLoaderPath() {
+		return this.scriptLoaderPath;
+	}
 
-  public String getCustomRunnerConfiguration() throws IOException {
-    return this.customRunnerConfiguration == null ? null : ioUtilsWrapper.toString(this.customRunnerConfiguration);
-  }
+	public String getSrcDirectoryName() {
+		return this.srcDirectoryName;
+	}
 
-  public String getScriptLoaderPath() {
-    return this.scriptLoaderPath;
-  }
+	public String getSpecDirectoryName() {
+		return this.specDirectoryName;
+	}
 
-  public String getSrcDirectoryName() {
-    return this.srcDirectoryName;
-  }
+	public int getAutoRefreshInterval() {
+		return this.autoRefreshInterval;
+	}
 
-  public String getSpecDirectoryName() {
-    return this.specDirectoryName;
-  }
-
-  public int getAutoRefreshInterval() {
-    return this.autoRefreshInterval;
-  }
-
-  public boolean getAutoRefresh() {
-    return this.autoRefresh;
-  }
+	public boolean getAutoRefresh() {
+		return this.autoRefresh;
+	}
 }
 
 
