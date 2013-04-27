@@ -30,117 +30,117 @@ import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
 @PrepareForTest({CreatesRunner.class,FileUtils.class})
 public class CreatesRunnerTest {
 
-  private static final String SOURCE_DIR = "sauces";
-  private static final String SPEC_DIR = "specks";
-  private static final String SOURCE_ENCODING = "UTF-Pandaz";
-  private static final String MANUAL_RUNNER_NAME = "Jerry. That's a nice name.";
-  public static final String SPEC_RUNNER_GENERATOR = "DEFAULT";
+	private static final String SOURCE_DIR = "sauces";
+	private static final String SPEC_DIR = "specks";
+	private static final String SOURCE_ENCODING = "UTF-Pandaz";
+	private static final String MANUAL_RUNNER_NAME = "Jerry. That's a nice name.";
+	public static final String SPEC_RUNNER_GENERATOR = "DEFAULT";
 
-  @Mock private DefaultSpecRunnerHtmlGenerator specRunnerHtmlGenerator;
+	@Mock private DefaultSpecRunnerHtmlGenerator specRunnerHtmlGenerator;
 
-  @Mock private Log log;
+	@Mock private Log log;
 
-  @Mock private ScriptSearch sources;
-  @Mock private ScriptSearch specs;
+	@Mock private ScriptSearch sources;
+	@Mock private ScriptSearch specs;
 
-  @Mock private File sourceDirectory;
-  @Mock private File specDirectory;
-  @Mock private File runnerDestination;
-  @Mock private File jasmineTargetDir;
-  @Mock private File customRunnerTemplate;
-  @Mock private SpecRunnerHtmlGeneratorFactory specRunnerHtmlGeneratorFactory;
+	@Mock private File sourceDirectory;
+	@Mock private File specDirectory;
+	@Mock private File runnerDestination;
+	@Mock private File jasmineTargetDir;
 
-  @Mock private JasmineConfiguration config;
+	@Mock private SpecRunnerHtmlGeneratorFactory specRunnerHtmlGeneratorFactory;
 
-  private CreatesRunner subject;
+	@Mock private JasmineConfiguration config;
 
-  @Before
-  public void before() {
-    mockStatic(FileUtils.class);
+	private CreatesRunner subject;
 
-    when(this.config.getSources()).thenReturn(this.sources);
-    when(this.config.getSpecs()).thenReturn(this.specs);
-    when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
-    when(this.config.getJasmineTargetDir()).thenReturn(this.jasmineTargetDir);
+	@Before
+	public void before() {
+		mockStatic(FileUtils.class);
 
-    subject = new CreatesRunner(this.config,this.log,MANUAL_RUNNER_NAME,ReporterType.HtmlReporter);
-  }
+		when(this.config.getSources()).thenReturn(this.sources);
+		when(this.config.getSpecs()).thenReturn(this.specs);
+		when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
+		when(this.config.getJasmineTargetDir()).thenReturn(this.jasmineTargetDir);
 
-  @Before
-  public void fakeOutDirectories() {
-    when(this.sources.getDirectory()).thenReturn(this.sourceDirectory);
-    when(this.sourceDirectory.getAbsolutePath()).thenReturn(SOURCE_DIR);
-    when(this.sourceDirectory.exists()).thenReturn(true);
+		this.subject = new CreatesRunner(this.config,this.log,MANUAL_RUNNER_NAME,ReporterType.HtmlReporter);
+	}
 
-    when(this.specs.getDirectory()).thenReturn(this.specDirectory);
-    when(this.specDirectory.getAbsolutePath()).thenReturn(SPEC_DIR);
-    when(this.specDirectory.exists()).thenReturn(true);
-  }
+	@Before
+	public void fakeOutDirectories() {
+		when(this.sources.getDirectory()).thenReturn(this.sourceDirectory);
+		when(this.sourceDirectory.getAbsolutePath()).thenReturn(SOURCE_DIR);
+		when(this.sourceDirectory.exists()).thenReturn(true);
 
-  @Before
-  public void stubConstructionOfExistingRunnerFile() throws Exception {
-    whenNew(File.class).withParameterTypes(File.class, String.class).withArguments(this.jasmineTargetDir,MANUAL_RUNNER_NAME).thenReturn(this.runnerDestination);
-  }
+		when(this.specs.getDirectory()).thenReturn(this.specDirectory);
+		when(this.specDirectory.getAbsolutePath()).thenReturn(SPEC_DIR);
+		when(this.specDirectory.exists()).thenReturn(true);
+	}
 
-  @Before
-  public void stubConstructionOfHtmlGenerator() throws Exception {
-    whenNew(SpecRunnerHtmlGeneratorFactory.class).withNoArguments().thenReturn(this.specRunnerHtmlGeneratorFactory);
-    when(this.specRunnerHtmlGeneratorFactory.create(any(ReporterType.class), any(AbstractJasmineMojo.class), any(ScriptResolver.class))).thenReturn(this.specRunnerHtmlGenerator);
-  }
+	@Before
+	public void stubConstructionOfExistingRunnerFile() throws Exception {
+		whenNew(File.class).withParameterTypes(File.class, String.class).withArguments(this.jasmineTargetDir,MANUAL_RUNNER_NAME).thenReturn(this.runnerDestination);
+	}
 
-  @Test
-  public void whenRunnerDoesNotExistThenCreateNewRunner() throws Exception {
-    String expected = "I'm a new spec runner yay!";
-    when(this.runnerDestination.exists()).thenReturn(false);
-    when(this.specRunnerHtmlGenerator.generate()).thenReturn(expected);
+	@Before
+	public void stubConstructionOfHtmlGenerator() throws Exception {
+		whenNew(SpecRunnerHtmlGeneratorFactory.class).withNoArguments().thenReturn(this.specRunnerHtmlGeneratorFactory);
+		when(this.specRunnerHtmlGeneratorFactory.create(any(ReporterType.class), any(AbstractJasmineMojo.class), any(ScriptResolver.class))).thenReturn(this.specRunnerHtmlGenerator);
+	}
 
-    this.subject.create();
+	@Test
+	public void whenRunnerDoesNotExistThenCreateNewRunner() throws Exception {
+		String expected = "I'm a new spec runner yay!";
+		when(this.runnerDestination.exists()).thenReturn(false);
+		when(this.specRunnerHtmlGenerator.generate()).thenReturn(expected);
 
-    verifyStatic();
-    FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
-  }
+		this.subject.create();
 
-  @Test
-  public void whenRunnerExistsAndDiffersThenWriteNewOne() throws IOException {
-    String expected = "HTRML!!!!111!111oneoneone";
-    when(this.runnerDestination.exists()).thenReturn(true);
-    when(FileUtils.readFileToString(this.runnerDestination)).thenReturn("old and crusty runner");
-    when(this.specRunnerHtmlGenerator.generate()).thenReturn(expected);
+		verifyStatic();
+		FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
+	}
 
-    this.subject.create();
+	@Test
+	public void whenRunnerExistsAndDiffersThenWriteNewOne() throws IOException {
+		String expected = "HTRML!!!!111!111oneoneone";
+		when(this.runnerDestination.exists()).thenReturn(true);
+		when(FileUtils.readFileToString(this.runnerDestination)).thenReturn("old and crusty runner");
+		when(this.specRunnerHtmlGenerator.generate()).thenReturn(expected);
 
-    verifyStatic();
-    FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
-  }
+		this.subject.create();
 
-  @Test
-  public void whenRunnerExistsAndIsSameThenDoNothing() throws IOException {
-    String existing = "HTRML!!!!111!111oneoneone";
-    when(this.runnerDestination.exists()).thenReturn(true);
-    when(FileUtils.readFileToString(this.runnerDestination)).thenReturn(existing);
-    when(this.specRunnerHtmlGenerator.generate()).thenReturn(existing);
+		verifyStatic();
+		FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
+	}
 
-    this.subject.create();
+	@Test
+	public void whenRunnerExistsAndIsSameThenDoNothing() throws IOException {
+		String existing = "HTRML!!!!111!111oneoneone";
+		when(this.runnerDestination.exists()).thenReturn(true);
+		when(FileUtils.readFileToString(this.runnerDestination)).thenReturn(existing);
+		when(this.specRunnerHtmlGenerator.generate()).thenReturn(existing);
 
-    this.neverWriteAFile();
-    verify(this.log).info("Skipping spec runner generation, because an identical spec runner already exists.");
-  }
+		this.subject.create();
 
-  @Test
-  public void whenExistingRunnerFailsToLoadThenWriteNewOne() throws IOException {
-    String expected = "HTRML!!!!111!111oneoneone";
-    when(this.runnerDestination.exists()).thenReturn(true);
-    when(FileUtils.readFileToString(this.runnerDestination)).thenThrow(new IOException());
-    when(this.specRunnerHtmlGenerator.generate()).thenReturn(expected);
+		this.neverWriteAFile();
+		verify(this.log).info("Skipping spec runner generation, because an identical spec runner already exists.");
+	}
 
-    this.subject.create();
+	@Test
+	public void whenExistingRunnerFailsToLoadThenWriteNewOne() throws IOException {
+		String expected = "HTRML!!!!111!111oneoneone";
+		when(this.runnerDestination.exists()).thenReturn(true);
+		when(FileUtils.readFileToString(this.runnerDestination)).thenThrow(new IOException());
+		when(this.specRunnerHtmlGenerator.generate()).thenReturn(expected);
 
-    verifyStatic();FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
-    verify(this.log).warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
-  }
+		this.subject.create();
 
-  private void neverWriteAFile() throws IOException {
-    verifyStatic(never());
-    FileUtils.writeStringToFile(any(File.class), anyString(), anyString());
-  }
+		verifyStatic();FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
+		verify(this.log).warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
+	}
+
+	private void neverWriteAFile() throws IOException {
+		verifyStatic(never());
+		FileUtils.writeStringToFile(any(File.class), anyString(), anyString());
+	}
 }

@@ -1,7 +1,6 @@
 package com.github.searls.jasmine.config;
 
 import java.io.File;
-import java.io.InputStream;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
@@ -10,27 +9,27 @@ import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 public interface JasmineConfiguration {
-  File getBasedir();
-  File getJasmineTargetDir();
+	File getBasedir();
+	File getJasmineTargetDir();
 
-  String getSrcDirectoryName();
-  String getSpecDirectoryName();
+	String getSrcDirectoryName();
+	String getSpecDirectoryName();
 
-  ScriptSearch getSources();
-  ScriptSearch getSpecs();
+	ScriptSearch getSources();
+	ScriptSearch getSpecs();
 
-  List<String> getPreloadSources();
+	List<String> getPreloadSources();
 
-  String getSourceEncoding();
+	String getSourceEncoding();
 
-  Log getLog();
+	Log getLog();
 
-  SpecRunnerTemplate getSpecRunnerTemplate();
+	SpecRunnerTemplate getSpecRunnerTemplate();
 
-  InputStream getCustomRunnerTemplate();
-  InputStream getCustomRunnerConfiguration();
+	File getCustomRunnerTemplate();
+	File getCustomRunnerConfiguration();
 
-  String getScriptLoaderPath();
+	String getScriptLoaderPath();
 
-  int getAutoRefreshInterval();
+	int getAutoRefreshInterval();
 }
