@@ -20,7 +20,7 @@ jasmine-maven-plugin,com.github.searls.jasmine,NullLog,23,0,0,0,17,0,17,0,17,0
 jasmine-maven-plugin,com.github.searls.jasmine.collections,CollectionHelper,2,7,1,1,0,2,1,2,0,2
 jasmine-maven-plugin,com.github.searls.jasmine.runner,DefaultSpecRunnerHtmlGenerator,244,4,6,0,42,2,8,1,5,1
 jasmine-maven-plugin,com.github.searls.jasmine.runner,AbstractSpecRunnerHtmlGenerator,104,11,8,0,20,4,10,1,6,1
-jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,159,98,39,5,24,27,30,10,10,8
+jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,157,92,39,5,24,26,30,9,10,7
 jasmine-maven-plugin,com.github.searls.jasmine.runner,ReporterType,9,39,0,0,0,2,2,2,2,2
 jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor,48,122,4,2,9,21,4,6,1,6
 jasmine-maven-plugin,com.github.searls.jasmine.runner,CreatesRunner,115,0,6,0,26,0,9,0,6,0
