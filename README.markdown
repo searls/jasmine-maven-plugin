@@ -5,6 +5,8 @@ jasmine-maven-plugin
 
 For information on how to use jasmine-plugin, check out its [documentation page](http://searls.github.com/jasmine-maven-plugin/).
 
+<strong>4/28/2013</strong> - 1.3.1.2 has just been released. Only bug fixes in this release. See issues [#175](https://github.com/searls/jasmine-maven-plugin/issues/175) and [#176](https://github.com/searls/jasmine-maven-plugin/issues/176) for details.
+
 <strong>4/13/2013</strong> - 1.3.1.1 has just been released and should be available in Maven Central soon. You can find full list of fixes/enhancements [here](http://searls.github.com/jasmine-maven-plugin/github-report.html). This is a quick summary:
  * Added support for using [PhantomJS](http://phantomjs.org/) through [GhostDriver](https://github.com/detro/ghostdriver). For configuration examples see [here](http://searls.github.io/jasmine-maven-plugin/phantomjs.html).
  * Allow passing filesystem path, a URL, or a classpath resource for `customRunnerTemplate` and `customRunnerConfiguration` parameters.
