@@ -12,11 +12,12 @@ import com.github.searls.jasmine.runner.CreatesRunner;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 /**
  * Execute specs in a web browser. Monitors your sources/specs for changes as you develop.
  */
-@Mojo(name="bdd",requiresDirectInvocation=true)
+@Mojo(name="bdd",requiresDirectInvocation=true,requiresDependencyResolution = ResolutionScope.TEST)
 public class ServerMojo extends AbstractJasmineMojo {
 
   public static final String INSTRUCTION_FORMAT =

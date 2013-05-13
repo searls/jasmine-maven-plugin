@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -477,6 +479,16 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	public File getBasedir() {
 		return this.mavenProject.getBasedir();
 	}
+
+    @Override
+    public List<File> getDependencies() {
+      final Set<Artifact> artifacts = this.mavenProject.getArtifacts();
+      final List<File> dependencies = new ArrayList<File>(artifacts.size());
+      for(Artifact artifact : artifacts) {
+        dependencies.add(artifact.getFile());
+      }
+      return dependencies;
+    }
 
 	private void loadResources() throws MojoExecutionException {
 		this.customRunnerTemplateFile = this.getResourceAsFile("customRunnerTemplate", this.customRunnerTemplate);

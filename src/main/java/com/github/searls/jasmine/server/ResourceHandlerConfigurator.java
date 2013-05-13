@@ -2,6 +2,7 @@ package com.github.searls.jasmine.server;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -17,11 +18,13 @@ public class ResourceHandlerConfigurator {
   private final JasmineConfiguration configuration;
   private final RelativizesFilePaths relativizesFilePaths;
   private final CreatesRunner createsRunner;
+  private List<File> jars;
 
   public ResourceHandlerConfigurator(JasmineConfiguration configuration, RelativizesFilePaths relativizesFilePaths, CreatesRunner createsRunner) {
     this.configuration = configuration;
     this.relativizesFilePaths = relativizesFilePaths;
     this.createsRunner = createsRunner;
+    this.jars = configuration.getDependencies();
   }
 
   public Handler createHandler() throws IOException  {
@@ -35,6 +38,11 @@ public class ResourceHandlerConfigurator {
 
     ContextHandler rootContextHandler = contexts.addContext("/", "");
     rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));
+
+    MetaInfContext metaInfContext = new MetaInfContext();
+    metaInfContext.setJars(jars);
+    metaInfContext.setContextPath("/");
+    contexts.addHandler(metaInfContext);
 
     return contexts;
   }
@@ -52,4 +60,5 @@ public class ResourceHandlerConfigurator {
   private String getWelcomeFilePath() throws IOException {
     return this.relativizesFilePaths.relativize(this.configuration.getBasedir(), this.configuration.getJasmineTargetDir()) + File.separator + createsRunner.getRunnerFile();
   }
+
 }
