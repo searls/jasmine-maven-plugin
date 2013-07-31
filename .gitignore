@@ -16,3 +16,4 @@ rerun.txt
 *.orig
 *~
 *.swp
+atlassian-ide-plugin.xml
