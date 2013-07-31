@@ -1,6 +1,6 @@
 Using with PhantomJS
 ===================================
-Starting with version `1.3.1.1` it is possible to configure the jasmine-maven-plugin to use [PhantomJS](http://phantomjs.org) instead of [HtmlUnit](http://htmlunit.sourceforge.net/) to execute you specs.
+Starting with version `1.3.1.1` it is possible to configure the jasmine-maven-plugin to use [PhantomJS](http://phantomjs.org) instead of [HtmlUnit](http://htmlunit.sourceforge.net/) to execute your specs.
 
 Here is an example configuration:
 
