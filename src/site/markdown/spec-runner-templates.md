@@ -16,7 +16,6 @@ The following variables are available for use in your custom template:
 
  * **cssDependencies** : includes all the styles needed for the Jasmine HtmlReporter.
  * **javascriptDependencies** : includes all the javascript for jasmine.
- * **cssDependencies** : includes all the styles needed for the Jasmine HtmlReporter.
  * **reporter** : the name of the jasmine reporter being used. This will be `HtmlReporter` during the `jasmine:bdd` goal and `JsApiReporter` during the `jasmine:test` goal.
  * **sourceEncoding** : the encoding to be used in the runner.
  * **preloadScriptTags** : this renders script tags for each of the scripts specified using the `preloadSources` parameter.
