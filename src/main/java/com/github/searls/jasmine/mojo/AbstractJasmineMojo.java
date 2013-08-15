@@ -165,14 +165,23 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Parameter(defaultValue="${project.build.directory}${file.separator}jasmine")
 	protected File jasmineTargetDir;
 
-
 	/**
-	 * Skip the tests.
+	 * Skip execution of tests.
 	 * 
 	 * @since 1.1.0
+	 * @see <a href="http://maven.apache.org/general.html#skip-test">http://maven.apache.org/general.html#skip-test</a>
 	 */
 	@Parameter(property="skipTests")
 	protected boolean skipTests;
+	
+	/**
+   * Skip compilation and execution of tests.
+   * 
+   * @since 1.3.1.3
+   * @see <a href="http://maven.apache.org/general.html#skip-test">http://maven.apache.org/general.html#skip-test</a>
+   */
+	@Parameter(property="maven.test.skip")
+  protected boolean mvnTestSkip;
 
 	/**
 	 * Halt the build on test failure.
