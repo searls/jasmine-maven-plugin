@@ -22,6 +22,7 @@ public class JasmineResourceHandler extends ResourceHandler {
 
   public JasmineResourceHandler(CreatesRunner createsRunner) {
     this.createsRunner = createsRunner;
+    setAliases(true);
   }
 
   @Override

@@ -27,13 +27,16 @@ public class ResourceHandlerConfigurator {
   public Handler createHandler() throws IOException  {
     ContextHandlerCollection contexts = new ContextHandlerCollection();
 
-    ContextHandler srcDirContextHandler = contexts.addContext("/" + this.configuration.getSrcDirectoryName(), "");
+    ContextHandler srcDirContextHandler = contexts.addContext("/" + configuration.srcDirectoryName, "");
+    srcDirContextHandler.setAliases(true);
     srcDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSources().getDirectory().getAbsolutePath(), null));
 
     ContextHandler specDirContextHandler = contexts.addContext("/" + this.configuration.getSpecDirectoryName(), "");
+    specDirContextHandler.setAliases(true);
     specDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSpecs().getDirectory().getAbsolutePath(), null));
 
     ContextHandler rootContextHandler = contexts.addContext("/", "");
+    rootContextHandler.setAliases(true);
     rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));
 
     return contexts;
