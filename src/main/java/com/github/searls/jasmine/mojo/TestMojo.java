@@ -34,7 +34,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
   @Override
   public void run() throws Exception {
-    if(!this.skipTests && !this.mvnTestSkip) {
+    if(!this.isSkipTests()) {
       ServerManager serverManager = this.getServerManager();
       try {
         int port = serverManager.start();
