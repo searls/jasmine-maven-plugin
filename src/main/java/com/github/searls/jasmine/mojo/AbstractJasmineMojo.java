@@ -174,7 +174,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Parameter(property="skipTests")
 	protected boolean skipTests;
 	
-	/**
+  /**
    * Skip compilation and execution of tests.
    * 
    * @since 1.3.1.3
@@ -182,6 +182,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    */
 	@Parameter(property="maven.test.skip")
   protected boolean mvnTestSkip;
+
+  /**
+   * Skip only jasmine tests
+   *
+   * @since 1.3.1.3
+   */
+  @Parameter(property="skipJasmineTests")
+  protected boolean skipJasmineTests;
 
 	/**
 	 * Halt the build on test failure.
@@ -486,6 +494,10 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	public File getBasedir() {
 		return this.mavenProject.getBasedir();
 	}
+
+  protected boolean isSkipTests() {
+    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;
+  }
 
 	private void loadResources() throws MojoExecutionException {
 		this.customRunnerTemplateFile = this.getResourceAsFile("customRunnerTemplate", this.customRunnerTemplate);
