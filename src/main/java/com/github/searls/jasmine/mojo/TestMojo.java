@@ -40,7 +40,7 @@ public class TestMojo extends AbstractJasmineMojo {
         int port = serverManager.start();
         setPortProperty(port);
         this.getLog().info("Executing Jasmine Specs");
-        JasmineResult result = this.executeSpecs(new URL("http://localhost:"+port));
+        JasmineResult result = this.executeSpecs(new URL("http://" + this.serverHostname + ":" + port));
         this.logResults(result);
         this.throwAnySpecFailures(result);
       } finally {
