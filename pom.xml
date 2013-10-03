@@ -27,6 +27,7 @@
       <id>searls</id>
       <name>Justin Searls</name>
       <email>searls@gmail.com</email>
+      <url>http://about.me/searls</url>
       <organization>Test Double</organization>
       <organizationUrl>http://testdouble.com</organizationUrl>
     </developer>
@@ -41,6 +42,7 @@
     <contributor>
       <name>Erik Bakstad</name>
       <email>erik.bakstad@gmail.com</email>
+      <url>https://github.com/ebaxt</url>
     </contributor>
     <contributor>
       <name>Luiz Ribeiro</name>
@@ -49,9 +51,11 @@
     </contributor>
     <contributor>
       <name>Dan Freeman</name>
+      <url>https://github.com/dfreeman</url>
     </contributor>
     <contributor>
       <name>dfabulich</name>
+      <url>http://github.com/dfabulich</url>
     </contributor>
     <contributor>
       <name>David Padbury</name>
@@ -64,6 +68,7 @@
     </contributor>
     <contributor>
       <name>sfry</name>
+      <url>https://github.com/sfry</url>
     </contributor>
     <contributor>
       <name>hikaruworld</name>
@@ -72,9 +77,19 @@
     <contributor>
       <name>Daniel Tabuenca</name>
       <email>dtabuenc@gmail.com</email> 
+      <url>https://github.com/dtabuenc</url> 
     </contributor>
     <contributor>
       <name>johnomalley</name>
+      <url>https://github.com/johnomalley</url>
+    </contributor>
+    <contributor>
+      <name>ddumont</name>
+      <url>https://github.com/ddumont</url>
+    </contributor>
+    <contributor>
+      <name>Rafael</name>
+      <url>https://github.com/rvalle</url>
     </contributor>
   </contributors>
   <scm>
