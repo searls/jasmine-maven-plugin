@@ -34,7 +34,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
   @Override
   public void run() throws Exception {
-<span class="pc bpc" id="L37" title="1 of 2 branches missed.">    if(!this.skipTests) {</span>
+<span class="pc bpc" id="L37" title="1 of 2 branches missed.">    if(!this.isSkipTests()) {</span>
 <span class="nc" id="L38">      ServerManager serverManager = this.getServerManager();</span>
       try {
 <span class="nc" id="L40">        int port = serverManager.start();</span>

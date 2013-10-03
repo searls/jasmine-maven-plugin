@@ -28,29 +28,32 @@ public class ResourceHandlerConfigurator {
 <span class="fc" id="L28">    ContextHandlerCollection contexts = new ContextHandlerCollection();</span>
 
 <span class="fc" id="L30">    ContextHandler srcDirContextHandler = contexts.addContext(&quot;/&quot; + this.configuration.getSrcDirectoryName(), &quot;&quot;);</span>
-<span class="fc" id="L31">    srcDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSources().getDirectory().getAbsolutePath(), null));</span>
+<span class="fc" id="L31">    srcDirContextHandler.setAliases(true);</span>
+<span class="fc" id="L32">    srcDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSources().getDirectory().getAbsolutePath(), null));</span>
 
-<span class="fc" id="L33">    ContextHandler specDirContextHandler = contexts.addContext(&quot;/&quot; + this.configuration.getSpecDirectoryName(), &quot;&quot;);</span>
-<span class="fc" id="L34">    specDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSpecs().getDirectory().getAbsolutePath(), null));</span>
+<span class="fc" id="L34">    ContextHandler specDirContextHandler = contexts.addContext(&quot;/&quot; + this.configuration.getSpecDirectoryName(), &quot;&quot;);</span>
+<span class="fc" id="L35">    specDirContextHandler.setAliases(true);</span>
+<span class="fc" id="L36">    specDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSpecs().getDirectory().getAbsolutePath(), null));</span>
 
-<span class="fc" id="L36">    ContextHandler rootContextHandler = contexts.addContext(&quot;/&quot;, &quot;&quot;);</span>
-<span class="fc" id="L37">    rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));</span>
+<span class="fc" id="L38">    ContextHandler rootContextHandler = contexts.addContext(&quot;/&quot;, &quot;&quot;);</span>
+<span class="fc" id="L39">    rootContextHandler.setAliases(true);</span>
+<span class="fc" id="L40">    rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));</span>
 
-<span class="fc" id="L39">    return contexts;</span>
+<span class="fc" id="L42">    return contexts;</span>
   }
 
   private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String[] welcomeFiles) {
-<span class="fc" id="L43">    ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner);</span>
-<span class="fc" id="L44">    resourceHandler.setDirectoriesListed(directory);</span>
-<span class="fc bfc" id="L45" title="All 2 branches covered.">    if (welcomeFiles != null) {</span>
-<span class="fc" id="L46">      resourceHandler.setWelcomeFiles(welcomeFiles);</span>
+<span class="fc" id="L46">    ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner);</span>
+<span class="fc" id="L47">    resourceHandler.setDirectoriesListed(directory);</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">    if (welcomeFiles != null) {</span>
+<span class="fc" id="L49">      resourceHandler.setWelcomeFiles(welcomeFiles);</span>
     }
-<span class="fc" id="L48">    resourceHandler.setResourceBase(absolutePath);</span>
-<span class="fc" id="L49">    return resourceHandler;</span>
+<span class="fc" id="L51">    resourceHandler.setResourceBase(absolutePath);</span>
+<span class="fc" id="L52">    return resourceHandler;</span>
   }
 
   private String getWelcomeFilePath() throws IOException {
-<span class="fc" id="L53">    return this.relativizesFilePaths.relativize(this.configuration.getBasedir(), this.configuration.getJasmineTargetDir()) + File.separator + createsRunner.getRunnerFile();</span>
+<span class="fc" id="L56">    return this.relativizesFilePaths.relativize(this.configuration.getBasedir(), this.configuration.getJasmineTargetDir()) + File.separator + createsRunner.getRunnerFile();</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
