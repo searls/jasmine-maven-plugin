@@ -421,8 +421,9 @@
         <artifactId>site-maven-plugin</artifactId>
         <version>0.8</version>
         <configuration>
-          <message>Creating site for ${project.version}</message>
+          <message>Generating site for ${project.version}</message>
           <server>github</server>
+          <noJekyll>true</noJekyll>
         </configuration>
         <executions>
           <execution>
