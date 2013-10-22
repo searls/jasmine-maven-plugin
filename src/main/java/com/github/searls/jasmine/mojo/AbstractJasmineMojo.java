@@ -353,7 +353,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
      * <p>The <code>jasmine:test</code> goal to specify hostname where the server is running.  Useful when using
      * the RemoteWebDriver.</p>
      *
-     * @since 1.3.1.3
+     * @since 1.3.1.4
      */
     @Parameter(property="jasmine.serverHostname", defaultValue = "localhost")
     protected String serverHostname;
