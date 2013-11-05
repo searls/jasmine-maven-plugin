@@ -108,7 +108,7 @@
   <properties>
     <powermock.version>1.4.12</powermock.version>
     <jetty.version>8.1.13.v20130916</jetty.version>
-    <selenium.version>2.35.0</selenium.version>
+    <selenium.version>2.37.0</selenium.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
