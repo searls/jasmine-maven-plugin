@@ -110,7 +110,7 @@
   };
 
   var resultForSpec = function(spec){
-    return reporter.results()[spec.id] || {};
+    return reporter.specResults()[spec.id] || {};
   };
 
   var describeFailureSentences = function() {

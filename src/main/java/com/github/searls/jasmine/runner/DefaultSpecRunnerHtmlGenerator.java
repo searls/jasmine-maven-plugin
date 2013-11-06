@@ -43,7 +43,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
                               String sourceDirectory,
                               String specDirectory) throws IOException {
     ST template = this.resolveHtmlTemplate();
-    this.includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS), template);
+    this.includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_BOOT_JS), template);
     this.applyCssToTemplate(asList(JASMINE_CSS), template);
     this.applyScriptTagsToTemplate("allScriptTags", allScripts, template);
     this.applyScriptTagsToTemplate("preloadScriptTags", preloads, template);

@@ -2,6 +2,8 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=$sourceEncoding$">
+  <meta http-equiv="X-UA-Compatible" content="IE=8">
+  
   $if(autoRefresh)$
   <meta http-equiv="refresh" content="$autoRefreshInterval$">
   $endif$
@@ -17,9 +19,10 @@
     }
     
 
-    var executeJasmineSpecs = function(){
-      window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
+    var executeJasmineSpecs = function(){      
       if ('$reporter$' == 'HtmlReporter') {
+      	window.reporter = new jasmine.HtmlReporter();
+      	jasmine.getEnv().addReporter(reporter);
         jasmine.getEnv().specFilter = function(spec) {
           return window.reporter.specFilter(spec);
         };
@@ -27,6 +30,10 @@
       
 	  //Don't do live updates when running through HTMLUnit
       if ('$reporter$' == 'JsApiReporter'){
+      	window.reporter = new jasmine.JsApiReporter({
+	      timer: new jasmine.Timer()
+	    });
+        jasmine.getEnv().addReporter(reporter);
 		jasmine.getEnv().updateInterval = Number.MAX_VALUE;
       }
       

@@ -9,7 +9,7 @@ var junitXmlReporter;
       if (reporter.finished !== true && !debug)
         throw 'Jasmine runner is not finished!';
 
-      var results = this.crunchResults(reporter.results());
+      var results = this.crunchResults(reporter.specResults());
 
       var writer = new XmlWriter();
       writer.beginNode('testsuite');
