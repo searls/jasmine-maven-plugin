@@ -347,6 +347,17 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Parameter(property="jasmine.serverPort", defaultValue="8234")
 	protected int serverPort;
 
+    /**
+     * <p>Not used by the <code>jasmine:bdd</code> goal.</p>
+     *
+     * <p>The <code>jasmine:test</code> goal to specify hostname where the server is running.  Useful when using
+     * the RemoteWebDriver.</p>
+     *
+     * @since 1.3.1.4
+     */
+    @Parameter(property="jasmine.serverHostname", defaultValue = "localhost")
+    protected String serverHostname;
+
 	/**
 	 * <p>Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
 	 * implementation of the runner generator. Typically this is used when using different script runners.</p>
