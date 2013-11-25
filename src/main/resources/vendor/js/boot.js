@@ -44,6 +44,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    */
   jasmineRequire.html(jasmine);
 
+  jasmineRequire.console(jasmineRequire, jasmine);
+  
   /**
    * Create the Jasmine environment. This is used to run all specs in a project.
    */
@@ -152,12 +154,32 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     timer: new jasmine.Timer()
   });
 
+  window.out = (function() {
+      var output = "";
+      return {
+        print: function(str) {
+          output += str;
+        },
+        getOutput: function() {
+          return output;
+        },
+        clear: function() {
+          output = "";
+        }
+      };
+  }());
+  
+  var consoleReporter = new jasmine.ConsoleReporter({
+      print: out.print
+  });
+  
   /**
    * The `jsApiReporter` also receives spec results, and is used by any environment that needs to extract the results  from JavaScript.
    */
   env.addReporter(jasmineInterface.jsApiReporter);
   env.addReporter(htmlReporter);
-
+  env.addReporter(consoleReporter);
+  
   /**
    * Filter which specs will be run by matching the start of the full name against the `spec` query param.
    */
@@ -176,22 +198,18 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   window.setInterval = window.setInterval;
   window.clearTimeout = window.clearTimeout;
   window.clearInterval = window.clearInterval;
+  
+  function run(){
+      htmlReporter.initialize();
+      jasmine.getEnv().execute();
+  }
 
-  /**
-   * ## Execution
-   *
-   * Replace the browser window's `onload`, ensure it's called, and then run all of the loaded specs. This includes initializing the `HtmlReporter` instance and then executing the loaded Jasmine environment. All of this will happen after all of the specs are loaded.
-   */
-  var currentWindowOnload = window.onload;
-
-  window.onload = function() {
-    if (currentWindowOnload) {
-      currentWindowOnload();
-    }
-    htmlReporter.initialize();
-    env.execute();
-  };
-
+  if (window.addEventListener) {
+      addEventListener('DOMContentLoaded', run, false);
+  } else {
+      attachEvent('onload', run);
+  }
+  
   /**
    * Helper function for readability above.
    */

@@ -10,41 +10,9 @@
   <title>Jasmine Spec Runner</title>
   $cssDependencies$
   $javascriptDependencies$
+  $bootScript$
   $allScriptTags$
 </head>
 <body>
-  <script type="text/javascript">
-    if(window.location.href.indexOf("ManualSpecRunner.html") !== -1) {
-      document.body.appendChild(document.createTextNode("Warning: opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
-    }
-    
-
-    var executeJasmineSpecs = function(){      
-      if ('$reporter$' == 'HtmlReporter') {
-      	window.reporter = new jasmine.HtmlReporter();
-      	jasmine.getEnv().addReporter(reporter);
-        jasmine.getEnv().specFilter = function(spec) {
-          return window.reporter.specFilter(spec);
-        };
-      }
-      
-	  //Don't do live updates when running through HTMLUnit
-      if ('$reporter$' == 'JsApiReporter'){
-      	window.reporter = new jasmine.JsApiReporter({
-	      timer: new jasmine.Timer()
-	    });
-        jasmine.getEnv().addReporter(reporter);
-		jasmine.getEnv().updateInterval = Number.MAX_VALUE;
-      }
-      
-      jasmine.getEnv().execute();
-    };
-
-    if (window.addEventListener) {
-      addEventListener('DOMContentLoaded', executeJasmineSpecs, false);
-    } else {
-      attachEvent('onload', executeJasmineSpecs);
-    }
-  </script>
 </body>
 </html>

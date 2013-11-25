@@ -23,7 +23,7 @@ public class JasmineResultTest {
   @Test
   public void shouldFailWhenFail() {
     subject.setDetails(
-        "Describe Kaka wants 0 failures \n" +
+        "Describe Kaka wants no failures \n" +
         "it is Swedish for cookie\n" +
         "Results: 2 specs, 1 failure");
 

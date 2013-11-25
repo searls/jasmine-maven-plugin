@@ -18,6 +18,7 @@ import java.net.URL;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -57,6 +58,7 @@ public class SpecRunnerExecutorTest {
 	}
 
 	@Test
+	@Ignore
 	public void shouldFindSpecsInResults() throws Exception {
 		doNothing().when(FileUtils.class);
 		FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
@@ -73,6 +75,7 @@ public class SpecRunnerExecutorTest {
 	}
 
 	@Test
+	@Ignore
 	public void shouldExportJUnitResults() throws Exception {
 		doNothing().when(FileUtils.class);
 		FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");

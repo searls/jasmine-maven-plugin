@@ -9,7 +9,7 @@ public class JasmineResult {
   }
 
   public boolean didPass() {
-    return getDescription().contains(" 0 failures");
+    return getDetails().contains(" 0 failures");
   }
 
   public String getDetails() {
