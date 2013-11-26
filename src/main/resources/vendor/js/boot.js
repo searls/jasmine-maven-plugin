@@ -139,8 +139,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   });
 
   var catchingExceptions = queryString.getParam("catch");
-  env.catchExceptions(typeof catchingExceptions === "undefined" ? true : catchingExceptions);
-
+  //env.catchExceptions(typeof catchingExceptions === "undefined" ? true : catchingExceptions);
+    
   /**
    * ## Reporters
    * The `HtmlReporter` builds all of the HTML UI for the runner page. This reporter paints the dots, stars, and x's for specs, as well as all spec names and all failures (if any).
@@ -156,6 +156,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
   window.out = (function() {
       var output = "";
+      var finished = false;
+      var failed = false;
+      
       return {
         print: function(str) {
           output += str;
@@ -165,12 +168,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         },
         clear: function() {
           output = "";
+        },
+        onComplete: function(result){
+          finished = true;
+          failed = result !== true;
+        },
+        isFinished: function(){
+          return finished;
+        },
+        isFailed: function(){
+          return failed;
         }
       };
   }());
   
   var consoleReporter = new jasmine.ConsoleReporter({
-      print: out.print
+      print: out.print,
+      onComplete: out.onComplete,
+      showColors: false
   });
   
   /**
@@ -183,13 +198,13 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   /**
    * Filter which specs will be run by matching the start of the full name against the `spec` query param.
    */
-  var specFilter = new jasmine.HtmlSpecFilter({
-    filterString: function() { return queryString.getParam("spec"); }
-  });
-
-  env.specFilter = function(spec) {
-    return specFilter.matches(spec.getFullName());
-  };
+//  var specFilter = new jasmine.HtmlSpecFilter({
+//    filterString: function() { return queryString.getParam("spec"); }
+//  });
+//
+//  env.specFilter = function(spec) {
+//    return specFilter.matches(spec.getFullName());
+//  };
 
   /**
    * Setting up timing functions to be able to be overridden. Certain browsers (Safari, IE 8, phantomjs) require this hack.

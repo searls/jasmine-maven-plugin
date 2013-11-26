@@ -92,7 +92,7 @@ getJasmineRequireObj().ConsoleReporter = function() {
 
     this.specDone = function(result) {
       specCount++;
-
+      
       if (result.status == "pending") {
         pendingCount++;
         print(colored("yellow", "*"));
