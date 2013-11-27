@@ -13,7 +13,6 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
   private static final String SOURCE_ENCODING = "sourceEncoding";
   private static final String CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME = "cssDependencies";
   private static final String JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME = "javascriptDependencies";
-  private static final String JAVASCRIPT_BOOT_SCRIPT_TEMPLATE_ATTR_NAME = "bootScript";
   protected static final String SOURCES_TEMPLATE_ATTR_NAME = "sources";
   protected static final String REPORTER_ATTR_NAME = "reporter";
   private final HtmlGeneratorConfiguration configuration;
@@ -32,16 +31,6 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
     return new ST(htmlTemplate,'$','$');
   }
 
-  protected void includeBootScriptDependency(String jasmineBootJs, ST template) throws IOException {
-	  StringBuilder js = new StringBuilder();
-
-	  if(jasmineBootJs != null) {
-		  js.append("<script type=\"text/javascript\">").append(configuration.IOtoString(jasmineBootJs)).append("</script>");
-	  }
-
-	  template.add(JAVASCRIPT_BOOT_SCRIPT_TEMPLATE_ATTR_NAME, js.toString());
-  }
-  
   protected void includeJavaScriptDependencies(List<String> dependencies, ST template) throws IOException {
     StringBuilder js = new StringBuilder();
     for (String jsFile : dependencies) {

@@ -8,6 +8,7 @@ import java.util.Set;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 
+import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.io.scripts.ScriptResolverException;
 
@@ -43,8 +44,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
                               String sourceDirectory,
                               String specDirectory) throws IOException {
     ST template = this.resolveHtmlTemplate();
-    this.includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS, CONSOLE_REPORTER_JS), template);
-    this.includeBootScriptDependency(JASMINE_BOOT_JS, template);
+    this.includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_CONSOLE_REPORTER_JS, JASMINE_BOOT_JS), template);
     this.applyCssToTemplate(asList(JASMINE_CSS), template);
     this.applyScriptTagsToTemplate("allScriptTags", allScripts, template);
     this.applyScriptTagsToTemplate("preloadScriptTags", preloads, template);
@@ -59,7 +59,8 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
 
     template.add("autoRefresh", this.getConfiguration().getAutoRefresh());
     template.add("autoRefreshInterval", this.getConfiguration().getAutoRefreshInterval());
-
+    template.add("browserIE8", "INTERNET_EXPLORER_8".equals(this.getConfiguration().getBrowserVersion()));
+    
     this.setCustomRunnerConfig(template);
     template.add(REPORTER_ATTR_NAME, this.getConfiguration().getReporterType().name());
     this.setEncoding(this.getConfiguration(), template);
@@ -73,7 +74,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     return template.render();
   }
 
-private String createJsonArray(Set<String> scripts) {
+  private String createJsonArray(Set<String> scripts) {
     if (null == scripts || scripts.isEmpty()) {
       return "[]";
     }

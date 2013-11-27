@@ -16,8 +16,8 @@ import com.google.common.base.Predicate;
 
 public class SpecRunnerExecutor {
 
-	public static final String CREATE_JUNIT_XML = "/lib/createJunitXml.js";
 	public static final String BUILD_REPORT_JS = "/lib/buildReport.js";
+	public static final String CREATE_JUNIT_XML = "/lib/createJunitXml.js";
 
 	private final IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
 
@@ -30,7 +30,7 @@ public class SpecRunnerExecutor {
 			driver.get(runnerUrl.toString());
 			this.waitForRunnerToFinish(driver, timeout, debug, log);
 			JasmineResult jasmineResult = new JasmineResult();
-			jasmineResult.setDetails(this.buildReport(executor,format));
+			jasmineResult.setDetails(this.buildConsoleReport(executor,format));
 			FileUtils.writeStringToFile(junitXmlReport, this.buildJunitXmlReport(executor,debug), "UTF-8");
 			driver.quit();
 
@@ -41,13 +41,14 @@ public class SpecRunnerExecutor {
 	}
 
 	private String buildReport(JavascriptExecutor driver, String format) throws IOException {
-//		String script =
-//				this.ioUtilsWrapper.toString(BUILD_REPORT_JS) +
-//				"return jasmineMavenPlugin.printReport(window.jsApiReporter,{format:'"+format+"'});";
-//		Object report = driver.executeScript(script);
-//		return report.toString();
-		
-		
+		String script =
+				this.ioUtilsWrapper.toString(BUILD_REPORT_JS) +
+				"return jasmineMavenPlugin.printReport(window.jsApiReporter,{format:'"+format+"'});";
+		Object report = driver.executeScript(script);
+		return report.toString();
+	}
+
+	private String buildConsoleReport(JavascriptExecutor driver, String format) throws IOException {
 		String script =	"return out.getOutput();";
 		Object report = driver.executeScript(script);
 		return report.toString();
@@ -86,7 +87,7 @@ public class SpecRunnerExecutor {
 	}
 
 	private Boolean executionFinished(JavascriptExecutor driver) {
-		return (Boolean) driver.executeScript("return (window.jsApiReporter.finished === true);");
+		return (Boolean) driver.executeScript("return (window.jsApiReporter === undefined) ? false : window.jsApiReporter.finished");
 	}
 
 }

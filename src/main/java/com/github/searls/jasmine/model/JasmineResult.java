@@ -4,10 +4,6 @@ package com.github.searls.jasmine.model;
 public class JasmineResult {
   private String details;
 
-  public String getDescription() {
-    return last(getDetails().split("\n"));
-  }
-
   public boolean didPass() {
     return getDetails().contains(" 0 failures");
   }

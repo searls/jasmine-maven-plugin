@@ -49,10 +49,9 @@ var junitXmlReporter;
         writer.beginNode('failure');
         writer.attrib('type', messages[j].matcherName);
         writer.attrib('message', messages[j].message);
-        writer.writeString(
-                //"expected:<" + messages[j].expected + "> but was:<" + messages[j].actual + ">" + "\n" +
-                messages[j].message + '\n');
-                // + (messages[j].stack || '')); // REMARK: stack not present on HtmlUnit supported browserVersion(s)
+        writer.writeString(messages[j].message + '\n');
+        // TODO : maybe better =>  "expected:<" + messages[j].expected + "> but was:<" + messages[j].actual + ">" + "\n" +
+        // TODO : include Error.stack => stack only supported in Mozilla browsers, but it seems HtmlUnit doesn't include a supporting browserVersion
         writer.endNode();
       }
     },

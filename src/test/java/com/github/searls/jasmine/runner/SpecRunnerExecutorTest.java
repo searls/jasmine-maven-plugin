@@ -66,7 +66,7 @@ public class SpecRunnerExecutorTest {
 		JasmineResult result = this.subject.execute(this.resource, this.file, driver, 300, false, this.log, null);
 
 		assertThat(result,is(not(nullValue())));
-		assertThat(result.getDescription(),containsString("kaka"));
+		assertThat(result.getDetails(),containsString("kaka"));
 		assertThat(result.getDetails(),containsString("pants"));
 		assertThat(result.didPass(),is(false));
 

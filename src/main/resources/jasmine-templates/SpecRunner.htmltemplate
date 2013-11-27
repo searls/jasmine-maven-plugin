@@ -2,15 +2,15 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=$sourceEncoding$">
+  $if(browserIE8)$
   <meta http-equiv="X-UA-Compatible" content="IE=8">
-  
+  $endif$
   $if(autoRefresh)$
   <meta http-equiv="refresh" content="$autoRefreshInterval$">
   $endif$
   <title>Jasmine Spec Runner</title>
   $cssDependencies$
   $javascriptDependencies$
-  $bootScript$
   $allScriptTags$
 </head>
 <body>

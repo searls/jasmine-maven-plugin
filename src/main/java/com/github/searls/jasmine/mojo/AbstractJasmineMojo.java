@@ -491,6 +491,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	}
 
 	@Override
+	public String getBrowserVersion() {
+		return browserVersion;
+	}
+
+	@Override
 	public File getBasedir() {
 		return this.mavenProject.getBasedir();
 	}
