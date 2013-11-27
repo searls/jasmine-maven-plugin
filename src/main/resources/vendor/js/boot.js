@@ -139,8 +139,8 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   });
 
   var catchingExceptions = queryString.getParam("catch");
-  //env.catchExceptions(typeof catchingExceptions === "undefined" ? true : catchingExceptions);
-    
+  env.catchExceptions(typeof catchingExceptions === "undefined" ? true : catchingExceptions);
+
   /**
    * ## Reporters
    * The `HtmlReporter` builds all of the HTML UI for the runner page. This reporter paints the dots, stars, and x's for specs, as well as all spec names and all failures (if any).
@@ -194,17 +194,17 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   env.addReporter(jasmineInterface.jsApiReporter);
   env.addReporter(htmlReporter);
   env.addReporter(consoleReporter);
-  
+
   /**
    * Filter which specs will be run by matching the start of the full name against the `spec` query param.
    */
-//  var specFilter = new jasmine.HtmlSpecFilter({
-//    filterString: function() { return queryString.getParam("spec"); }
-//  });
-//
-//  env.specFilter = function(spec) {
-//    return specFilter.matches(spec.getFullName());
-//  };
+  var specFilter = new jasmine.HtmlSpecFilter({
+    filterString: function() { return queryString.getParam("spec"); }
+  });
+
+  env.specFilter = function(spec) {
+    return queryString.getParam("spec") ? specFilter.matches(spec.getFullName()) : true;
+  };
 
   /**
    * Setting up timing functions to be able to be overridden. Certain browsers (Safari, IE 8, phantomjs) require this hack.
@@ -213,18 +213,22 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   window.setInterval = window.setInterval;
   window.clearTimeout = window.clearTimeout;
   window.clearInterval = window.clearInterval;
-  
-  function run(){
-      htmlReporter.initialize();
-      jasmine.getEnv().execute();
-  }
 
-  if (window.addEventListener) {
-      addEventListener('DOMContentLoaded', run, false);
-  } else {
-      attachEvent('onload', run);
-  }
-  
+  /**
+   * ## Execution
+   *
+   * Replace the browser window's `onload`, ensure it's called, and then run all of the loaded specs. This includes initializing the `HtmlReporter` instance and then executing the loaded Jasmine environment. All of this will happen after all of the specs are loaded.
+   */
+  var currentWindowOnload = window.onload;
+
+  window.onload = function() {
+    if (currentWindowOnload) {
+      currentWindowOnload();
+    }
+    htmlReporter.initialize();
+    env.execute();
+  };
+
   /**
    * Helper function for readability above.
    */
