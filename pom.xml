@@ -402,19 +402,26 @@
               <goal>prepare-agent</goal>
               <goal>check</goal>
             </goals>
-         <configuration>
+            <configuration>
               <check>
                 <classRatio>88</classRatio>
                 <instructionRatio>70</instructionRatio>
                 <methodRatio>64</methodRatio>
                 <lineRatio>68</lineRatio>
               </check>
-              <excludes>
-                <exclude>com/github/searls/jasmine/mojo/HelpMojo*</exclude>
-              </excludes>
             </configuration>
           </execution>
         </executions>
+        <configuration>
+          <excludes>
+            <exclude>com/github/searls/jasmine/mojo/HelpMojo*</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.eluder.coveralls</groupId>
+        <artifactId>coveralls-maven-plugin</artifactId>
+        <version>2.0.1</version>
       </plugin>
       <plugin>
         <groupId>com.github.github</groupId>

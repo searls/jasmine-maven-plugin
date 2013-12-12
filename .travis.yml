@@ -1,6 +1,5 @@
 language: java
 jdk:
-  - openjdk7
   - openjdk6
   - oraclejdk7
 before_install:
@@ -8,3 +7,5 @@ before_install:
   - "sh -e /etc/init.d/xvfb start"
 install: bundle install
 script: bundle exec rake cucumber
+after_success:
+  - mvn test jacoco:report coveralls:jacoco
