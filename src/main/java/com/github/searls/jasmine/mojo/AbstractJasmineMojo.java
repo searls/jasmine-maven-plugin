@@ -291,8 +291,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 * 
 	 * @since 1.1.0
 	 */
-	@Parameter
-	private final List<String> sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
+	@Parameter(defaultValue = "${jasmine.sourceIncludes}")
+	private List<String> sourceIncludes;
 
 	/**
 	 * <p>Just like <code>sourceIncludes</code>, but will exclude anything matching the provided patterns.</p>
@@ -406,6 +406,12 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Override
 	public final void execute() throws MojoExecutionException, MojoFailureException {
 		this.loadResources();
+		
+		if (this.sourceIncludes == null || this.sourceIncludes.size() == 0) {
+			this.sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
+		}
+
+		this.getLog().info("Running with the following value for parameter sourceIncludes: "+this.sourceIncludes);
 
 		this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);
 		this.specs = new ScriptSearch(this.jsTestSrcDir,this.specIncludes,this.specExcludes);
