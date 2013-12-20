@@ -1,14 +1,7 @@
 package com.github.searls.jasmine.server;
 
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.verify;
-
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +9,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.powermock.reflect.Whitebox;
+
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ServerManagerTest {
@@ -27,6 +21,9 @@ public class ServerManagerTest {
   @Mock
   private Server server;
 
+  @Mock
+  private Connector connector;
+
   private ServerManager serverManager;
 
   @Captor
@@ -34,16 +31,15 @@ public class ServerManagerTest {
 
   @Before
   public void before() {
-    this.serverManager = new ServerManager(server,configurator);
+    this.serverManager = new ServerManager(server,connector,configurator);
   }
 
   @Test
   public void testStartAnyPort() throws Exception {
     this.serverManager.start();
 
-    verify(this.server).addConnector(connectorCaptor.capture());
-    assertThat(this.connectorCaptor.getValue(),is(instanceOf(SelectChannelConnector.class)));
-    assertThat(this.connectorCaptor.getValue().getPort(),is(0));
+    verify(this.server).addConnector(this.connector);
+    verify(this.connector).setPort(0);
   }
 
   @Test
@@ -51,8 +47,7 @@ public class ServerManagerTest {
     this.serverManager.start(1234);
 
     verify(this.server).addConnector(connectorCaptor.capture());
-    assertThat(this.connectorCaptor.getValue(),is(instanceOf(SelectChannelConnector.class)));
-    assertThat(this.connectorCaptor.getValue().getPort(),is(1234));
+    verify(this.connector).setPort(1234);
   }
 
   @Test
@@ -67,10 +62,4 @@ public class ServerManagerTest {
     verify(this.server).join();
   }
 
-  @Test
-  public void testConstructWithoutServer() throws Exception {
-    ServerManager manager = new ServerManager(this.configurator);
-    Server newServer = Whitebox.getInternalState(manager, Server.class);
-    assertNotNull(newServer);
-  }
 }

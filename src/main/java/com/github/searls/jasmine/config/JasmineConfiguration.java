@@ -9,7 +9,8 @@ import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 public interface JasmineConfiguration {
-	File getBasedir();
+
+  File getBasedir();
 	File getJasmineTargetDir();
 
 	String getSrcDirectoryName();

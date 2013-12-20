@@ -2,22 +2,21 @@ package com.github.searls.jasmine.server;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 public class ServerManager {
 
   private static final int ANY_PORT = 0;
 
   private final Server server;
+  private final Connector connector;
   private final ResourceHandlerConfigurator configurator;
 
-  public ServerManager(Server server, ResourceHandlerConfigurator configurator) {
-    this.configurator = configurator;
+  public ServerManager(Server server,
+                       Connector connector,
+                       ResourceHandlerConfigurator configurator) {
     this.server = server;
-  }
-
-  public ServerManager(ResourceHandlerConfigurator configurator) {
-    this(new Server(),configurator);
+    this.connector = connector;
+    this.configurator = configurator;
   }
 
   public int start() throws Exception {
@@ -29,7 +28,6 @@ public class ServerManager {
   }
 
   private int startServer(int port) throws Exception {
-    Connector connector = new SelectChannelConnector();
     connector.setPort(port);
 
     this.server.setHandler(this.configurator.createHandler());

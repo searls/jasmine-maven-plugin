@@ -1,11 +1,10 @@
 package com.github.searls.jasmine.mojo;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -15,12 +14,14 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceLoader;
+import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
-import com.github.searls.jasmine.config.JasmineConfiguration;
-import com.github.searls.jasmine.exception.StringifiesStackTraces;
-import com.github.searls.jasmine.io.ScansDirectory;
-import com.github.searls.jasmine.model.ScriptSearch;
-import com.github.searls.jasmine.runner.SpecRunnerTemplate;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {
 
@@ -369,6 +370,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Parameter(property="jasmine.serverPort", defaultValue="8234")
 	protected int serverPort;
 
+  /**
+   * <p>Specify the URI scheme in which to access the SpecRunner.</p>
+   *
+   * @since 1.3.1.4
+   */
+  @Parameter(property="jasmine.uriScheme", defaultValue="http")
+  protected String uriScheme;
+
     /**
      * <p>Not used by the <code>jasmine:bdd</code> goal.</p>
      *
@@ -421,6 +430,20 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Parameter(property="coffeeScriptCompilationEnabled", defaultValue="true")
 	protected boolean coffeeScriptCompilationEnabled;
 	
+  /**
+   * <p>Type of {@link org.eclipse.jetty.server.Connector} to use on the jetty server.</p>
+   *
+   * <p>Most users won't need to change this from the default value. It should only be used
+   * by advanced users.</p>
+   *
+   * @since 1.3.1.4
+   */
+  @Parameter(
+      property="jasmine.connectorClass",
+      defaultValue="org.eclipse.jetty.server.nio.SelectChannelConnector"
+  )
+  protected String connectorClass;
+
 	@Parameter(defaultValue="${project}", readonly=true)
 	protected MavenProject mavenProject;
 
@@ -543,6 +566,20 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	public File getBasedir() {
 		return this.mavenProject.getBasedir();
 	}
+
+  protected Connector getConnector() throws MojoExecutionException {
+    try {
+      @SuppressWarnings("unchecked")
+      Class<? extends Connector> c = (Class<? extends Connector>) Class.forName(connectorClass);
+      return c.newInstance();
+    } catch(InstantiationException e) {
+      throw new MojoExecutionException("Unable to instantiate.",e);
+    } catch (IllegalAccessException e) {
+      throw new MojoExecutionException("Unable to instantiate.",e);
+    } catch (ClassNotFoundException e) {
+      throw new MojoExecutionException("Unable to instantiate.",e);
+    }
+  }
 
   protected boolean isSkipTests() {
     return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;
