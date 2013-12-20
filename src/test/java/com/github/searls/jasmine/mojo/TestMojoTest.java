@@ -29,9 +29,9 @@ public class TestMojoTest {
   }
 
   @Test
-  public void testRunIfSkipIsTrue() throws Exception {
+  public void testExecuteIfSkipIsTrue() throws Exception {
     this.mojo.skipTests = true;
-    this.mojo.run();
+    this.mojo.execute();
     verify(log).info("Skipping Jasmine Specs");
   }
 }
