@@ -2,6 +2,9 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=$sourceEncoding$">
+  $if(browserIE8)$
+  <meta http-equiv="X-UA-Compatible" content="IE=8">
+  $endif$
   $if(autoRefresh)$
   <meta http-equiv="refresh" content="$autoRefreshInterval$">
   $endif$
@@ -11,33 +14,5 @@
   $allScriptTags$
 </head>
 <body>
-  <script type="text/javascript">
-    if(window.location.href.indexOf("ManualSpecRunner.html") !== -1) {
-      document.body.appendChild(document.createTextNode("Warning: opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
-    }
-    
-
-    var executeJasmineSpecs = function(){
-      window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
-      if ('$reporter$' == 'HtmlReporter') {
-        jasmine.getEnv().specFilter = function(spec) {
-          return window.reporter.specFilter(spec);
-        };
-      }
-      
-	  //Don't do live updates when running through HTMLUnit
-      if ('$reporter$' == 'JsApiReporter'){
-		jasmine.getEnv().updateInterval = Number.MAX_VALUE;
-      }
-      
-      jasmine.getEnv().execute();
-    };
-
-    if (window.addEventListener) {
-      addEventListener('DOMContentLoaded', executeJasmineSpecs, false);
-    } else {
-      attachEvent('onload', executeJasmineSpecs);
-    }
-  </script>
 </body>
 </html>

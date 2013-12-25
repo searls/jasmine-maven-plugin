@@ -30,7 +30,7 @@ public class SpecRunnerExecutor {
 			driver.get(runnerUrl.toString());
 			this.waitForRunnerToFinish(driver, timeout, debug, log);
 			JasmineResult jasmineResult = new JasmineResult();
-			jasmineResult.setDetails(this.buildReport(executor,format));
+			jasmineResult.setDetails(this.buildConsoleReport(executor,format));
 			FileUtils.writeStringToFile(junitXmlReport, this.buildJunitXmlReport(executor,debug), "UTF-8");
 			driver.quit();
 
@@ -43,7 +43,13 @@ public class SpecRunnerExecutor {
 	private String buildReport(JavascriptExecutor driver, String format) throws IOException {
 		String script =
 				this.ioUtilsWrapper.toString(BUILD_REPORT_JS) +
-				"return jasmineMavenPlugin.printReport(window.reporter,{format:'"+format+"'});";
+				"return jasmineMavenPlugin.printReport(window.jsApiReporter,{format:'"+format+"'});";
+		Object report = driver.executeScript(script);
+		return report.toString();
+	}
+
+	private String buildConsoleReport(JavascriptExecutor driver, String format) throws IOException {
+		String script =	"return out.getOutput();";
 		Object report = driver.executeScript(script);
 		return report.toString();
 	}
@@ -51,7 +57,7 @@ public class SpecRunnerExecutor {
 	private String buildJunitXmlReport(JavascriptExecutor driver, boolean debug) throws IOException {
 		Object junitReport = driver.executeScript(
 				this.ioUtilsWrapper.toString(CREATE_JUNIT_XML) +
-				"return junitXmlReporter.report(window.reporter,"+debug+");");
+				"return junitXmlReporter.report(window.jsApiReporter,"+debug+");");
 		return junitReport.toString();
 	}
 
@@ -81,7 +87,7 @@ public class SpecRunnerExecutor {
 	}
 
 	private Boolean executionFinished(JavascriptExecutor driver) {
-		return (Boolean) driver.executeScript("return (window.reporter === undefined) ? false : window.reporter.finished");
+		return (Boolean) driver.executeScript("return (window.jsApiReporter === undefined) ? false : window.jsApiReporter.finished");
 	}
 
 }

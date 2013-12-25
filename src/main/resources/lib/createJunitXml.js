@@ -6,10 +6,10 @@ var junitXmlReporter;
     report: function(reporter,debug) {
       if (!reporter)
         throw 'Jasmine JS API Reporter must not be null.';
-      if (reporter.finished !== true && !debug)
+      if (reporter.status() !== 'done' && !debug)
         throw 'Jasmine runner is not finished!';
 
-      var results = this.crunchResults(reporter.results());
+      var results = this.crunchResults(reporter.specs());
 
       var writer = new XmlWriter();
       writer.beginNode('testsuite');
@@ -21,46 +21,39 @@ var junitXmlReporter;
       writer.attrib('hostname','localhost');
       writer.attrib('time', '0.0');
       writer.attrib('timestamp',this.currentTimestamp());
-      this.writeChildren(reporter, writer, reporter.suites(),'');
+      this.writeSpecResults(reporter, writer, reporter.specs());
       writer.endNode();
 
       return this.prolog+writer.toString();
     },
-    writeChildren: function(reporter, writer, tests,runningName) {
-      for(var i=0;i<tests.length;i++) {
-        var name = (runningName.length > 0 ? runningName+' ' : '')+tests[i].name;
-        if(tests[i].type === 'spec') {
-          var specResult = reporter.results()[tests[i].id] || {};
-          this.writeTestcase(writer,specResult,name);
-        }
-        this.writeChildren(reporter, writer,tests[i].children,name);
+    writeSpecResults: function(reporter, writer, specResults) {
+      for(var i=0;i<specResults.length;i++) {
+        this.writeTestcase(writer,specResults[i]);
       }
     },
-    writeTestcase: function(writer,specResult,name) {
-      var failure = specResult.result !== 'passed';
+    writeTestcase: function(writer,specResult) {
+      var failure = specResult.status !== 'passed';
       writer.beginNode('testcase');
       writer.attrib('classname','jasmine');
-      writer.attrib('name',name);
+      writer.attrib('name',specResult.fullName);
       writer.attrib('time','0.0');
       writer.attrib('failure',failure+'');
       if(failure) {
-        this.writeError(writer,specResult);
+        this.writeFailure(writer,specResult);
       }
       writer.endNode();
     },
-    writeError: function(writer,specResult) {
-      writer.beginNode('error');
-      var message = '';
-      var type = '';
-      var messages = specResult.messages || [];
+    writeFailure: function(writer,specResult) {      
+      var messages = specResult.failedExpectations || [];
       for(var j=0;j<messages.length;j++) {
-        message += messages[j].message;
-        type = messages[j].type + '.' + messages[j].matcherName;
+        writer.beginNode('failure');
+        writer.attrib('type', messages[j].matcherName);
+        writer.attrib('message', messages[j].message);
+        writer.writeString(messages[j].message + '\n');
+        // TODO : maybe better =>  "expected:<" + messages[j].expected + "> but was:<" + messages[j].actual + ">" + "\n" +
+        // TODO : include Error.stack => stack only supported in Mozilla browsers, but it seems HtmlUnit doesn't include a supporting browserVersion
+        writer.endNode();
       }
-      writer.attrib('type',type);
-      writer.attrib('message',message);
-      writer.writeString(message);
-      writer.endNode();
     },
     crunchResults: function(results) {
       var count=0;
@@ -68,7 +61,7 @@ var junitXmlReporter;
       var last;
       for(var key in results) {
         count++;
-        if(results[key].result !== 'passed') {
+        if(results[key].status !== 'passed') {
           fails++;
         }
         last = key;
