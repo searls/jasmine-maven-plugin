@@ -10,16 +10,29 @@ import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.resource.Resource;
 
+import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
+import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 public class HandlesRequestsForCoffee {
 
   private CoffeeScript coffeeScript = new CoffeeScript();
   private BuildsJavaScriptToWriteFailureHtml buildsJavaScriptToWriteFailureHtml = new BuildsJavaScriptToWriteFailureHtml();
+  private JasmineConfiguration configuration;
 
+  public HandlesRequestsForCoffee(JasmineConfiguration configuration) {
+	  this.configuration = configuration;
+  }
+  
   public void handle(Request baseRequest, HttpServletResponse response, Resource resource) throws IOException {
     baseRequest.setHandled(true);
-    String javascript = compileCoffee(resource);
+    String javascript = null;
+    if (!configuration.isCoffeeScriptCompilationEnabled()) {
+    	// CoffeeScript RequireJS plugin should be used for translation
+    	javascript = IOUtils.toString(resource.getInputStream(), "UTF-8");
+    } else {
+        javascript = compileCoffee(resource);
+    }
     setHeaders(response, resource, javascript);
     writeResponse(response, javascript);
   }

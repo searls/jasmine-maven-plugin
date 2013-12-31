@@ -43,7 +43,7 @@ public class ResourceHandlerConfigurator {
   }
 
   private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String[] welcomeFiles) {
-    ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner);
+    ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner, this.configuration);
     resourceHandler.setDirectoriesListed(directory);
     if (welcomeFiles != null) {
       resourceHandler.setWelcomeFiles(welcomeFiles);
