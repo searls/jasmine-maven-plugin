@@ -405,7 +405,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	private File customRunnerConfigurationFile;
 
 	@Override
-	public final void execute() throws MojoExecutionException, MojoFailureException {
+	public void execute() throws MojoExecutionException, MojoFailureException {
 		this.loadResources();
 		
 		this.initIncludesExcludes();

@@ -3,6 +3,7 @@ package com.github.searls.jasmine.mojo;
 import java.io.File;
 import java.net.URL;
 
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -33,23 +34,28 @@ public class TestMojo extends AbstractJasmineMojo {
   }
 
   @Override
-  public void run() throws Exception {
+  public void execute() throws MojoExecutionException, MojoFailureException {
     if(!this.isSkipTests()) {
-      ServerManager serverManager = this.getServerManager();
-      try {
-        int port = serverManager.start();
-        setPortProperty(port);
-        this.getLog().info("Executing Jasmine Specs");
-        JasmineResult result = this.executeSpecs(new URL("http://" + this.serverHostname + ":" + port));
-        this.logResults(result);
-        this.throwAnySpecFailures(result);
-      } finally {
-        if (!keepServerAlive) {
-          serverManager.stop();
-        }
-      }
+      super.execute();
     } else {
       this.getLog().info("Skipping Jasmine Specs");
+    }
+  }
+
+  @Override
+  public void run() throws Exception {
+    ServerManager serverManager = this.getServerManager();
+    try {
+      int port = serverManager.start();
+      setPortProperty(port);
+      this.getLog().info("Executing Jasmine Specs");
+      JasmineResult result = this.executeSpecs(new URL("http://" + this.serverHostname + ":" + port));
+      this.logResults(result);
+      this.throwAnySpecFailures(result);
+    } finally {
+      if (!keepServerAlive) {
+        serverManager.stop();
+      }
     }
   }
 
