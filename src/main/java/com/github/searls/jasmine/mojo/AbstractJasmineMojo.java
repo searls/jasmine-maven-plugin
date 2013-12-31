@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -300,8 +301,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 * 
 	 * @since 1.1.0
 	 */
-	@Parameter
-	private final List<String> sourceExcludes = Collections.emptyList();
+	@Parameter(defaultValue = "${jasmine.sourceExcludes}")
+	private List<String> sourceExcludes;
 
 	/**
 	 * <p>I often find myself needing control of the spec include order
@@ -325,8 +326,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 * 
 	 * @since 1.1.0
 	 */
-	@Parameter
-	private final List<String> specIncludes = ScansDirectory.DEFAULT_INCLUDES;
+	@Parameter(defaultValue = "${jasmine.specIncludes}")
+	private List<String> specIncludes;
 
 	/**
 	 * <p>Just like <code>specIncludes</code>, but will exclude anything matching the provided patterns.</p>
@@ -334,8 +335,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 * 
 	 * @since 1.1.0
 	 */
-	@Parameter
-	private final List<String> specExcludes = Collections.emptyList();
+	@Parameter(defaultValue = "${jasmine.specExcludes}")
+	private List<String> specExcludes;
 
 	/**
 	 * <p>Used by the <code>jasmine:bdd</code> goal to specify port to run the server under.</p>
@@ -407,11 +408,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	public final void execute() throws MojoExecutionException, MojoFailureException {
 		this.loadResources();
 		
-		if (this.sourceIncludes == null || this.sourceIncludes.size() == 0) {
-			this.sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
-		}
-
-		this.getLog().info("Running with the following value for parameter sourceIncludes: "+this.sourceIncludes);
+		this.initIncludesExcludes();
 
 		this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);
 		this.specs = new ScriptSearch(this.jsTestSrcDir,this.specIncludes,this.specExcludes);
@@ -512,9 +509,39 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 		return this.mavenProject.getBasedir();
 	}
 
-  protected boolean isSkipTests() {
-    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;
-  }
+    protected boolean isSkipTests() {
+      return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;
+    }
+  
+	private void initIncludesExcludes() {
+		if (CollectionUtils.isEmpty(this.sourceExcludes)) {
+			this.sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
+		}
+		this.getLog().debug(
+				"Running with the following value for parameter sourceIncludes: "
+						+ this.sourceIncludes);
+
+		if (CollectionUtils.isEmpty(this.sourceExcludes)) {
+			this.sourceExcludes = Collections.emptyList();
+		}
+		this.getLog().debug(
+				"Running with the following value for parameter sourceExcludes: "
+						+ this.sourceExcludes);
+
+		if (CollectionUtils.isEmpty(this.specIncludes)) {
+			this.specIncludes = ScansDirectory.DEFAULT_INCLUDES;
+		}
+		this.getLog().debug(
+				"Running with the following value for parameter specIncludes: "
+						+ this.specIncludes);
+
+		if (CollectionUtils.isEmpty(this.specExcludes)) {
+			this.specExcludes = Collections.emptyList();
+		}
+		this.getLog().debug(
+				"Running with the following value for parameter specExcludes: "
+						+ this.specExcludes);
+	}
 
 	private void loadResources() throws MojoExecutionException {
 		this.customRunnerTemplateFile = this.getResourceAsFile("customRunnerTemplate", this.customRunnerTemplate);
