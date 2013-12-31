@@ -12,16 +12,18 @@ import org.eclipse.jetty.util.resource.Resource;
 
 import com.github.searls.jasmine.coffee.DetectsCoffee;
 import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
+import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.runner.CreatesRunner;
 
 public class JasmineResourceHandler extends ResourceHandler {
 
   private final DetectsCoffee detectsCoffee = new DetectsCoffee();
-  private final HandlesRequestsForCoffee handlesRequestsForCoffee = new HandlesRequestsForCoffee();
+  private final HandlesRequestsForCoffee handlesRequestsForCoffee;
   private final CreatesRunner createsRunner;
 
-  public JasmineResourceHandler(CreatesRunner createsRunner) {
+  public JasmineResourceHandler(CreatesRunner createsRunner, JasmineConfiguration configuration) {
     this.createsRunner = createsRunner;
+    this.handlesRequestsForCoffee = new HandlesRequestsForCoffee(configuration);
     setAliases(true);
   }
 

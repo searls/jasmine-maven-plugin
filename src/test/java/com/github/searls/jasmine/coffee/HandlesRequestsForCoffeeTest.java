@@ -19,17 +19,20 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
+import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HandlesRequestsForCoffeeTest {
   private static final String COFFEE = "coffee";
 
-  @InjectMocks HandlesRequestsForCoffee subject = new HandlesRequestsForCoffee();
+  @InjectMocks HandlesRequestsForCoffee subject = new HandlesRequestsForCoffee(null);
 
   @Mock private CoffeeScript coffeeScript = new CoffeeScript();
   @Mock private BuildsJavaScriptToWriteFailureHtml buildsJavaScriptToWriteFailureHtml;
-
+  @Mock private JasmineConfiguration configuration;
+  
   @Mock private Request baseRequest;
   @Mock(answer=Answers.RETURNS_DEEP_STUBS) private HttpServletResponse response;
   @Mock private Resource resource;
@@ -42,6 +45,11 @@ public class HandlesRequestsForCoffeeTest {
   @Before
   public void defaultCoffeeStubbing() throws IOException {
     when(coffeeScript.compile(COFFEE)).thenReturn("blarg!");
+  }
+
+  @Before
+  public void defaultSpecConfigurationStubbing() throws IOException {
+    when(configuration.getSpecRunnerTemplate()).thenReturn(SpecRunnerTemplate.DEFAULT);
   }
 
   @Test
@@ -111,5 +119,14 @@ public class HandlesRequestsForCoffeeTest {
     verify(response.getWriter()).write("win");
   }
 
+  @Test
+  public void whenCoffeeRequestWithREQUIRE_JSThenWriteCoffee() throws IOException {
+	when(configuration.getSpecRunnerTemplate()).thenReturn(SpecRunnerTemplate.REQUIRE_JS);
+	  
+    subject.handle(baseRequest, response, resource);
+
+    verify(response.getWriter()).write(COFFEE);
+    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(COFFEE.length()));
+  }
 
 }
