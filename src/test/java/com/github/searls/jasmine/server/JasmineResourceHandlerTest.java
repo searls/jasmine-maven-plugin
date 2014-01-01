@@ -23,6 +23,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.github.searls.jasmine.coffee.DetectsCoffee;
 import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
+import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.runner.CreatesRunner;
 
 @RunWith(PowerMockRunner.class)
@@ -33,6 +34,7 @@ public class JasmineResourceHandlerTest {
   @Mock private DetectsCoffee detectsCoffee;
   @Mock private HandlesRequestsForCoffee handlesRequestsForCoffee;
   @Mock private CreatesRunner createsRunner;
+  @Mock private JasmineConfiguration configuration;
 
   @Mock Request baseRequest;
   @Mock HttpServletRequest request;
@@ -41,7 +43,7 @@ public class JasmineResourceHandlerTest {
 
   @Mock Log log;
 
-  @InjectMocks private final JasmineResourceHandler subject = new JasmineResourceHandler(createsRunner) {
+  @InjectMocks private final JasmineResourceHandler subject = new JasmineResourceHandler(createsRunner, configuration) {
     @Override
     protected Resource getResource(HttpServletRequest request) throws MalformedURLException {
       return JasmineResourceHandlerTest.this.resource;

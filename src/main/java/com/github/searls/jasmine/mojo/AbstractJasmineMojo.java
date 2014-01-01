@@ -390,6 +390,16 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Parameter(property="jasmine.autoRefreshInterval", defaultValue="0")
 	protected int autoRefreshInterval;
 
+	/**
+	 * <p>Control the Coffee Script compilation.  e.g. When using RequireJS the compilation
+	 * happens within the Coffee Script AMD loader plugin; we therefore need to disable the 
+	 * compilation here.</p>
+	 *
+	 * @since 1.3.1.4
+	 */
+	@Parameter(property="coffeeScriptCompilationEnabled", defaultValue="true")
+	protected boolean coffeeScriptCompilationEnabled;
+	
 	@Parameter(defaultValue="${project}", readonly=true)
 	protected MavenProject mavenProject;
 
@@ -487,6 +497,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Override
 	public int getAutoRefreshInterval() {
 		return this.autoRefreshInterval;
+	}
+
+	@Override
+	public boolean isCoffeeScriptCompilationEnabled() {
+		return this.coffeeScriptCompilationEnabled;
 	}
 
 	public MavenProject getMavenProject() {
