@@ -25,7 +25,35 @@ Here is an example configuration:
   </plugins>
 </build>
 ```
-The above configuration assumes that the `phantomjs` binary is on your systems `PATH`. If you would prefer, you can also specify the location of the binary using a configuration like this:
+The above configuration assumes that the `phantomjs` binary is on your systems `PATH`.
+
+If you would prefer, you can also use [klieber's phantomjs-maven-plugin](https://github.com/klieber/phantomjs-maven-plugin) to pull down a version of phantomjs:
+```
+      <plugin>
+        <groupId>com.github.klieber</groupId>
+        <artifactId>phantomjs-maven-plugin</artifactId>
+        <version>0.2.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>install</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <version>1.9.2</version>
+        </configuration>
+      </plugin>
+```
+If you use com.github.klieber.phantomjs-maven-plugin edit the jasmine-maven-plugin configuration to point to the phantomjs that gets installed dynamically:
+
+```
+<webDriverCapabilities>
+  <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
+</webDriverCapabilities>
+```
+
+If you would prefer, you can also specify the location of the binary using a configuration like this:
 
 ```
 <build>
