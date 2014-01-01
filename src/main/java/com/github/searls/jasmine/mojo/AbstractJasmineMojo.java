@@ -514,7 +514,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
     }
   
 	private void initIncludesExcludes() {
-		if (CollectionUtils.isEmpty(this.sourceExcludes)) {
+		if (CollectionUtils.isEmpty(this.sourceIncludes)) {
 			this.sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
 		}
 		this.getLog().debug(
