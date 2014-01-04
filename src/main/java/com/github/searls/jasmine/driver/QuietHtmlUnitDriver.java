@@ -1,5 +1,6 @@
 package com.github.searls.jasmine.driver;
 
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import com.gargoylesoftware.htmlunit.BrowserVersion;
@@ -11,11 +12,12 @@ import com.gargoylesoftware.htmlunit.WebClient;
  * The default web driver - overridden to tweak a few things.
  */
 public class QuietHtmlUnitDriver extends HtmlUnitDriver {
-	private final boolean debug;
 
-	public QuietHtmlUnitDriver(BrowserVersion version, boolean debug) {
-		super(version);
-		this.debug = debug;
+  private final boolean debug;
+
+	public QuietHtmlUnitDriver(Capabilities capabilities, boolean debug) {
+    super(capabilities);
+    this.debug = debug;
 		this.setJavascriptEnabled(true);
 	}
 

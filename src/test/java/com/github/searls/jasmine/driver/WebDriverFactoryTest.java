@@ -1,5 +1,7 @@
 package com.github.searls.jasmine.driver;
 
+import com.github.searls.jasmine.mojo.Capability;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +62,10 @@ public class WebDriverFactoryTest {
 
   @Test
   public void setsCapabilityFromMap() throws Exception {
-    factory.setWebDriverCapabilities(ImmutableMap.of("foo", "bar"));
+    Capability capability = new Capability();
+    capability.setName("foo");
+    capability.setValue("bar");
+    factory.setWebDriverCapabilities(ImmutableList.of(capability));
 
     assertEquals("bar", createWebDriverAndReturnCapabilities().getCapability("foo"));
   }

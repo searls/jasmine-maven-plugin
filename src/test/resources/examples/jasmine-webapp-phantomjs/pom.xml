@@ -34,12 +34,17 @@
                         <source>require-config.js</source>
                     </preloadSources>
                     <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+
                     <webDriverCapabilities>
-                        <!--
-                        needed if phantom.js is not on the PATH
-                        <phantomjs.binary.path>path goes here</phantomjs.binary.path>
-                        -->
+                      <capability>
+                        <name>phantomjs.cli.args</name>
+                        <list>
+                          <value>--disk-cache=true</value>
+                          <value>--max-disk-cache-size=256</value>
+                        </list>
+                      </capability>
                     </webDriverCapabilities>
+
                 </configuration>
             </plugin>
         </plugins>
