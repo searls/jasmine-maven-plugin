@@ -1,17 +1,18 @@
 package com.github.searls.jasmine.mojo;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Mojo;
-
 import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.runner.CreatesRunner;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.eclipse.jetty.server.Server;
+
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Execute specs in a web browser. Monitors your sources/specs for changes as you develop.
@@ -22,7 +23,7 @@ public class ServerMojo extends AbstractJasmineMojo {
   public static final String INSTRUCTION_FORMAT =
       "\n\n" +
           "Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n" +
-          "  http://localhost:%s"+
+          " %s://localhost:%s"+
           "\n\n" +
           "The server will monitor these two directories for scripts that you add, remove, and change:\n\n" +
           "  source directory: %s\n\n"+
@@ -39,6 +40,7 @@ public class ServerMojo extends AbstractJasmineMojo {
   private String buildServerInstructions() throws IOException {
     return String.format(
         INSTRUCTION_FORMAT,
+        this.uriScheme,
         this.serverPort,
         this.getRelativePath(this.sources.getDirectory()),
         this.getRelativePath(this.specs.getDirectory()));
@@ -53,7 +55,7 @@ public class ServerMojo extends AbstractJasmineMojo {
     serverManager.join();
   }
 
-  private ServerManager getServerManager() {
+  private ServerManager getServerManager() throws MojoExecutionException {
     Log log = this.debug ? this.getLog() : new NullLog();
 
     CreatesRunner createsRunner = new CreatesRunner(
@@ -67,7 +69,7 @@ public class ServerMojo extends AbstractJasmineMojo {
         this.relativizesFilePaths,
         createsRunner);
 
-    return new ServerManager(configurator);
+    return new ServerManager(new Server(), getConnector(), configurator);
   }
 
   private String getRelativePath(File absolutePath) throws IOException {

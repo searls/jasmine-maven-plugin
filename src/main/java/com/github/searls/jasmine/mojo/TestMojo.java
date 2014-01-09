@@ -8,6 +8,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.eclipse.jetty.server.Server;
 import org.openqa.selenium.WebDriver;
 
 import com.github.searls.jasmine.NullLog;
@@ -49,7 +50,7 @@ public class TestMojo extends AbstractJasmineMojo {
       int port = serverManager.start();
       setPortProperty(port);
       this.getLog().info("Executing Jasmine Specs");
-      JasmineResult result = this.executeSpecs(new URL("http://" + this.serverHostname + ":" + port));
+      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+"://" + this.serverHostname + ":" + port));
       this.logResults(result);
       this.throwAnySpecFailures(result);
     } finally {
@@ -59,7 +60,7 @@ public class TestMojo extends AbstractJasmineMojo {
     }
   }
 
-  private ServerManager getServerManager() {
+  private ServerManager getServerManager() throws MojoExecutionException {
     Log log = this.debug ? this.getLog() : new NullLog();
 
     CreatesRunner createsRunner = new CreatesRunner(
@@ -73,7 +74,7 @@ public class TestMojo extends AbstractJasmineMojo {
         this.relativizesFilePaths,
         createsRunner);
 
-    return new ServerManager(configurator);
+    return new ServerManager(new Server(), getConnector(), configurator);
   }
 
   private void setPortProperty(int port) {
