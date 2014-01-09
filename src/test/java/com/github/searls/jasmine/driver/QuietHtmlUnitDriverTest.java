@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
@@ -18,13 +19,18 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class QuietHtmlUnitDriverTest {
+
   @Mock
   private WebClient mockWebClient;
+
+  @Mock
+  private DesiredCapabilities capabilities;
+
   private QuietHtmlUnitDriver driver;
   private boolean debug = false;
 
   private void createDriver() {
-    driver = new QuietHtmlUnitDriver(BrowserVersion.FIREFOX_3_6, debug);
+    driver = new QuietHtmlUnitDriver(capabilities, debug);
   }
 
   @Test

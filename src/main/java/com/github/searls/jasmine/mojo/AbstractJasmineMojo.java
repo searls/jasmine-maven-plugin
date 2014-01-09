@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -65,28 +66,47 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	protected String webDriverClassName;
 
 	/**
-	 * Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.
-	 * <p/>
-	 * This property will be ignored if org.openqa.selenium.htmlunit.HtmlUnitDriver is used; use the browserVersion
-	 * property instead.
-	 * <p/>
-	 * For org.openqa.selenium.phantomjs.PhantomJSDriver, include "phantomjs.binary.path" if phantomJS is not in the
-	 * system command path of the build machine.
+	 * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>
+   *
+	 * <p>Capabilities value can be either a String, a List, or a Map.</p>
+   *
+   * <p>Example:</p>
+   * <pre>
+   * &lt;webDriverCapabilities&gt;
+   *   &lt;capability&gt;
+   *     &lt;name&gt;phantomjs.binary.path&lt;/name&gt;
+   *     &lt;value&gt;/opt/phantomjs/bin/phantomjs&lt;/value&gt;
+   *   &lt;/capability&gt;
+   *   &lt;capability&gt;
+   *     &lt;name&gt;phantomjs.cli.args&lt;/name&gt;
+   *     &lt;list&gt;
+   *       &lt;value&gt;--disk-cache=true&lt;/value&gt;
+   *       &lt;value&gt;--max-disk-cache-size=256&lt;/value&gt;
+   *     &lt;/list&gt;
+   *   &lt;/capability&gt;
+   *   &lt;capability&gt;
+   *     &lt;name&gt;proxy&lt;/name&gt;
+   *     &lt;map&gt;
+   *       &lt;httpProxy&gt;myproxyserver.com:8000&lt;/httpProxy&gt;
+   *     &lt;/map&gt;
+   *   &lt;/capability&gt;
+   * &lt;/webDriverCapabilities&gt;
+   * </pre>
 	 *
 	 * @since 1.3.1.1
 	 */
-	@Parameter
-	protected Map<String, String> webDriverCapabilities;
+  @Parameter
+  protected List<Capability> webDriverCapabilities = Collections.emptyList();
 
 	/**
 	 * <p>Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
 	 * This maps 1-to-1 with the public static instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.</p>
 	 *
-	 * <p>Some valid examples: CHROME, FIREFOX_3_6, INTERNET_EXPLORER_7, INTERNET_EXPLORER_8, INTERNET_EXPLORER_9</p>
+	 * <p>Some valid examples: CHROME, FIREFOX_17, INTERNET_EXPLORER_9, INTERNET_EXPLORER_10</p>
 	 *
 	 * @since 1.1.0
 	 */
-	@Parameter(defaultValue="FIREFOX_3_6")
+	@Parameter(defaultValue="FIREFOX_17")
 	protected String browserVersion;
 
 	/**
@@ -273,6 +293,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	protected boolean keepServerAlive;
 
 	/**
+   * <p>Allows specifying which source files should be included and in what order.</p>
+   * <pre>
 	 * &lt;sourceIncludes&gt;
 	 *   &lt;include&gt;vendor/&#42;&#42;/&#42;.js&lt;/include&gt;
 	 *   &lt;include&gt;myBootstrapFile.js&lt;/include&gt;
@@ -415,6 +437,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
+
 		this.loadResources();
 
 		this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);

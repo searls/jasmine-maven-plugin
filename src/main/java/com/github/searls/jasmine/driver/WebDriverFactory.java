@@ -1,15 +1,17 @@
 package com.github.searls.jasmine.driver;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.github.searls.jasmine.mojo.Capability;
 import com.google.common.base.Objects;
+import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.lang.reflect.Constructor;
 import java.util.Collections;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Creates a WebDriver for TestMojo using configured properties.
@@ -18,7 +20,7 @@ public class WebDriverFactory {
   private boolean debug;
   private String browserVersion;
   private String webDriverClassName;
-  private Map<String, String> webDriverCapabilities;
+  private List<Capability> webDriverCapabilities;
 
   public WebDriverFactory() {
     setWebDriverCapabilities(null);
@@ -36,8 +38,8 @@ public class WebDriverFactory {
     this.webDriverClassName = webDriverClassName;
   }
 
-  public void setWebDriverCapabilities(Map<String, String> webDriverCapabilities) {
-    this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.<String, String>emptyMap());
+  public void setWebDriverCapabilities(List<Capability> webDriverCapabilities) {
+    this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.<Capability>emptyList());
   }
 
   public WebDriver createWebDriver() throws Exception {
@@ -74,21 +76,31 @@ public class WebDriverFactory {
       return new Object[] {getCapabilities()};
   }
 
-  private Capabilities getCapabilities() {
+  private DesiredCapabilities getCapabilities() {
     DesiredCapabilities capabilities = new DesiredCapabilities();
     capabilities.setJavascriptEnabled(true);
-    for (Map.Entry<String, String> entry : webDriverCapabilities.entrySet()) {
-      capabilities.setCapability(entry.getKey(), entry.getValue());
+
+    for (Capability capability : webDriverCapabilities) {
+      if (StringUtils.isNotBlank(capability.getValue())) {
+        capabilities.setCapability(capability.getName(),capability.getValue());
+      } else if (capability.getList() != null && !capability.getList().isEmpty()) {
+        capabilities.setCapability(capability.getName(),capability.getList());
+      } else if (capability.getMap() != null && !capability.getMap().isEmpty()) {
+        capabilities.setCapability(capability.getName(),capability.getMap());
+      }
     }
+
     return capabilities;
   }
 
-
-  private BrowserVersion getBrowserVersion() throws Exception {
-    return (BrowserVersion) BrowserVersion.class.getField(browserVersion).get(BrowserVersion.class);
-  }
-
   private WebDriver createDefaultWebDriver() throws Exception {
-    return new QuietHtmlUnitDriver(getBrowserVersion(), debug);
+    DesiredCapabilities capabilities = getCapabilities();
+    if (StringUtils.isBlank(capabilities.getBrowserName())) {
+      capabilities.setBrowserName(BrowserType.HTMLUNIT);
+    }
+    if (StringUtils.isBlank(capabilities.getVersion())) {
+      capabilities.setVersion(browserVersion.replaceAll("(\\D+)_(\\d.*)?", "$1-$2").replaceAll("_", " ").toLowerCase());
+    }
+    return new QuietHtmlUnitDriver(getCapabilities(), debug);
   }
 }
