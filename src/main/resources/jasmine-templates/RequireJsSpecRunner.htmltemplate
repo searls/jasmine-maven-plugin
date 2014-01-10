@@ -6,6 +6,16 @@
   <meta http-equiv="refresh" content="$autoRefreshInterval$">
   $endif$
   <title>Jasmine Spec Runner</title>
+  <script type="text/javascript">
+    window.onerror = function(msg,url,line) {
+      var jserror = document.head.getAttribute('jmp_jserror') || '';
+      if (jserror) {
+        jserror += ':!:';
+      }
+      jserror += msg;
+      document.head.setAttribute('jmp_jserror',jserror);
+    };
+  </script>
   $cssDependencies$
   $javascriptDependencies$
   $preloadScriptTags$

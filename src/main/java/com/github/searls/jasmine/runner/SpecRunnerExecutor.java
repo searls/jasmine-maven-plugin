@@ -5,9 +5,13 @@ import java.io.IOException;
 import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.github.searls.jasmine.io.IOUtilsWrapper;
@@ -29,6 +33,9 @@ public class SpecRunnerExecutor {
 			JavascriptExecutor executor = (JavascriptExecutor) driver;
 			driver.get(runnerUrl.toString());
 			this.waitForRunnerToFinish(driver, timeout, debug, log);
+
+      this.checkForConsoleErrors(driver, log);
+
 			JasmineResult jasmineResult = new JasmineResult();
 			jasmineResult.setDetails(this.buildReport(executor,format));
 			FileUtils.writeStringToFile(junitXmlReport, this.buildJunitXmlReport(executor,debug), "UTF-8");
@@ -39,6 +46,17 @@ public class SpecRunnerExecutor {
 			throw new RuntimeException(e);
 		}
 	}
+
+  private void checkForConsoleErrors(WebDriver driver, Log log) {
+    WebElement head = driver.findElement(By.tagName("head"));
+    if (head != null) {
+      String jserrors = head.getAttribute("jmp_jserror");
+      if (StringUtils.isNotBlank(jserrors)) {
+        log.warn("JavaScript Console Errors:\n\n  * "+jserrors.replaceAll(":!:","\n  * ")+"\n\n");
+        throw new RuntimeException("There were javascript console errors.");
+      }
+    }
+  }
 
 	private String buildReport(JavascriptExecutor driver, String format) throws IOException {
 		String script =
