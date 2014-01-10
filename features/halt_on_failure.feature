@@ -18,6 +18,14 @@ Feature: halt the build when a spec failure occurs
     Then the build should fail
     And I should see "Results: 5 specs, 4 failures"
     And I should see "There were Jasmine spec failures"
+  
+  Scenario: project with syntax error
+
+    Given I am currently in the "jasmine-webapp-syntax-error" project
+    When I run "mvn clean test"
+    Then the build should fail
+    And I should see ".*JavaScript Console Errors:"
+    And I should see ".*SyntaxError: Parse error"
 
   Scenario: project with no failures
   
