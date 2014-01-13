@@ -57,10 +57,17 @@ public class WebDriverFactory {
 
   private Constructor<? extends WebDriver> getWebDriverConstructor() throws Exception {
     Class<? extends WebDriver> webDriverClass = getWebDriverClass();
+    boolean hasCapabilities = !webDriverCapabilities.isEmpty();
     try {
-      return webDriverClass.getConstructor(Capabilities.class);
-    } catch (Exception exception) {
+      if (hasCapabilities) {
+        return webDriverClass.getConstructor(Capabilities.class);
+      }
       return webDriverClass.getConstructor();
+    } catch (Exception exception) {
+      if (hasCapabilities) {
+        return webDriverClass.getConstructor();
+      }
+      return webDriverClass.getConstructor(Capabilities.class);
     }
   }
 
