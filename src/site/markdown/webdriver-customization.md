@@ -32,7 +32,7 @@ Here is an example using FirefoxDriver:
 
 Setting capabilities
 --------------------
-You can configure your WebDriver implementation using [Capabilities](http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/Capabilities.html) as a simple String, List<String>, or a Map<String,String>. The capabilities are configured using the `webDriverCapabilities` parameter and you may provide multiple capabilities.
+You can configure your WebDriver implementation using [Capabilities](http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/Capabilities.html) as a simple String, List, or a Map. The capabilities are configured using the `webDriverCapabilities` parameter and you may provide multiple capabilities.
 
 * Capability as a String
 
@@ -45,7 +45,7 @@ You can configure your WebDriver implementation using [Capabilities](http://sele
 </webDriverCapabilities>
 ```
 
-* Capability as a List<String>
+* Capability as a List
 
 ``` xml
 <webDriverCapabilities>
@@ -59,7 +59,7 @@ You can configure your WebDriver implementation using [Capabilities](http://sele
 </webDriverCapabilities>
 ```
 
-* Capability as a Map<String,String>
+* Capability as a Map
 
 ``` xml
 <webDriverCapabilities>
@@ -70,8 +70,9 @@ You can configure your WebDriver implementation using [Capabilities](http://sele
     </map>
   </capability>
 </webDriverCapabilities>
+```
 
-You will need to consult with your WebDriver implementation to determine what capabilities are possible.  If a capability can not be provided as either a String, List<String>, or Map<String,String> then it is currently not supported.
+You will need to consult with your WebDriver implementation to determine what capabilities are possible.  If a capability can not be provided as either a String, List, or Map then it is currently not supported.
 
 Lastly, we do not test every possible WebDriver implementation with every possible permutation of capabilities so it is very possible that they will not work. Feel free to file a bug if you come across such a capability that you feel should be supported.
 
