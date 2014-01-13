@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>QuietHtmlUnitDriver.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.html" class="el_package">com.github.searls.jasmine.driver</a> &gt; <span class="el_source">QuietHtmlUnitDriver.java</span></div><h1>QuietHtmlUnitDriver.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.driver;
+
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.gargoylesoftware.htmlunit.IncorrectnessListener;
+import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
+import com.gargoylesoftware.htmlunit.WebClient;
+
+/**
+ * The default web driver - overridden to tweak a few things.
+ */
+public class QuietHtmlUnitDriver extends HtmlUnitDriver {
+
+  private final boolean debug;
+
+	public QuietHtmlUnitDriver(Capabilities capabilities, boolean debug) {
+<span class="fc" id="L19">    super(capabilities);</span>
+<span class="fc" id="L20">    this.debug = debug;</span>
+<span class="fc" id="L21">		this.setJavascriptEnabled(true);</span>
+<span class="fc" id="L22">	}</span>
+
+	@Override
+	protected WebClient modifyWebClient(WebClient client) {
+<span class="fc" id="L26">		client.setAjaxController(new NicelyResynchronizingAjaxController());</span>
+
+		//Disables stuff like this &quot;com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'.&quot;
+<span class="fc bfc" id="L29" title="All 2 branches covered.">		if (!this.debug) {</span>
+<span class="fc" id="L30">			client.setIncorrectnessListener(new IncorrectnessListener() {</span>
+				@Override
+				public void notify(String message, Object origin) {
+<span class="nc" id="L33">				}</span>
+			});
+		}
+<span class="fc" id="L36">		return client;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

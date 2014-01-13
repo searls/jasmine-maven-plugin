@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>BasicScriptResolver.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.html" class="el_package">com.github.searls.jasmine.io.scripts</a> &gt; <span class="el_source">BasicScriptResolver.java</span></div><h1>BasicScriptResolver.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.io.scripts;
+
+import java.io.File;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.codehaus.plexus.util.StringUtils;
+
+import com.github.searls.jasmine.model.ScriptSearch;
+
+public class BasicScriptResolver implements ScriptResolver {
+
+<span class="fc" id="L14">  private static final ResolvesLocationOfPreloadSources RESOLVES_PRELOAD_SOURCES = new ResolvesLocationOfPreloadSources();</span>
+<span class="fc" id="L15">  private static final FindsScriptLocationsInDirectory FINDS_SCRIPT_LOCATIONS = new FindsScriptLocationsInDirectory();</span>
+
+  private final File baseDirectory;
+  private final ScriptSearch sourceScriptSearch;
+  private final ScriptSearch specScriptSearch;
+  private final List&lt;String&gt; preloadList;
+
+  private Set&lt;String&gt; sources;
+  private Set&lt;String&gt; specs;
+  private Set&lt;String&gt; preloads;
+
+  public BasicScriptResolver(File baseDirectory,
+                             ScriptSearch sourceScriptSearch,
+                             ScriptSearch specScriptSearch,
+<span class="fc" id="L29">                             List&lt;String&gt; preloadList) {</span>
+<span class="fc" id="L30">    this.baseDirectory = baseDirectory;</span>
+<span class="fc" id="L31">    this.sourceScriptSearch = sourceScriptSearch;</span>
+<span class="fc" id="L32">    this.specScriptSearch = specScriptSearch;</span>
+<span class="fc" id="L33">    this.preloadList = preloadList;</span>
+<span class="fc" id="L34">    resolveScripts();</span>
+<span class="fc" id="L35">  }</span>
+
+  private void resolveScripts() {
+<span class="fc" id="L38">    this.preloads = new LinkedHashSet&lt;String&gt;(RESOLVES_PRELOAD_SOURCES.resolve(</span>
+        this.preloadList,
+        this.sourceScriptSearch.getDirectory(),
+        this.specScriptSearch.getDirectory()));
+<span class="fc" id="L42">    this.sources = new LinkedHashSet&lt;String&gt;(FINDS_SCRIPT_LOCATIONS.find(this.sourceScriptSearch));</span>
+<span class="fc" id="L43">    this.sources.removeAll(this.preloads);</span>
+
+<span class="fc" id="L45">    this.specs = new LinkedHashSet&lt;String&gt;(FINDS_SCRIPT_LOCATIONS.find(this.specScriptSearch));</span>
+<span class="fc" id="L46">    this.specs.removeAll(this.preloads);</span>
+<span class="fc" id="L47">  }</span>
+
+  @Override
+  public String getSourceDirectory() {
+<span class="fc" id="L51">    return directoryToString(this.sourceScriptSearch.getDirectory());</span>
+  }
+
+  @Override
+  public String getSpecDirectory() {
+<span class="fc" id="L56">    return directoryToString(this.specScriptSearch.getDirectory());</span>
+  }
+
+  @Override
+  public String getBaseDirectory() {
+<span class="nc" id="L61">    return directoryToString(this.baseDirectory);</span>
+  }
+
+  @Override
+  public Set&lt;String&gt; getSources() {
+<span class="nc" id="L66">    return sources;</span>
+  }
+
+  @Override
+  public Set&lt;String&gt; getSpecs() {
+<span class="nc" id="L71">    return specs;</span>
+  }
+
+  @Override
+  public Set&lt;String&gt; getPreloads() {
+<span class="nc" id="L76">    return preloads;</span>
+  }
+
+  @Override
+  public Set&lt;String&gt; getAllScripts() {
+<span class="nc" id="L81">    LinkedHashSet&lt;String&gt; allScripts = new LinkedHashSet&lt;String&gt;();</span>
+<span class="nc" id="L82">    allScripts.addAll(this.getPreloads());</span>
+<span class="nc" id="L83">    allScripts.addAll(this.getSources());</span>
+<span class="nc" id="L84">    allScripts.addAll(this.getSpecs());</span>
+<span class="nc" id="L85">    return allScripts;</span>
+  }
+
+  private String directoryToString(File directory) {
+<span class="fc" id="L89">    return StringUtils.stripEnd(directory.toURI().toString(), &quot;/&quot;);</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

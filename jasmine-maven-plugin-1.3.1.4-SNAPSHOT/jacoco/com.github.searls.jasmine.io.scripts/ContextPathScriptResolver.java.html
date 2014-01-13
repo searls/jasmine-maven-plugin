@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ContextPathScriptResolver.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.html" class="el_package">com.github.searls.jasmine.io.scripts</a> &gt; <span class="el_source">ContextPathScriptResolver.java</span></div><h1>ContextPathScriptResolver.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.io.scripts;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+public class ContextPathScriptResolver implements ScriptResolver {
+
+  private final ScriptResolver scriptResolver;
+  private final String baseContextPath;
+  private final String sourceContextPath;
+  private final String specContextPath;
+
+  public ContextPathScriptResolver(ScriptResolver scriptResolver,
+                                   String sourceContextPath,
+                                   String specContextPath) {
+<span class="fc" id="L16">    this(scriptResolver, &quot;&quot;, sourceContextPath, specContextPath);</span>
+<span class="fc" id="L17">  }</span>
+
+  public ContextPathScriptResolver(ScriptResolver scriptResolver,
+                                   String baseContextPath,
+                                   String sourceContextPath,
+<span class="fc" id="L22">                                   String specContextPath) {</span>
+<span class="fc" id="L23">    this.scriptResolver = scriptResolver;</span>
+<span class="fc" id="L24">    this.baseContextPath = baseContextPath;</span>
+<span class="fc" id="L25">    this.sourceContextPath = sourceContextPath;</span>
+<span class="fc" id="L26">    this.specContextPath = specContextPath;</span>
+<span class="fc" id="L27">  }</span>
+
+  @Override
+  public String getSourceDirectory() {
+<span class="fc" id="L31">    return this.sourceContextPath;</span>
+  }
+
+  @Override
+  public String getSpecDirectory() {
+<span class="fc" id="L36">    return this.specContextPath;</span>
+  }
+
+  @Override
+  public String getBaseDirectory() {
+<span class="nc" id="L41">    return this.baseContextPath;</span>
+  }
+
+  @Override
+  public Set&lt;String&gt; getSources() throws ScriptResolverException {
+<span class="fc" id="L46">    return relativeToContextPath(</span>
+        this.scriptResolver.getSourceDirectory(),
+        this.sourceContextPath,
+        this.scriptResolver.getSources());
+  }
+
+  @Override
+  public Set&lt;String&gt; getSpecs() throws ScriptResolverException {
+<span class="fc" id="L54">    return relativeToContextPath(</span>
+        this.scriptResolver.getSpecDirectory(),
+        this.specContextPath,
+        this.scriptResolver.getSpecs());
+  }
+
+  @Override
+  public Set&lt;String&gt; getPreloads() throws ScriptResolverException {
+<span class="fc" id="L62">    Set&lt;String&gt; scripts = this.scriptResolver.getPreloads();</span>
+<span class="fc" id="L63">    scripts = relativeToContextPath(</span>
+        this.scriptResolver.getSourceDirectory(),
+        this.sourceContextPath,
+        scripts);
+<span class="fc" id="L67">    scripts = relativeToContextPath(</span>
+        this.scriptResolver.getSpecDirectory(),
+        this.specContextPath,
+        scripts);
+<span class="fc" id="L71">    scripts = relativeToContextPath(</span>
+        this.scriptResolver.getBaseDirectory(),
+        this.baseContextPath,
+        scripts);
+<span class="fc" id="L75">    return scripts;</span>
+  }
+
+  @Override
+  public Set&lt;String&gt; getAllScripts() throws ScriptResolverException {
+<span class="nc" id="L80">    LinkedHashSet&lt;String&gt; allScripts = new LinkedHashSet&lt;String&gt;();</span>
+<span class="nc" id="L81">    allScripts.addAll(this.getPreloads());</span>
+<span class="nc" id="L82">    allScripts.addAll(this.getSources());</span>
+<span class="nc" id="L83">    allScripts.addAll(this.getSpecs());</span>
+<span class="nc" id="L84">    return allScripts;</span>
+  }
+
+  private Set&lt;String&gt; relativeToContextPath(String realPath, String contextPath, Set&lt;String&gt; absoluteScripts) {
+<span class="fc" id="L88">    Set&lt;String&gt; relativeScripts = new LinkedHashSet&lt;String&gt;();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">    for (String absoluteScript : absoluteScripts) {</span>
+<span class="fc" id="L90">      relativeScripts.add(absoluteScript.replace(realPath, contextPath));</span>
+<span class="fc" id="L91">    }</span>
+<span class="fc" id="L92">    return relativeScripts;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
