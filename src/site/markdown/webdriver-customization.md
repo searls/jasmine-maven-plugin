@@ -39,7 +39,7 @@ You can configure your WebDriver implementation using [Capabilities](http://sele
 ``` xml
 <webDriverCapabilities>
   <capability>
-    <name>phantomjs.binary</name>
+    <name>phantomjs.binary.path</name>
     <value>/opt/phantomjs/bin/phantomjs</value>
   </capability>
 </webDriverCapabilities>
@@ -124,7 +124,7 @@ Configuring PhantomJSDriver with custom binary path and caching settings:
     <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
     <webDriverCapabilities>
       <capability>
-        <name>phantomjs.binary</name>
+        <name>phantomjs.binary.path</name>
         <value>/opt/phantomjs/bin/phantomjs</value>
       </capability>
       <capability>
