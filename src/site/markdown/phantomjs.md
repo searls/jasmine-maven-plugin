@@ -59,7 +59,7 @@ For more information on configuration options for PhantomJSDriver see its [docum
 
 Automatically installing phantomjs
 ----------------------------------
-One of the downsides of using phantomjs instead of HtmlUnit is it requires native binaries be present on the system you are running your build on. The [phantomjs-maven-plugin](https://klieber.github.io/phantomjs-maven-plugin) solves that problem by automatically pulling down phantomjs when needed.
+One of the downsides of using phantomjs instead of HtmlUnit is it requires native binaries be present on the system you are running your build on. The [phantomjs-maven-plugin](http://klieber.github.io/phantomjs-maven-plugin) solves that problem by automatically pulling down phantomjs when needed.
 
 Here's an example using `phantomjs-maven-plugin` with the `jasmine-maven-plugin`:
 
