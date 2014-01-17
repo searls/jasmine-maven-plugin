@@ -2,50 +2,48 @@
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 public class ServerManager {
 
   private static final int ANY_PORT = 0;
 
   private final Server server;
+  private final Connector connector;
   private final ResourceHandlerConfigurator configurator;
 
-<span class="fc" id="L14">  public ServerManager(Server server, ResourceHandlerConfigurator configurator) {</span>
-<span class="fc" id="L15">    this.configurator = configurator;</span>
-<span class="fc" id="L16">    this.server = server;</span>
-<span class="fc" id="L17">  }</span>
-
-  public ServerManager(ResourceHandlerConfigurator configurator) {
-<span class="fc" id="L20">    this(new Server(),configurator);</span>
-<span class="fc" id="L21">  }</span>
+  public ServerManager(Server server,
+                       Connector connector,
+<span class="fc" id="L16">                       ResourceHandlerConfigurator configurator) {</span>
+<span class="fc" id="L17">    this.server = server;</span>
+<span class="fc" id="L18">    this.connector = connector;</span>
+<span class="fc" id="L19">    this.configurator = configurator;</span>
+<span class="fc" id="L20">  }</span>
 
   public int start() throws Exception {
-<span class="fc" id="L24">    return this.startServer(ANY_PORT);</span>
+<span class="fc" id="L23">    return this.startServer(ANY_PORT);</span>
   }
 
   public void start(int port) throws Exception {
-<span class="fc" id="L28">    this.startServer(port);</span>
-<span class="fc" id="L29">  }</span>
+<span class="fc" id="L27">    this.startServer(port);</span>
+<span class="fc" id="L28">  }</span>
 
   private int startServer(int port) throws Exception {
-<span class="fc" id="L32">    Connector connector = new SelectChannelConnector();</span>
-<span class="fc" id="L33">    connector.setPort(port);</span>
+<span class="fc" id="L31">    connector.setPort(port);</span>
 
-<span class="fc" id="L35">    this.server.setHandler(this.configurator.createHandler());</span>
-<span class="fc" id="L36">    this.server.addConnector(connector);</span>
+<span class="fc" id="L33">    this.server.setHandler(this.configurator.createHandler());</span>
+<span class="fc" id="L34">    this.server.addConnector(connector);</span>
 
-<span class="fc" id="L38">    this.server.start();</span>
+<span class="fc" id="L36">    this.server.start();</span>
 
-<span class="fc" id="L40">    return connector.getLocalPort();</span>
+<span class="fc" id="L38">    return connector.getLocalPort();</span>
   }
 
   public void stop() throws Exception {
-<span class="fc" id="L44">    this.server.stop();</span>
-<span class="fc" id="L45">  }</span>
+<span class="fc" id="L42">    this.server.stop();</span>
+<span class="fc" id="L43">  }</span>
 
   public void join() throws Exception {
-<span class="fc" id="L48">    this.server.join();</span>
-<span class="fc" id="L49">  }</span>
+<span class="fc" id="L46">    this.server.join();</span>
+<span class="fc" id="L47">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
