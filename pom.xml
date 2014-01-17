@@ -91,6 +91,18 @@
       <name>Rafael</name>
       <url>https://github.com/rvalle</url>
     </contributor>
+    <contributor>
+      <name>worldjoe</name>
+      <url>https://github.com/worldjoe</url>
+    </contributor>
+    <contributor>
+      <name>Aaron Phethean</name>
+      <url>https://github.com/aphethean</url>
+    </contributor>
+    <contributor>
+      <name>Steve Krall</name>
+      <url>https://github.com/skrall</url>
+    </contributor>
   </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
