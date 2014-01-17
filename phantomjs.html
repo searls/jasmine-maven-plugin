@@ -225,7 +225,7 @@
     &lt;/plugin&gt;
   &lt;/plugins&gt;
 &lt;/build&gt;
-</pre></div><p>For more information on configuration options for PhantomJSDriver see its <a class="externalLink" href="https://github.com/detro/ghostdriver">documentation</a>.</p><div class="section"><h2>Automatically installing phantomjs<a name="Automatically_installing_phantomjs"></a></h2><p>One of the downsides of using phantomjs instead of HtmlUnit is it requires native binaries be present on the system you are running your build on. The <a class="externalLink" href="https://klieber.github.io/phantomjs-maven-plugin">phantomjs-maven-plugin</a> solves that problem by automatically pulling down phantomjs when needed.</p><p>Heres an example using <tt>phantomjs-maven-plugin</tt> with the <tt>jasmine-maven-plugin</tt>:</p>
+</pre></div><p>For more information on configuration options for PhantomJSDriver see its <a class="externalLink" href="https://github.com/detro/ghostdriver">documentation</a>.</p><div class="section"><h2>Automatically installing phantomjs<a name="Automatically_installing_phantomjs"></a></h2><p>One of the downsides of using phantomjs instead of HtmlUnit is it requires native binaries be present on the system you are running your build on. The <a class="externalLink" href="http://klieber.github.io/phantomjs-maven-plugin">phantomjs-maven-plugin</a> solves that problem by automatically pulling down phantomjs when needed.</p><p>Heres an example using <tt>phantomjs-maven-plugin</tt> with the <tt>jasmine-maven-plugin</tt>:</p>
 <div class="source"><pre class="prettyprint">&lt;build&gt;
   &lt;plugins&gt;
     &lt;plugin&gt;
