@@ -5,6 +5,7 @@ import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
+import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -566,6 +567,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	public File getBasedir() {
 		return this.mavenProject.getBasedir();
 	}
+
+    @Override
+    public ClassLoader getProjectClassLoader() {
+       return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();
+    }
 
   protected Connector getConnector() throws MojoExecutionException {
     try {

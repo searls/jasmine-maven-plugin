@@ -15,6 +15,7 @@ import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.CreatesRunner;
+import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceHandlerConfiguratorTest {
@@ -72,6 +73,7 @@ public class ResourceHandlerConfiguratorTest {
     when(configuration.getSpecs()).thenReturn(specs);
     when(configuration.getSources()).thenReturn(sources);
     when(configuration.getBasedir()).thenReturn(baseDirectory);
+    when(configuration.getProjectClassLoader()).thenReturn(new ProjectClassLoaderFactory().create());
 
     this.configurator.createHandler();
   }

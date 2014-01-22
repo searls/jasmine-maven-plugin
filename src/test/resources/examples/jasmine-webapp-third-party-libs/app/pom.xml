@@ -1,0 +1,85 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.github.searls</groupId>
+        <artifactId>jasmine-webapp-3rd-party-libs-parent</artifactId>
+        <version>%{project.version}</version>
+    </parent>
+    <artifactId>jasmine-webapp-3rd-party-libs</artifactId>
+    <version>%{project.version}</version>
+    <packaging>war</packaging>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <version>%{project.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <preloadSources>
+                        <!--jar (transitive dependency)-->
+                        <source>classpath/META-INF/resources/webjars/jquery/1.9.0/jquery.js</source>
+
+                        <!--WebJars (direct dependency)-->
+                        <source>classpath/META-INF/resources/webjars/bootstrap/3.0.3/js/bootstrap.js</source>
+
+                        <!--war dependency from lib-at-war-->
+                        <source>classpath/js/foo.js</source>
+
+                        <!--<scope>test</scope>-->
+                        <source>classpath/META-INF/resources/webjars/jasmine-async/0.1.0/jasmine.async.js</source>
+
+                        <!--<scope>runtime</scope>-->
+                        <source>classpath/META-INF/resources/webjars/lodash/2.4.1/lodash.js</source>
+
+                        <!--WebJars Locator query-->
+                        <source>webjar/i18next.js</source>
+                    </preloadSources>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>3.0.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>i18next</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>jasmine-async</artifactId>
+            <version>0.1.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>lodash</artifactId>
+            <version>2.4.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.searls</groupId>
+            <artifactId>jasmine-webapp-3rd-party-libs-war-with-js</artifactId>
+            <version>%{project.version}</version>
+            <type>war</type>
+        </dependency>
+    </dependencies>
+</project>
