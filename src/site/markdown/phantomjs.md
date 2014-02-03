@@ -44,7 +44,7 @@ The above configuration assumes that the `phantomjs` binary is on your systems `
             <webDriverCapabilities>
               <capability>
                 <name>phantomjs.binary.path</name>
-                <value>/opt/phantomjs/bin/phantomjs</name>
+                <value>/opt/phantomjs/bin/phantomjs</value>
               </capability>
             </webDriverCapabilities>
           </configuration>
@@ -95,7 +95,7 @@ Here's an example using `phantomjs-maven-plugin` with the `jasmine-maven-plugin`
             <webDriverCapabilities>
               <capability>
                 <name>phantomjs.binary.path</name>
-                <value>${phantomjs.binary}</name>
+                <value>${phantomjs.binary}</value>
               </capability>
             </webDriverCapabilities>
           </configuration>
