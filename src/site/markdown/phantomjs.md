@@ -44,7 +44,7 @@ The above configuration assumes that the `phantomjs` binary is on your systems `
             <webDriverCapabilities>
               <capability>
                 <name>phantomjs.binary.path</name>
-                <value>/opt/phantomjs/bin/phantomjs</name>
+                <value>/opt/phantomjs/bin/phantomjs</value>
               </capability>
             </webDriverCapabilities>
           </configuration>
