@@ -42,10 +42,7 @@ The above configuration assumes that the `phantomjs` binary is on your systems `
           <configuration>
             <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
             <webDriverCapabilities>
-              <capability>
-                <name>phantomjs.binary.path</name>
-                <value>/opt/phantomjs/bin/phantomjs</name>
-              </capability>
+              <phantomjs.binary.path>/opt/phantomjs/bin/phantomjs</phantomjs.binary.path>
             </webDriverCapabilities>
           </configuration>
         </execution>
@@ -93,10 +90,7 @@ Here's an example using `phantomjs-maven-plugin` with the `jasmine-maven-plugin`
           <configuration>
             <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
             <webDriverCapabilities>
-              <capability>
-                <name>phantomjs.binary.path</name>
-                <value>${phantomjs.binary}</name>
-              </capability>
+              <phantomjs.binary.path>${phantomjs.binary}</phantomjs.binary.path>
             </webDriverCapabilities>
           </configuration>
         </execution>
