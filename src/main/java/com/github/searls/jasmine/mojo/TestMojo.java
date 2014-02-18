@@ -8,6 +8,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.eclipse.jetty.server.Server;
 import org.openqa.selenium.WebDriver;
 
@@ -25,7 +26,7 @@ import com.github.searls.jasmine.server.ServerManager;
 /**
  * Execute specs using Selenium Web Driver. Uses HtmlUnitDriver for head-less execution by default.
  */
-@Mojo(name="test",defaultPhase=LifecyclePhase.TEST)
+@Mojo(name="test",defaultPhase=LifecyclePhase.TEST,requiresDependencyResolution = ResolutionScope.TEST)
 public class TestMojo extends AbstractJasmineMojo {
 
   private final RelativizesFilePaths relativizesFilePaths;

@@ -35,4 +35,6 @@ public interface JasmineConfiguration {
 	int getAutoRefreshInterval();
 	
 	boolean isCoffeeScriptCompilationEnabled();
+
+    ClassLoader getProjectClassLoader();
 }

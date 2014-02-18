@@ -10,6 +10,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.eclipse.jetty.server.Server;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +18,7 @@ import java.io.IOException;
 /**
  * Execute specs in a web browser. Monitors your sources/specs for changes as you develop.
  */
-@Mojo(name="bdd",requiresDirectInvocation=true)
+@Mojo(name="bdd",requiresDirectInvocation=true,requiresDependencyResolution = ResolutionScope.TEST)
 public class ServerMojo extends AbstractJasmineMojo {
 
   public static final String INSTRUCTION_FORMAT =

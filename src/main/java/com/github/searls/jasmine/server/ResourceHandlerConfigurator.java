@@ -11,6 +11,8 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.runner.CreatesRunner;
+import com.github.searls.jasmine.thirdpartylibs.ClassPathResourceHandler;
+import com.github.searls.jasmine.thirdpartylibs.WebJarResourceHandler;
 
 public class ResourceHandlerConfigurator {
 
@@ -38,6 +40,14 @@ public class ResourceHandlerConfigurator {
     ContextHandler rootContextHandler = contexts.addContext("/", "");
     rootContextHandler.setAliases(true);
     rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));
+
+    ContextHandler classPathContextHandler = contexts.addContext("/classpath", "");
+    classPathContextHandler.setHandler(new ClassPathResourceHandler(configuration.getProjectClassLoader()));
+    classPathContextHandler.setAliases(true);
+
+    ContextHandler webJarsContextHandler = contexts.addContext("/webjar", "");
+    webJarsContextHandler.setHandler(new WebJarResourceHandler(configuration.getProjectClassLoader()));
+    webJarsContextHandler.setAliases(true);
 
     return contexts;
   }
