@@ -16,6 +16,8 @@ public interface JasmineConfiguration {
 	String getSrcDirectoryName();
 	String getSpecDirectoryName();
 
+	String getWebjarDirectoryName();
+	
 	ScriptSearch getSources();
 	ScriptSearch getSpecs();
 
