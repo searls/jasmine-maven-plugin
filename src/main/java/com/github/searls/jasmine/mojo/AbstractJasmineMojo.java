@@ -445,6 +445,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   )
   protected String connectorClass;
 
+	/**
+	 * <p>The context from which webjar scripts will be served.</p>
+	 *
+	 * @since 1.3.1.5
+	 */
+	@Parameter(property="webjarDirectoryName", defaultValue="webjar")
+	protected String webjarDirectoryName;
+
 	@Parameter(defaultValue="${project}", readonly=true)
 	protected MavenProject mavenProject;
 
@@ -516,6 +524,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Override
 	public String getSpecDirectoryName() {
 		return this.specDirectoryName;
+	}
+
+	@Override
+	public String getWebjarDirectoryName() {
+		return webjarDirectoryName;
 	}
 
 	@Override
