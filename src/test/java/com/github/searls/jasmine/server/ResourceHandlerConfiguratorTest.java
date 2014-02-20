@@ -1,21 +1,23 @@
 package com.github.searls.jasmine.server;
 
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-
+import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.io.RelativizesFilePaths;
+import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.mojo.Context;
+import com.github.searls.jasmine.runner.CreatesRunner;
+import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.searls.jasmine.config.JasmineConfiguration;
-import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.model.ScriptSearch;
-import com.github.searls.jasmine.runner.CreatesRunner;
-import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
+import java.io.File;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ResourceHandlerConfiguratorTest {
@@ -24,6 +26,8 @@ public class ResourceHandlerConfiguratorTest {
   private static final String SOURCE_DIRECTORY = "sourcedir";
   private static final String SPEC_DIRECTORY = "specdir";
   private static final String BASE_DIRECTORY = "basedir";
+  private static final String SOURCE_CONTEXT_ROOT = "sourceroot";
+  private static final String SPEC_CONTEXT_ROOT = "specroot";
 
   private ResourceHandlerConfigurator configurator;
 
@@ -51,8 +55,17 @@ public class ResourceHandlerConfiguratorTest {
   @Mock
   private CreatesRunner createsRunner;
 
+  @Mock
+  private Context contextA;
+
+  @Mock
+  private Context contextB;
+
+  private List<Context> contexts;
+
   @Before
   public void before() {
+    contexts = Arrays.asList(contextA, contextB);
     this.configurator = new ResourceHandlerConfigurator(
         configuration,
         relativizesFilePaths,
@@ -67,13 +80,16 @@ public class ResourceHandlerConfiguratorTest {
     when(specDirectory.getAbsolutePath()).thenReturn(SPEC_DIRECTORY);
     when(baseDirectory.getAbsolutePath()).thenReturn(BASE_DIRECTORY);
 
-    when(sources.getDirectory()).thenReturn(sourceDirectory);
-    when(specs.getDirectory()).thenReturn(specDirectory);
-
-    when(configuration.getSpecs()).thenReturn(specs);
-    when(configuration.getSources()).thenReturn(sources);
     when(configuration.getBasedir()).thenReturn(baseDirectory);
     when(configuration.getProjectClassLoader()).thenReturn(new ProjectClassLoaderFactory().create());
+
+    when(contextA.getContextRoot()).thenReturn(SOURCE_CONTEXT_ROOT);
+    when(contextA.getDirectory()).thenReturn(sourceDirectory);
+
+    when(contextB.getContextRoot()).thenReturn(SPEC_CONTEXT_ROOT);
+    when(contextB.getDirectory()).thenReturn(specDirectory);
+
+    when(configuration.getContexts()).thenReturn(contexts);
 
     this.configurator.createHandler();
   }

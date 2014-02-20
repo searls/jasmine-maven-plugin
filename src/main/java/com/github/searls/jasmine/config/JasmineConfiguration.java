@@ -1,12 +1,12 @@
 package com.github.searls.jasmine.config;
 
-import java.io.File;
-import java.util.List;
-
+import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.mojo.Context;
+import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import org.apache.maven.plugin.logging.Log;
 
-import com.github.searls.jasmine.model.ScriptSearch;
-import com.github.searls.jasmine.runner.SpecRunnerTemplate;
+import java.io.File;
+import java.util.List;
 
 public interface JasmineConfiguration {
 
@@ -18,6 +18,8 @@ public interface JasmineConfiguration {
 
 	ScriptSearch getSources();
 	ScriptSearch getSpecs();
+
+  List<Context> getContexts();
 
 	List<String> getPreloadSources();
 

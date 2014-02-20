@@ -3,6 +3,7 @@ package com.github.searls.jasmine.server;
 import java.io.File;
 import java.io.IOException;
 
+import com.github.searls.jasmine.mojo.Context;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -29,13 +30,11 @@ public class ResourceHandlerConfigurator {
   public Handler createHandler() throws IOException  {
     ContextHandlerCollection contexts = new ContextHandlerCollection();
 
-    ContextHandler srcDirContextHandler = contexts.addContext("/" + this.configuration.getSrcDirectoryName(), "");
-    srcDirContextHandler.setAliases(true);
-    srcDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSources().getDirectory().getAbsolutePath(), null));
-
-    ContextHandler specDirContextHandler = contexts.addContext("/" + this.configuration.getSpecDirectoryName(), "");
-    specDirContextHandler.setAliases(true);
-    specDirContextHandler.setHandler(this.createResourceHandler(true, this.configuration.getSpecs().getDirectory().getAbsolutePath(), null));
+    for (Context context : this.configuration.getContexts()) {
+      ContextHandler handler = contexts.addContext("/"+context.getContextRoot(), "");
+      handler.setAliases(true);
+      handler.setHandler(this.createResourceHandler(true, context.getDirectory().getAbsolutePath(), null));
+    }
 
     ContextHandler rootContextHandler = contexts.addContext("/", "");
     rootContextHandler.setAliases(true);

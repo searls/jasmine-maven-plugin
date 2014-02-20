@@ -445,7 +445,27 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   )
   protected String connectorClass;
 
-	@Parameter(defaultValue="${project}", readonly=true)
+  /**
+   * <p>Specify additional contexts to make available.</p>
+   * <pre>
+   * &lt;additionalContexts&gt;
+   *   &lt;context&gt;
+   *     &lt;contextRoot&gt;/lib&lt;/contextRoot&gt;
+   *     &lt;directory&gt;${project.basedir}/src/main/lib&lt;/directory&gt;
+   *   &lt;/context&gt;
+   *   &lt;context&gt;
+   *     &lt;contextRoot&gt;/test/lib&lt;/contextRoot&gt;
+   *     &lt;directory&gt;${project.basedir}/src/test/lib&lt;/directory&gt;
+   *   &lt;/context&gt;
+   * &lt;/additionalContexts&gt;
+   * </pre>
+   *
+   * @since 1.3.1.5
+   */
+  @Parameter
+  private List<Context> additionalContexts = Collections.emptyList();
+
+  @Parameter(defaultValue="${project}", readonly=true)
 	protected MavenProject mavenProject;
 
 	@Component
@@ -458,6 +478,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	private File customRunnerTemplateFile;
 	private File customRunnerConfigurationFile;
+
 
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
@@ -568,10 +589,19 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 		return this.mavenProject.getBasedir();
 	}
 
-    @Override
-    public ClassLoader getProjectClassLoader() {
-       return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();
-    }
+  @Override
+  public ClassLoader getProjectClassLoader() {
+     return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();
+  }
+
+  @Override
+  public List<Context> getContexts() {
+    List<Context> contexts = new ArrayList<Context>();
+    contexts.add(new Context(this.srcDirectoryName, this.jsSrcDir));
+    contexts.add(new Context(this.specDirectoryName, this.jsTestSrcDir));
+    contexts.addAll(additionalContexts);
+    return contexts;
+  }
 
   protected Connector getConnector() throws MojoExecutionException {
     try {
