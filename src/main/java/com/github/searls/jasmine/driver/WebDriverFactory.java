@@ -8,8 +8,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,6 +24,7 @@ public class WebDriverFactory {
   private boolean debug;
   private String browserVersion;
   private String webDriverClassName;
+  private String remoteWebDriverUrl;
   private List<Capability> webDriverCapabilities;
 
   public WebDriverFactory() {
@@ -38,17 +43,53 @@ public class WebDriverFactory {
     this.webDriverClassName = webDriverClassName;
   }
 
+  public void setRemoteWebDriverUrl(String remoteWebDriverUrl) {
+    this.remoteWebDriverUrl = remoteWebDriverUrl;
+  }
+
   public void setWebDriverCapabilities(List<Capability> webDriverCapabilities) {
     this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.<Capability>emptyList());
   }
 
   public WebDriver createWebDriver() throws Exception {
-    if (HtmlUnitDriver.class.getName().equals(webDriverClassName)) {
+      
+    if (remoteWebDriverUrl != null) {
+          return createRemoteWebDriver();
+    }      
+    else if (HtmlUnitDriver.class.getName().equals(webDriverClassName)) {
       return createDefaultWebDriver();
-    } else {
+    }
+    else {
       return createCustomWebDriver();
     }
   }
+
+    WebDriver createRemoteWebDriver()
+    {
+        // If the user set remoteWebDriverUrl, webDriverClassName must be either RemoteWebDriver or null
+        boolean ok = webDriverClassName == null || RemoteWebDriver.class.getName().equals(webDriverClassName);
+        if (!ok)
+        {
+            throw new RuntimeException("You can't use 'remoteWebDriverUrl' with drivers other than RemoteWebDriver.");
+        }
+
+        // In case it's null
+        webDriverClassName = RemoteWebDriver.class.getName(); // do we have to?
+        
+        return new RemoteWebDriver(toUrl(remoteWebDriverUrl), getCapabilities());
+    }
+
+    URL toUrl(String url)
+    {
+        try
+        {
+            return new URL(url);
+        }
+        catch (MalformedURLException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 
   @SuppressWarnings("unchecked")
   private Class<? extends WebDriver> getWebDriverClass() throws Exception {

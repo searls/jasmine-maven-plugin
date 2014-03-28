@@ -51,6 +51,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	/**
 	 * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
 	 * The plugin uses <a href="http://htmlunit.sourceforge.net/">HtmlUnit</a> by default.
+	 * 
+	 * If the remoteWebDriverUrl property is included this property will be ignored.
 	 *
 	 * <p>Some valid examples:</p>
 	 * <ul>
@@ -66,6 +68,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 */
 	@Parameter(defaultValue="org.openqa.selenium.htmlunit.HtmlUnitDriver")
 	protected String webDriverClassName;
+	
+	/**
+	 * A URL used to create a RemoteWebDriver.  If this property is included, webDriverClassName will be ignored.
+	 *
+	 */
+	@Parameter
+	protected String remoteWebDriverUrl;
+
 
 	/**
 	 * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>

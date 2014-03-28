@@ -95,6 +95,7 @@ public class TestMojo extends AbstractJasmineMojo {
     WebDriverFactory factory = new WebDriverFactory();
     factory.setWebDriverCapabilities(webDriverCapabilities);
     factory.setWebDriverClassName(webDriverClassName);
+    factory.setRemoteWebDriverUrl(remoteWebDriverUrl);
     factory.setDebug(debug);
     factory.setBrowserVersion(browserVersion);
     return factory.createWebDriver();
