@@ -40,7 +40,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	private File jsSrcDir;
 
 	/**
-	 * Directory storying your Jasmine Specs.
+	 * Directory storing your Jasmine Specs.
 	 * @since 1.1.0
 	 */
 	@Parameter(
