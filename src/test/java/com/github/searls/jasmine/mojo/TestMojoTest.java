@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.Arrays;
 import java.util.Properties;
 
 import org.apache.maven.plugin.logging.Log;
@@ -54,6 +55,22 @@ public class TestMojoTest {
     String ip = mojo.getIP();
     
     System.out.println("IP = " + ip);
+  }
+  
+  @Test
+  public void getIP_multi_homed() {
+    
+    TestMojo mojo = spy(new TestMojo());
+    Log log = mock(Log.class);
+    mojo.setLog(log);
+    
+    when(mojo.getIPList()).thenReturn(Arrays.asList("1.1.1.1", "2.2.2.2"));
+
+    String ip = mojo.getIP();
+    
+    verify(log).warn("More than one IP found: [1.1.1.1, 2.2.2.2]. Might pick the wrong one.");
+    
+    assertEquals("1.1.1.1" , ip);
   }
   
   @Test
