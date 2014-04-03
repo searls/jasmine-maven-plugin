@@ -397,7 +397,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
      *
      * @since 1.3.1.4
      */
-    @Parameter(property="jasmine.serverHostname", defaultValue = "localhost")
+    @Parameter(property="jasmine.serverHostname")
     protected String serverHostname;
 
 	/**

@@ -1,7 +1,15 @@
 package com.github.searls.jasmine.mojo;
 
 import java.io.File;
+import java.net.Inet6Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URL;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -50,14 +58,55 @@ public class TestMojo extends AbstractJasmineMojo {
     try {
       int port = serverManager.start();
       setPortProperty(port);
+      
+      this.serverHostname = processServerHostName(this.serverHostname, this.remoteWebDriverUrl);
+      
+      URL runner = new URL(uriScheme+"://" + serverHostname + ":" + port);
+      
+      this.getLog().info(String.format("Remote selenium server: '%s'", this.remoteWebDriverUrl));
+      this.getLog().info(String.format("Will fetch specs from: '%s'", runner));
+
       this.getLog().info("Executing Jasmine Specs");
-      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+"://" + this.serverHostname + ":" + port));
+      
+      JasmineResult result = this.executeSpecs(runner);
       this.logResults(result);
       this.throwAnySpecFailures(result);
     } finally {
       if (!keepServerAlive) {
         serverManager.stop();
       }
+    }
+  }
+
+  /**
+   * 
+   * @param serverHostname    user-provided hostname
+   * @param remoteWebDriverUrl
+   * 
+   * @return
+   */
+  String processServerHostName(String serverHostname, String remoteWebDriverUrl) {
+    
+    final String IP       = "IP";
+    final String HOSTNAME = "HOSTNAME";
+    
+    if (remoteWebDriverUrl != null)
+    {
+      if (serverHostname == null || serverHostname.equals(IP))
+      {
+        serverHostname = getIP();
+      }
+      else if (serverHostname.equals(HOSTNAME))
+      {
+        serverHostname = getHostName();
+      }
+      
+      return serverHostname;
+    }
+    else
+    {
+      return serverHostname != null ? serverHostname
+                                    : "localhost";
     }
   }
 
@@ -81,6 +130,7 @@ public class TestMojo extends AbstractJasmineMojo {
   private void setPortProperty(int port) {
     this.mavenProject.getProperties().setProperty("jasmine.serverPort", String.valueOf(port));
   }
+
   private JasmineResult executeSpecs(URL runner) throws Exception {
     WebDriver driver = this.createDriver();
     JasmineResult result = new SpecRunnerExecutor().execute(
@@ -89,6 +139,73 @@ public class TestMojo extends AbstractJasmineMojo {
         driver,
         this.timeout, this.debug, this.getLog(), this.format);
     return result;
+  }
+  
+  String getHostName() {
+    
+    try {
+      
+      return InetAddress.getLocalHost().getHostName();
+      
+    } catch (UnknownHostException e) {
+      
+      throw new RuntimeException(e);
+    }
+  }
+  
+  String getIP() {
+    
+    List<String> ipList = getIPList();
+    
+    if (ipList.size() > 1) {
+      this.getLog().warn(String.format("More than one IP found: %s. Might pick the wrong one.", ipList));
+    }
+    
+    return ipList.isEmpty() ? null
+                             : ipList.get(0);
+  }
+  
+  List<String> getIPList() {
+    
+    try {
+
+      List<String> ipList = new ArrayList<String>();
+
+      Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+
+      while (interfaces.hasMoreElements()) {
+        NetworkInterface current = interfaces.nextElement();
+
+        /*
+         * [...] the InetAddress API provides methods for testing for loopback, link local, site local,
+         * multicast and broadcast addresses. You can use these to sort out which of the IP addresses you
+         * get back is most appropriate.
+         * 
+         * [http://stackoverflow.com/a/9482369/1553043]
+         */
+        if (!current.isUp() || current.isLoopback() || current.isVirtual()) continue;
+
+        Enumeration<InetAddress> addresses = current.getInetAddresses();
+
+        while (addresses.hasMoreElements()) {
+          InetAddress current_addr = addresses.nextElement();
+
+          //  Filter IPv6 and loopback (again)
+          if (current_addr.isLoopbackAddress() || current_addr instanceof Inet6Address) continue;
+
+          String hostAddress = current_addr.getHostAddress();
+
+          // System.out.println(hostAddress);
+
+          ipList.add(hostAddress);
+        }
+      }
+
+      return ipList;
+    }
+    catch(SocketException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private WebDriver createDriver() throws Exception {
