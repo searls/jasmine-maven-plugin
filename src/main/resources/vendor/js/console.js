@@ -72,7 +72,7 @@ getJasmineRequireObj().ConsoleReporter = function() {
       }
 
       printNewline();
-      var specCounts = specCount + " " + plural("spec", specCount) + ", " +
+      var specCounts = "Results: " + specCount + " " + plural("spec", specCount) + ", " +
         failureCount + " " + plural("failure", failureCount);
 
       if (pendingCount) {
@@ -83,7 +83,7 @@ getJasmineRequireObj().ConsoleReporter = function() {
 
       printNewline();
       var seconds = timer.elapsed() / 1000;
-      print("Finished in " + seconds + " " + plural("second", seconds));
+      //print("Finished in " + seconds + " " + plural("second", seconds));
 
       printNewline();
 
