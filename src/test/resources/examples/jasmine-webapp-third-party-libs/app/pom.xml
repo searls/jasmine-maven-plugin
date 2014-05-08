@@ -41,7 +41,7 @@
                         <source>classpath/META-INF/resources/webjars/lodash/2.4.1/lodash.js</source>
 
                         <!--WebJars Locator query-->
-                        <source>webjar/i18next.js</source>
+                        <source>webjars/i18next.js</source>
                     </preloadSources>
                 </configuration>
             </plugin>

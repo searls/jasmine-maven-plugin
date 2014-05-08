@@ -45,7 +45,7 @@ public class ResourceHandlerConfigurator {
     classPathContextHandler.setHandler(new ClassPathResourceHandler(configuration.getProjectClassLoader()));
     classPathContextHandler.setAliases(true);
 
-    ContextHandler webJarsContextHandler = contexts.addContext("/webjar", "");
+    ContextHandler webJarsContextHandler = contexts.addContext("/webjars", "");
     webJarsContextHandler.setHandler(new WebJarResourceHandler(configuration.getProjectClassLoader()));
     webJarsContextHandler.setAliases(true);
 
