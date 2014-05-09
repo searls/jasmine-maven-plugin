@@ -12,23 +12,9 @@ jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,ScriptResolverExceptio
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,HelpMojo,875,0,106,0,151,0,69,0,16,0
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,Capability,14,17,0,0,6,7,4,5,4,5
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,ServerMojo,100,0,2,0,14,0,6,0,5,0
-jasmine-maven-plugin,com.github.searls.jasmine.mojo,AbstractJasmineMojo,111,175,13,3,26,41,17,13,10,12
+jasmine-maven-plugin,com.github.searls.jasmine.mojo,AbstractJasmineMojo,150,178,13,3,32,42,19,13,12,12
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,TestMojo,179,16,11,1,33,6,13,2,7,2
-jasmine-maven-plugin,com.github.searls.jasmine.server,ResourceHandlerConfigurator,0,140,0,2,0,23,0,5,0,4
-jasmine-maven-plugin,com.github.searls.jasmine.server,ServerManager,0,51,0,0,0,17,0,6,0,6
-jasmine-maven-plugin,com.github.searls.jasmine.server,JasmineResourceHandler,0,75,0,12,0,17,0,10,0,4
-jasmine-maven-plugin,com.github.searls.jasmine,NullLog,23,0,0,0,17,0,17,0,17,0
-jasmine-maven-plugin,com.github.searls.jasmine.collections,CollectionHelper,0,9,0,2,0,2,0,3,0,2
-jasmine-maven-plugin,com.github.searls.jasmine.runner,DefaultSpecRunnerHtmlGenerator,27,221,2,4,5,39,2,7,0,6
-jasmine-maven-plugin,com.github.searls.jasmine.runner,AbstractSpecRunnerHtmlGenerator,0,115,1,7,0,24,1,10,0,7
-jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,157,92,39,5,24,26,30,9,10,7
-jasmine-maven-plugin,com.github.searls.jasmine.runner,ReporterType,9,39,0,0,0,2,2,2,2,2
-jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor,68,141,6,4,11,27,6,7,1,7
-jasmine-maven-plugin,com.github.searls.jasmine.runner,CreatesRunner,115,0,6,0,26,0,9,0,6,0
-jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerTemplate,9,37,0,0,0,7,2,3,2,3
-jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor.new Predicate() {...},0,16,0,0,0,2,0,2,0,2
-jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerHtmlGeneratorFactory,7,17,0,0,2,3,0,3,0,3
-jasmine-maven-plugin,com.github.searls.jasmine.exception,StringifiesStackTraces,0,18,0,0,0,5,0,2,0,2
+jasmine-maven-plugin,com.github.searls.jasmine.mojo,Context,26,0,0,0,11,0,6,0,6,0
 jasmine-maven-plugin,com.github.searls.jasmine.io,ScansDirectory,0,106,0,2,0,16,0,5,0,4
 jasmine-maven-plugin,com.github.searls.jasmine.io,RelativizesFilePaths,0,98,0,6,0,15,0,10,0,7
 jasmine-maven-plugin,com.github.searls.jasmine.io,IOUtilsWrapper,0,13,0,0,0,3,0,3,0,3
@@ -39,4 +25,23 @@ jasmine-maven-plugin,com.github.searls.jasmine.model,ScriptSearch,0,21,0,0,0,8,0
 jasmine-maven-plugin,com.github.searls.jasmine.model,JasmineResult,0,30,0,0,0,7,0,6,0,6
 jasmine-maven-plugin,com.github.searls.jasmine.driver,QuietHtmlUnitDriver.new IncorrectnessListener() {...},1,6,0,0,1,1,1,1,1,1
 jasmine-maven-plugin,com.github.searls.jasmine.driver,QuietHtmlUnitDriver,0,26,0,2,0,8,0,3,0,2
-jasmine-maven-plugin,com.github.searls.jasmine.driver,WebDriverFactory,36,166,12,14,7,39,9,16,1,11
+jasmine-maven-plugin,com.github.searls.jasmine.driver,WebDriverFactory,36,175,14,16,7,40,11,16,1,11
+jasmine-maven-plugin,com.github.searls.jasmine.collections,CollectionHelper,0,9,0,2,0,2,0,3,0,2
+jasmine-maven-plugin,com.github.searls.jasmine.server,ResourceHandlerConfigurator,0,154,0,4,0,28,0,6,0,4
+jasmine-maven-plugin,com.github.searls.jasmine.server,ServerManager,0,51,0,0,0,17,0,6,0,6
+jasmine-maven-plugin,com.github.searls.jasmine.server,JasmineResourceHandler,0,75,0,12,0,17,0,10,0,4
+jasmine-maven-plugin,com.github.searls.jasmine,NullLog,23,0,0,0,17,0,17,0,17,0
+jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,WebJarResourceHandler,0,40,0,0,0,11,0,3,0,3
+jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,ProjectClassLoaderFactory,6,77,0,4,2,17,0,6,0,4
+jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,AbstractThirdPartyLibsResourceHandler,8,71,1,3,3,21,1,6,0,5
+jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,ClassPathResourceHandler,0,11,0,0,0,4,0,2,0,2
+jasmine-maven-plugin,com.github.searls.jasmine.runner,DefaultSpecRunnerHtmlGenerator,27,221,2,4,5,39,2,7,0,6
+jasmine-maven-plugin,com.github.searls.jasmine.runner,AbstractSpecRunnerHtmlGenerator,0,115,1,7,0,24,1,10,0,7
+jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,157,92,39,5,24,26,30,9,10,7
+jasmine-maven-plugin,com.github.searls.jasmine.runner,ReporterType,9,39,0,0,0,2,2,2,2,2
+jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor,68,141,6,4,11,27,6,7,1,7
+jasmine-maven-plugin,com.github.searls.jasmine.runner,CreatesRunner,115,0,6,0,26,0,9,0,6,0
+jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerTemplate,9,37,0,0,0,7,2,3,2,3
+jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor.new Predicate() {...},0,16,0,0,0,2,0,2,0,2
+jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerHtmlGeneratorFactory,7,17,0,0,2,3,0,3,0,3
+jasmine-maven-plugin,com.github.searls.jasmine.exception,StringifiesStackTraces,0,18,0,0,0,5,0,2,0,2

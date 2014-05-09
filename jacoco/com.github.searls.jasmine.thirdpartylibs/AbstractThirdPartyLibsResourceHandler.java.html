@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractThirdPartyLibsResourceHandler.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.html" class="el_package">com.github.searls.jasmine.thirdpartylibs</a> &gt; <span class="el_source">AbstractThirdPartyLibsResourceHandler.java</span></div><h1>AbstractThirdPartyLibsResourceHandler.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.thirdpartylibs;
+
+import org.apache.commons.io.IOUtils;
+import org.eclipse.jetty.http.HttpHeaders;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.Date;
+
+<span class="fc" id="L14">public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHandler {</span>
+
+  @Override
+  public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+<span class="pc bpc" id="L18" title="1 of 2 branches missed.">    if (baseRequest.isHandled())</span>
+<span class="nc" id="L19">      return;</span>
+
+<span class="fc" id="L21">    String resourcePath = getResourcePath(target);</span>
+<span class="fc" id="L22">    InputStream resource = findResource(resourcePath);</span>
+
+<span class="fc bfc" id="L24" title="All 2 branches covered.">    if (resource != null) {</span>
+<span class="fc" id="L25">      String javascript = IOUtils.toString(resource, &quot;UTF-8&quot;);</span>
+<span class="fc" id="L26">      setHeaders(response, javascript);</span>
+<span class="fc" id="L27">      writeResponse(response, javascript);</span>
+<span class="fc" id="L28">      baseRequest.setHandled(true);</span>
+    }
+<span class="fc" id="L30">  }</span>
+
+  abstract protected InputStream findResource(String resourcePath);
+
+  private String getResourcePath(String url) {
+<span class="fc" id="L35">    return url.replaceFirst(&quot;^/&quot;, &quot;&quot;);</span>
+  }
+
+  private void setHeaders(HttpServletResponse response, String javascript) {
+<span class="fc" id="L39">    response.setCharacterEncoding(&quot;UTF-8&quot;);</span>
+<span class="fc" id="L40">    response.setContentType(&quot;text/javascript&quot;);</span>
+<span class="fc" id="L41">    response.addDateHeader(&quot;EXPIRES&quot;, 0L);</span>
+<span class="fc" id="L42">    response.setDateHeader(HttpHeaders.LAST_MODIFIED, new Date().getTime());</span>
+    try {
+<span class="fc" id="L44">      int contentLength = javascript.getBytes(&quot;UTF-8&quot;).length;</span>
+<span class="fc" id="L45">      response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(contentLength));</span>
+<span class="nc" id="L46">    } catch (UnsupportedEncodingException e) {</span>
+<span class="nc" id="L47">      throw new RuntimeException(&quot;The JVM does not support javascript default encoding.&quot;, e);</span>
+<span class="fc" id="L48">    }</span>
+<span class="fc" id="L49">  }</span>
+
+  private void writeResponse(HttpServletResponse response, String javascript) throws IOException {
+<span class="fc" id="L52">    response.getWriter().write(javascript);</span>
+<span class="fc" id="L53">  }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

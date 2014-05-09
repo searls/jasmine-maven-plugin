@@ -9,4 +9,5 @@ com.github.searls.jasmine.model
 com.github.searls.jasmine.mojo
 com.github.searls.jasmine.runner
 com.github.searls.jasmine.server
+com.github.searls.jasmine.thirdpartylibs
 org.eclipse.jetty.server

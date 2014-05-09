@@ -88,27 +88,28 @@ public class WebDriverFactory {
 <span class="fc" id="L88">    capabilities.setJavascriptEnabled(true);</span>
 
 <span class="fc bfc" id="L90" title="All 2 branches covered.">    for (Capability capability : webDriverCapabilities) {</span>
-<span class="pc bpc" id="L91" title="1 of 2 branches missed.">      if (StringUtils.isNotBlank(capability.getValue())) {</span>
-<span class="fc" id="L92">        capabilities.setCapability(capability.getName(),capability.getValue());</span>
-<span class="nc bnc" id="L93" title="All 4 branches missed.">      } else if (capability.getList() != null &amp;&amp; !capability.getList().isEmpty()) {</span>
-<span class="nc" id="L94">        capabilities.setCapability(capability.getName(),capability.getList());</span>
-<span class="nc bnc" id="L95" title="All 4 branches missed.">      } else if (capability.getMap() != null &amp;&amp; !capability.getMap().isEmpty()) {</span>
-<span class="nc" id="L96">        capabilities.setCapability(capability.getName(),capability.getMap());</span>
+<span class="fc" id="L91">      Object value = capability.getValue();</span>
+<span class="pc bpc" id="L92" title="3 of 6 branches missed.">      if (value != null &amp;&amp; (!String.class.isInstance(value) || StringUtils.isNotBlank((String)value))) {</span>
+<span class="fc" id="L93">        capabilities.setCapability(capability.getName(),capability.getValue());</span>
+<span class="nc bnc" id="L94" title="All 4 branches missed.">      } else if (capability.getList() != null &amp;&amp; !capability.getList().isEmpty()) {</span>
+<span class="nc" id="L95">        capabilities.setCapability(capability.getName(),capability.getList());</span>
+<span class="nc bnc" id="L96" title="All 4 branches missed.">      } else if (capability.getMap() != null &amp;&amp; !capability.getMap().isEmpty()) {</span>
+<span class="nc" id="L97">        capabilities.setCapability(capability.getName(),capability.getMap());</span>
       }
-<span class="fc" id="L98">    }</span>
+<span class="fc" id="L99">    }</span>
 
-<span class="fc" id="L100">    return capabilities;</span>
+<span class="fc" id="L101">    return capabilities;</span>
   }
 
   private WebDriver createDefaultWebDriver() throws Exception {
-<span class="fc" id="L104">    DesiredCapabilities capabilities = getCapabilities();</span>
-<span class="pc bpc" id="L105" title="1 of 2 branches missed.">    if (StringUtils.isBlank(capabilities.getBrowserName())) {</span>
-<span class="fc" id="L106">      capabilities.setBrowserName(BrowserType.HTMLUNIT);</span>
+<span class="fc" id="L105">    DesiredCapabilities capabilities = getCapabilities();</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">    if (StringUtils.isBlank(capabilities.getBrowserName())) {</span>
+<span class="fc" id="L107">      capabilities.setBrowserName(BrowserType.HTMLUNIT);</span>
     }
-<span class="pc bpc" id="L108" title="1 of 2 branches missed.">    if (StringUtils.isBlank(capabilities.getVersion())) {</span>
-<span class="fc" id="L109">      capabilities.setVersion(browserVersion.replaceAll(&quot;(\\D+)_(\\d.*)?&quot;, &quot;$1-$2&quot;).replaceAll(&quot;_&quot;, &quot; &quot;).toLowerCase());</span>
+<span class="pc bpc" id="L109" title="1 of 2 branches missed.">    if (StringUtils.isBlank(capabilities.getVersion())) {</span>
+<span class="fc" id="L110">      capabilities.setVersion(browserVersion.replaceAll(&quot;(\\D+)_(\\d.*)?&quot;, &quot;$1-$2&quot;).replaceAll(&quot;_&quot;, &quot; &quot;).toLowerCase());</span>
     }
-<span class="fc" id="L111">    return new QuietHtmlUnitDriver(getCapabilities(), debug);</span>
+<span class="fc" id="L112">    return new QuietHtmlUnitDriver(getCapabilities(), debug);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

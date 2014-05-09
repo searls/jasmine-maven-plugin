@@ -6,9 +6,9 @@ import java.util.Map;
 <span class="fc" id="L6">public class Capability {</span>
 
   private String name;
-  private String value;
-  private List&lt;String&gt; list;
-  private Map&lt;String,String&gt; map;
+  private Object value;
+  private List&lt;Object&gt; list;
+  private Map&lt;String,Object&gt; map;
 
   public String getName() {
 <span class="fc" id="L14">    return name;</span>
@@ -18,27 +18,27 @@ import java.util.Map;
 <span class="fc" id="L18">    this.name = name;</span>
 <span class="fc" id="L19">  }</span>
 
-  public String getValue() {
+  public Object getValue() {
 <span class="fc" id="L22">    return value;</span>
   }
 
-  public void setValue(String value) {
+  public void setValue(Object value) {
 <span class="fc" id="L26">    this.value = value;</span>
 <span class="fc" id="L27">  }</span>
 
-  public List&lt;String&gt; getList() {
+  public List&lt;Object&gt; getList() {
 <span class="nc" id="L30">    return list;</span>
   }
 
-  public void setList(List&lt;String&gt; list) {
+  public void setList(List&lt;Object&gt; list) {
 <span class="nc" id="L34">    this.list = list;</span>
 <span class="nc" id="L35">  }</span>
 
-  public Map&lt;String, String&gt; getMap() {
+  public Map&lt;String, Object&gt; getMap() {
 <span class="nc" id="L38">    return map;</span>
   }
 
-  public void setMap(Map&lt;String, String&gt; map) {
+  public void setMap(Map&lt;String, Object&gt; map) {
 <span class="nc" id="L42">    this.map = map;</span>
 <span class="nc" id="L43">  }</span>
 }

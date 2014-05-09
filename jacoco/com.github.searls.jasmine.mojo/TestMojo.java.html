@@ -8,6 +8,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.eclipse.jetty.server.Server;
 import org.openqa.selenium.WebDriver;
 
@@ -25,90 +26,90 @@ import com.github.searls.jasmine.server.ServerManager;
 /**
  * Execute specs using Selenium Web Driver. Uses HtmlUnitDriver for head-less execution by default.
  */
-@Mojo(name=&quot;test&quot;,defaultPhase=LifecyclePhase.TEST)
+@Mojo(name=&quot;test&quot;,defaultPhase=LifecyclePhase.TEST,requiresDependencyResolution = ResolutionScope.TEST)
 public class TestMojo extends AbstractJasmineMojo {
 
   private final RelativizesFilePaths relativizesFilePaths;
 
-<span class="fc" id="L33">  public TestMojo() {</span>
-<span class="fc" id="L34">    this.relativizesFilePaths = new RelativizesFilePaths();</span>
-<span class="fc" id="L35">  }</span>
+<span class="fc" id="L34">  public TestMojo() {</span>
+<span class="fc" id="L35">    this.relativizesFilePaths = new RelativizesFilePaths();</span>
+<span class="fc" id="L36">  }</span>
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-<span class="pc bpc" id="L39" title="1 of 2 branches missed.">    if(!this.isSkipTests()) {</span>
-<span class="nc" id="L40">      super.execute();</span>
+<span class="pc bpc" id="L40" title="1 of 2 branches missed.">    if(!this.isSkipTests()) {</span>
+<span class="nc" id="L41">      super.execute();</span>
     } else {
-<span class="fc" id="L42">      this.getLog().info(&quot;Skipping Jasmine Specs&quot;);</span>
+<span class="fc" id="L43">      this.getLog().info(&quot;Skipping Jasmine Specs&quot;);</span>
     }
-<span class="fc" id="L44">  }</span>
+<span class="fc" id="L45">  }</span>
 
   @Override
   public void run() throws Exception {
-<span class="nc" id="L48">    ServerManager serverManager = this.getServerManager();</span>
+<span class="nc" id="L49">    ServerManager serverManager = this.getServerManager();</span>
     try {
-<span class="nc" id="L50">      int port = serverManager.start();</span>
-<span class="nc" id="L51">      setPortProperty(port);</span>
-<span class="nc" id="L52">      this.getLog().info(&quot;Executing Jasmine Specs&quot;);</span>
-<span class="nc" id="L53">      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+&quot;://&quot; + this.serverHostname + &quot;:&quot; + port));</span>
-<span class="nc" id="L54">      this.logResults(result);</span>
-<span class="nc" id="L55">      this.throwAnySpecFailures(result);</span>
+<span class="nc" id="L51">      int port = serverManager.start();</span>
+<span class="nc" id="L52">      setPortProperty(port);</span>
+<span class="nc" id="L53">      this.getLog().info(&quot;Executing Jasmine Specs&quot;);</span>
+<span class="nc" id="L54">      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+&quot;://&quot; + this.serverHostname + &quot;:&quot; + port));</span>
+<span class="nc" id="L55">      this.logResults(result);</span>
+<span class="nc" id="L56">      this.throwAnySpecFailures(result);</span>
     } finally {
-<span class="nc bnc" id="L57" title="All 4 branches missed.">      if (!keepServerAlive) {</span>
-<span class="nc" id="L58">        serverManager.stop();</span>
+<span class="nc bnc" id="L58" title="All 4 branches missed.">      if (!keepServerAlive) {</span>
+<span class="nc" id="L59">        serverManager.stop();</span>
       }
     }
-<span class="nc" id="L61">  }</span>
+<span class="nc" id="L62">  }</span>
 
   private ServerManager getServerManager() throws MojoExecutionException {
-<span class="nc bnc" id="L64" title="All 2 branches missed.">    Log log = this.debug ? this.getLog() : new NullLog();</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">    Log log = this.debug ? this.getLog() : new NullLog();</span>
 
-<span class="nc" id="L66">    CreatesRunner createsRunner = new CreatesRunner(</span>
+<span class="nc" id="L67">    CreatesRunner createsRunner = new CreatesRunner(</span>
         this,
         log,
         this.specRunnerHtmlFileName,
         ReporterType.JsApiReporter);
 
-<span class="nc" id="L72">    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(</span>
+<span class="nc" id="L73">    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(</span>
         this,
         this.relativizesFilePaths,
         createsRunner);
 
-<span class="nc" id="L77">    return new ServerManager(new Server(), getConnector(), configurator);</span>
+<span class="nc" id="L78">    return new ServerManager(new Server(), getConnector(), configurator);</span>
   }
 
   private void setPortProperty(int port) {
-<span class="nc" id="L81">    this.mavenProject.getProperties().setProperty(&quot;jasmine.serverPort&quot;, String.valueOf(port));</span>
-<span class="nc" id="L82">  }</span>
+<span class="nc" id="L82">    this.mavenProject.getProperties().setProperty(&quot;jasmine.serverPort&quot;, String.valueOf(port));</span>
+<span class="nc" id="L83">  }</span>
   private JasmineResult executeSpecs(URL runner) throws Exception {
-<span class="nc" id="L84">    WebDriver driver = this.createDriver();</span>
-<span class="nc" id="L85">    JasmineResult result = new SpecRunnerExecutor().execute(</span>
+<span class="nc" id="L85">    WebDriver driver = this.createDriver();</span>
+<span class="nc" id="L86">    JasmineResult result = new SpecRunnerExecutor().execute(</span>
         runner,
         new File(this.jasmineTargetDir,this.junitXmlReportFileName),
         driver,
         this.timeout, this.debug, this.getLog(), this.format);
-<span class="nc" id="L90">    return result;</span>
+<span class="nc" id="L91">    return result;</span>
   }
 
   private WebDriver createDriver() throws Exception {
-<span class="nc" id="L94">    WebDriverFactory factory = new WebDriverFactory();</span>
-<span class="nc" id="L95">    factory.setWebDriverCapabilities(webDriverCapabilities);</span>
-<span class="nc" id="L96">    factory.setWebDriverClassName(webDriverClassName);</span>
-<span class="nc" id="L97">    factory.setDebug(debug);</span>
-<span class="nc" id="L98">    factory.setBrowserVersion(browserVersion);</span>
-<span class="nc" id="L99">    return factory.createWebDriver();</span>
+<span class="nc" id="L95">    WebDriverFactory factory = new WebDriverFactory();</span>
+<span class="nc" id="L96">    factory.setWebDriverCapabilities(webDriverCapabilities);</span>
+<span class="nc" id="L97">    factory.setWebDriverClassName(webDriverClassName);</span>
+<span class="nc" id="L98">    factory.setDebug(debug);</span>
+<span class="nc" id="L99">    factory.setBrowserVersion(browserVersion);</span>
+<span class="nc" id="L100">    return factory.createWebDriver();</span>
   }
 
   private void logResults(JasmineResult result) {
-<span class="nc" id="L103">    JasmineResultLogger resultLogger = new JasmineResultLogger();</span>
-<span class="nc" id="L104">    resultLogger.setLog(this.getLog());</span>
-<span class="nc" id="L105">    resultLogger.log(result);</span>
-<span class="nc" id="L106">  }</span>
+<span class="nc" id="L104">    JasmineResultLogger resultLogger = new JasmineResultLogger();</span>
+<span class="nc" id="L105">    resultLogger.setLog(this.getLog());</span>
+<span class="nc" id="L106">    resultLogger.log(result);</span>
+<span class="nc" id="L107">  }</span>
 
   private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
-<span class="nc bnc" id="L109" title="All 4 branches missed.">    if(this.haltOnFailure &amp;&amp; !result.didPass()) {</span>
-<span class="nc" id="L110">      throw new MojoFailureException(&quot;There were Jasmine spec failures.&quot;);</span>
+<span class="nc bnc" id="L110" title="All 4 branches missed.">    if(this.haltOnFailure &amp;&amp; !result.didPass()) {</span>
+<span class="nc" id="L111">      throw new MojoFailureException(&quot;There were Jasmine spec failures.&quot;);</span>
     }
-<span class="nc" id="L112">  }</span>
+<span class="nc" id="L113">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
