@@ -6,9 +6,9 @@ import java.util.Map;
 public class Capability {
 
   private String name;
-  private String value;
-  private List<String> list;
-  private Map<String,String> map;
+  private Object value;
+  private List<Object> list;
+  private Map<String,Object> map;
 
   public String getName() {
     return name;
@@ -18,27 +18,27 @@ public class Capability {
     this.name = name;
   }
 
-  public String getValue() {
+  public Object getValue() {
     return value;
   }
 
-  public void setValue(String value) {
+  public void setValue(Object value) {
     this.value = value;
   }
 
-  public List<String> getList() {
+  public List<Object> getList() {
     return list;
   }
 
-  public void setList(List<String> list) {
+  public void setList(List<Object> list) {
     this.list = list;
   }
 
-  public Map<String, String> getMap() {
+  public Map<String, Object> getMap() {
     return map;
   }
 
-  public void setMap(Map<String, String> map) {
+  public void setMap(Map<String, Object> map) {
     this.map = map;
   }
 }

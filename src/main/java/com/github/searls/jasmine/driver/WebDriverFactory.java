@@ -88,7 +88,8 @@ public class WebDriverFactory {
     capabilities.setJavascriptEnabled(true);
 
     for (Capability capability : webDriverCapabilities) {
-      if (StringUtils.isNotBlank(capability.getValue())) {
+      Object value = capability.getValue();
+      if (value != null && (!String.class.isInstance(value) || StringUtils.isNotBlank((String)value))) {
         capabilities.setCapability(capability.getName(),capability.getValue());
       } else if (capability.getList() != null && !capability.getList().isEmpty()) {
         capabilities.setCapability(capability.getName(),capability.getList());
