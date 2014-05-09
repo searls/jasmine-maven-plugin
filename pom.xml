@@ -105,8 +105,8 @@
   </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
-    <connection>scm:git:https://github.com/searls/jasmine-maven-plugin.git</connection>
-    <developerConnection>scm:git:https://searls@github.com/searls/jasmine-maven-plugin.git</developerConnection>
+    <connection>scm:git:git@github.com:searls/jasmine-maven-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:searls/jasmine-maven-plugin.git</developerConnection>
   </scm>
   <distributionManagement>
     <snapshotRepository>
