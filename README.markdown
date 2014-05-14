@@ -1,7 +1,7 @@
 jasmine-maven-plugin
 ====================
 
-[![Build Status](https://secure.travis-ci.org/searls/jasmine-maven-plugin.png)](http://travis-ci.org/searls/jasmine-maven-plugin) [![Coverage Status](https://coveralls.io/repos/searls/jasmine-maven-plugin/badge.png?branch=master)](https://coveralls.io/r/searls/jasmine-maven-plugin?branch=master)
+[![Build Status](https://secure.travis-ci.org/searls/jasmine-maven-plugin.png)](http://travis-ci.org/searls/jasmine-maven-plugin) [![Coverage Status](https://coveralls.io/repos/searls/jasmine-maven-plugin/badge.png?branch=master)](https://coveralls.io/r/searls/jasmine-maven-plugin?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin)
 
 For information on how to use the jasmine-maven-plugin, check out its [documentation page](http://searls.github.com/jasmine-maven-plugin/).
 

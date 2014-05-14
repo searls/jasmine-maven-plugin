@@ -6,7 +6,6 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;

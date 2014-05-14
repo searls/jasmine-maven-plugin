@@ -5,30 +5,30 @@ If you are using an AMD implementation like require.js then the default [Spec Ru
 
 Here is an example configuration:
 
-```
+```xml
 <plugin>
-    <groupId>com.github.searls</groupId>
-    <artifactId>jasmine-maven-plugin</artifactId>
-    <version>${jasmine-maven-plugin.version}</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>test</goal>
-            </goals>
-        </execution>
-    </executions>
-    <configuration>
-        <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
-        <preloadSources>
-            <source>lib/require.js</source>
-        </preloadSources>
-    </configuration>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${currentStableVersion}<version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>test</goal>
+      </goals>
+    </execution>
+  </executions>
+  <configuration>
+    <specRunnerTemplate>REQUIRE_JS</specRunnerTemplate>
+    <preloadSources>
+      <source>lib/require.js</source>
+    </preloadSources>
+  </configuration>
 </plugin>
 ```
 
 This template expects that you will wrap all of your specs in a `define` call so that they can be loaded as modules and in turn load any dependencies needed. So for example, if you had the follow module to be tested:
 
-```
+```js
 // example.js
 define(function() {
   return {
@@ -41,7 +41,7 @@ define(function() {
 
 Then the spec would look like this:
 
-```
+```js
 // example.spec.js
 define("example", function(example) {
   describe("example.hello", function() {
@@ -85,7 +85,7 @@ For instance, say you would prefer to use [testr.js](https://github.com/mattfysh
     // remove sourceDir and .js extension from each source
     for (var i=0; i < sources.length; i++) {
       sources[i] = sources[i].replace(sourceDir+'/','').replace(/\.js\$/,'');
-    }   
+    }
 
     $if(customRunnerConfiguration)$
     $customRunnerConfiguration$
@@ -99,7 +99,7 @@ For instance, say you would prefer to use [testr.js](https://github.com/mattfysh
         autoLoad: true
       });
     $endif$
-    
+
     require(sources, function() {
       var currentWindowOnload = window.onload;
 
@@ -109,7 +109,7 @@ For instance, say you would prefer to use [testr.js](https://github.com/mattfysh
         }
         execJasmine();
       };
-      
+
       function execJasmine() {
         window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
         jasmine.getEnv().execute();
@@ -122,11 +122,11 @@ For instance, say you would prefer to use [testr.js](https://github.com/mattfysh
 
 The configuration for the template would just look something like this:
 
-```
+```xml
 <plugin>
-  <groupId>com.github.searls</groupId>
-  <artifactId>jasmine-maven-plugin</artifactId>
-  <version>${jasmine-maven-plugin.version}</version>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${currentStableVersion}<version>
   <executions>
     <execution>
       <goals>

@@ -12,7 +12,6 @@ import org.eclipse.jetty.util.resource.Resource;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
-import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 
 public class HandlesRequestsForCoffee {
 
@@ -23,7 +22,7 @@ public class HandlesRequestsForCoffee {
   public HandlesRequestsForCoffee(JasmineConfiguration configuration) {
 	  this.configuration = configuration;
   }
-  
+
   public void handle(Request baseRequest, HttpServletResponse response, Resource resource) throws IOException {
     baseRequest.setHandled(true);
     String javascript = null;

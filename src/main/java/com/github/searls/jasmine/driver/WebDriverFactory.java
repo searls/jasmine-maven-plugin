@@ -79,8 +79,8 @@ public class WebDriverFactory {
   private Object[] getWebDriverConstructorArguments(Constructor<? extends WebDriver> constructor) {
     if (constructor.getParameterTypes().length == 0) {
       return new Object[0];
-    } else
-      return new Object[] {getCapabilities()};
+    }
+    return new Object[] {getCapabilities()};
   }
 
   private DesiredCapabilities getCapabilities() {

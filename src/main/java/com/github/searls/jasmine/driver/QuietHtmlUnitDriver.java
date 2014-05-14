@@ -3,7 +3,6 @@ package com.github.searls.jasmine.driver;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;

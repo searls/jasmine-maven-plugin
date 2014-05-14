@@ -20,10 +20,7 @@
  */
 package com.github.searls.jasmine.mojo;
 
-import com.github.searls.jasmine.model.ScriptSearch;
-
 import java.io.File;
-import java.util.List;
 
 public class Context {
 
