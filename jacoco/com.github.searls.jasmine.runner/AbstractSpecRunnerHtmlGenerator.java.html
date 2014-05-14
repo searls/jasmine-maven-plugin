@@ -23,38 +23,38 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
 <span class="fc" id="L23">  }</span>
 
   protected void setEncoding(HtmlGeneratorConfiguration htmlGeneratorConfiguration, ST template) {
-<span class="fc bfc" id="L26" title="All 2 branches covered.">    template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);</span>
-<span class="fc" id="L27">  }</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">    template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);</span>
+<span class="nc" id="L27">  }</span>
 
   protected ST resolveHtmlTemplate() throws IOException {
-<span class="fc" id="L30">    String htmlTemplate = configuration.getRunnerTemplate();</span>
-<span class="fc" id="L31">    return new ST(htmlTemplate,'$','$');</span>
+<span class="nc" id="L30">    String htmlTemplate = configuration.getRunnerTemplate();</span>
+<span class="nc" id="L31">    return new ST(htmlTemplate,'$','$');</span>
   }
 
   protected void includeJavaScriptDependencies(List&lt;String&gt; dependencies, ST template) throws IOException {
-<span class="fc" id="L35">    StringBuilder js = new StringBuilder();</span>
-<span class="fc bfc" id="L36" title="All 2 branches covered.">    for (String jsFile : dependencies) {</span>
-<span class="pc bpc" id="L37" title="1 of 2 branches missed.">      if(jsFile != null) {</span>
-<span class="fc" id="L38">        js.append(&quot;&lt;script type=\&quot;text/javascript\&quot;&gt;&quot;).append(configuration.IOtoString(jsFile)).append(&quot;&lt;/script&gt;&quot;);</span>
+<span class="nc" id="L35">    StringBuilder js = new StringBuilder();</span>
+<span class="nc bnc" id="L36" title="All 2 branches missed.">    for (String jsFile : dependencies) {</span>
+<span class="nc bnc" id="L37" title="All 2 branches missed.">      if(jsFile != null) {</span>
+<span class="nc" id="L38">        js.append(&quot;&lt;script type=\&quot;text/javascript\&quot;&gt;&quot;).append(configuration.IOtoString(jsFile)).append(&quot;&lt;/script&gt;&quot;);</span>
       }
-<span class="fc" id="L40">    }</span>
-<span class="fc" id="L41">    template.add(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());</span>
-<span class="fc" id="L42">  }</span>
+<span class="nc" id="L40">    }</span>
+<span class="nc" id="L41">    template.add(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());</span>
+<span class="nc" id="L42">  }</span>
 
   protected void applyCssToTemplate(List&lt;String&gt; styles, ST template) throws IOException {
-<span class="fc" id="L45">    StringBuilder css = new StringBuilder();</span>
-<span class="fc bfc" id="L46" title="All 2 branches covered.">    for (String cssFile : styles) {</span>
-<span class="fc" id="L47">      css.append(&quot;&lt;style type=\&quot;text/css\&quot;&gt;&quot;).append(configuration.IOtoString(cssFile)).append(&quot;&lt;/style&gt;&quot;);</span>
-<span class="fc" id="L48">    }</span>
-<span class="fc" id="L49">    template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());</span>
-<span class="fc" id="L50">  }</span>
+<span class="nc" id="L45">    StringBuilder css = new StringBuilder();</span>
+<span class="nc bnc" id="L46" title="All 2 branches missed.">    for (String cssFile : styles) {</span>
+<span class="nc" id="L47">      css.append(&quot;&lt;style type=\&quot;text/css\&quot;&gt;&quot;).append(configuration.IOtoString(cssFile)).append(&quot;&lt;/style&gt;&quot;);</span>
+<span class="nc" id="L48">    }</span>
+<span class="nc" id="L49">    template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());</span>
+<span class="nc" id="L50">  }</span>
 
   public HtmlGeneratorConfiguration getConfiguration() {
-<span class="fc" id="L53">    return configuration;</span>
+<span class="nc" id="L53">    return configuration;</span>
   }
 
   protected void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Set&lt;String&gt; scripts, ST template) throws IOException {
-<span class="fc" id="L57">    template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));</span>
-<span class="fc" id="L58">  }</span>
+<span class="nc" id="L57">    template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));</span>
+<span class="nc" id="L58">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
