@@ -10,7 +10,7 @@ Usage
  First run this:
 
 +-----
-mvn archetype:generate -DarchetypeGroupId=com.github.searls -DarchetypeArtifactId=jasmine-archetype -DarchetypeVersion=RELEASE -DgroupId=com.acme -DartifactId=my-jasmine-project -Dversion=0.0.1-SNAPSHOT
+mvn archetype:generate -DarchetypeGroupId=${project.groupId} -DarchetypeArtifactId=jasmine-archetype -DarchetypeVersion=${currentStableVersion} -DgroupId=com.acme -DartifactId=my-jasmine-project -Dversion=0.0.1-SNAPSHOT
 +-----
 
  And then this:
@@ -33,9 +33,9 @@ cd my-jasmine-project && mvn jasmine:bdd
   <plugins>
     …
     <plugin>
-      <groupId>com.github.searls</groupId>
-      <artifactId>jasmine-maven-plugin</artifactId>
-      <version>${jasmine-plugin-version}</version>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${project.artifactId}</artifactId>
+      <version>${currentStableVersion}<version>
       <executions>
         <execution>
           <goals>
