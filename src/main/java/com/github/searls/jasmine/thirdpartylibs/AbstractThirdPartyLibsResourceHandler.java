@@ -8,15 +8,18 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.InputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHandler {
 
   @Override
   public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-    if (baseRequest.isHandled())
+    if (baseRequest.isHandled()) {
       return;
+    }
 
     String resourcePath = getResourcePath(target);
     InputStream resource = findResource(resourcePath);
@@ -29,7 +32,7 @@ public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHand
     }
   }
 
-  abstract protected InputStream findResource(String resourcePath);
+  protected abstract InputStream findResource(String resourcePath);
 
   private String getResourcePath(String url) {
     return url.replaceFirst("^/", "");

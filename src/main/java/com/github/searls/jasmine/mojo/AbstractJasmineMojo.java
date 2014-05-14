@@ -6,7 +6,6 @@ import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -16,13 +15,11 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceLoader;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {
 
@@ -136,9 +133,9 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 *   &lt;source&gt;vendor/jquery.js&lt;/source&gt;
 	 * &lt;/preloadSources&gt;
 	 * </pre>
-	 * 
+         *
 	 * <p>And jquery.js would load before all the other sources and specs.</p>
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter
@@ -149,7 +146,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
 	 * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
 	 * and make the changes you need.</p>
-	 * 
+         *
 	 * <p>Potential values are a filesystem path, a URL, or a classpath resource. The default template is
 	 * stored in <code>src/main/resources/jasmine-templates/SpecRunner.htmltemplate</code>, and the
 	 * required template strings are tokenized in "$*$" patterns.</p>
@@ -181,7 +178,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * Target directory for files created by the plugin.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue="${project.build.directory}${file.separator}jasmine")
@@ -189,16 +186,16 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * Skip execution of tests.
-	 * 
+         *
 	 * @since 1.1.0
 	 * @see <a href="http://maven.apache.org/general.html#skip-test">http://maven.apache.org/general.html#skip-test</a>
 	 */
 	@Parameter(property="skipTests")
 	protected boolean skipTests;
-	
+
   /**
    * Skip compilation and execution of tests.
-   * 
+   *
    * @since 1.3.1.3
    * @see <a href="http://maven.apache.org/general.html#skip-test">http://maven.apache.org/general.html#skip-test</a>
    */
@@ -215,7 +212,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * Halt the build on test failure.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(property="haltOnFailure", defaultValue="true")
@@ -223,7 +220,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * Timeout for spec execution in seconds.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue="300")
@@ -255,7 +252,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * The name of the generated JUnit XML report.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue="TEST-jasmine.xml")
@@ -263,7 +260,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * The name of the directory the specs will be deployed to on the server.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue="spec")
@@ -271,7 +268,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * The name of the directory the sources will be deployed to on the server.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue="src")
@@ -279,7 +276,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * The source encoding.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue="${project.build.sourceEncoding}")
@@ -288,7 +285,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	/**
 	 * Keep the server alive after the <code>jasmine:test</code> goal exists.
 	 * Useful if you need to run further analysis on your tests, like collecting code coverage.
-	 * 
+         *
 	 * @since 1.3.1.0
 	 */
 	@Parameter(property="keepServerAlive", defaultValue="false")
@@ -304,7 +301,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
 	 * &lt;/sourceIncludes&gt;
 	 * </pre>
-	 * 
+         *
 	 * <p>Default <code>sourceIncludes</code>:</p>
 	 * <pre>
 	 * &lt;sourceIncludes&gt;
@@ -312,7 +309,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
 	 * &lt;/sourceIncludes&gt;
 	 * </pre>
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter
@@ -321,7 +318,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	/**
 	 * <p>Just like <code>sourceIncludes</code>, but will exclude anything matching the provided patterns.</p>
 	 * <p>There are no <code>sourceExcludes</code> by default.</p>
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter
@@ -338,7 +335,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
 	 * &lt;/specIncludes&gt;
 	 * </pre>
-	 * 
+         *
 	 * <p>Default <code>specIncludes</code>:</p>
 	 * <pre>
 	 * &lt;specIncludes&gt;
@@ -346,7 +343,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
 	 * &lt;/specIncludes&gt;
 	 * </pre>
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter
@@ -355,7 +352,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	/**
 	 * <p>Just like <code>specIncludes</code>, but will exclude anything matching the provided patterns.</p>
 	 * <p>There are no <code>specExcludes</code> by default.</p>
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter
@@ -363,9 +360,9 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * <p>Used by the <code>jasmine:bdd</code> goal to specify port to run the server under.</p>
-	 * 
+         *
 	 * <p>The <code>jasmine:test</code> goal always uses a random available port so this property is ignored.</p>
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(property="jasmine.serverPort", defaultValue="8234")
@@ -395,7 +392,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 * implementation of the runner generator. Typically this is used when using different script runners.</p>
 	 *
 	 * <p>Some valid examples: DEFAULT, REQUIRE_JS</p>
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(property="jasmine.specRunnerTemplate", defaultValue="DEFAULT")
@@ -415,7 +412,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	/**
 	 * <p>Automatically refresh the test runner at the given interval (specified in seconds) when using the <code>jasmine:bdd</code> goal.</p>
 	 * <p>A value of <code>0</code> disables the automatic refresh (which is the default).</p>
-	 * 
+         *
 	 * @since 1.3.1.1
 	 */
 	@Parameter(property="jasmine.autoRefreshInterval", defaultValue="0")
@@ -423,14 +420,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	/**
 	 * <p>Control the Coffee Script compilation.  e.g. When using RequireJS the compilation
-	 * happens within the Coffee Script AMD loader plugin; we therefore need to disable the 
+         * happens within the Coffee Script AMD loader plugin; we therefore need to disable the
 	 * compilation here.</p>
 	 *
 	 * @since 1.3.1.4
 	 */
 	@Parameter(property="coffeeScriptCompilationEnabled", defaultValue="true")
 	protected boolean coffeeScriptCompilationEnabled;
-	
+
   /**
    * <p>Type of {@link org.eclipse.jetty.server.Connector} to use on the jetty server.</p>
    *
