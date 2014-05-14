@@ -79,8 +79,8 @@ public class WebDriverFactory {
   private Object[] getWebDriverConstructorArguments(Constructor&lt;? extends WebDriver&gt; constructor) {
 <span class="fc bfc" id="L80" title="All 2 branches covered.">    if (constructor.getParameterTypes().length == 0) {</span>
 <span class="fc" id="L81">      return new Object[0];</span>
-    } else
-<span class="fc" id="L83">      return new Object[] {getCapabilities()};</span>
+    }
+<span class="fc" id="L83">    return new Object[] {getCapabilities()};</span>
   }
 
   private DesiredCapabilities getCapabilities() {

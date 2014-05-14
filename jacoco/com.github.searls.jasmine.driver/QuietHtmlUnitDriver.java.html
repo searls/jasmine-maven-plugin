@@ -3,7 +3,6 @@
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
@@ -16,24 +15,24 @@ public class QuietHtmlUnitDriver extends HtmlUnitDriver {
   private final boolean debug;
 
 	public QuietHtmlUnitDriver(Capabilities capabilities, boolean debug) {
-<span class="fc" id="L19">    super(capabilities);</span>
-<span class="fc" id="L20">    this.debug = debug;</span>
-<span class="fc" id="L21">		this.setJavascriptEnabled(true);</span>
-<span class="fc" id="L22">	}</span>
+<span class="fc" id="L18">    super(capabilities);</span>
+<span class="fc" id="L19">    this.debug = debug;</span>
+<span class="fc" id="L20">		this.setJavascriptEnabled(true);</span>
+<span class="fc" id="L21">	}</span>
 
 	@Override
 	protected WebClient modifyWebClient(WebClient client) {
-<span class="fc" id="L26">		client.setAjaxController(new NicelyResynchronizingAjaxController());</span>
+<span class="fc" id="L25">		client.setAjaxController(new NicelyResynchronizingAjaxController());</span>
 
 		//Disables stuff like this &quot;com.gargoylesoftware.htmlunit.IncorrectnessListenerImpl notify WARNING: Obsolete content type encountered: 'text/javascript'.&quot;
-<span class="fc bfc" id="L29" title="All 2 branches covered.">		if (!this.debug) {</span>
-<span class="fc" id="L30">			client.setIncorrectnessListener(new IncorrectnessListener() {</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">		if (!this.debug) {</span>
+<span class="fc" id="L29">			client.setIncorrectnessListener(new IncorrectnessListener() {</span>
 				@Override
 				public void notify(String message, Object origin) {
-<span class="nc" id="L33">				}</span>
+<span class="nc" id="L32">				}</span>
 			});
 		}
-<span class="fc" id="L36">		return client;</span>
+<span class="fc" id="L35">		return client;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

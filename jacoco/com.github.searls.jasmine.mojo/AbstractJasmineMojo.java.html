@@ -6,7 +6,6 @@ import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -16,15 +15,13 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceLoader;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
-<span class="fc" id="L27">public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {</span>
+<span class="fc" id="L24">public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {</span>
 
 	private static final String ERROR_FILE_DNE = &quot;Invalid value for parameter '%s'. File does not exist: %s&quot;;
 
@@ -97,7 +94,7 @@ import java.util.Map;
 	 *
 	 * @since 1.3.1.1
 	 */
-<span class="fc" id="L100">  @Parameter</span>
+<span class="fc" id="L97">  @Parameter</span>
   protected List&lt;Capability&gt; webDriverCapabilities = Collections.emptyList();
 
 	/**
@@ -136,9 +133,9 @@ import java.util.Map;
 	 *   &amp;lt;source&amp;gt;vendor/jquery.js&amp;lt;/source&amp;gt;
 	 * &amp;lt;/preloadSources&amp;gt;
 	 * &lt;/pre&gt;
-	 * 
+         *
 	 * &lt;p&gt;And jquery.js would load before all the other sources and specs.&lt;/p&gt;
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter
@@ -149,7 +146,7 @@ import java.util.Map;
 	 * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
 	 * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
 	 * and make the changes you need.&lt;/p&gt;
-	 * 
+         *
 	 * &lt;p&gt;Potential values are a filesystem path, a URL, or a classpath resource. The default template is
 	 * stored in &lt;code&gt;src/main/resources/jasmine-templates/SpecRunner.htmltemplate&lt;/code&gt;, and the
 	 * required template strings are tokenized in &quot;$*$&quot; patterns.&lt;/p&gt;
@@ -181,7 +178,7 @@ import java.util.Map;
 
 	/**
 	 * Target directory for files created by the plugin.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue=&quot;${project.build.directory}${file.separator}jasmine&quot;)
@@ -189,16 +186,16 @@ import java.util.Map;
 
 	/**
 	 * Skip execution of tests.
-	 * 
+         *
 	 * @since 1.1.0
 	 * @see &lt;a href=&quot;http://maven.apache.org/general.html#skip-test&quot;&gt;http://maven.apache.org/general.html#skip-test&lt;/a&gt;
 	 */
 	@Parameter(property=&quot;skipTests&quot;)
 	protected boolean skipTests;
-	
+
   /**
    * Skip compilation and execution of tests.
-   * 
+   *
    * @since 1.3.1.3
    * @see &lt;a href=&quot;http://maven.apache.org/general.html#skip-test&quot;&gt;http://maven.apache.org/general.html#skip-test&lt;/a&gt;
    */
@@ -215,7 +212,7 @@ import java.util.Map;
 
 	/**
 	 * Halt the build on test failure.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(property=&quot;haltOnFailure&quot;, defaultValue=&quot;true&quot;)
@@ -223,7 +220,7 @@ import java.util.Map;
 
 	/**
 	 * Timeout for spec execution in seconds.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue=&quot;300&quot;)
@@ -255,7 +252,7 @@ import java.util.Map;
 
 	/**
 	 * The name of the generated JUnit XML report.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue=&quot;TEST-jasmine.xml&quot;)
@@ -263,7 +260,7 @@ import java.util.Map;
 
 	/**
 	 * The name of the directory the specs will be deployed to on the server.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue=&quot;spec&quot;)
@@ -271,7 +268,7 @@ import java.util.Map;
 
 	/**
 	 * The name of the directory the sources will be deployed to on the server.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue=&quot;src&quot;)
@@ -279,7 +276,7 @@ import java.util.Map;
 
 	/**
 	 * The source encoding.
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(defaultValue=&quot;${project.build.sourceEncoding}&quot;)
@@ -288,7 +285,7 @@ import java.util.Map;
 	/**
 	 * Keep the server alive after the &lt;code&gt;jasmine:test&lt;/code&gt; goal exists.
 	 * Useful if you need to run further analysis on your tests, like collecting code coverage.
-	 * 
+         *
 	 * @since 1.3.1.0
 	 */
 	@Parameter(property=&quot;keepServerAlive&quot;, defaultValue=&quot;false&quot;)
@@ -304,7 +301,7 @@ import java.util.Map;
 	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
 	 * &amp;lt;/sourceIncludes&amp;gt;
 	 * &lt;/pre&gt;
-	 * 
+         *
 	 * &lt;p&gt;Default &lt;code&gt;sourceIncludes&lt;/code&gt;:&lt;/p&gt;
 	 * &lt;pre&gt;
 	 * &amp;lt;sourceIncludes&amp;gt;
@@ -312,19 +309,19 @@ import java.util.Map;
 	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
 	 * &amp;lt;/sourceIncludes&amp;gt;
 	 * &lt;/pre&gt;
-	 * 
+         *
 	 * @since 1.1.0
 	 */
-<span class="fc" id="L318">	@Parameter</span>
+<span class="fc" id="L315">	@Parameter</span>
 	private final List&lt;String&gt; sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
 	/**
 	 * &lt;p&gt;Just like &lt;code&gt;sourceIncludes&lt;/code&gt;, but will exclude anything matching the provided patterns.&lt;/p&gt;
 	 * &lt;p&gt;There are no &lt;code&gt;sourceExcludes&lt;/code&gt; by default.&lt;/p&gt;
-	 * 
+         *
 	 * @since 1.1.0
 	 */
-<span class="fc" id="L327">	@Parameter</span>
+<span class="fc" id="L324">	@Parameter</span>
 	private final List&lt;String&gt; sourceExcludes = Collections.emptyList();
 
 	/**
@@ -338,7 +335,7 @@ import java.util.Map;
 	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
 	 * &amp;lt;/specIncludes&amp;gt;
 	 * &lt;/pre&gt;
-	 * 
+         *
 	 * &lt;p&gt;Default &lt;code&gt;specIncludes&lt;/code&gt;:&lt;/p&gt;
 	 * &lt;pre&gt;
 	 * &amp;lt;specIncludes&amp;gt;
@@ -346,26 +343,26 @@ import java.util.Map;
 	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
 	 * &amp;lt;/specIncludes&amp;gt;
 	 * &lt;/pre&gt;
-	 * 
+         *
 	 * @since 1.1.0
 	 */
-<span class="fc" id="L352">	@Parameter</span>
+<span class="fc" id="L349">	@Parameter</span>
 	private final List&lt;String&gt; specIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
 	/**
 	 * &lt;p&gt;Just like &lt;code&gt;specIncludes&lt;/code&gt;, but will exclude anything matching the provided patterns.&lt;/p&gt;
 	 * &lt;p&gt;There are no &lt;code&gt;specExcludes&lt;/code&gt; by default.&lt;/p&gt;
-	 * 
+         *
 	 * @since 1.1.0
 	 */
-<span class="fc" id="L361">	@Parameter</span>
+<span class="fc" id="L358">	@Parameter</span>
 	private final List&lt;String&gt; specExcludes = Collections.emptyList();
 
 	/**
 	 * &lt;p&gt;Used by the &lt;code&gt;jasmine:bdd&lt;/code&gt; goal to specify port to run the server under.&lt;/p&gt;
-	 * 
+         *
 	 * &lt;p&gt;The &lt;code&gt;jasmine:test&lt;/code&gt; goal always uses a random available port so this property is ignored.&lt;/p&gt;
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(property=&quot;jasmine.serverPort&quot;, defaultValue=&quot;8234&quot;)
@@ -395,7 +392,7 @@ import java.util.Map;
 	 * implementation of the runner generator. Typically this is used when using different script runners.&lt;/p&gt;
 	 *
 	 * &lt;p&gt;Some valid examples: DEFAULT, REQUIRE_JS&lt;/p&gt;
-	 * 
+         *
 	 * @since 1.1.0
 	 */
 	@Parameter(property=&quot;jasmine.specRunnerTemplate&quot;, defaultValue=&quot;DEFAULT&quot;)
@@ -415,7 +412,7 @@ import java.util.Map;
 	/**
 	 * &lt;p&gt;Automatically refresh the test runner at the given interval (specified in seconds) when using the &lt;code&gt;jasmine:bdd&lt;/code&gt; goal.&lt;/p&gt;
 	 * &lt;p&gt;A value of &lt;code&gt;0&lt;/code&gt; disables the automatic refresh (which is the default).&lt;/p&gt;
-	 * 
+         *
 	 * @since 1.3.1.1
 	 */
 	@Parameter(property=&quot;jasmine.autoRefreshInterval&quot;, defaultValue=&quot;0&quot;)
@@ -423,14 +420,14 @@ import java.util.Map;
 
 	/**
 	 * &lt;p&gt;Control the Coffee Script compilation.  e.g. When using RequireJS the compilation
-	 * happens within the Coffee Script AMD loader plugin; we therefore need to disable the 
+         * happens within the Coffee Script AMD loader plugin; we therefore need to disable the
 	 * compilation here.&lt;/p&gt;
 	 *
 	 * @since 1.3.1.4
 	 */
 	@Parameter(property=&quot;coffeeScriptCompilationEnabled&quot;, defaultValue=&quot;true&quot;)
 	protected boolean coffeeScriptCompilationEnabled;
-	
+
   /**
    * &lt;p&gt;Type of {@link org.eclipse.jetty.server.Connector} to use on the jetty server.&lt;/p&gt;
    *
@@ -462,7 +459,7 @@ import java.util.Map;
    *
    * @since 1.3.1.5
    */
-<span class="fc" id="L465">  @Parameter</span>
+<span class="fc" id="L462">  @Parameter</span>
   private List&lt;Context&gt; additionalContexts = Collections.emptyList();
 
   @Parameter(defaultValue=&quot;${project}&quot;, readonly=true)
@@ -474,7 +471,7 @@ import java.util.Map;
 	protected ScriptSearch sources;
 	protected ScriptSearch specs;
 
-<span class="fc" id="L477">	protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();</span>
+<span class="fc" id="L474">	protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();</span>
 
 	private File customRunnerTemplateFile;
 	private File customRunnerConfigurationFile;
@@ -483,170 +480,170 @@ import java.util.Map;
 	@Override
 	public void execute() throws MojoExecutionException, MojoFailureException {
 
-<span class="fc" id="L486">		this.loadResources();</span>
+<span class="fc" id="L483">		this.loadResources();</span>
 
-<span class="fc" id="L488">		this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);</span>
-<span class="fc" id="L489">		this.specs = new ScriptSearch(this.jsTestSrcDir,this.specIncludes,this.specExcludes);</span>
+<span class="fc" id="L485">		this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);</span>
+<span class="fc" id="L486">		this.specs = new ScriptSearch(this.jsTestSrcDir,this.specIncludes,this.specExcludes);</span>
 
 		try {
-<span class="fc" id="L492">			this.run();</span>
-<span class="fc" id="L493">		} catch(MojoFailureException e) {</span>
-<span class="fc" id="L494">			throw e;</span>
-<span class="fc" id="L495">		} catch(Exception e) {</span>
-<span class="fc" id="L496">			throw new MojoExecutionException(&quot;The jasmine-maven-plugin encountered an exception: \n&quot;+this.stringifiesStackTraces.stringify(e),e);</span>
-<span class="fc" id="L497">		}</span>
-<span class="fc" id="L498">	}</span>
+<span class="fc" id="L489">			this.run();</span>
+<span class="fc" id="L490">		} catch(MojoFailureException e) {</span>
+<span class="fc" id="L491">			throw e;</span>
+<span class="fc" id="L492">		} catch(Exception e) {</span>
+<span class="fc" id="L493">			throw new MojoExecutionException(&quot;The jasmine-maven-plugin encountered an exception: \n&quot;+this.stringifiesStackTraces.stringify(e),e);</span>
+<span class="fc" id="L494">		}</span>
+<span class="fc" id="L495">	}</span>
 
 	public abstract void run() throws Exception;
 
 	@Override
 	public String getSourceEncoding() {
-<span class="fc" id="L504">		return this.sourceEncoding;</span>
+<span class="fc" id="L501">		return this.sourceEncoding;</span>
 	}
 
 	@Override
 	public File getCustomRunnerTemplate() {
-<span class="fc" id="L509">		return this.customRunnerTemplateFile;</span>
+<span class="fc" id="L506">		return this.customRunnerTemplateFile;</span>
 	}
 
 	@Override
 	public SpecRunnerTemplate getSpecRunnerTemplate() {
-<span class="nc" id="L514">		return this.specRunnerTemplate;</span>
+<span class="nc" id="L511">		return this.specRunnerTemplate;</span>
 	}
 
 	@Override
 	public File getJasmineTargetDir() {
-<span class="nc" id="L519">		return this.jasmineTargetDir;</span>
+<span class="nc" id="L516">		return this.jasmineTargetDir;</span>
 	}
 
 	@Override
 	public String getSrcDirectoryName() {
-<span class="nc" id="L524">		return this.srcDirectoryName;</span>
+<span class="nc" id="L521">		return this.srcDirectoryName;</span>
 	}
 
 	@Override
 	public ScriptSearch getSources() {
-<span class="nc" id="L529">		return this.sources;</span>
+<span class="nc" id="L526">		return this.sources;</span>
 	}
 
 	@Override
 	public ScriptSearch getSpecs() {
-<span class="nc" id="L534">		return this.specs;</span>
+<span class="nc" id="L531">		return this.specs;</span>
 	}
 
 	@Override
 	public String getSpecDirectoryName() {
-<span class="nc" id="L539">		return this.specDirectoryName;</span>
+<span class="nc" id="L536">		return this.specDirectoryName;</span>
 	}
 
 	@Override
 	public List&lt;String&gt; getPreloadSources() {
-<span class="nc" id="L544">		this.addRequireJsIfNecessary(); // This is temporary until the scriptLoaderPath parameter is removed</span>
-<span class="nc" id="L545">		return this.preloadSources;</span>
+<span class="nc" id="L541">		this.addRequireJsIfNecessary(); // This is temporary until the scriptLoaderPath parameter is removed</span>
+<span class="nc" id="L542">		return this.preloadSources;</span>
 	}
 
 	private void addRequireJsIfNecessary() {
-<span class="nc bnc" id="L549" title="All 2 branches missed.">		String scriptLoaderPath = this.getScriptLoaderPath() == null ? &quot;require.js&quot; : this.getScriptLoaderPath();</span>
-<span class="nc" id="L550">		String requireJsPath = String.format(&quot;%s/%s&quot;, this.jsSrcDir, scriptLoaderPath);</span>
-<span class="nc bnc" id="L551" title="All 2 branches missed.">		if (SpecRunnerTemplate.REQUIRE_JS.equals(this.specRunnerTemplate)) {</span>
-<span class="nc" id="L552">			File requireJsFile = new File(requireJsPath);</span>
-<span class="nc bnc" id="L553" title="All 2 branches missed.">			if (requireJsFile.exists()) {</span>
-<span class="nc bnc" id="L554" title="All 2 branches missed.">				if (this.preloadSources == null) {</span>
-<span class="nc" id="L555">					this.preloadSources = new ArrayList&lt;String&gt;();</span>
+<span class="nc bnc" id="L546" title="All 2 branches missed.">		String scriptLoaderPath = this.getScriptLoaderPath() == null ? &quot;require.js&quot; : this.getScriptLoaderPath();</span>
+<span class="nc" id="L547">		String requireJsPath = String.format(&quot;%s/%s&quot;, this.jsSrcDir, scriptLoaderPath);</span>
+<span class="nc bnc" id="L548" title="All 2 branches missed.">		if (SpecRunnerTemplate.REQUIRE_JS.equals(this.specRunnerTemplate)) {</span>
+<span class="nc" id="L549">			File requireJsFile = new File(requireJsPath);</span>
+<span class="nc bnc" id="L550" title="All 2 branches missed.">			if (requireJsFile.exists()) {</span>
+<span class="nc bnc" id="L551" title="All 2 branches missed.">				if (this.preloadSources == null) {</span>
+<span class="nc" id="L552">					this.preloadSources = new ArrayList&lt;String&gt;();</span>
 				}
-<span class="nc" id="L557">				this.preloadSources.add(requireJsPath);</span>
+<span class="nc" id="L554">				this.preloadSources.add(requireJsPath);</span>
 			}
 		}
-<span class="nc" id="L560">	}</span>
+<span class="nc" id="L557">	}</span>
 
 	@Override
 	public int getAutoRefreshInterval() {
-<span class="fc" id="L564">		return this.autoRefreshInterval;</span>
+<span class="fc" id="L561">		return this.autoRefreshInterval;</span>
 	}
 
 	@Override
 	public boolean isCoffeeScriptCompilationEnabled() {
-<span class="nc" id="L569">		return this.coffeeScriptCompilationEnabled;</span>
+<span class="nc" id="L566">		return this.coffeeScriptCompilationEnabled;</span>
 	}
 
 	public MavenProject getMavenProject() {
-<span class="fc" id="L573">		return this.mavenProject;</span>
+<span class="fc" id="L570">		return this.mavenProject;</span>
 	}
 
 	@Override
 	public File getCustomRunnerConfiguration() {
-<span class="fc" id="L578">		return this.customRunnerConfigurationFile;</span>
+<span class="fc" id="L575">		return this.customRunnerConfigurationFile;</span>
 	}
 
 	@Deprecated
 	@Override
 	public String getScriptLoaderPath() {
-<span class="fc" id="L584">		return this.scriptLoaderPath;</span>
+<span class="fc" id="L581">		return this.scriptLoaderPath;</span>
 	}
 
 	@Override
 	public File getBasedir() {
-<span class="fc" id="L589">		return this.mavenProject.getBasedir();</span>
+<span class="fc" id="L586">		return this.mavenProject.getBasedir();</span>
 	}
 
   @Override
   public ClassLoader getProjectClassLoader() {
-<span class="nc" id="L594">     return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();</span>
+<span class="nc" id="L591">     return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();</span>
   }
 
   @Override
   public List&lt;Context&gt; getContexts() {
-<span class="nc" id="L599">    List&lt;Context&gt; contexts = new ArrayList&lt;Context&gt;();</span>
-<span class="nc" id="L600">    contexts.add(new Context(this.srcDirectoryName, this.jsSrcDir));</span>
-<span class="nc" id="L601">    contexts.add(new Context(this.specDirectoryName, this.jsTestSrcDir));</span>
-<span class="nc" id="L602">    contexts.addAll(additionalContexts);</span>
-<span class="nc" id="L603">    return contexts;</span>
+<span class="nc" id="L596">    List&lt;Context&gt; contexts = new ArrayList&lt;Context&gt;();</span>
+<span class="nc" id="L597">    contexts.add(new Context(this.srcDirectoryName, this.jsSrcDir));</span>
+<span class="nc" id="L598">    contexts.add(new Context(this.specDirectoryName, this.jsTestSrcDir));</span>
+<span class="nc" id="L599">    contexts.addAll(additionalContexts);</span>
+<span class="nc" id="L600">    return contexts;</span>
   }
 
   protected Connector getConnector() throws MojoExecutionException {
     try {
       @SuppressWarnings(&quot;unchecked&quot;)
-<span class="nc" id="L609">      Class&lt;? extends Connector&gt; c = (Class&lt;? extends Connector&gt;) Class.forName(connectorClass);</span>
-<span class="nc" id="L610">      return c.newInstance();</span>
-<span class="nc" id="L611">    } catch(InstantiationException e) {</span>
-<span class="nc" id="L612">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
-<span class="nc" id="L613">    } catch (IllegalAccessException e) {</span>
-<span class="nc" id="L614">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
-<span class="nc" id="L615">    } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L616">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
+<span class="nc" id="L606">      Class&lt;? extends Connector&gt; c = (Class&lt;? extends Connector&gt;) Class.forName(connectorClass);</span>
+<span class="nc" id="L607">      return c.newInstance();</span>
+<span class="nc" id="L608">    } catch(InstantiationException e) {</span>
+<span class="nc" id="L609">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
+<span class="nc" id="L610">    } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L611">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
+<span class="nc" id="L612">    } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L613">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
     }
   }
 
   protected boolean isSkipTests() {
-<span class="pc bpc" id="L621" title="5 of 6 branches missed.">    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;</span>
+<span class="pc bpc" id="L618" title="5 of 6 branches missed.">    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;</span>
   }
 
 	private void loadResources() throws MojoExecutionException {
-<span class="fc" id="L625">		this.customRunnerTemplateFile = this.getResourceAsFile(&quot;customRunnerTemplate&quot;, this.customRunnerTemplate);</span>
-<span class="fc" id="L626">		this.customRunnerConfigurationFile = this.getResourceAsFile(&quot;customRunnerConfiguration&quot;, this.customRunnerConfiguration);</span>
-<span class="fc" id="L627">	}</span>
+<span class="fc" id="L622">		this.customRunnerTemplateFile = this.getResourceAsFile(&quot;customRunnerTemplate&quot;, this.customRunnerTemplate);</span>
+<span class="fc" id="L623">		this.customRunnerConfigurationFile = this.getResourceAsFile(&quot;customRunnerConfiguration&quot;, this.customRunnerConfiguration);</span>
+<span class="fc" id="L624">	}</span>
 
 	private File getResourceAsFile(String parameter, String resourceLocation) throws MojoExecutionException {
-<span class="fc" id="L630">		File file = null;</span>
+<span class="fc" id="L627">		File file = null;</span>
 
-<span class="fc bfc" id="L632" title="All 2 branches covered.">		if (resourceLocation != null) {</span>
-<span class="fc" id="L633">			this.locator.addSearchPath( &quot;url&quot;, &quot;&quot; );</span>
-<span class="fc" id="L634">			this.locator.addSearchPath( FileResourceLoader.ID, this.mavenProject.getFile().getParentFile().getAbsolutePath() );</span>
+<span class="fc bfc" id="L629" title="All 2 branches covered.">		if (resourceLocation != null) {</span>
+<span class="fc" id="L630">			this.locator.addSearchPath( &quot;url&quot;, &quot;&quot; );</span>
+<span class="fc" id="L631">			this.locator.addSearchPath( FileResourceLoader.ID, this.mavenProject.getFile().getParentFile().getAbsolutePath() );</span>
 
-<span class="fc" id="L636">			ClassLoader origLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="fc" id="L633">			ClassLoader origLoader = Thread.currentThread().getContextClassLoader();</span>
 			try {
-<span class="fc" id="L638">				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());</span>
+<span class="fc" id="L635">				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());</span>
 				try {
-<span class="fc" id="L640">					file = this.locator.getResourceAsFile(resourceLocation);</span>
-<span class="fc" id="L641">				} catch (Exception e) {</span>
-<span class="fc" id="L642">					throw new MojoExecutionException(String.format(ERROR_FILE_DNE,parameter,resourceLocation));</span>
-<span class="fc" id="L643">				}</span>
+<span class="fc" id="L637">					file = this.locator.getResourceAsFile(resourceLocation);</span>
+<span class="fc" id="L638">				} catch (Exception e) {</span>
+<span class="fc" id="L639">					throw new MojoExecutionException(String.format(ERROR_FILE_DNE,parameter,resourceLocation));</span>
+<span class="fc" id="L640">				}</span>
 			}
 			finally {
-<span class="fc" id="L646">				Thread.currentThread().setContextClassLoader( origLoader );</span>
-<span class="fc" id="L647">			}</span>
+<span class="fc" id="L643">				Thread.currentThread().setContextClassLoader( origLoader );</span>
+<span class="fc" id="L644">			}</span>
 		}
-<span class="fc" id="L649">		return file;</span>
+<span class="fc" id="L646">		return file;</span>
 	}
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>

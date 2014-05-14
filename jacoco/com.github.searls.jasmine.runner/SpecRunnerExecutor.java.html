@@ -6,7 +6,6 @@ import java.net.URL;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,88 +17,88 @@ import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.model.JasmineResult;
 import com.google.common.base.Predicate;
 
-<span class="fc" id="L21">public class SpecRunnerExecutor {</span>
+<span class="fc" id="L20">public class SpecRunnerExecutor {</span>
 
 	public static final String BUILD_REPORT_JS = &quot;/lib/buildReport.js&quot;;
 	public static final String CREATE_JUNIT_XML = &quot;/lib/createJunitXml.js&quot;;
 
-<span class="fc" id="L26">	private final IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();</span>
+<span class="fc" id="L25">	private final IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();</span>
 
 	public JasmineResult execute(URL runnerUrl, File junitXmlReport, WebDriver driver, int timeout, boolean debug, Log log, String format) {
 		try {
-<span class="pc bpc" id="L30" title="1 of 2 branches missed.">			if (!(driver instanceof JavascriptExecutor)) {</span>
-<span class="nc" id="L31">				throw new RuntimeException(&quot;The provided web driver can't execute JavaScript: &quot; + driver.getClass());</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">			if (!(driver instanceof JavascriptExecutor)) {</span>
+<span class="nc" id="L30">				throw new RuntimeException(&quot;The provided web driver can't execute JavaScript: &quot; + driver.getClass());</span>
 			}
-<span class="fc" id="L33">			JavascriptExecutor executor = (JavascriptExecutor) driver;</span>
-<span class="fc" id="L34">			driver.get(runnerUrl.toString());</span>
-<span class="fc" id="L35">			this.waitForRunnerToFinish(driver, timeout, debug, log);</span>
+<span class="fc" id="L32">			JavascriptExecutor executor = (JavascriptExecutor) driver;</span>
+<span class="fc" id="L33">			driver.get(runnerUrl.toString());</span>
+<span class="fc" id="L34">			this.waitForRunnerToFinish(driver, timeout, debug, log);</span>
 
-<span class="fc" id="L37">      this.checkForConsoleErrors(driver, log);</span>
+<span class="fc" id="L36">      this.checkForConsoleErrors(driver, log);</span>
 
-<span class="fc" id="L39">			JasmineResult jasmineResult = new JasmineResult();</span>
-<span class="fc" id="L40">			jasmineResult.setDetails(this.buildReport(executor,format));</span>
-<span class="fc" id="L41">			FileUtils.writeStringToFile(junitXmlReport, this.buildJunitXmlReport(executor,debug), &quot;UTF-8&quot;);</span>
-<span class="fc" id="L42">			driver.quit();</span>
+<span class="fc" id="L38">			JasmineResult jasmineResult = new JasmineResult();</span>
+<span class="fc" id="L39">			jasmineResult.setDetails(this.buildReport(executor,format));</span>
+<span class="fc" id="L40">			FileUtils.writeStringToFile(junitXmlReport, this.buildJunitXmlReport(executor,debug), &quot;UTF-8&quot;);</span>
+<span class="fc" id="L41">			driver.quit();</span>
 
-<span class="fc" id="L44">			return jasmineResult;</span>
-<span class="nc" id="L45">		} catch (Exception e) {</span>
-<span class="nc" id="L46">			throw new RuntimeException(e);</span>
+<span class="fc" id="L43">			return jasmineResult;</span>
+<span class="nc" id="L44">		} catch (Exception e) {</span>
+<span class="nc" id="L45">			throw new RuntimeException(e);</span>
 		}
 	}
 
   private void checkForConsoleErrors(WebDriver driver, Log log) {
-<span class="fc" id="L51">    WebElement head = driver.findElement(By.tagName(&quot;head&quot;));</span>
-<span class="pc bpc" id="L52" title="1 of 2 branches missed.">    if (head != null) {</span>
-<span class="fc" id="L53">      String jserrors = head.getAttribute(&quot;jmp_jserror&quot;);</span>
-<span class="pc bpc" id="L54" title="1 of 2 branches missed.">      if (StringUtils.isNotBlank(jserrors)) {</span>
-<span class="nc" id="L55">        log.warn(&quot;JavaScript Console Errors:\n\n  * &quot;+jserrors.replaceAll(&quot;:!:&quot;,&quot;\n  * &quot;)+&quot;\n\n&quot;);</span>
-<span class="nc" id="L56">        throw new RuntimeException(&quot;There were javascript console errors.&quot;);</span>
+<span class="fc" id="L50">    WebElement head = driver.findElement(By.tagName(&quot;head&quot;));</span>
+<span class="pc bpc" id="L51" title="1 of 2 branches missed.">    if (head != null) {</span>
+<span class="fc" id="L52">      String jserrors = head.getAttribute(&quot;jmp_jserror&quot;);</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">      if (StringUtils.isNotBlank(jserrors)) {</span>
+<span class="nc" id="L54">        log.warn(&quot;JavaScript Console Errors:\n\n  * &quot;+jserrors.replaceAll(&quot;:!:&quot;,&quot;\n  * &quot;)+&quot;\n\n&quot;);</span>
+<span class="nc" id="L55">        throw new RuntimeException(&quot;There were javascript console errors.&quot;);</span>
       }
     }
-<span class="fc" id="L59">  }</span>
+<span class="fc" id="L58">  }</span>
 
 	private String buildReport(JavascriptExecutor driver, String format) throws IOException {
-<span class="fc" id="L62">		String script =</span>
+<span class="fc" id="L61">		String script =</span>
 				this.ioUtilsWrapper.toString(BUILD_REPORT_JS) +
 				&quot;return jasmineMavenPlugin.printReport(window.reporter,{format:'&quot;+format+&quot;'});&quot;;
-<span class="fc" id="L65">		Object report = driver.executeScript(script);</span>
-<span class="fc" id="L66">		return report.toString();</span>
+<span class="fc" id="L64">		Object report = driver.executeScript(script);</span>
+<span class="fc" id="L65">		return report.toString();</span>
 	}
 
 	private String buildJunitXmlReport(JavascriptExecutor driver, boolean debug) throws IOException {
-<span class="fc" id="L70">		Object junitReport = driver.executeScript(</span>
+<span class="fc" id="L69">		Object junitReport = driver.executeScript(</span>
 				this.ioUtilsWrapper.toString(CREATE_JUNIT_XML) +
 				&quot;return junitXmlReporter.report(window.reporter,&quot;+debug+&quot;);&quot;);
-<span class="fc" id="L73">		return junitReport.toString();</span>
+<span class="fc" id="L72">		return junitReport.toString();</span>
 	}
 
 	private void waitForRunnerToFinish(final WebDriver driver, int timeout, boolean debug, Log log) throws InterruptedException {
-<span class="fc" id="L77">		final JavascriptExecutor executor = (JavascriptExecutor) driver;</span>
-<span class="fc" id="L78">		new WebDriverWait(driver, timeout, 1000).until(new Predicate&lt;WebDriver&gt;() {</span>
+<span class="fc" id="L76">		final JavascriptExecutor executor = (JavascriptExecutor) driver;</span>
+<span class="fc" id="L77">		new WebDriverWait(driver, timeout, 1000).until(new Predicate&lt;WebDriver&gt;() {</span>
 			@Override
 			public boolean apply(WebDriver input) {
-<span class="fc" id="L81">				return SpecRunnerExecutor.this.executionFinished(executor);</span>
+<span class="fc" id="L80">				return SpecRunnerExecutor.this.executionFinished(executor);</span>
 			}
 		});
 
-<span class="pc bpc" id="L85" title="1 of 2 branches missed.">		if (!this.executionFinished(executor)) {</span>
-<span class="nc" id="L86">			this.handleTimeout(timeout, debug, log);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">		if (!this.executionFinished(executor)) {</span>
+<span class="nc" id="L85">			this.handleTimeout(timeout, debug, log);</span>
 		}
-<span class="fc" id="L88">	}</span>
+<span class="fc" id="L87">	}</span>
 
 	private void handleTimeout(int timeout, boolean debug, Log log) {
-<span class="nc" id="L91">		log.warn(&quot;Attempted to wait for your specs to finish processing over the course of &quot; +</span>
+<span class="nc" id="L90">		log.warn(&quot;Attempted to wait for your specs to finish processing over the course of &quot; +</span>
 				timeout +
 				&quot; seconds, but it still appears to be running.&quot;);
-<span class="nc bnc" id="L94" title="All 2 branches missed.">		if(debug) {</span>
-<span class="nc" id="L95">			log.warn(&quot;Debug mode: will attempt to parse the incomplete spec runner results&quot;);</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">		if(debug) {</span>
+<span class="nc" id="L94">			log.warn(&quot;Debug mode: will attempt to parse the incomplete spec runner results&quot;);</span>
 		} else {
-<span class="nc" id="L97">			throw new IllegalStateException(&quot;Timeout occurred. Aborting execution of specs. (Try configuring 'debug' to 'true' for more details.)&quot;);</span>
+<span class="nc" id="L96">			throw new IllegalStateException(&quot;Timeout occurred. Aborting execution of specs. (Try configuring 'debug' to 'true' for more details.)&quot;);</span>
 		}
-<span class="nc" id="L99">	}</span>
+<span class="nc" id="L98">	}</span>
 
 	private Boolean executionFinished(JavascriptExecutor driver) {
-<span class="fc" id="L102">		return (Boolean) driver.executeScript(&quot;return (window.reporter === undefined) ? false : window.reporter.finished&quot;);</span>
+<span class="fc" id="L101">		return (Boolean) driver.executeScript(&quot;return (window.reporter === undefined) ? false : window.reporter.finished&quot;);</span>
 	}
 
 }
