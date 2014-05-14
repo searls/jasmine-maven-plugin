@@ -42,7 +42,7 @@
     <contributor>
       <name>Luiz Ribeiro</name>
       <email>luizfar@gmail.com</email>
-      <url>http://luizfar.wordpress.com</url> 
+      <url>http://luizfar.wordpress.com</url>
     </contributor>
     <contributor>
       <name>Dan Freeman</name>
@@ -55,11 +55,11 @@
     <contributor>
       <name>David Padbury</name>
       <email>david@davidpadbury.com</email>
-      <url>http://davidpadbury.com</url> 
+      <url>http://davidpadbury.com</url>
     </contributor>
     <contributor>
       <name>Conny Kreyßel</name>
-      <url>http://www.kreyssel.org</url> 
+      <url>http://www.kreyssel.org</url>
     </contributor>
     <contributor>
       <name>sfry</name>
@@ -67,12 +67,12 @@
     </contributor>
     <contributor>
       <name>hikaruworld</name>
-      <url>http://prepro.wordpress.com</url> 
+      <url>http://prepro.wordpress.com</url>
     </contributor>
     <contributor>
       <name>Daniel Tabuenca</name>
-      <email>dtabuenc@gmail.com</email> 
-      <url>https://github.com/dtabuenc</url> 
+      <email>dtabuenc@gmail.com</email>
+      <url>https://github.com/dtabuenc</url>
     </contributor>
     <contributor>
       <name>johnomalley</name>
@@ -134,7 +134,7 @@
 	<prerequisites>
 	  <maven>3.0.4</maven>
 	</prerequisites>
-	
+
   <dependencies>
     <!-- Mojo Dependencies -->
     <dependency>
@@ -153,7 +153,7 @@
       <version>3.2</version>
       <scope>provided</scope>
     </dependency>
-    
+
     <!-- Plugin Dependencies -->
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
@@ -308,6 +308,9 @@
           <version>3.3</version>
           <configuration>
             <skipDeploy>true</skipDeploy>
+            <attributes>
+              <currentStableVersion>${releasedVersion.version}</currentStableVersion>
+            </attributes>
           </configuration>
           <dependencies>
             <dependency>
@@ -454,6 +457,19 @@
         <version>2.2.0</version>
       </plugin>
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>pre-site</phase>
+            <goals>
+              <goal>released-version</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>com.github.github</groupId>
         <artifactId>site-maven-plugin</artifactId>
         <version>0.9</version>
@@ -520,7 +536,7 @@
               <report>plugins</report>
             </reports>
           </reportSet>
-        </reportSets> 
+        </reportSets>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -528,7 +544,6 @@
         <version>2.10</version>
         <configuration>
           <columnNames>Id,Summary,Reporter,Assignee,Status,Type,Created,Fix Version</columnNames>
-          <onlyCurrentVersion>true</onlyCurrentVersion>
         </configuration>
         <reportSets>
           <reportSet>

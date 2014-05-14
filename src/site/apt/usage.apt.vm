@@ -13,7 +13,7 @@ Usage
 mvn archetype:generate -DarchetypeGroupId=com.github.searls -DarchetypeArtifactId=jasmine-archetype -DarchetypeVersion=RELEASE -DgroupId=com.acme -DartifactId=my-jasmine-project -Dversion=0.0.1-SNAPSHOT
 +-----
 
- And then this: 
+ And then this:
 
 +-----
 cd my-jasmine-project && mvn jasmine:bdd
@@ -82,14 +82,14 @@ Just leave this process running as you test-drive your code,
 refreshing your browser window to re-run your specs.
 You can kill the server with Ctrl-C when you're done.
 +-----
-    
+
  Now visit http://localhost:8234 in your browser of choice and you should see a Jasmine spec runner with 0 specs, 0 failures. Sort of like this one:
 
 [./images/empty.png]
-     
+
  And that's it! When you add source scripts to the source directory and spec scripts to the specs directory and refresh the page, your specs will be executed.
 
- Running the jasmine:bdd goal and refreshing an actual browser will always provide substantially faster feedback than the headless jasmine:test goal. As a result, I strongly recommend you use it to drive development of your JavaScript and only worry about running the headless execution when you would otherwise perform full Maven builds (like before you push your code or in CI). 
+ Running the jasmine:bdd goal and refreshing an actual browser will always provide substantially faster feedback than the headless jasmine:test goal. As a result, I strongly recommend you use it to drive development of your JavaScript and only worry about running the headless execution when you would otherwise perform full Maven builds (like before you push your code or in CI).
 
 * Running a build
 
@@ -100,7 +100,7 @@ You can kill the server with Ctrl-C when you're done.
 +-----
 mvn clean test
 +-----
-    
+
  A happy build might output:
 
 +-----
@@ -131,7 +131,7 @@ Results: 6 specs, 0 failures
 [INFO] Final Memory: 9M/81M
 [INFO] ------------------------------------------------------------------------
 +-----
-    
+
  And a failing build might output:
 
 +-----
@@ -164,5 +164,5 @@ Results: 5 specs, 1 failures
 [INFO] Final Memory: 8M/81M
 [INFO] ------------------------------------------------------------------------
 +-----
-    
+
  The plugin relies on HtmlUnit for headless (which is to say, GUI-less) execution. It's not a perfect emulation of a browser, but for moderately well-isolated unit testing (e.g. only pedestrian interactions with the DOM), it works really well.

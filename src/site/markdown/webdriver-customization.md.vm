@@ -4,7 +4,7 @@ The jamine-maven-plugin ships with [HtmlUnitDriver](https://code.google.com/p/se
 
 Changing the implementation
 ---------------------------
-The `webDriverClassName` parameter allows you to specify the WebDriver implementation you would like to use in place of HtmlUnitDriver. The WebDriver implementation must either have a constructor that excepts no arguments or a constructor that accepts a single [Capabilities](http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/Capabilities.html) argument. 
+The `webDriverClassName` parameter allows you to specify the WebDriver implementation you would like to use in place of HtmlUnitDriver. The WebDriver implementation must either have a constructor that excepts no arguments or a constructor that accepts a single [Capabilities](http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/Capabilities.html) argument.
 
 Here is an example using FirefoxDriver:
 
@@ -12,9 +12,9 @@ Here is an example using FirefoxDriver:
 <build>
   <plugins>
     <plugin>
-      <groupId>com.github.searls</groupId>
-      <artifactId>jasmine-maven-plugin</artifactId>
-      <version>${jasmine-plugin-version}</version>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>${project.artifactId}</artifactId>
+      <version>${currentStableVersion}<version>
       <executions>
         <execution>
           <goals>
@@ -83,9 +83,9 @@ Configuring the default HtmlUnitDriver to use a proxy:
 
 ```xml
 <plugin>
-  <groupId>com.github.searls</groupId>
-  <artifactId>jasmine-maven-plugin</artifactId>
-  <version>${jasmine-maven-plugin.version}</version>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${currentStableVersion}<version>
   <executions>
     <execution>
       <goals>
@@ -110,9 +110,9 @@ Configuring PhantomJSDriver with custom binary path and caching settings:
 
 ```xml
 <plugin>
-  <groupId>com.github.searls</groupId>
-  <artifactId>jasmine-maven-plugin</artifactId>
-  <version>${jasmine-maven-plugin.version}</version>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${currentStableVersion}<version>
   <executions>
     <execution>
       <goals>

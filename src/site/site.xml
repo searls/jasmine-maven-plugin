@@ -29,6 +29,7 @@
       <item name="Code Coverage" href="code-coverage.html" />
       <item name="WebDriver Customization" href="webdriver-customization.html" />
       <item name="Using with PhantomJS" href="phantomjs.html" />
+      <item name="WebJars Support" href="webjars-support.html" />
    </menu>
     
    <menu ref="reports"/>
