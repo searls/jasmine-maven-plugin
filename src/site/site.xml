@@ -13,6 +13,10 @@
         <ribbonOrientation>right</ribbonOrientation>
         <ribbonColor>black</ribbonColor>
       </gitHub>
+      <ohloh>
+        <projectId>jasmine-maven-plugin</projectId>
+        <widget>thin-badge</widget>
+      </ohloh>
     </fluidoSkin>
   </custom>
   <body>
@@ -21,6 +25,7 @@
       <item name="Introduction" href="index.html"/>
       <item name="Goals" href="plugin-info.html"/>
       <item name="Usage" href="usage.html"/>
+      <item name="Releases" href="http://github.com/searls/jasmine-maven-plugin/releases" />
    </menu>
    
    <menu name="Examples">
@@ -35,8 +40,8 @@
    <menu ref="reports"/>
 
    <menu name="External Links">
-     <item name="Jasmine Docs" href="http://github.com/pivotal/jasmine/wiki" />
-     <item name="CoffeeScript Docs" href="http://jashkenas.github.com/coffee-script/" />
+     <item name="Jasmine Docs" href="http://jasmine.github.io/" />
+     <item name="CoffeeScript Docs" href="http://coffeescript.org/" />
      <item name="Try Jasmine in your browser" href="http://try-jasmine.heroku.com/" />
    </menu>
 
