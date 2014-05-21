@@ -447,11 +447,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * <pre>
    * &lt;additionalContexts&gt;
    *   &lt;context&gt;
-   *     &lt;contextRoot&gt;/lib&lt;/contextRoot&gt;
+   *     &lt;contextRoot&gt;lib&lt;/contextRoot&gt;
    *     &lt;directory&gt;${project.basedir}/src/main/lib&lt;/directory&gt;
    *   &lt;/context&gt;
    *   &lt;context&gt;
-   *     &lt;contextRoot&gt;/test/lib&lt;/contextRoot&gt;
+   *     &lt;contextRoot&gt;test/lib&lt;/contextRoot&gt;
    *     &lt;directory&gt;${project.basedir}/src/test/lib&lt;/directory&gt;
    *   &lt;/context&gt;
    * &lt;/additionalContexts&gt;
