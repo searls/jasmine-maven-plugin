@@ -9,7 +9,6 @@
   <artifactId>jasmine-webapp-passing</artifactId>
   <packaging>war</packaging>
   <name>Example Webapp using Jasmine Maven Plugin</name>
-
   <build>
     <plugins>
       <plugin>
@@ -29,9 +28,14 @@
               <contextRoot>vendor</contextRoot>
               <directory>src/main/vendor</directory>
             </context>
+            <context>
+              <contextRoot>/other</contextRoot>
+              <directory>src/main/other</directory>
+            </context>
           </additionalContexts>
           <preloadSources>
             <source>vendor/math.js</source>
+            <source>other/util.js</source>
           </preloadSources>
         </configuration>
       </plugin>

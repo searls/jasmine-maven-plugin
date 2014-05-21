@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.github.searls.jasmine.mojo.Context;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -31,14 +32,15 @@ public class ResourceHandlerConfigurator {
     ContextHandlerCollection contexts = new ContextHandlerCollection();
 
     for (Context context : this.configuration.getContexts()) {
-      ContextHandler handler = contexts.addContext("/"+context.getContextRoot(), "");
+      String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(),"/");
+      ContextHandler handler = contexts.addContext(contextRoot, "");
       handler.setAliases(true);
       handler.setHandler(this.createResourceHandler(true, context.getDirectory().getAbsolutePath(), null));
     }
 
     ContextHandler rootContextHandler = contexts.addContext("/", "");
-    rootContextHandler.setAliases(true);
     rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));
+    rootContextHandler.setAliases(true);
 
     ContextHandler classPathContextHandler = contexts.addContext("/classpath", "");
     classPathContextHandler.setHandler(new ClassPathResourceHandler(configuration.getProjectClassLoader()));
