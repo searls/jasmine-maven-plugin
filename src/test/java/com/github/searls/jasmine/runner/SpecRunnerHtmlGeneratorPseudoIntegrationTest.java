@@ -1,22 +1,13 @@
 package com.github.searls.jasmine.runner;
 
-import static com.github.searls.jasmine.Matchers.containsScriptTagWith;
-import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
-import static com.github.searls.jasmine.Matchers.containsStyleTagWith;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_CSS;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_HTML_JS;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_JS;
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
+import com.gargoylesoftware.htmlunit.IncorrectnessListener;
+import com.gargoylesoftware.htmlunit.MockWebConnection;
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlMeta;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
+import com.github.searls.jasmine.io.scripts.ScriptResolverException;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -26,14 +17,18 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.gargoylesoftware.htmlunit.IncorrectnessListener;
-import com.gargoylesoftware.htmlunit.MockWebConnection;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlMeta;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.github.searls.jasmine.io.IOUtilsWrapper;
-import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import com.github.searls.jasmine.io.scripts.ScriptResolverException;
+import java.io.IOException;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import static com.github.searls.jasmine.Matchers.containsLinkTagWithSource;
+import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.*;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
@@ -99,33 +94,23 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   @Test
   public void populatesJasmineSource() throws Exception {
-    String expected = "javascript()";
-    when(this.generatorConfiguration.IOtoString(eq(JASMINE_JS))).thenReturn(expected);
-
     String html = this.subject.generate();
 
-    assertThat(html, containsScriptTagWith(expected));
+    assertThat(html, containsScriptTagWithSource(JASMINE_JS));
   }
 
   @Test
   public void populatesJasmineHtmlSource() throws Exception {
-    String expected = "javascript()";
-    when(this.generatorConfiguration.IOtoString(eq(JASMINE_HTML_JS))).thenReturn(expected);
-
-
     String html = this.subject.generate();
 
-    assertThat(html, containsScriptTagWith(expected));
+    assertThat(html, containsScriptTagWithSource(JASMINE_HTML_JS));
   }
 
   @Test
   public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
-    String expected = "h1 { background-color: awesome}";
-
-    when(this.generatorConfiguration.IOtoString(eq(JASMINE_CSS))).thenReturn(expected);
     String html = this.subject.generate();
 
-    assertThat(html, containsStyleTagWith(expected));
+    assertThat(html, containsLinkTagWithSource(JASMINE_CSS));
   }
 
   @Test

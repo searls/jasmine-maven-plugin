@@ -9,7 +9,7 @@
     if (config.format === 'progress') {
       result = printProgressFormat(reporter);
     } else {
-      result = buildDocumentationFormatReport(reporter.suites(),0);
+      result = buildDocumentationFormatReport(jasmine.getEnv().topSuite().children,0);
     }
     result += describeFailureSentences(reporter);
     result += "\n\nResults: "+specCount+" specs, "+failureCount+" failures\n";
@@ -72,22 +72,24 @@
 
   var buildDocumentationFormatReport = function(items,indentLevel) {
     var line = '';
-     for(var i=0;i<items.length;i++){
-      var item = items[i];
-      if(!inArray(reportedItems,item)) {
-        line += (i > 0 && indentLevel === 0 ? '\n' : '')+"\n"+indent(indentLevel)+item.name;
+    if (items) {
+      for(var i=0;i<items.length;i++){
+        var item = items[i];
+        if(!inArray(reportedItems,item)) {
+          line += (i > 0 && indentLevel === 0 ? '\n' : '')+"\n"+indent(indentLevel)+item.description;
 
-        if(item.type == 'spec') {
-          specCount++;
-          var result = resultForSpec(item);
-          if(result.result !== 'passed') {
-            failureCount++;
-            line += describeMessages(result.messages,indentLevel+1);
+          if(item instanceof jasmine.Spec) {
+            specCount++;
+            var result = resultForSpec(item);
+            if(result.status !== 'passed') {
+              failureCount++;
+              line += describeMessages(result.failedExpectations,indentLevel+1);
+            }
           }
-        }
 
-        reportedItems.push(item);
-        line += buildDocumentationFormatReport(item.children,indentLevel+1);
+          reportedItems.push(item);
+          line += buildDocumentationFormatReport(item.children,indentLevel+1);
+        }
       }
     }
     return line;
@@ -110,7 +112,13 @@
   };
 
   var resultForSpec = function(spec){
-    return reporter.results()[spec.id] || {};
+    var specResults = reporter.specs();
+    for (var i=0; i < specResults.length; i++) {
+      if (spec.id == specResults[i].id) {
+        return specResults[i];
+      }
+    }
+    return {};
   };
 
   var describeFailureSentences = function() {

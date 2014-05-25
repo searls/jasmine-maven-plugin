@@ -20,34 +20,16 @@
   </script>
   $cssDependencies$
   $javascriptDependencies$
+  $jasmineBoot$
+  <script type="text/javascript">
+    jasmine.boot();
+  </script>
   $allScriptTags$
 </head>
 <body>
   <script type="text/javascript">
     if(window.location.href.indexOf("ManualSpecRunner.html") !== -1) {
-      document.body.appendChild(document.createTextNode("Warning: opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
-    }
-
-    var executeJasmineSpecs = function(){
-      window.reporter = new jasmine.$reporter$(); jasmine.getEnv().addReporter(reporter);
-      if ('$reporter$' == 'HtmlReporter') {
-        jasmine.getEnv().specFilter = function(spec) {
-          return window.reporter.specFilter(spec);
-        };
-      }
-      
-	  //Don't do live updates when running through HTMLUnit
-      if ('$reporter$' == 'JsApiReporter'){
-		jasmine.getEnv().updateInterval = Number.MAX_VALUE;
-      }
-      
-      jasmine.getEnv().execute();
-    };
-
-    if (window.addEventListener) {
-      addEventListener('DOMContentLoaded', executeJasmineSpecs, false);
-    } else {
-      attachEvent('onload', executeJasmineSpecs);
+      document.body.appendChild(document.createTextNode("Warning: Opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
     }
   </script>
 </body>

@@ -31,20 +31,25 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
     return new ST(htmlTemplate,'$','$');
   }
 
-  protected void includeJavaScriptDependencies(List<String> dependencies, ST template) throws IOException {
+  protected void includeJavaScriptDependencies(List<String> dependencies, String boot, ST template) throws IOException {
     StringBuilder js = new StringBuilder();
     for (String jsFile : dependencies) {
       if(jsFile != null) {
-        js.append("<script type=\"text/javascript\">").append(configuration.IOtoString(jsFile)).append("</script>");
+        js.append("<script type=\"text/javascript\" src=\"").append(jsFile).append("\"></script>");
       }
     }
     template.add(JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME, js.toString());
+    js = new StringBuilder();
+    if (boot != null) {
+      js.append("<script type=\"text/javascript\" src=\"").append(boot).append("\"></script>");
+    }
+    template.add("jasmineBoot", js.toString());
   }
 
   protected void applyCssToTemplate(List<String> styles, ST template) throws IOException {
     StringBuilder css = new StringBuilder();
     for (String cssFile : styles) {
-      css.append("<style type=\"text/css\">").append(configuration.IOtoString(cssFile)).append("</style>");
+      css.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append("\"/>");
     }
     template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());
   }

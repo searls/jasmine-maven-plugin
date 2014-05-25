@@ -21,18 +21,7 @@ public class Matchers {
 			}
 		};
 	}
-	public static Matcher<String> containsScriptTagWith(final String script) {
-		return new TypeSafeMatcher<String>() {
-			@Override
-			public boolean matchesSafely(String html) {
-				return html.contains("<script type=\"text/javascript\">" + script + "</script>");
-			}
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("contains <script/> tag with contents '"+script+"'");
-			}
-		};
-	}
+
 	public static Matcher<String> containsScriptTagWithSource(final String src) {
 		return new TypeSafeMatcher<String>() {
 			@Override
@@ -45,16 +34,16 @@ public class Matchers {
 			}
 		};
 	}
-	public static Matcher<String> containsStyleTagWith(final String style) {
-		return new TypeSafeMatcher<String>() {
-			@Override
-			public boolean matchesSafely(String html) {
-				return html.contains("<style type=\"text/css\">" + style + "</style>");
-			}
-			@Override
-			public void describeTo(Description description) {
-				description.appendText("contains <style/> tag with contents '"+style+"'");
-			}
-		};
-	}
+  public static Matcher<String> containsLinkTagWithSource(final String src) {
+    return new TypeSafeMatcher<String>() {
+      @Override
+      public boolean matchesSafely(String html) {
+        return html.contains("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + src + "\"/>");
+      }
+      @Override
+      public void describeTo(Description description) {
+        description.appendText("contains <link/> tag with src='"+src+"'");
+      }
+    };
+  }
 }

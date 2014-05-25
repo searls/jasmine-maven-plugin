@@ -1,4 +1,14 @@
-jasmine.Matchers.prototype.toEqualFoo =  function(someting) {
-  var rx = new RegExp("Foo" + someting);
-  return rx.test(this.actual);
-};
+jasmine.addMatchers({
+  toEqualFoo : function(util, customEqualityTesters) {
+    return {
+      compare: function(actual, expected) {
+        var rx = new RegExp("Foo" + expected);
+        var passed = rx.test(actual);
+        return {
+          pass: passed,
+          message: 'Expected ' + actual + (passed ? '' : ' not') + ' to match ' + expected
+        };
+      }
+    };
+  }
+});

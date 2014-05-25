@@ -26,7 +26,7 @@ public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHand
 
     if (resource != null) {
       String javascript = IOUtils.toString(resource, "UTF-8");
-      setHeaders(response, javascript);
+      setHeaders(response, resourcePath, javascript);
       writeResponse(response, javascript);
       baseRequest.setHandled(true);
     }
@@ -38,13 +38,18 @@ public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHand
     return url.replaceFirst("^/", "");
   }
 
-  private void setHeaders(HttpServletResponse response, String javascript) {
+  private void setHeaders(HttpServletResponse response, String resourcePath, String content) {
     response.setCharacterEncoding("UTF-8");
-    response.setContentType("text/javascript");
+
+    if (resourcePath.endsWith(".css")) {
+      response.setContentType("text/css");
+    } else {
+      response.setContentType("text/javascript");
+    }
     response.addDateHeader("EXPIRES", 0L);
     response.setDateHeader(HttpHeaders.LAST_MODIFIED, new Date().getTime());
     try {
-      int contentLength = javascript.getBytes("UTF-8").length;
+      int contentLength = content.getBytes("UTF-8").length;
       response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(contentLength));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException("The JVM does not support javascript default encoding.", e);
