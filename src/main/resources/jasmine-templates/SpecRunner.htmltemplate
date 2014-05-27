@@ -22,7 +22,7 @@
   $javascriptDependencies$
   $jasmineBoot$
   <script type="text/javascript">
-    jasmine.boot();
+    window.onload = jasmine.boot;
   </script>
   $allScriptTags$
 </head>
