@@ -7,7 +7,7 @@
     reporter = r, reportedItems=[], specCount=0, failureCount=0;
     var result;
     if (config.format === 'progress') {
-      result = printProgressFormat(reporter);
+      result = printProgressFormat(jasmine.getEnv().topSuite().children);
     } else {
       result = buildDocumentationFormatReport(jasmine.getEnv().topSuite().children,0);
     }
@@ -36,10 +36,10 @@
     return message;
   };
 
-  var printProgressFormat = function(reporter) {
+  var printProgressFormat = function(items) {
     var linesPerRow = 80;
     var result = '\n';
-    report = buildProgressFormatReport(reporter.suites());
+    report = buildProgressFormatReport(items);
     if(report.length > linesPerRow) {
       for (var i=0; i < report.length; i+=linesPerRow) {
         result += report.substring(i,i+linesPerRow) + '\n';
@@ -52,20 +52,22 @@
 
   var buildProgressFormatReport = function(items) {
     var output = '';
-    for (var i=0; i < items.length; i++) {
-      var item = items[i];
-      if(item.type == 'spec') {
-        specCount++;
-        var result = resultForSpec(item);
-        if(result.result !== 'passed') {
-          failureCount++;
-          output += 'F';
-        } else {
-          output += '.';
+    if (items) {
+      for (var i=0; i < items.length; i++) {
+        var item = items[i];
+        if(item instanceof jasmine.Spec) {
+          specCount++;
+          var result = resultForSpec(item);
+          if(result.status !== 'passed') {
+            failureCount++;
+            output += 'F';
+          } else {
+            output += '.';
+          }
         }
+        reportedItems.push(item);
+        output += buildProgressFormatReport(item.children);
       }
-      reportedItems.push(item);
-      output += buildProgressFormatReport(item.children);
     }
     return output;
   };
