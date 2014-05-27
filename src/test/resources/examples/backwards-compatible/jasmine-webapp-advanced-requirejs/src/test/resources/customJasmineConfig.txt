@@ -1,4 +1,0 @@
-paths: {
-    specs: '../specs',
-    jquery: 'wrap_jquery'
-}
