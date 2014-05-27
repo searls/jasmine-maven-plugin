@@ -20,7 +20,6 @@
   </script>
   $cssDependencies$
   $javascriptDependencies$
-  $jasmineBoot$
   $preloadScriptTags$
 </head>
 <body>

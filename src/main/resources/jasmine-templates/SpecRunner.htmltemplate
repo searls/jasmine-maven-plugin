@@ -20,7 +20,6 @@
   </script>
   $cssDependencies$
   $javascriptDependencies$
-  $jasmineBoot$
   <script type="text/javascript">
     window.onload = jasmine.boot;
   </script>
