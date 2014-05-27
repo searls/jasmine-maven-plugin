@@ -458,6 +458,9 @@
         <configuration>
           <excludes>
             <exclude>com/github/searls/jasmine/mojo/HelpMojo*</exclude>
+            <!-- prevent 'Method code too large' exception -->
+            <!-- see http://goo.gl/5THrnt --> 
+            <exclude>**com.steadystate*</exclude>
           </excludes>
         </configuration>
       </plugin>
