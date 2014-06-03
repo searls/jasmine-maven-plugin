@@ -1,6 +1,16 @@
 var junitXmlReporter;
 
 (function() {
+  var resultForSpec = function(reporter, spec){
+    var specResults = reporter.specs();
+    for (var i=0; i < specResults.length; i++) {
+      if (spec.id == specResults[i].id) {
+        return specResults[i];
+      }
+    }
+    return {};
+  };
+
   junitXmlReporter = {
     prolog: '<?xml version="1.0" encoding="UTF-8" ?>',
     report: function(reporter,debug) {
@@ -9,7 +19,7 @@ var junitXmlReporter;
       if (reporter.finished !== true && !debug)
         throw 'Jasmine runner is not finished!';
 
-      var results = this.crunchResults(reporter.results());
+      var results = this.crunchResults(reporter.specs());
 
       var writer = new XmlWriter();
       writer.beginNode('testsuite');
@@ -21,23 +31,25 @@ var junitXmlReporter;
       writer.attrib('hostname','localhost');
       writer.attrib('time', '0.0');
       writer.attrib('timestamp',this.currentTimestamp());
-      this.writeChildren(reporter, writer, reporter.suites(),'');
+      this.writeChildren(reporter, writer, jasmine.getEnv().topSuite().children,'');
       writer.endNode();
 
       return this.prolog+writer.toString();
     },
     writeChildren: function(reporter, writer, tests,runningName) {
-      for(var i=0;i<tests.length;i++) {
-        var name = (runningName.length > 0 ? runningName+' ' : '')+tests[i].name;
-        if(tests[i].type === 'spec') {
-          var specResult = reporter.results()[tests[i].id] || {};
-          this.writeTestcase(writer,specResult,name);
+      if (tests) {
+        for(var i=0;i<tests.length;i++) {
+          var name = (runningName && runningName.length > 0 ? runningName+' ' : '')+tests[i].description;
+          if(tests[i] instanceof jasmine.Spec) {
+            var specResult = resultForSpec(reporter, tests[i]);
+            this.writeTestcase(writer,specResult,name);
+          }
+          this.writeChildren(reporter, writer,tests[i].children,name);
         }
-        this.writeChildren(reporter, writer,tests[i].children,name);
       }
     },
     writeTestcase: function(writer,specResult,name) {
-      var failure = specResult.result !== 'passed';
+      var failure = specResult.status !== 'passed';
       writer.beginNode('testcase');
       writer.attrib('classname','jasmine');
       writer.attrib('name',name);
@@ -52,10 +64,10 @@ var junitXmlReporter;
       writer.beginNode('error');
       var message = '';
       var type = '';
-      var messages = specResult.messages || [];
+      var messages = specResult.failedExpectations || [];
       for(var j=0;j<messages.length;j++) {
         message += messages[j].message;
-        type = messages[j].type + '.' + messages[j].matcherName;
+        type = 'expect.' + messages[j].matcherName;
       }
       writer.attrib('type',type);
       writer.attrib('message',message);
@@ -68,7 +80,7 @@ var junitXmlReporter;
       var last;
       for(var key in results) {
         count++;
-        if(results[key].result !== 'passed') {
+        if(results[key].status !== 'passed') {
           fails++;
         }
         last = key;

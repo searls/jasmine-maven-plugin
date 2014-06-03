@@ -3,7 +3,7 @@
 
   <groupId>com.github.searls</groupId>
   <artifactId>jasmine-maven-plugin</artifactId>
-  <version>1.3.1.6-SNAPSHOT</version>
+  <version>2.0-SNAPSHOT</version>
   <packaging>maven-plugin</packaging>
 
   <name>jasmine-maven-plugin</name>
@@ -231,6 +231,16 @@
       <artifactId>webjars-locator</artifactId>
       <version>0.14</version>
     </dependency>
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>jasmine</artifactId>
+      <version>2.0.0</version>
+    </dependency>
+    <dependency>
+      <groupId>net.sourceforge.htmlunit</groupId>
+      <artifactId>htmlunit</artifactId>
+      <version>2.14</version>
+    </dependency>
 
     <!-- Plugin test deps -->
     <dependency>
@@ -448,6 +458,9 @@
         <configuration>
           <excludes>
             <exclude>com/github/searls/jasmine/mojo/HelpMojo*</exclude>
+            <!-- prevent 'Method code too large' exception -->
+            <!-- see http://goo.gl/5THrnt --> 
+            <exclude>**com.steadystate*</exclude>
           </excludes>
         </configuration>
       </plugin>

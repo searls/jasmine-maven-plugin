@@ -1,15 +1,13 @@
 package com.github.searls.jasmine.runner;
 
-import static java.util.Arrays.asList;
-
-import java.io.IOException;
-import java.util.Set;
-
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
+import com.github.searls.jasmine.io.scripts.ScriptResolverException;
 import org.apache.commons.lang3.StringUtils;
 import org.stringtemplate.v4.ST;
 
-import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import com.github.searls.jasmine.io.scripts.ScriptResolverException;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Set;
 
 public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
 
@@ -43,8 +41,11 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
                               String sourceDirectory,
                               String specDirectory) throws IOException {
     ST template = this.resolveHtmlTemplate();
-    this.includeJavaScriptDependencies(asList(JASMINE_JS, JASMINE_HTML_JS), template);
-    this.applyCssToTemplate(asList(JASMINE_CSS), template);
+    this.applyScriptTagsToTemplate(
+        JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
+        Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_BOOT_JS),
+        template);
+    this.applyCssToTemplate(Arrays.asList(JASMINE_CSS), template);
     this.applyScriptTagsToTemplate("allScriptTags", allScripts, template);
     this.applyScriptTagsToTemplate("preloadScriptTags", preloads, template);
     this.applyScriptTagsToTemplate("sourceScriptTags", sources, template);
