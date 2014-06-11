@@ -3,6 +3,7 @@ package com.github.searls.jasmine.mojo;
 import java.io.File;
 import java.net.URL;
 
+import com.jezhumble.javasysmon.JavaSysMon;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -47,6 +48,7 @@ public class TestMojo extends AbstractJasmineMojo {
   @Override
   public void run() throws Exception {
     ServerManager serverManager = this.getServerManager();
+    attachShutDownHook();
     try {
       int port = serverManager.start();
       setPortProperty(port);
@@ -111,4 +113,21 @@ public class TestMojo extends AbstractJasmineMojo {
       throw new MojoFailureException("There were Jasmine spec failures.");
     }
   }
+  
+  protected void attachShutDownHook() {
+    this.getLog().debug("Attaching ShutdownHook");
+    Runtime.getRuntime().addShutdownHook( new Thread() {
+        @Override
+        public void run() {
+            shutdownHook();
+        }
+    } );
+  }
+  
+  protected void shutdownHook() {
+    this.getLog().debug("Cleanup Child Processes");
+    JavaSysMon monitor = new JavaSysMon();
+    monitor.infanticide();
+  }
+  
 }

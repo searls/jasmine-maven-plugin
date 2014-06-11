@@ -1,7 +1,9 @@
 package com.github.searls.jasmine.mojo;
 
 import static org.mockito.Mockito.verify;
+//import static org.junit.Assert.assertTrue;
 
+import com.sun.jna.Platform;
 import java.util.Properties;
 
 import org.apache.maven.plugin.logging.Log;
@@ -34,4 +36,26 @@ public class TestMojoTest {
     this.mojo.execute();
     verify(log).info("Skipping Jasmine Specs");
   }
+  
+  @Test(timeout = 10000)
+  public void testCleanupChildProcessesInShutdownHook() throws Exception {
+    ProcessBuilder builder;
+    Process process;
+    if ( Platform.isWindows() ) {
+      builder = new ProcessBuilder( "timeout", "60" );
+    } else {
+      builder = new ProcessBuilder( "sleep", "60" );
+    }
+//    long start = System.currentTimeMillis();
+    process = builder.start();
+    Thread.sleep( 1000 );
+    this.mojo.attachShutDownHook();
+    verify(log).debug("Attaching ShutdownHook");
+    this.mojo.shutdownHook();
+    verify(log).debug("Cleanup Child Processes");
+    process.waitFor();
+//    long now = System.currentTimeMillis();
+//    assertTrue( (now - start) < 10 * 1000 );
+  }
+  
 }

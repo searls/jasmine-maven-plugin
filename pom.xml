@@ -102,6 +102,10 @@
       <name>gejgalis</name>
       <url>https://github.com/gejgalis</url>
     </contributor>
+    <contributor>
+      <name>mfernandes-git</name>
+      <url>https://github.com/mfernandes-git</url>
+    </contributor>
   </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
@@ -230,6 +234,11 @@
       <groupId>org.webjars</groupId>
       <artifactId>webjars-locator</artifactId>
       <version>0.14</version>
+    </dependency>
+    <dependency>
+      <groupId>com.outr.javasysmon</groupId>
+      <artifactId>javasysmon_2.10</artifactId>
+      <version>0.3.4</version>
     </dependency>
 
     <!-- Plugin test deps -->
