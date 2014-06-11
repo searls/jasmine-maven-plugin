@@ -1,7 +1,6 @@
 package com.github.searls.jasmine.mojo;
 
 import static org.mockito.Mockito.verify;
-//import static org.junit.Assert.assertTrue;
 
 import com.sun.jna.Platform;
 import java.util.Properties;
