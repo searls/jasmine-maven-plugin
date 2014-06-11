@@ -46,7 +46,6 @@ public class TestMojoTest {
     } else {
       builder = new ProcessBuilder( "sleep", "60" );
     }
-//    long start = System.currentTimeMillis();
     process = builder.start();
     Thread.sleep( 1000 );
     this.mojo.attachShutDownHook();
@@ -54,8 +53,6 @@ public class TestMojoTest {
     this.mojo.shutdownHook();
     verify(log).debug("Cleanup Child Processes");
     process.waitFor();
-//    long now = System.currentTimeMillis();
-//    assertTrue( (now - start) < 10 * 1000 );
   }
   
 }
