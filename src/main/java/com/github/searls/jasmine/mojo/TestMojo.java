@@ -3,7 +3,6 @@ package com.github.searls.jasmine.mojo;
 import java.io.File;
 import java.net.URL;
 
-import com.jezhumble.javasysmon.JavaSysMon;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
@@ -48,7 +47,6 @@ public class TestMojo extends AbstractJasmineMojo {
   @Override
   public void run() throws Exception {
     ServerManager serverManager = this.getServerManager();
-    attachShutDownHook();
     try {
       int port = serverManager.start();
       setPortProperty(port);
@@ -85,6 +83,7 @@ public class TestMojo extends AbstractJasmineMojo {
   }
   private JasmineResult executeSpecs(URL runner) throws Exception {
     WebDriver driver = this.createDriver();
+	attachShutDownHook( driver );
     JasmineResult result = new SpecRunnerExecutor().execute(
         runner,
         new File(this.jasmineTargetDir,this.junitXmlReportFileName),
@@ -114,20 +113,26 @@ public class TestMojo extends AbstractJasmineMojo {
     }
   }
   
-  protected void attachShutDownHook() {
+  protected void attachShutDownHook( final WebDriver driver) {
     this.getLog().debug("Attaching ShutdownHook");
     Runtime.getRuntime().addShutdownHook( new Thread() {
         @Override
         public void run() {
-            shutdownHook();
+            shutdownHook(driver);
         }
     } );
   }
   
-  protected void shutdownHook() {
-    this.getLog().debug("Cleanup Child Processes");
-    JavaSysMon monitor = new JavaSysMon();
-    monitor.infanticide();
+  protected void shutdownHook(WebDriver driver) {
+    if (driver != null ) {
+      this.getLog().debug("Cleanup Child Processes");
+
+      try {
+        driver.quit();
+      } catch ( Throwable t ) {
+        //Ignore the exception.  The driver may already be shutdown.
+      }
+
+    }
   }
-  
 }

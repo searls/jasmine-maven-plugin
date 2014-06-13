@@ -2,7 +2,6 @@ package com.github.searls.jasmine.mojo;
 
 import static org.mockito.Mockito.verify;
 
-import com.sun.jna.Platform;
 import java.util.Properties;
 
 import org.apache.maven.plugin.logging.Log;
@@ -10,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.openqa.selenium.WebDriver;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
@@ -23,6 +23,9 @@ public class TestMojoTest {
   @Mock
   private Properties properties;
 
+  @Mock
+  private WebDriver driver;
+  
   @Before
   public void before() {
     this.mojo = new TestMojo();
@@ -36,22 +39,13 @@ public class TestMojoTest {
     verify(log).info("Skipping Jasmine Specs");
   }
   
-  @Test(timeout = 10000)
+  @Test
   public void testCleanupChildProcessesInShutdownHook() throws Exception {
-    ProcessBuilder builder;
-    Process process;
-    if ( Platform.isWindows() ) {
-      builder = new ProcessBuilder( "timeout", "60" );
-    } else {
-      builder = new ProcessBuilder( "sleep", "60" );
-    }
-    process = builder.start();
-    Thread.sleep( 1000 );
-    this.mojo.attachShutDownHook();
+    this.mojo.attachShutDownHook(driver);
     verify(log).debug("Attaching ShutdownHook");
-    this.mojo.shutdownHook();
+    this.mojo.shutdownHook(driver);
     verify(log).debug("Cleanup Child Processes");
-    process.waitFor();
+	verify(driver).quit();
   }
   
 }

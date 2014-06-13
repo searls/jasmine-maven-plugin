@@ -235,11 +235,6 @@
       <artifactId>webjars-locator</artifactId>
       <version>0.14</version>
     </dependency>
-    <dependency>
-      <groupId>com.outr.javasysmon</groupId>
-      <artifactId>javasysmon_2.10</artifactId>
-      <version>0.3.4</version>
-    </dependency>
 
     <!-- Plugin test deps -->
     <dependency>
