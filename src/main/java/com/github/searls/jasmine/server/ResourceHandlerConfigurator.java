@@ -35,11 +35,11 @@ public class ResourceHandlerConfigurator {
       String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(),"/");
       ContextHandler handler = contexts.addContext(contextRoot, "");
       handler.setAliases(true);
-      handler.setHandler(this.createResourceHandler(true, context.getDirectory().getAbsolutePath(), null));
+      handler.setHandler(this.createResourceHandler(true, context.getDirectory().getCanonicalPath(), null));
     }
 
     ContextHandler rootContextHandler = contexts.addContext("/", "");
-    rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getAbsolutePath(), new String[]{this.getWelcomeFilePath()}));
+    rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getCanonicalPath(), new String[]{this.getWelcomeFilePath()}));
     rootContextHandler.setAliases(true);
 
     ContextHandler classPathContextHandler = contexts.addContext("/classpath", "");

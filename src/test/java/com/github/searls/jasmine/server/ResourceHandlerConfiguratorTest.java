@@ -76,9 +76,9 @@ public class ResourceHandlerConfiguratorTest {
   public void testCreateHandler() throws IOException {
     when(createsRunner.getRunnerFile()).thenReturn(WELCOME_FILE);
 
-    when(sourceDirectory.getAbsolutePath()).thenReturn(SOURCE_DIRECTORY);
-    when(specDirectory.getAbsolutePath()).thenReturn(SPEC_DIRECTORY);
-    when(baseDirectory.getAbsolutePath()).thenReturn(BASE_DIRECTORY);
+    when(sourceDirectory.getCanonicalPath()).thenReturn(SOURCE_DIRECTORY);
+    when(specDirectory.getCanonicalPath()).thenReturn(SPEC_DIRECTORY);
+    when(baseDirectory.getCanonicalPath()).thenReturn(BASE_DIRECTORY);
 
     when(configuration.getBasedir()).thenReturn(baseDirectory);
     when(configuration.getProjectClassLoader()).thenReturn(new ProjectClassLoaderFactory().create());
