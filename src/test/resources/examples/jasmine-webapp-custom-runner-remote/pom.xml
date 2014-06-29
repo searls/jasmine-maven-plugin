@@ -23,7 +23,7 @@
           </execution>
         </executions>
         <configuration>
-          <customRunnerTemplate>https://raw.github.com/searls/jasmine-maven-plugin/master/src/test/resources/examples/jasmine-webapp-custom-runner/src/test/resources/templates/specrunner.html</customRunnerTemplate>
+          <customRunnerTemplate>http://localhost:8235/templates/specrunner.html</customRunnerTemplate>
         </configuration>
       </plugin>
     </plugins>

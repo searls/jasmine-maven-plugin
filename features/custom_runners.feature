@@ -16,11 +16,13 @@ Feature: using a custom runner template
     When I run "mvn clean install"
     Then the build should succeed
     And the file "jasmine-webapp/target/jasmine/SpecRunner.html" should contain "Copyright Acme, Inc."
-    
+
+  @server    
   Scenario: using a custom runner from a remote url
-  
+    
     Given I am currently in the "jasmine-webapp-custom-runner-remote" project
-    When I run "mvn clean test"
+    When I run "ruby -run -e httpd ../jasmine-webapp-custom-runner/src/test/resources -p 8235" in a new process
+    And I run "mvn clean test"
     Then the build should succeed
     And the file "target/jasmine/SpecRunner.html" should contain "Copyright Acme, Inc."
     

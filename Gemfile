@@ -2,7 +2,7 @@ source 'http://rubygems.org'
 
 gem 'cucumber'
 gem 'rspec'
-gem 'nokogiri'
+gem 'nokogiri', '~> 1.6.2.1'
 gem 'relish'
 gem 'capybara', '~> 2.0.2'
 gem 'rake'
