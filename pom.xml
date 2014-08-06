@@ -288,7 +288,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.2</version>
+          <version>3.3</version>
           <configuration>
             <skipDeploy>true</skipDeploy>
           </configuration>
@@ -331,7 +331,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.2</version>
+        <version>3.3</version>
         <configuration>
           <goalPrefix>jasmine</goalPrefix>
           <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
