@@ -6,7 +6,6 @@ import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -16,13 +15,11 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceLoader;
 import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.nio.SelectChannelConnector;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {
 
@@ -59,7 +56,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 *   <li>org.openqa.selenium.firefox.FirefoxDriver</li>
 	 *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
 	 * </ul>
-	 * <p/>
+	 * <p></p>
 	 * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
 	 *
 	 * @since 1.1.0
