@@ -35,7 +35,7 @@ cd my-jasmine-project && mvn jasmine:bdd
     <plugin>
       <groupId>${project.groupId}</groupId>
       <artifactId>${project.artifactId}</artifactId>
-      <version>${currentStableVersion}<version>
+      <version>${currentStableVersion}</version>
       <executions>
         <execution>
           <goals>
