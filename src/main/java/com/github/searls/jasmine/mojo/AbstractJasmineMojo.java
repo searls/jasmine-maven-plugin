@@ -56,7 +56,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 *   <li>org.openqa.selenium.firefox.FirefoxDriver</li>
 	 *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
 	 * </ul>
-	 * <p/>
+	 * <p></p>
 	 * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
 	 *
 	 * @since 1.1.0
