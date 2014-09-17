@@ -49,14 +49,20 @@ var junitXmlReporter;
       }
     },
     writeTestcase: function(writer,specResult,name) {
-      var failure = specResult.status !== 'passed';
+      var failure = specResult.status == 'failed';
+      var skipped = specResult.status == 'pending';
       writer.beginNode('testcase');
       writer.attrib('classname','jasmine');
       writer.attrib('name',name);
       writer.attrib('time','0.0');
-      writer.attrib('failure',failure+'');
-      if(failure) {
-        this.writeError(writer,specResult);
+
+      if(skipped) {
+        this.writeSkipped(writer);
+      } else {
+        writer.attrib('failure',failure+'');
+        if(failure) {
+          this.writeError(writer,specResult);
+        }
       }
       writer.endNode();
     },
@@ -74,21 +80,29 @@ var junitXmlReporter;
       writer.writeString(message);
       writer.endNode();
     },
+    writeSkipped: function(writer) {
+      writer.beginNode('skipped');
+      writer.endNode();
+    },
     crunchResults: function(results) {
       var count=0;
       var fails=0;
+      var skipped=0;
       var last;
       for(var key in results) {
         count++;
-        if(results[key].status !== 'passed') {
+        if(results[key].status == 'failed') {
           fails++;
+        }
+        if(results[key].status == 'pending') {
+          skipped++;
         }
         last = key;
       }
       return {
         tests: count.toString(),
         failures: fails.toString(),
-        skipped: count > 0 ? (1+parseInt(last)-count).toString() : "0"
+        skipped: skipped.toString()
       };
     },
     currentTimestamp: function() {
