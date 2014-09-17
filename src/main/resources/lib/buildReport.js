@@ -1,10 +1,10 @@
 (function() {
   var jasmineMavenPlugin = window.jasmineMavenPlugin = window.jasmineMavenPlugin || {};
-  var reporter,reportedItems,specCount,failureCount;
+  var reporter,reportedItems,specCount,failureCount,pendingCount;
 
   jasmineMavenPlugin.printReport = function(r, config) {
     config = config || {};
-    reporter = r, reportedItems=[], specCount=0, failureCount=0;
+    reporter = r, reportedItems=[], specCount=0, failureCount=0, pendingCount=0;
     var result;
     if (config.format === 'progress') {
       result = printProgressFormat(jasmine.getEnv().topSuite().children);
@@ -12,7 +12,7 @@
       result = buildDocumentationFormatReport(jasmine.getEnv().topSuite().children,0);
     }
     result += describeFailureSentences(reporter);
-    result += "\n\nResults: "+specCount+" specs, "+failureCount+" failures\n";
+    result += "\n\nResults: "+specCount+" specs, "+failureCount+" failures, "+pendingCount+" pending\n";
     return result;
   };
 
@@ -24,7 +24,7 @@
     return indentStr;
   };
 
-  var describeMessages = function(messages,indentLevel) {
+  var describeFailureMessages = function(messages,indentLevel) {
     var message = ' <<< FAILURE!';
     if(messages) {
       for(var i=0;i<messages.length;i++) {
@@ -58,9 +58,11 @@
         if(item instanceof jasmine.Spec) {
           specCount++;
           var result = resultForSpec(item);
-          if(result.status !== 'passed') {
+          if (result.status == 'failed') {
             failureCount++;
             output += 'F';
+          } else if (result.status == 'pending') {
+            pendingCount++;
           } else {
             output += '.';
           }
@@ -83,9 +85,12 @@
           if(item instanceof jasmine.Spec) {
             specCount++;
             var result = resultForSpec(item);
-            if(result.status !== 'passed') {
+            if(result.status == 'failed') {
               failureCount++;
-              line += describeMessages(result.failedExpectations,indentLevel+1);
+              line += describeFailureMessages(result.failedExpectations,indentLevel+1);
+            } else if (result.status == 'pending') {
+              pendingCount++;
+              line += " <<< PENDING";
             }
           }
 
@@ -106,7 +111,7 @@
         buildFailureSentences(children,failures,desc+component.name);
       } else {
         var result = resultForSpec(component);
-        if(result.result !== 'passed') {
+        if(result.result == 'failed') {
           failures.push(desc + 'it ' + component.name + describeMessages(result.messages,2));
         }
       }
