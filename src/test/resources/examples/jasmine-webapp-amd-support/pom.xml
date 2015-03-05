@@ -29,8 +29,7 @@
                     <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
                     <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
                     <preloadSources>
-                    		<source>lib/require.js</source>
-                        <source>lib/jasmine.fooMatcher.js</source>
+                        <source>lib/require.js</source>
                     </preloadSources>
                 </configuration>
             </plugin>
