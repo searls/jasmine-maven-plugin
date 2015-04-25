@@ -54,7 +54,7 @@ var junitXmlReporter;
       writer.beginNode('testcase');
       writer.attrib('classname','jasmine');
       writer.attrib('name',name);
-      writer.attrib('time','0.0');
+      writer.attrib('time',''+specResult.time || '0.0');
 
       if(skipped) {
         this.writeSkipped(writer);
