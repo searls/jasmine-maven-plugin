@@ -8,4 +8,4 @@ before_install:
 install: travis_retry bundle install
 script: bundle exec rake cucumber
 after_success:
-  - mvn test jacoco:report coveralls:jacoco
+  - mvn clean test jacoco:report coveralls:report
