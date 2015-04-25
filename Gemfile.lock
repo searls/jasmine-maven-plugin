@@ -62,15 +62,15 @@ GEM
       rspec-support (~> 3.2.0)
     rspec-support (3.2.2)
     rubyzip (1.1.7)
-    selenium-webdriver (2.41.0)
-      childprocess (>= 0.5.0)
+    selenium-webdriver (2.45.0)
+      childprocess (~> 0.5)
       multi_json (~> 1.0)
       rubyzip (~> 1.0)
-      websocket (~> 1.0.4)
+      websocket (~> 1.0)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.1)
-    websocket (1.0.7)
+    websocket (1.2.2)
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -78,10 +78,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  capybara (> 2.0.2)
+  capybara (~> 2.4.4)
   cucumber
   nokogiri (~> 1.6.2.1)
   rake
   relish
   rspec
-  selenium-webdriver (~> 2.41.0)
+  selenium-webdriver (~> 2.45.0)
