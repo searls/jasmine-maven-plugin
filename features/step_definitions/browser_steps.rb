@@ -16,6 +16,6 @@ When /^I load "([^"]*)" in a browser$/ do |url|
 end
 
 Then /page should contain "([^"]*)"$/ do |expected|
-  page.should have_content(expected)
+  expect(page).to have_content(expected)
 end
 
