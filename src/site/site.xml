@@ -35,6 +35,7 @@
       <item name="WebDriver Customization" href="webdriver-customization.html" />
       <item name="Using with PhantomJS" href="phantomjs.html" />
       <item name="WebJars Support" href="webjars-support.html" />
+      <item name="Override Jasmine Version" href="override-jasmine-version.html" />
    </menu>
     
    <menu ref="reports"/>

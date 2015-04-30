@@ -102,6 +102,10 @@
       <name>gejgalis</name>
       <url>https://github.com/gejgalis</url>
     </contributor>
+    <contributor>
+      <name>tongant</name>
+      <url>https://github.com/tongant</url>
+    </contributor>
   </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
@@ -127,6 +131,7 @@
     <powermock.version>1.4.12</powermock.version>
     <jetty.version>8.1.14.v20131031</jetty.version>
     <selenium.version>2.41.0</selenium.version>
+    <jasmine.version>2.3.0</jasmine.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -234,7 +239,7 @@
     <dependency>
       <groupId>org.webjars.bower</groupId>
       <artifactId>jasmine</artifactId>
-      <version>2.3.0</version>
+      <version>${jasmine.version}</version>
     </dependency>
     <dependency>
       <groupId>net.sourceforge.htmlunit</groupId>
@@ -320,6 +325,7 @@
             <skipDeploy>true</skipDeploy>
             <attributes>
               <currentStableVersion>${releasedVersion.version}</currentStableVersion>
+              <jasmineVersion>${jasmine.version}</jasmineVersion>
             </attributes>
           </configuration>
           <dependencies>
