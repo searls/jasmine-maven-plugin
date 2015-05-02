@@ -1,16 +1,26 @@
 package com.github.searls.jasmine.io.scripts;
 
+import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.ScriptSearch;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.searls.jasmine.io.ScansDirectory;
-import com.github.searls.jasmine.model.ScriptSearch;
-
 public class FindsScriptLocationsInDirectory {
 
-  private final ScansDirectory scansDirectory = new ScansDirectory();
-  private final ConvertsFileToUriString convertsFileToUriString = new ConvertsFileToUriString();
+  private final ScansDirectory scansDirectory;
+  private final ConvertsFileToUriString convertsFileToUriString;
+
+  public FindsScriptLocationsInDirectory(ScansDirectory scansDirectory,
+                                         ConvertsFileToUriString convertsFileToUriString) {
+    this.scansDirectory = scansDirectory;
+    this.convertsFileToUriString = convertsFileToUriString;
+  }
+
+  public FindsScriptLocationsInDirectory() {
+    this(new ScansDirectory(), new ConvertsFileToUriString());
+  }
 
   public List<String> find(ScriptSearch search) {
     List<String> scriptLocations = new ArrayList<String>();

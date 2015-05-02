@@ -1,9 +1,8 @@
 package com.github.searls.jasmine.runner;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
+import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.model.JasmineResult;
+import com.google.common.base.Predicate;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.logging.Log;
@@ -13,16 +12,26 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.github.searls.jasmine.io.IOUtilsWrapper;
-import com.github.searls.jasmine.model.JasmineResult;
-import com.google.common.base.Predicate;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
 public class SpecRunnerExecutor {
 
 	public static final String BUILD_REPORT_JS = "/lib/buildReport.js";
 	public static final String CREATE_JUNIT_XML = "/lib/createJunitXml.js";
 
-	private final IOUtilsWrapper ioUtilsWrapper = new IOUtilsWrapper();
+	private final IOUtilsWrapper ioUtilsWrapper;
+
+	public SpecRunnerExecutor(IOUtilsWrapper ioUtilsWrapper) {
+		this.ioUtilsWrapper = ioUtilsWrapper;
+	}
+
+	public SpecRunnerExecutor() {
+		this(new IOUtilsWrapper());
+	}
+
+
 
 	public JasmineResult execute(URL runnerUrl, File junitXmlReport, WebDriver driver, int timeout, boolean debug, Log log, String format) {
 		try {

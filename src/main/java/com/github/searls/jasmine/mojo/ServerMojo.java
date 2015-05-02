@@ -35,7 +35,11 @@ public class ServerMojo extends AbstractJasmineMojo {
   private final RelativizesFilePaths relativizesFilePaths;
 
   public ServerMojo() {
-    this.relativizesFilePaths = new RelativizesFilePaths();
+    this(new RelativizesFilePaths());
+  }
+
+  public ServerMojo(RelativizesFilePaths relativizesFilePaths) {
+    this.relativizesFilePaths = relativizesFilePaths;
   }
 
   private String buildServerInstructions() throws IOException {

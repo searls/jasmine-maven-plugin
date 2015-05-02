@@ -1,20 +1,8 @@
 package com.github.searls.jasmine.runner;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
-
+import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.model.JasmineResult;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
@@ -26,9 +14,20 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
-import com.github.searls.jasmine.io.IOUtilsWrapper;
-import com.github.searls.jasmine.model.JasmineResult;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doNothing;
+import static org.powermock.api.mockito.PowerMockito.spy;
+import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(FileUtils.class)
@@ -38,14 +37,15 @@ public class SpecRunnerExecutorTest {
 	private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
 	private static HtmlUnitDriver driver;
 
-	@InjectMocks private final SpecRunnerExecutor subject = new SpecRunnerExecutor();
-
 	@Mock private IOUtilsWrapper ioUtilsWrapper;
 
 	@Mock private File file;
 	@Mock private Log log;
 
 	private final URL resource = this.getClass().getResource("/example_nested_specrunner.html");
+
+	@InjectMocks
+	private SpecRunnerExecutor subject;
 
 	@Before
 	public void stubResourceStreams() throws IOException {

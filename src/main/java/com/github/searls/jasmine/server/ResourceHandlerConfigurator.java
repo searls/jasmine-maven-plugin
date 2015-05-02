@@ -1,20 +1,19 @@
 package com.github.searls.jasmine.server;
 
-import java.io.File;
-import java.io.IOException;
-
+import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.mojo.Context;
+import com.github.searls.jasmine.runner.CreatesRunner;
+import com.github.searls.jasmine.thirdpartylibs.ClassPathResourceHandler;
+import com.github.searls.jasmine.thirdpartylibs.WebJarResourceHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
-import com.github.searls.jasmine.config.JasmineConfiguration;
-import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.runner.CreatesRunner;
-import com.github.searls.jasmine.thirdpartylibs.ClassPathResourceHandler;
-import com.github.searls.jasmine.thirdpartylibs.WebJarResourceHandler;
+import java.io.File;
+import java.io.IOException;
 
 public class ResourceHandlerConfigurator {
 
@@ -22,7 +21,9 @@ public class ResourceHandlerConfigurator {
   private final RelativizesFilePaths relativizesFilePaths;
   private final CreatesRunner createsRunner;
 
-  public ResourceHandlerConfigurator(JasmineConfiguration configuration, RelativizesFilePaths relativizesFilePaths, CreatesRunner createsRunner) {
+  public ResourceHandlerConfigurator(JasmineConfiguration configuration,
+                                     RelativizesFilePaths relativizesFilePaths,
+                                     CreatesRunner createsRunner) {
     this.configuration = configuration;
     this.relativizesFilePaths = relativizesFilePaths;
     this.createsRunner = createsRunner;

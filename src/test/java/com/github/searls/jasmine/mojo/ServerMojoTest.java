@@ -11,11 +11,9 @@ import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -43,8 +41,6 @@ public class ServerMojoTest {
   private static final String connectorClassString = "org.eclipse.jetty.server.nio.SelectChannelConnector";
   private static final Class<? extends Connector> connectorClass = org.eclipse.jetty.server.nio.SelectChannelConnector.class;
 
-  @InjectMocks private final ServerMojo subject = new ServerMojo();
-
   @Mock private Log log;
   @Mock private MavenProject mavenProject;
   @Mock private RelativizesFilePaths relativizesFilePaths;
@@ -58,8 +54,12 @@ public class ServerMojoTest {
   @Mock private ResourceHandlerConfigurator configurator;
   @Mock private ServerManager serverManager;
 
+  private ServerMojo subject;
+
   @Before
   public void arrangeAndAct() throws Exception {
+    this.subject = new ServerMojo(relativizesFilePaths);
+    this.subject.mavenProject = mavenProject;
     this.subject.sources = this.sources;
     this.subject.specs = this.specs;
     this.subject.setLog(this.log);

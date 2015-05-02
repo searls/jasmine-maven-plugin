@@ -1,29 +1,34 @@
 package com.github.searls.jasmine.server;
 
-import java.io.IOException;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.ResourceHandler;
-import org.eclipse.jetty.util.resource.Resource;
-
 import com.github.searls.jasmine.coffee.DetectsCoffee;
 import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.runner.CreatesRunner;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.handler.ResourceHandler;
+import org.eclipse.jetty.util.resource.Resource;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 public class JasmineResourceHandler extends ResourceHandler {
 
-  private final DetectsCoffee detectsCoffee = new DetectsCoffee();
+  private final DetectsCoffee detectsCoffee;
   private final HandlesRequestsForCoffee handlesRequestsForCoffee;
   private final CreatesRunner createsRunner;
 
   public JasmineResourceHandler(CreatesRunner createsRunner, JasmineConfiguration configuration) {
+    this(createsRunner, new HandlesRequestsForCoffee(configuration), new DetectsCoffee());
+  }
+
+  public JasmineResourceHandler(CreatesRunner createsRunner,
+                                HandlesRequestsForCoffee handlesRequestsForCoffee,
+                                DetectsCoffee detectsCoffee) {
+    this.detectsCoffee = detectsCoffee;
     this.createsRunner = createsRunner;
-    this.handlesRequestsForCoffee = new HandlesRequestsForCoffee(configuration);
+    this.handlesRequestsForCoffee = handlesRequestsForCoffee;
     setAliases(true);
   }
 

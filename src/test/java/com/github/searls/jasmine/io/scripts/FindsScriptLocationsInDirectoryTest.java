@@ -1,15 +1,8 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
+import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.ScriptSearch;
+import edu.emory.mathcs.backport.java.util.Collections;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +11,15 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.searls.jasmine.io.ScansDirectory;
-import com.github.searls.jasmine.model.ScriptSearch;
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
-import edu.emory.mathcs.backport.java.util.Collections;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class FindsScriptLocationsInDirectoryTest {
@@ -30,12 +28,12 @@ public class FindsScriptLocationsInDirectoryTest {
   private static final List<String> EXCLUDES = asList("So out");
   private static final String FILE_LOCATION = "blah/a.js";
 
-  @InjectMocks private FindsScriptLocationsInDirectory subject = new FindsScriptLocationsInDirectory();
-
   @Mock private ScansDirectory scansDirectory;
   @Mock private ConvertsFileToUriString convertsFileToUriString;
 
   @Spy private File directory = new File("Not quite a real directory");
+
+  @InjectMocks private FindsScriptLocationsInDirectory subject;
 
   @Before
   public void directoryStubbing() {
