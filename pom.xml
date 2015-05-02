@@ -126,7 +126,7 @@
   <properties>
     <powermock.version>1.4.12</powermock.version>
     <jetty.version>8.1.14.v20131031</jetty.version>
-    <selenium.version>2.41.0</selenium.version>
+    <selenium.version>2.45.0</selenium.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -222,9 +222,9 @@
       <version>3.1</version>
     </dependency>
     <dependency>
-      <groupId>com.github.detro.ghostdriver</groupId>
+      <groupId>com.codeborne</groupId>
       <artifactId>phantomjsdriver</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.1</version>
     </dependency>
     <dependency>
       <groupId>org.webjars</groupId>
