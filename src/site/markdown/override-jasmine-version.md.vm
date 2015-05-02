@@ -1,6 +1,6 @@
 # Overriding Jasmine Version
 
-The `${project.artifactId}` comes with Jasmine `${jasmineVersion}` but you can easily override that version. For instance, if you wanted to use Jasmine `2.1.3`just configure the plugin like this:
+The `${project.artifactId}` comes with Jasmine `${jasmineVersion}` but you can easily override that version. For instance, if you wanted to use Jasmine `2.1.3` just configure the plugin like this:
 
 ```xml
 <plugin>
