@@ -19,21 +19,21 @@ import org.codehaus.plexus.util.DirectoryScanner;
 
   public List&lt;String&gt; scan(File directory, List&lt;String&gt; includes, List&lt;String&gt; excludes) {
 <span class="fc" id="L21">    Set&lt;String&gt; set = new LinkedHashSet&lt;String&gt;();</span>
-<span class="fc bfc" id="L22" title="All 2 branches covered.">    for (String include : includes) {</span>
-<span class="fc" id="L23">      set.addAll(performScan(directory, include, excludes));</span>
-<span class="fc" id="L24">    }</span>
+<span class="pc bpc" id="L22" title="1 of 2 branches missed.">    for (String include : includes) {</span>
+<span class="nc" id="L23">      set.addAll(performScan(directory, include, excludes));</span>
+<span class="nc" id="L24">    }</span>
 <span class="fc" id="L25">    return new ArrayList&lt;String&gt;(set);</span>
   }
 
   private List&lt;String&gt; performScan(File directory, String include, List&lt;String&gt; excludes) {
-<span class="fc" id="L29">    directoryScanner.setBasedir(directory);</span>
-<span class="fc" id="L30">    directoryScanner.setIncludes(new String[]{ include });</span>
-<span class="fc" id="L31">    directoryScanner.setExcludes(excludes.toArray(new String[]{}));</span>
-<span class="fc" id="L32">    directoryScanner.addDefaultExcludes();</span>
-<span class="fc" id="L33">    directoryScanner.scan();</span>
-<span class="fc" id="L34">    ArrayList&lt;String&gt; result = new ArrayList&lt;String&gt;(asList(directoryScanner.getIncludedFiles()));</span>
-<span class="fc" id="L35">    Collections.sort(result);</span>
-<span class="fc" id="L36">    return result;</span>
+<span class="nc" id="L29">    directoryScanner.setBasedir(directory);</span>
+<span class="nc" id="L30">    directoryScanner.setIncludes(new String[]{ include });</span>
+<span class="nc" id="L31">    directoryScanner.setExcludes(excludes.toArray(new String[]{}));</span>
+<span class="nc" id="L32">    directoryScanner.addDefaultExcludes();</span>
+<span class="nc" id="L33">    directoryScanner.scan();</span>
+<span class="nc" id="L34">    ArrayList&lt;String&gt; result = new ArrayList&lt;String&gt;(asList(directoryScanner.getIncludedFiles()));</span>
+<span class="nc" id="L35">    Collections.sort(result);</span>
+<span class="nc" id="L36">    return result;</span>
   }
 
 }
