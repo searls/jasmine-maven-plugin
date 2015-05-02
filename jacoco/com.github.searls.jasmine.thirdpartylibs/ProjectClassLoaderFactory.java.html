@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ProjectClassLoaderFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.html" class="el_package">com.github.searls.jasmine.thirdpartylibs</a> &gt; <span class="el_source">ProjectClassLoaderFactory.java</span></div><h1>ProjectClassLoaderFactory.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.thirdpartylibs;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ProjectClassLoaderFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.thirdpartylibs</a> &gt; <span class="el_source">ProjectClassLoaderFactory.java</span></div><h1>ProjectClassLoaderFactory.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.thirdpartylibs;
 
 import org.apache.maven.artifact.Artifact;
 
@@ -24,23 +24,23 @@ public class ProjectClassLoaderFactory {
 
   public ClassLoader create() {
 <span class="fc" id="L26">    final List&lt;String&gt; classpathElements = new ArrayList&lt;String&gt;();</span>
-<span class="fc bfc" id="L27" title="All 2 branches covered.">    for (Artifact artifact : artifacts) {</span>
-<span class="fc" id="L28">      classpathElements.add(artifact.getFile().getAbsolutePath());</span>
-<span class="fc" id="L29">    }</span>
+<span class="pc bpc" id="L27" title="1 of 2 branches missed.">    for (Artifact artifact : artifacts) {</span>
+<span class="nc" id="L28">      classpathElements.add(artifact.getFile().getAbsolutePath());</span>
+<span class="nc" id="L29">    }</span>
 <span class="fc" id="L30">    return createURLClassLoader(classpathElements);</span>
   }
 
   private ClassLoader createURLClassLoader(final List&lt;String&gt; classpathElements) {
 <span class="fc" id="L34">    final List&lt;URL&gt; urls = new ArrayList&lt;URL&gt;();</span>
     try {
-<span class="fc bfc" id="L36" title="All 2 branches covered.">      for (final String element : classpathElements) {</span>
-<span class="fc" id="L37">        final File elementFile = new File(element);</span>
-<span class="fc" id="L38">        urls.add(elementFile.toURI().toURL());</span>
-<span class="fc" id="L39">      }</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">      for (final String element : classpathElements) {</span>
+<span class="nc" id="L37">        final File elementFile = new File(element);</span>
+<span class="nc" id="L38">        urls.add(elementFile.toURI().toURL());</span>
+<span class="nc" id="L39">      }</span>
 <span class="nc" id="L40">    } catch (final Exception e) {</span>
 <span class="nc" id="L41">      throw new RuntimeException(e);</span>
 <span class="fc" id="L42">    }</span>
 <span class="fc" id="L43">    return new URLClassLoader(urls.toArray(new URL[urls.size()]), Thread.currentThread().getContextClassLoader());</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

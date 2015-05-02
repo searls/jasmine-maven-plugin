@@ -84,9 +84,9 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testCreateHandler() <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>      when(createsRunner.getRunnerFile()).thenReturn(WELCOME_FILE);
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>  
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>      when(sourceDirectory.getAbsolutePath()).thenReturn(SOURCE_DIRECTORY);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      when(specDirectory.getAbsolutePath()).thenReturn(SPEC_DIRECTORY);
-<a class="jxr_linenumber" name="L81" href="#L81">81</a>      when(baseDirectory.getAbsolutePath()).thenReturn(BASE_DIRECTORY);
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>      when(sourceDirectory.getCanonicalPath()).thenReturn(SOURCE_DIRECTORY);
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      when(specDirectory.getCanonicalPath()).thenReturn(SPEC_DIRECTORY);
+<a class="jxr_linenumber" name="L81" href="#L81">81</a>      when(baseDirectory.getCanonicalPath()).thenReturn(BASE_DIRECTORY);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      when(configuration.getBasedir()).thenReturn(baseDirectory);
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>      when(configuration.getProjectClassLoader()).thenReturn(<strong class="jxr_keyword">new</strong> ProjectClassLoaderFactory().create());
@@ -105,6 +105,6 @@
 <a class="jxr_linenumber" name="L97" href="#L97">97</a>  }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2015. All rights reserved.</div>
 </body>
 </html>

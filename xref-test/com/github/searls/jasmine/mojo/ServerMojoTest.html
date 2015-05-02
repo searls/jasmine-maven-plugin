@@ -19,55 +19,55 @@
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.apache.maven.project.MavenProject;
 <a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> org.eclipse.jetty.server.Connector;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> org.eclipse.jetty.server.Server;
-<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> org.eclipse.jetty.server.ssl.SslSelectChannelConnector;
-<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.junit.runner.RunWith;
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.mockito.InjectMocks;
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.mockito.Mock;
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> org.powermock.core.classloader.annotations.PrepareForTest;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> org.powermock.modules.junit4.PowerMockRunner;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">import</strong> org.junit.Before;
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> org.junit.Test;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> org.junit.runner.RunWith;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> org.mockito.Mock;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> org.powermock.core.classloader.annotations.PrepareForTest;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> org.powermock.modules.junit4.PowerMockRunner;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> java.io.File;
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>  
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> java.io.File;
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Matchers.eq;
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Matchers.isA;
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.verify;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.when;
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.powermock.api.mockito.PowerMockito.whenNew;
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>  
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>  @RunWith(PowerMockRunner.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  @PrepareForTest(ServerMojo.<strong class="jxr_keyword">class</strong>)
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/github/searls/jasmine/mojo/ServerMojoTest.html">ServerMojoTest</a> {
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SPECS_DIR = <span class="jxr_string">"spec dir"</span>;
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SOURCE_DIR = <span class="jxr_string">"source dir"</span>;
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SCHEME = <span class="jxr_string">"http"</span>;
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> PORT = 8923;
-<a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String RELATIVE_TARGET_DIR = <span class="jxr_string">"some dir"</span>;
-<a class="jxr_linenumber" name="L40" href="#L40">40</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String MANUAL_SPEC_RUNNER_NAME = <span class="jxr_string">"nacho specs"</span>;
-<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String BASE_DIR = <span class="jxr_string">"my-base-dir"</span>;
-<a class="jxr_linenumber" name="L42" href="#L42">42</a>  
-<a class="jxr_linenumber" name="L43" href="#L43">43</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String connectorClassString = <span class="jxr_string">"org.eclipse.jetty.server.nio.SelectChannelConnector"</span>;
-<a class="jxr_linenumber" name="L44" href="#L44">44</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Connector&gt; connectorClass = org.eclipse.jetty.server.nio.SelectChannelConnector.<strong class="jxr_keyword">class</strong>;
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @InjectMocks <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> ServerMojo subject = <strong class="jxr_keyword">new</strong> ServerMojo();
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>  
-<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @Mock <strong class="jxr_keyword">private</strong> Log log;
-<a class="jxr_linenumber" name="L49" href="#L49">49</a>    @Mock <strong class="jxr_keyword">private</strong> MavenProject mavenProject;
-<a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Mock <strong class="jxr_keyword">private</strong> RelativizesFilePaths relativizesFilePaths;
-<a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Mock <strong class="jxr_keyword">private</strong> File baseDir;
-<a class="jxr_linenumber" name="L52" href="#L52">52</a>    @Mock <strong class="jxr_keyword">private</strong> File targetDir;
-<a class="jxr_linenumber" name="L53" href="#L53">53</a>    @Mock <strong class="jxr_keyword">private</strong> File sourceDir;
-<a class="jxr_linenumber" name="L54" href="#L54">54</a>    @Mock <strong class="jxr_keyword">private</strong> File specDir;
-<a class="jxr_linenumber" name="L55" href="#L55">55</a>    @Mock <strong class="jxr_keyword">private</strong> ScriptSearch sources;
-<a class="jxr_linenumber" name="L56" href="#L56">56</a>    @Mock <strong class="jxr_keyword">private</strong> ScriptSearch specs;
-<a class="jxr_linenumber" name="L57" href="#L57">57</a>    @Mock <strong class="jxr_keyword">private</strong> CreatesRunner createsRunner;
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>    @Mock <strong class="jxr_keyword">private</strong> ResourceHandlerConfigurator configurator;
-<a class="jxr_linenumber" name="L59" href="#L59">59</a>    @Mock <strong class="jxr_keyword">private</strong> ServerManager serverManager;
-<a class="jxr_linenumber" name="L60" href="#L60">60</a>  
-<a class="jxr_linenumber" name="L61" href="#L61">61</a>    @Before
-<a class="jxr_linenumber" name="L62" href="#L62">62</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> arrangeAndAct() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Matchers.eq;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Matchers.isA;
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.verify;
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.mockito.Mockito.when;
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.powermock.api.mockito.PowerMockito.whenNew;
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  @RunWith(PowerMockRunner.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>  @PrepareForTest(ServerMojo.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/github/searls/jasmine/mojo/ServerMojoTest.html">ServerMojoTest</a> {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SPECS_DIR = <span class="jxr_string">"spec dir"</span>;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SOURCE_DIR = <span class="jxr_string">"source dir"</span>;
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String SCHEME = <span class="jxr_string">"http"</span>;
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> PORT = 8923;
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String RELATIVE_TARGET_DIR = <span class="jxr_string">"some dir"</span>;
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String MANUAL_SPEC_RUNNER_NAME = <span class="jxr_string">"nacho specs"</span>;
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String BASE_DIR = <span class="jxr_string">"my-base-dir"</span>;
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String connectorClassString = <span class="jxr_string">"org.eclipse.jetty.server.nio.SelectChannelConnector"</span>;
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Class&lt;? <strong class="jxr_keyword">extends</strong> Connector&gt; connectorClass = org.eclipse.jetty.server.nio.SelectChannelConnector.<strong class="jxr_keyword">class</strong>;
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>  
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>    @Mock <strong class="jxr_keyword">private</strong> Log log;
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>    @Mock <strong class="jxr_keyword">private</strong> MavenProject mavenProject;
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>    @Mock <strong class="jxr_keyword">private</strong> RelativizesFilePaths relativizesFilePaths;
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>    @Mock <strong class="jxr_keyword">private</strong> File baseDir;
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>    @Mock <strong class="jxr_keyword">private</strong> File targetDir;
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>    @Mock <strong class="jxr_keyword">private</strong> File sourceDir;
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>    @Mock <strong class="jxr_keyword">private</strong> File specDir;
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>    @Mock <strong class="jxr_keyword">private</strong> ScriptSearch sources;
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>    @Mock <strong class="jxr_keyword">private</strong> ScriptSearch specs;
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>    @Mock <strong class="jxr_keyword">private</strong> CreatesRunner createsRunner;
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>    @Mock <strong class="jxr_keyword">private</strong> ResourceHandlerConfigurator configurator;
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>    @Mock <strong class="jxr_keyword">private</strong> ServerManager serverManager;
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>  
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>    <strong class="jxr_keyword">private</strong> ServerMojo subject;
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>  
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>    @Before
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> arrangeAndAct() <strong class="jxr_keyword">throws</strong> Exception {
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>      <strong class="jxr_keyword">this</strong>.subject = <strong class="jxr_keyword">new</strong> ServerMojo(relativizesFilePaths);
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">this</strong>.subject.mavenProject = mavenProject;
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>      <strong class="jxr_keyword">this</strong>.subject.sources = <strong class="jxr_keyword">this</strong>.sources;
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      <strong class="jxr_keyword">this</strong>.subject.specs = <strong class="jxr_keyword">this</strong>.specs;
 <a class="jxr_linenumber" name="L65" href="#L65">65</a>      <strong class="jxr_keyword">this</strong>.subject.setLog(<strong class="jxr_keyword">this</strong>.log);
@@ -121,6 +121,6 @@
 <a class="jxr_linenumber" name="L113" href="#L113">113</a> }
 </pre>
 <hr/>
-<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+<div id="footer">Copyright &#169; 2015. All rights reserved.</div>
 </body>
 </html>

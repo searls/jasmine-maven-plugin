@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractJasmineMojo.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">AbstractJasmineMojo.java</span></div><h1>AbstractJasmineMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractJasmineMojo.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">AbstractJasmineMojo.java</span></div><h1>AbstractJasmineMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
@@ -56,7 +56,7 @@ import java.util.List;
 	 *   &lt;li&gt;org.openqa.selenium.firefox.FirefoxDriver&lt;/li&gt;
 	 *   &lt;li&gt;org.openqa.selenium.ie.InternetExplorerDriver&lt;/li&gt;
 	 * &lt;/ul&gt;
-	 * &lt;p/&gt;
+	 * &lt;p&gt;&lt;/p&gt;
 	 * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
 	 *
 	 * @since 1.1.0
@@ -447,11 +447,11 @@ import java.util.List;
    * &lt;pre&gt;
    * &amp;lt;additionalContexts&amp;gt;
    *   &amp;lt;context&amp;gt;
-   *     &amp;lt;contextRoot&amp;gt;/lib&amp;lt;/contextRoot&amp;gt;
+   *     &amp;lt;contextRoot&amp;gt;lib&amp;lt;/contextRoot&amp;gt;
    *     &amp;lt;directory&amp;gt;${project.basedir}/src/main/lib&amp;lt;/directory&amp;gt;
    *   &amp;lt;/context&amp;gt;
    *   &amp;lt;context&amp;gt;
-   *     &amp;lt;contextRoot&amp;gt;/test/lib&amp;lt;/contextRoot&amp;gt;
+   *     &amp;lt;contextRoot&amp;gt;test/lib&amp;lt;/contextRoot&amp;gt;
    *     &amp;lt;directory&amp;gt;${project.basedir}/src/test/lib&amp;lt;/directory&amp;gt;
    *   &amp;lt;/context&amp;gt;
    * &amp;lt;/additionalContexts&amp;gt;
@@ -615,7 +615,7 @@ import java.util.List;
   }
 
   protected boolean isSkipTests() {
-<span class="pc bpc" id="L618" title="5 of 6 branches missed.">    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;</span>
+<span class="nc bnc" id="L618" title="All 6 branches missed.">    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;</span>
   }
 
 	private void loadResources() throws MojoExecutionException {
@@ -646,4 +646,4 @@ import java.util.List;
 <span class="fc" id="L646">		return file;</span>
 	}
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.2.201302030002</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
