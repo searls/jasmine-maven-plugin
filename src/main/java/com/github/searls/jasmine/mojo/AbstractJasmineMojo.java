@@ -46,82 +46,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	private File jsTestSrcDir;
 
 	/**
-	 * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
-	 * The plugin uses <a href="http://htmlunit.sourceforge.net/">HtmlUnit</a> by default.
-	 *
-	 * <p>Some valid examples:</p>
-	 * <ul>
-	 *   <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
-	 *   <li>org.openqa.selenium.phantomjs.PhantomJSDriver</li>
-	 *   <li>org.openqa.selenium.firefox.FirefoxDriver</li>
-	 *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
-	 * </ul>
-	 * <p></p>
-	 * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue="org.openqa.selenium.htmlunit.HtmlUnitDriver")
-	protected String webDriverClassName;
-
-	/**
-	 * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>
-   *
-	 * <p>Capabilities value can be either a String, a List, or a Map.</p>
-   *
-   * <p>Example:</p>
-   * <pre>
-   * &lt;webDriverCapabilities&gt;
-   *   &lt;capability&gt;
-   *     &lt;name&gt;phantomjs.binary.path&lt;/name&gt;
-   *     &lt;value&gt;/opt/phantomjs/bin/phantomjs&lt;/value&gt;
-   *   &lt;/capability&gt;
-   *   &lt;capability&gt;
-   *     &lt;name&gt;phantomjs.cli.args&lt;/name&gt;
-   *     &lt;list&gt;
-   *       &lt;value&gt;--disk-cache=true&lt;/value&gt;
-   *       &lt;value&gt;--max-disk-cache-size=256&lt;/value&gt;
-   *     &lt;/list&gt;
-   *   &lt;/capability&gt;
-   *   &lt;capability&gt;
-   *     &lt;name&gt;proxy&lt;/name&gt;
-   *     &lt;map&gt;
-   *       &lt;httpProxy&gt;myproxyserver.com:8000&lt;/httpProxy&gt;
-   *     &lt;/map&gt;
-   *   &lt;/capability&gt;
-   * &lt;/webDriverCapabilities&gt;
-   * </pre>
-	 *
-	 * @since 1.3.1.1
-	 */
-  @Parameter
-  protected List<Capability> webDriverCapabilities = Collections.emptyList();
-
-	/**
-	 * <p>Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
-	 * This maps 1-to-1 with the public static instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.</p>
-	 *
-	 * <p>Some valid examples: CHROME, FIREFOX_17, INTERNET_EXPLORER_9, INTERNET_EXPLORER_10</p>
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue="FIREFOX_17")
-	protected String browserVersion;
-
-	/**
-	 * <p>Determines the format that jasmine:test will print to console.</p>
-	 * <p>Valid options:</p>
-	 * <ul>
-	 *   <li>"documentation" - (default) - print specs in a nested format</li>
-	 *   <li>"progress" - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')</li>
-	 * </ul>
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue="documentation")
-	protected String format;
-
-	/**
 	 * <p>JavaScript sources (typically vendor/lib dependencies) that need to be loaded
 	 * before other sources (and specs) in a particular order. Each source will first be
 	 * searched for relative to <code>${jsSrcDir}</code>, then <code>${jsTestSrcDir}</code>,
@@ -251,14 +175,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	protected String manualSpecRunnerHtmlFileName;
 
 	/**
-	 * The name of the generated JUnit XML report.
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue="TEST-jasmine.xml")
-	protected String junitXmlReportFileName;
-
-	/**
 	 * The name of the directory the specs will be deployed to on the server.
          *
 	 * @since 1.1.0
@@ -281,15 +197,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	 */
 	@Parameter(defaultValue="${project.build.sourceEncoding}")
 	protected String sourceEncoding;
-
-	/**
-	 * Keep the server alive after the <code>jasmine:test</code> goal exists.
-	 * Useful if you need to run further analysis on your tests, like collecting code coverage.
-         *
-	 * @since 1.3.1.0
-	 */
-	@Parameter(property="keepServerAlive", defaultValue="false")
-	protected boolean keepServerAlive;
 
 	/**
    * <p>Allows specifying which source files should be included and in what order.</p>
@@ -376,16 +283,16 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Parameter(property="jasmine.uriScheme", defaultValue="http")
   protected String uriScheme;
 
-    /**
-     * <p>Not used by the <code>jasmine:bdd</code> goal.</p>
-     *
-     * <p>The <code>jasmine:test</code> goal to specify hostname where the server is running.  Useful when using
-     * the RemoteWebDriver.</p>
-     *
-     * @since 1.3.1.4
-     */
-    @Parameter(property="jasmine.serverHostname", defaultValue = "localhost")
-    protected String serverHostname;
+  /**
+   * <p>Not used by the <code>jasmine:bdd</code> goal.</p>
+   *
+   * <p>The <code>jasmine:test</code> goal to specify hostname where the server is running.  Useful when using
+   * the RemoteWebDriver.</p>
+   *
+   * @since 1.3.1.4
+   */
+  @Parameter(property="jasmine.serverHostname", defaultValue = "localhost")
+  protected String serverHostname;
 
 	/**
 	 * <p>Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom

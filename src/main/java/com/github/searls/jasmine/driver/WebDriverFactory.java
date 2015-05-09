@@ -1,12 +1,15 @@
 package com.github.searls.jasmine.driver;
 
+import com.github.klieber.phantomjs.locate.PhantomJsLocator;
+import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
+import com.github.klieber.phantomjs.locate.RepositoryDetails;
 import com.github.searls.jasmine.mojo.Capability;
 import com.google.common.base.Objects;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.lang.reflect.Constructor;
@@ -21,6 +24,8 @@ public class WebDriverFactory {
   private String browserVersion;
   private String webDriverClassName;
   private List<Capability> webDriverCapabilities;
+  private PhantomJsLocatorOptions phantomJsLocatorOptions;
+  private RepositoryDetails repositoryDetails;
 
   public WebDriverFactory() {
     setWebDriverCapabilities(null);
@@ -42,9 +47,27 @@ public class WebDriverFactory {
     this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.<Capability>emptyList());
   }
 
+  public PhantomJsLocatorOptions getPhantomJsLocatorOptions() {
+    return phantomJsLocatorOptions;
+  }
+
+  public void setPhantomJsLocatorOptions(PhantomJsLocatorOptions phantomJsLocatorOptions) {
+    this.phantomJsLocatorOptions = phantomJsLocatorOptions;
+  }
+
+  public RepositoryDetails getRepositoryDetails() {
+    return repositoryDetails;
+  }
+
+  public void setRepositoryDetails(RepositoryDetails repositoryDetails) {
+    this.repositoryDetails = repositoryDetails;
+  }
+
   public WebDriver createWebDriver() throws Exception {
-    if (HtmlUnitDriver.class.getName().equals(webDriverClassName)) {
-      return createDefaultWebDriver();
+    if (PhantomJSDriver.class.getName().equals(webDriverClassName)) {
+      return createPhantomJsWebDriver();
+    } else if (HtmlUnitDriver.class.getName().equals(webDriverClassName)) {
+      return createHtmlUnitWebDriver();
     } else {
       return createCustomWebDriver();
     }
@@ -85,6 +108,11 @@ public class WebDriverFactory {
 
   private DesiredCapabilities getCapabilities() {
     DesiredCapabilities capabilities = new DesiredCapabilities();
+    customizeCapabilities(capabilities);
+    return capabilities;
+  }
+
+  private void customizeCapabilities(DesiredCapabilities capabilities) {
     capabilities.setJavascriptEnabled(true);
 
     for (Capability capability : webDriverCapabilities) {
@@ -97,18 +125,27 @@ public class WebDriverFactory {
         capabilities.setCapability(capability.getName(),capability.getMap());
       }
     }
-
-    return capabilities;
   }
 
-  private WebDriver createDefaultWebDriver() throws Exception {
-    DesiredCapabilities capabilities = getCapabilities();
-    if (StringUtils.isBlank(capabilities.getBrowserName())) {
-      capabilities.setBrowserName(BrowserType.HTMLUNIT);
-    }
-    if (StringUtils.isBlank(capabilities.getVersion())) {
+  private WebDriver createHtmlUnitWebDriver() throws Exception {
+    DesiredCapabilities capabilities = DesiredCapabilities.htmlUnitWithJs();
+    if (StringUtils.isNotBlank(capabilities.getVersion())) {
       capabilities.setVersion(browserVersion.replaceAll("(\\D+)_(\\d.*)?", "$1-$2").replaceAll("_", " ").toLowerCase());
     }
-    return new QuietHtmlUnitDriver(getCapabilities(), debug);
+    customizeCapabilities(capabilities);
+    return new QuietHtmlUnitDriver(capabilities, debug);
+  }
+
+  private WebDriver createPhantomJsWebDriver() throws Exception {
+    DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
+    customizeCapabilities(getCapabilities());
+
+    if (capabilities.getCapability("phantomjs.binary.path") == null) {
+      PhantomJsLocator locator = new PhantomJsLocator(this.phantomJsLocatorOptions, this.repositoryDetails);
+      String phantomJsPath = locator.locate();
+      capabilities.setCapability("phantomjs.binary.path", phantomJsPath);
+    }
+
+    return new PhantomJSDriver(capabilities);
   }
 }

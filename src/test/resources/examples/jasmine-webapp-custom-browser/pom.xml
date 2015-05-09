@@ -24,6 +24,7 @@
           </execution>
         </executions>
         <configuration>
+          <webDriverClassName>org.openqa.selenium.htmlunit.HtmlUnitDriver</webDriverClassName>
           <browserVersion>INTERNET_EXPLORER_6</browserVersion>
         </configuration>
       </plugin>

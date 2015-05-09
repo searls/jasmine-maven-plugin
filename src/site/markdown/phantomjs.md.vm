@@ -1,5 +1,11 @@
 Using with PhantomJS
 ====================
+Prior to version `2.0`, [HtmlUnit](http://htmlunit.sourceforge.net/) was used
+to execute specs by default. Starting with version `2.0`, [PhantomJS](http://phantomjs.org) is the default. The `jasmine-maven-plugin` uses the core of the [phantomjs-maven-plugin](http://klieber.github.io/phantomjs-maven-plugin) to automatically pull in PhantomJS if it is not currently installed on the system so you do not need to do anything to configure it. If you'd like to use a different version of PhantomJS than what jasmine-maven-plugin uses by default you can configure it with the [phantomjs configuration parameter](/jasmine-maven-plugin/test-mojo.html#phantomjs).
+
+Configuration prior to 2.0
+--------------------------
+
 Starting with version `1.3.1.1` it is possible to configure the jasmine-maven-plugin to use [PhantomJS](http://phantomjs.org) instead of [HtmlUnit](http://htmlunit.sourceforge.net/) to execute your specs.
 
 Here is an example configuration:
@@ -57,8 +63,8 @@ The above configuration assumes that the `phantomjs` binary is on your systems `
 
 For more information on configuration options for PhantomJSDriver see its [documentation](https://github.com/detro/ghostdriver).
 
-Automatically installing phantomjs
-----------------------------------
+Automatically installing phantomjs prior to 2.0
+-----------------------------------------------
 One of the downsides of using phantomjs instead of HtmlUnit is it requires native binaries be present on the system you are running your build on. The [phantomjs-maven-plugin](http://klieber.github.io/phantomjs-maven-plugin) solves that problem by automatically pulling down phantomjs when needed.
 
 Here's an example using `phantomjs-maven-plugin` with the `jasmine-maven-plugin`:
