@@ -9,8 +9,6 @@ For information on how to use the jasmine-maven-plugin, check out its [documenta
 
 You can find the latest release along with release notes [here](https://github.com/searls/jasmine-maven-plugin/releases).
 
-The plugin's version numbering will mirror the version of Jasmine that backs it (with a version number tacked on at the end that tracks changes to the plugin within a Jasmine release). The latest version of the plugin points to Jasmine 1.3.1, so its version number is **1.3.1.X**. 
-
 If you want to point at snapshot releases of the plugin (note that I don't deploy them often), they're hosted on the [Sonatype OSS snapshot repository](https://oss.sonatype.org/service/local/repositories/snapshots).
 
 ## Maintainers
