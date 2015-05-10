@@ -24,28 +24,28 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
 <span class="fc" id="L24">  }</span>
 
   protected void setEncoding(HtmlGeneratorConfiguration htmlGeneratorConfiguration, ST template) {
-<span class="nc bnc" id="L27" title="All 2 branches missed.">    template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);</span>
-<span class="nc" id="L28">  }</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">    template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);</span>
+<span class="fc" id="L28">  }</span>
 
   protected ST resolveHtmlTemplate() throws IOException {
-<span class="nc" id="L31">    String htmlTemplate = configuration.getRunnerTemplate();</span>
-<span class="nc" id="L32">    return new ST(htmlTemplate,'$','$');</span>
+<span class="fc" id="L31">    String htmlTemplate = configuration.getRunnerTemplate();</span>
+<span class="fc" id="L32">    return new ST(htmlTemplate,'$','$');</span>
   }
 
   protected void applyCssToTemplate(List&lt;String&gt; styles, ST template) throws IOException {
-<span class="nc" id="L36">    StringBuilder css = new StringBuilder();</span>
-<span class="nc bnc" id="L37" title="All 2 branches missed.">    for (String cssFile : styles) {</span>
-<span class="nc" id="L38">      css.append(&quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot;).append(cssFile).append(&quot;\&quot;/&gt;&quot;);</span>
-<span class="nc" id="L39">    }</span>
-<span class="nc" id="L40">    template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());</span>
-<span class="nc" id="L41">  }</span>
+<span class="fc" id="L36">    StringBuilder css = new StringBuilder();</span>
+<span class="fc bfc" id="L37" title="All 2 branches covered.">    for (String cssFile : styles) {</span>
+<span class="fc" id="L38">      css.append(&quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot;).append(cssFile).append(&quot;\&quot;/&gt;&quot;);</span>
+<span class="fc" id="L39">    }</span>
+<span class="fc" id="L40">    template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());</span>
+<span class="fc" id="L41">  }</span>
 
   public HtmlGeneratorConfiguration getConfiguration() {
-<span class="nc" id="L44">    return configuration;</span>
+<span class="fc" id="L44">    return configuration;</span>
   }
 
   protected void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Collection&lt;String&gt; scripts, ST template) throws IOException {
-<span class="nc" id="L48">    template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));</span>
-<span class="nc" id="L49">  }</span>
+<span class="fc" id="L48">    template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));</span>
+<span class="fc" id="L49">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

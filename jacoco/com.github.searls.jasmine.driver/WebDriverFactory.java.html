@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>WebDriverFactory.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.driver</a> &gt; <span class="el_source">WebDriverFactory.java</span></div><h1>WebDriverFactory.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.driver;
 
+import com.github.klieber.phantomjs.locate.PhantomJsLocator;
+import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
+import com.github.klieber.phantomjs.locate.RepositoryDetails;
 import com.github.searls.jasmine.mojo.Capability;
 import com.google.common.base.Objects;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.remote.BrowserType;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import java.lang.reflect.Constructor;
@@ -21,95 +24,129 @@ public class WebDriverFactory {
   private String browserVersion;
   private String webDriverClassName;
   private List&lt;Capability&gt; webDriverCapabilities;
+  private PhantomJsLocatorOptions phantomJsLocatorOptions;
+  private RepositoryDetails repositoryDetails;
 
-<span class="fc" id="L25">  public WebDriverFactory() {</span>
-<span class="fc" id="L26">    setWebDriverCapabilities(null);</span>
-<span class="fc" id="L27">  }</span>
+<span class="fc" id="L30">  public WebDriverFactory() {</span>
+<span class="fc" id="L31">    setWebDriverCapabilities(null);</span>
+<span class="fc" id="L32">  }</span>
 
   public void setDebug(boolean debug) {
-<span class="nc" id="L30">    this.debug = debug;</span>
-<span class="nc" id="L31">  }</span>
+<span class="nc" id="L35">    this.debug = debug;</span>
+<span class="nc" id="L36">  }</span>
 
   public void setBrowserVersion(String browserVersion) {
-<span class="fc" id="L34">    this.browserVersion = browserVersion;</span>
-<span class="fc" id="L35">  }</span>
+<span class="fc" id="L39">    this.browserVersion = browserVersion;</span>
+<span class="fc" id="L40">  }</span>
 
   public void setWebDriverClassName(String webDriverClassName) {
-<span class="fc" id="L38">    this.webDriverClassName = webDriverClassName;</span>
-<span class="fc" id="L39">  }</span>
+<span class="fc" id="L43">    this.webDriverClassName = webDriverClassName;</span>
+<span class="fc" id="L44">  }</span>
 
   public void setWebDriverCapabilities(List&lt;Capability&gt; webDriverCapabilities) {
-<span class="fc" id="L42">    this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.&lt;Capability&gt;emptyList());</span>
-<span class="fc" id="L43">  }</span>
+<span class="fc" id="L47">    this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.&lt;Capability&gt;emptyList());</span>
+<span class="fc" id="L48">  }</span>
+
+  public PhantomJsLocatorOptions getPhantomJsLocatorOptions() {
+<span class="nc" id="L51">    return phantomJsLocatorOptions;</span>
+  }
+
+  public void setPhantomJsLocatorOptions(PhantomJsLocatorOptions phantomJsLocatorOptions) {
+<span class="nc" id="L55">    this.phantomJsLocatorOptions = phantomJsLocatorOptions;</span>
+<span class="nc" id="L56">  }</span>
+
+  public RepositoryDetails getRepositoryDetails() {
+<span class="nc" id="L59">    return repositoryDetails;</span>
+  }
+
+  public void setRepositoryDetails(RepositoryDetails repositoryDetails) {
+<span class="nc" id="L63">    this.repositoryDetails = repositoryDetails;</span>
+<span class="nc" id="L64">  }</span>
 
   public WebDriver createWebDriver() throws Exception {
-<span class="fc bfc" id="L46" title="All 2 branches covered.">    if (HtmlUnitDriver.class.getName().equals(webDriverClassName)) {</span>
-<span class="fc" id="L47">      return createDefaultWebDriver();</span>
+<span class="pc bpc" id="L67" title="1 of 2 branches missed.">    if (PhantomJSDriver.class.getName().equals(webDriverClassName)) {</span>
+<span class="nc" id="L68">      return createPhantomJsWebDriver();</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">    } else if (HtmlUnitDriver.class.getName().equals(webDriverClassName)) {</span>
+<span class="fc" id="L70">      return createHtmlUnitWebDriver();</span>
     } else {
-<span class="fc" id="L49">      return createCustomWebDriver();</span>
+<span class="fc" id="L72">      return createCustomWebDriver();</span>
     }
   }
 
   @SuppressWarnings(&quot;unchecked&quot;)
   private Class&lt;? extends WebDriver&gt; getWebDriverClass() throws Exception {
-<span class="fc" id="L55">    return (Class&lt;WebDriver&gt;) Class.forName(webDriverClassName);</span>
+<span class="fc" id="L78">    return (Class&lt;WebDriver&gt;) Class.forName(webDriverClassName);</span>
   }
 
   private Constructor&lt;? extends WebDriver&gt; getWebDriverConstructor() throws Exception {
-<span class="fc" id="L59">    Class&lt;? extends WebDriver&gt; webDriverClass = getWebDriverClass();</span>
-<span class="fc bfc" id="L60" title="All 2 branches covered.">    boolean hasCapabilities = !webDriverCapabilities.isEmpty();</span>
+<span class="fc" id="L82">    Class&lt;? extends WebDriver&gt; webDriverClass = getWebDriverClass();</span>
+<span class="fc bfc" id="L83" title="All 2 branches covered.">    boolean hasCapabilities = !webDriverCapabilities.isEmpty();</span>
     try {
-<span class="fc bfc" id="L62" title="All 2 branches covered.">      if (hasCapabilities) {</span>
-<span class="fc" id="L63">        return webDriverClass.getConstructor(Capabilities.class);</span>
+<span class="fc bfc" id="L85" title="All 2 branches covered.">      if (hasCapabilities) {</span>
+<span class="fc" id="L86">        return webDriverClass.getConstructor(Capabilities.class);</span>
       }
-<span class="fc" id="L65">      return webDriverClass.getConstructor();</span>
-<span class="fc" id="L66">    } catch (Exception exception) {</span>
-<span class="pc bpc" id="L67" title="1 of 2 branches missed.">      if (hasCapabilities) {</span>
-<span class="nc" id="L68">        return webDriverClass.getConstructor();</span>
+<span class="fc" id="L88">      return webDriverClass.getConstructor();</span>
+<span class="fc" id="L89">    } catch (Exception exception) {</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">      if (hasCapabilities) {</span>
+<span class="nc" id="L91">        return webDriverClass.getConstructor();</span>
       }
-<span class="fc" id="L70">      return webDriverClass.getConstructor(Capabilities.class);</span>
+<span class="fc" id="L93">      return webDriverClass.getConstructor(Capabilities.class);</span>
     }
   }
 
   private WebDriver createCustomWebDriver() throws Exception {
-<span class="fc" id="L75">    Constructor&lt;? extends WebDriver&gt; constructor = getWebDriverConstructor();</span>
-<span class="fc" id="L76">    return constructor.newInstance(getWebDriverConstructorArguments(constructor));</span>
+<span class="fc" id="L98">    Constructor&lt;? extends WebDriver&gt; constructor = getWebDriverConstructor();</span>
+<span class="fc" id="L99">    return constructor.newInstance(getWebDriverConstructorArguments(constructor));</span>
   }
 
   private Object[] getWebDriverConstructorArguments(Constructor&lt;? extends WebDriver&gt; constructor) {
-<span class="fc bfc" id="L80" title="All 2 branches covered.">    if (constructor.getParameterTypes().length == 0) {</span>
-<span class="fc" id="L81">      return new Object[0];</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">    if (constructor.getParameterTypes().length == 0) {</span>
+<span class="fc" id="L104">      return new Object[0];</span>
     }
-<span class="fc" id="L83">    return new Object[] {getCapabilities()};</span>
+<span class="fc" id="L106">    return new Object[] {getCapabilities()};</span>
   }
 
   private DesiredCapabilities getCapabilities() {
-<span class="fc" id="L87">    DesiredCapabilities capabilities = new DesiredCapabilities();</span>
-<span class="fc" id="L88">    capabilities.setJavascriptEnabled(true);</span>
-
-<span class="fc bfc" id="L90" title="All 2 branches covered.">    for (Capability capability : webDriverCapabilities) {</span>
-<span class="fc" id="L91">      Object value = capability.getValue();</span>
-<span class="pc bpc" id="L92" title="3 of 6 branches missed.">      if (value != null &amp;&amp; (!String.class.isInstance(value) || StringUtils.isNotBlank((String)value))) {</span>
-<span class="fc" id="L93">        capabilities.setCapability(capability.getName(),capability.getValue());</span>
-<span class="nc bnc" id="L94" title="All 4 branches missed.">      } else if (capability.getList() != null &amp;&amp; !capability.getList().isEmpty()) {</span>
-<span class="nc" id="L95">        capabilities.setCapability(capability.getName(),capability.getList());</span>
-<span class="nc bnc" id="L96" title="All 4 branches missed.">      } else if (capability.getMap() != null &amp;&amp; !capability.getMap().isEmpty()) {</span>
-<span class="nc" id="L97">        capabilities.setCapability(capability.getName(),capability.getMap());</span>
-      }
-<span class="fc" id="L99">    }</span>
-
-<span class="fc" id="L101">    return capabilities;</span>
+<span class="fc" id="L110">    DesiredCapabilities capabilities = new DesiredCapabilities();</span>
+<span class="fc" id="L111">    customizeCapabilities(capabilities);</span>
+<span class="fc" id="L112">    return capabilities;</span>
   }
 
-  private WebDriver createDefaultWebDriver() throws Exception {
-<span class="fc" id="L105">    DesiredCapabilities capabilities = getCapabilities();</span>
-<span class="pc bpc" id="L106" title="1 of 2 branches missed.">    if (StringUtils.isBlank(capabilities.getBrowserName())) {</span>
-<span class="fc" id="L107">      capabilities.setBrowserName(BrowserType.HTMLUNIT);</span>
+  private void customizeCapabilities(DesiredCapabilities capabilities) {
+<span class="fc" id="L116">    capabilities.setJavascriptEnabled(true);</span>
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">    for (Capability capability : webDriverCapabilities) {</span>
+<span class="fc" id="L119">      Object value = capability.getValue();</span>
+<span class="pc bpc" id="L120" title="3 of 6 branches missed.">      if (value != null &amp;&amp; (!String.class.isInstance(value) || StringUtils.isNotBlank((String)value))) {</span>
+<span class="fc" id="L121">        capabilities.setCapability(capability.getName(),capability.getValue());</span>
+<span class="nc bnc" id="L122" title="All 4 branches missed.">      } else if (capability.getList() != null &amp;&amp; !capability.getList().isEmpty()) {</span>
+<span class="nc" id="L123">        capabilities.setCapability(capability.getName(),capability.getList());</span>
+<span class="nc bnc" id="L124" title="All 4 branches missed.">      } else if (capability.getMap() != null &amp;&amp; !capability.getMap().isEmpty()) {</span>
+<span class="nc" id="L125">        capabilities.setCapability(capability.getName(),capability.getMap());</span>
+      }
+<span class="fc" id="L127">    }</span>
+<span class="fc" id="L128">  }</span>
+
+  private WebDriver createHtmlUnitWebDriver() throws Exception {
+<span class="fc" id="L131">    DesiredCapabilities capabilities = DesiredCapabilities.htmlUnitWithJs();</span>
+<span class="pc bpc" id="L132" title="1 of 2 branches missed.">    if (StringUtils.isNotBlank(capabilities.getVersion())) {</span>
+<span class="nc" id="L133">      capabilities.setVersion(browserVersion.replaceAll(&quot;(\\D+)_(\\d.*)?&quot;, &quot;$1-$2&quot;).replaceAll(&quot;_&quot;, &quot; &quot;).toLowerCase());</span>
     }
-<span class="pc bpc" id="L109" title="1 of 2 branches missed.">    if (StringUtils.isBlank(capabilities.getVersion())) {</span>
-<span class="fc" id="L110">      capabilities.setVersion(browserVersion.replaceAll(&quot;(\\D+)_(\\d.*)?&quot;, &quot;$1-$2&quot;).replaceAll(&quot;_&quot;, &quot; &quot;).toLowerCase());</span>
+<span class="fc" id="L135">    customizeCapabilities(capabilities);</span>
+<span class="fc" id="L136">    return new QuietHtmlUnitDriver(capabilities, debug);</span>
+  }
+
+  private WebDriver createPhantomJsWebDriver() throws Exception {
+<span class="nc" id="L140">    DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();</span>
+<span class="nc" id="L141">    customizeCapabilities(getCapabilities());</span>
+
+<span class="nc bnc" id="L143" title="All 2 branches missed.">    if (capabilities.getCapability(&quot;phantomjs.binary.path&quot;) == null) {</span>
+<span class="nc" id="L144">      PhantomJsLocator locator = new PhantomJsLocator(this.phantomJsLocatorOptions, this.repositoryDetails);</span>
+<span class="nc" id="L145">      String phantomJsPath = locator.locate();</span>
+<span class="nc" id="L146">      capabilities.setCapability(&quot;phantomjs.binary.path&quot;, phantomJsPath);</span>
     }
-<span class="fc" id="L112">    return new QuietHtmlUnitDriver(getCapabilities(), debug);</span>
+
+<span class="nc" id="L149">    return new PhantomJSDriver(capabilities);</span>
   }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
