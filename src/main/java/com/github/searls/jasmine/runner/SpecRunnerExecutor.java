@@ -42,16 +42,21 @@ public class SpecRunnerExecutor {
 			driver.get(runnerUrl.toString());
 			this.waitForRunnerToFinish(driver, timeout, debug, log);
 
-      this.checkForConsoleErrors(driver, log);
+      		this.checkForConsoleErrors(driver, log);
 
 			JasmineResult jasmineResult = new JasmineResult();
 			jasmineResult.setDetails(this.buildReport(executor,format));
 			FileUtils.writeStringToFile(junitXmlReport, this.buildJunitXmlReport(executor,debug), "UTF-8");
-			driver.quit();
 
 			return jasmineResult;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		} finally {
+			try { 
+				driver.quit(); 
+			} catch (Exception e) {
+				System.err.println("There was an exception quitting WebDriver - " + e.getMessage());
+			}
 		}
 	}
 
