@@ -55,7 +55,7 @@ public class SpecRunnerExecutor {
 			try { 
 				driver.quit(); 
 			} catch (Exception e) {
-				System.err.println("There was an exception quitting WebDriver - " + e.getMessage());
+				log.error("There was an exception quitting WebDriver.", e);
 			}
 		}
 	}
