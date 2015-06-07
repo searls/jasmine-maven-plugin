@@ -138,7 +138,7 @@ public class WebDriverFactory {
 
   private WebDriver createPhantomJsWebDriver() throws Exception {
     DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
-    customizeCapabilities(getCapabilities());
+    customizeCapabilities(capabilities);
 
     if (capabilities.getCapability("phantomjs.binary.path") == null) {
       PhantomJsLocator locator = new PhantomJsLocator(this.phantomJsLocatorOptions, this.repositoryDetails);
