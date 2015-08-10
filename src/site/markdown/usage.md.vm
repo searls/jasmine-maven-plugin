@@ -1,33 +1,38 @@
- ------
- Usage
- ------
- ------
-
 Usage
+=====
 
-* The 30 second version
+The 30 second version
+---------------------
 
- First run this:
+First run this:
 
-+-----
-mvn archetype:generate -DarchetypeGroupId=${project.groupId} -DarchetypeArtifactId=jasmine-archetype -DarchetypeVersion=${currentStableVersion} -DgroupId=com.acme -DartifactId=my-jasmine-project -Dversion=0.0.1-SNAPSHOT
-+-----
+```sh
+mvn archetype:generate \
+ -DarchetypeGroupId=${project.groupId} \
+ -DarchetypeArtifactId=jasmine-archetype \
+ -DarchetypeVersion=RELEASE \
+ -DjasminePluginVersion=${currentStableVersion} \
+ -DgroupId=com.acme \
+ -DartifactId=my-jasmine-project \
+ -Dversion=0.0.1-SNAPSHOT
+```
 
- And then this:
+And then this:
 
-+-----
+```sh
 cd my-jasmine-project && mvn jasmine:bdd
-+-----
+```
 
- Then go here and you should see
+Then go to http://localhost:8234 and you should see this:
 
-[./images/archetype.png]
+![Jasmine Archetype](./images/archetype.png)
 
-* Adding it to your project
+Adding it to your project
+-------------------------
 
- If you're already familiar with adding Maven plugins to POM files, then this should be a breeze. If it's new to you, then take a deep breath and contemplate adding this XML to your project's "pom.xml" file:
+If you're already familiar with adding Maven plugins to POM files, then this should be a breeze. If it's new to you, then take a deep breath and contemplate adding this XML to your project's "pom.xml" file:
 
-+-----
+```xml
 <build>
   …
   <plugins>
@@ -43,6 +48,7 @@ cd my-jasmine-project && mvn jasmine:bdd
           </goals>
         </execution>
       </executions>
+      <!-- keep the configuration out of the execution so that the bdd goal has access to it -->
       <configuration>
         <!-- configuration properties will go here -->
       </configuration>
@@ -51,19 +57,20 @@ cd my-jasmine-project && mvn jasmine:bdd
   </plugins>
   …
 </build>
-+-----
+```
 
-* Writing Jasmine specs
+Writing Jasmine specs
+---------------------
 
- Ready to try it out? Once you've added the plugin to your project, just run the following in a terminal:
+Ready to try it out? Once you've added the plugin to your project, just run the following in a terminal:
 
-+-----
+```sh
 mvn jasmine:bdd
-+-----
+```
 
- You should see some output like this
+You should see some output like this
 
-+-----
+```
 [INFO]
 
 Server started--it's time to spec some JavaScript! You can run your
@@ -81,29 +88,36 @@ The server will monitor these two directories for scripts
 Just leave this process running as you test-drive your code,
 refreshing your browser window to re-run your specs.
 You can kill the server with Ctrl-C when you're done.
-+-----
+```
 
- Now visit http://localhost:8234 in your browser of choice and you should see a Jasmine spec runner with 0 specs, 0 failures. Sort of like this one:
+Now visit http://localhost:8234 in your browser of choice and you should see a Jasmine spec runner with 0 specs, 0 failures. Sort of like this one:
 
-[./images/empty.png]
+![Jasmine BDD Results](./images/empty.png)
 
- And that's it! When you add source scripts to the source directory and spec scripts to the specs directory and refresh the page, your specs will be executed.
+And that's it! When you add source scripts to the source directory and spec scripts to the specs directory and refresh
+the page, your specs will be executed. You can even use the [autoRefreshInterval](bdd-mojo.html#autoRefreshInterval) to
+have the page automatically refresh for you.
 
- Running the jasmine:bdd goal and refreshing an actual browser will always provide substantially faster feedback than the headless jasmine:test goal. As a result, I strongly recommend you use it to drive development of your JavaScript and only worry about running the headless execution when you would otherwise perform full Maven builds (like before you push your code or in CI).
+Running the jasmine:bdd goal and refreshing an actual browser will always provide substantially faster feedback than the
+headless jasmine:test goal. As a result, I strongly recommend you use it to drive development of your JavaScript and
+only worry about running the headless execution when you would otherwise perform full Maven builds (like before you push
+your code or in CI).
 
-* Running a build
+Running a build
+---------------
 
- If you've added the plugin as shown above (that is, with an execution of the test goal) to your POM, it's already set up execute your Jasmine specs every time your build goes through the test lifecycle phase!
+If you've added the plugin as shown above (that is, with an execution of the test goal) to your POM, it's already set up
+execute your Jasmine specs every time your build goes through the test lifecycle phase!
 
- So when you run this:
+So when you run this:
 
-+-----
+```sh
 mvn clean test
-+-----
+```
 
- A happy build might output:
+A happy build might output:
 
-+-----
+```
 [INFO] Executing Jasmine Specs
 [INFO]
 -------------------------------------------------------
@@ -130,11 +144,11 @@ Results: 6 specs, 0 failures
 [INFO] Finished at: Mon Jul 04 15:01:58 EDT 2011
 [INFO] Final Memory: 9M/81M
 [INFO] ------------------------------------------------------------------------
-+-----
+```
 
- And a failing build might output:
+And a failing build might output:
 
-+-----
+```
 [INFO] Executing Jasmine Specs
 [INFO]
 -------------------------------------------------------
@@ -163,6 +177,6 @@ Results: 5 specs, 1 failures
 [INFO] Finished at: Mon Jul 04 15:03:47 EDT 2011
 [INFO] Final Memory: 8M/81M
 [INFO] ------------------------------------------------------------------------
-+-----
+```
 
- The plugin relies on HtmlUnit for headless (which is to say, GUI-less) execution. It's not a perfect emulation of a browser, but for moderately well-isolated unit testing (e.g. only pedestrian interactions with the DOM), it works really well.
+The plugin relies on [PhantomJS](http://phantomjs.org/) for headless execution and it works quite well!
