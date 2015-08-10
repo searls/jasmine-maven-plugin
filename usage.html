@@ -53,7 +53,7 @@
                   <li id="publishDate">Last Published: 10 Aug 2015
                       <span class="divider">|</span>
                    </li>
-                  <li id="projectVersion">Version: 2.0-SNAPSHOT
+                  <li id="projectVersion">Version: 2.0-beta-02
                       </li>
                       
                 
@@ -62,9 +62,9 @@
                             </ul>
       </div>
 
-            
+                  
       <div class="row-fluid">
-        <div id="leftColumn" class="span2">
+        <div id="leftColumn" class="span3">
           <div class="well sidebar-nav">
                 
                     
@@ -154,7 +154,7 @@
           <span class="icon-chevron-right"></span>
         Project Information</a>
                   </li>
-                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                  
       <li>
   
                           <a href="project-reports.html" title="Project Reports">
@@ -201,8 +201,8 @@
           </div>
         </div>
         
-                
-        <div id="bodyColumn"  class="span10" >
+                        
+        <div id="bodyColumn"  class="span9" >
                                   
             <h1>Usage</h1>
 <div class="section">
@@ -213,7 +213,7 @@
 <div class="source"><pre class="prettyprint">mvn archetype:generate \
  -DarchetypeGroupId=com.github.searls \
  -DarchetypeArtifactId=jasmine-archetype \
- -DarchetypeVersion=2.0 \
+ -DarchetypeVersion=RELEASE \
  -DjasminePluginVersion=2.0 \
  -DgroupId=com.acme \
  -DartifactId=my-jasmine-project \
@@ -286,7 +286,7 @@ You can kill the server with Ctrl-C when you're done.
 </pre></div></div>
 <p>Now visit <a class="externalLink" href="http://localhost:8234">http://localhost:8234</a> in your browser of choice and you should see a Jasmine spec runner with 0 specs, 0 failures. Sort of like this one:</p>
 <p><img src="./images/empty.png" alt="Jasmine BDD Results" /></p>
-<p>And that&#x2019;s it! When you add source scripts to the source directory and spec scripts to the specs directory and refresh the page, your specs will be executed. You can even use the (autoRefreshInterval)[bdd-mojo.html#autoRefreshInterval] to have the page automatically refresh for you.</p>
+<a>And that&#x2019;s it! When you add source scripts to the source directory and spec scripts to the specs directory and refresh the page, your specs will be executed. You can even use the <a href="bdd-mojo.html#autoRefreshInterval">autoRefreshInterval</a> to have the page automatically refresh for you.</p>
 <p>Running the jasmine:bdd goal and refreshing an actual browser will always provide substantially faster feedback than the headless jasmine:test goal. As a result, I strongly recommend you use it to drive development of your JavaScript and only worry about running the headless execution when you would otherwise perform full Maven builds (like before you push your code or in CI).</p></div>
 <div class="section">
 <h2><a name="Running_a_build"></a>Running a build</h2>

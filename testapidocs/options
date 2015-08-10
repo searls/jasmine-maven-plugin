@@ -15,7 +15,7 @@
 -docencoding
 'UTF-8'
 -doctitle
-'jasmine-maven-plugin 2.0-SNAPSHOT Test API'
+'jasmine-maven-plugin 2.0-beta-02 Test API'
 -link
 '../apidocs'
 -linkoffline
@@ -23,4 +23,4 @@
 -use
 -version
 -windowtitle
-'jasmine-maven-plugin 2.0-SNAPSHOT Test API'
+'jasmine-maven-plugin 2.0-beta-02 Test API'

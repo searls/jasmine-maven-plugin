@@ -15,10 +15,10 @@
 -docencoding
 'UTF-8'
 -doctitle
-'jasmine-maven-plugin 2.0-SNAPSHOT API'
+'jasmine-maven-plugin 2.0-beta-02 API'
 -linkoffline
 'http://docs.oracle.com/javase/6/docs/api' '/Volumes/sandbox/jasmine-maven-plugin/target/javadoc-bundle-options'
 -use
 -version
 -windowtitle
-'jasmine-maven-plugin 2.0-SNAPSHOT API'
+'jasmine-maven-plugin 2.0-beta-02 API'
