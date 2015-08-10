@@ -1,13 +1,12 @@
 package com.github.searls.jasmine.runner;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
-
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
+import org.apache.commons.io.FileUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class HtmlGeneratorConfiguration {
 	private final String sourceEncoding;
@@ -17,7 +16,6 @@ public class HtmlGeneratorConfiguration {
 	private final IOUtilsWrapper ioUtilsWrapper;
 	private final SpecRunnerTemplate specRunnerTemplate;
 	private final ScriptResolver scriptResolver;
-	private final String scriptLoaderPath;
 	private final String srcDirectoryName;
 	private final String specDirectoryName;
 	private final int autoRefreshInterval;
@@ -35,7 +33,6 @@ public class HtmlGeneratorConfiguration {
 		this.specRunnerTemplate = configuration.getSpecRunnerTemplate();
 		this.scriptResolver = scriptResolver;
 		this.customRunnerConfiguration = configuration.getCustomRunnerConfiguration();
-		this.scriptLoaderPath = configuration.getScriptLoaderPath();
 		this.srcDirectoryName = configuration.getSrcDirectoryName();
 		this.specDirectoryName = configuration.getSpecDirectoryName();
 		this.autoRefreshInterval = configuration.getAutoRefreshInterval();
@@ -107,10 +104,6 @@ public class HtmlGeneratorConfiguration {
 
 	public String getCustomRunnerConfiguration() throws IOException {
 		return this.customRunnerConfiguration == null ? null : FileUtils.readFileToString(this.customRunnerConfiguration);
-	}
-
-	public String getScriptLoaderPath() {
-		return this.scriptLoaderPath;
 	}
 
 	public String getSrcDirectoryName() {

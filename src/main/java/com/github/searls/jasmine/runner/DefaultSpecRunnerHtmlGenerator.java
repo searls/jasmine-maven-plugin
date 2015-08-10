@@ -68,7 +68,6 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     this.applyScriptTagsToTemplate("sources", allScripts, template);
     template.add("specs", this.createJsonArray(specs));
     template.add("priority", this.createJsonArray(preloads));
-    template.add("requirejsPath", this.resolveRequirejsPath(sourceDirectory));
 
     return template.render();
   }
@@ -86,14 +85,5 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
   private void setCustomRunnerConfig(ST template) throws IOException {
     String customRunnerConfiguration = this.getConfiguration().getCustomRunnerConfiguration();
     template.add("customRunnerConfiguration", customRunnerConfiguration);
-  }
-
-  private String resolveRequirejsPath(String sourceDirectory) {
-    String scriptLoaderPath = this.getConfiguration().getScriptLoaderPath();
-    if(null == scriptLoaderPath) {
-      return String.format("%s/require.js", sourceDirectory);
-    } else {
-      return String.format("%s/%s", sourceDirectory, scriptLoaderPath);
-    }
   }
 }

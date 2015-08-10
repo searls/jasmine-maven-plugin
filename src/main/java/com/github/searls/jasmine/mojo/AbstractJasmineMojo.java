@@ -306,17 +306,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	protected SpecRunnerTemplate specRunnerTemplate;
 
 	/**
-	 * <p>Path to loader script, relative to jsSrcDir. Defaults to jsSrcDir/nameOfScript.js. Which script to look for is determined by
-	 * the selected spcRunnerTemplate. I.e require.js is used when REQUIRE_JS is selected as specRunnerTemplate.</p>
-	 *
-	 * @since 1.1.0
-	 * @deprecated Specify script loader path using the <code>preloadSources</code> parameter instead.
-	 */
-	@Parameter
-	@Deprecated
-	protected String scriptLoaderPath;
-
-	/**
 	 * <p>Automatically refresh the test runner at the given interval (specified in seconds) when using the <code>jasmine:bdd</code> goal.</p>
 	 * <p>A value of <code>0</code> disables the automatic refresh (which is the default).</p>
          *
@@ -445,22 +434,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
 	@Override
 	public List<String> getPreloadSources() {
-		this.addRequireJsIfNecessary(); // This is temporary until the scriptLoaderPath parameter is removed
 		return this.preloadSources;
-	}
-
-	private void addRequireJsIfNecessary() {
-		String scriptLoaderPath = this.getScriptLoaderPath() == null ? "require.js" : this.getScriptLoaderPath();
-		String requireJsPath = String.format("%s/%s", this.jsSrcDir, scriptLoaderPath);
-		if (SpecRunnerTemplate.REQUIRE_JS.equals(this.specRunnerTemplate)) {
-			File requireJsFile = new File(requireJsPath);
-			if (requireJsFile.exists()) {
-				if (this.preloadSources == null) {
-					this.preloadSources = new ArrayList<String>();
-				}
-				this.preloadSources.add(requireJsPath);
-			}
-		}
 	}
 
 	@Override
@@ -480,12 +454,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 	@Override
 	public File getCustomRunnerConfiguration() {
 		return this.customRunnerConfigurationFile;
-	}
-
-	@Deprecated
-	@Override
-	public String getScriptLoaderPath() {
-		return this.scriptLoaderPath;
 	}
 
 	@Override

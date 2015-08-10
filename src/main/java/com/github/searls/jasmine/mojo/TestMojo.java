@@ -42,7 +42,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
   /**
    * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
-   * The plugin uses <a href="http://htmlunit.sourceforge.net/">HtmlUnit</a> by default.
+   * The plugin uses <a href="https://github.com/detro/ghostdriver">PhantomJSDriver</a> by default.
    *
    * <p>Some valid examples:</p>
    * <ul>
@@ -52,7 +52,7 @@ public class TestMojo extends AbstractJasmineMojo {
    *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
    * </ul>
    * <p></p>
-   * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
+   * See the webDriverCapabilities property for configuring driver specific properties.
    *
    * @since 1.1.0
    */

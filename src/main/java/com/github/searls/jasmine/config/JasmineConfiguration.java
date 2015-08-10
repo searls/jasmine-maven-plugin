@@ -32,8 +32,6 @@ public interface JasmineConfiguration {
 	File getCustomRunnerTemplate();
 	File getCustomRunnerConfiguration();
 
-	String getScriptLoaderPath();
-
 	int getAutoRefreshInterval();
 	
 	boolean isCoffeeScriptCompilationEnabled();

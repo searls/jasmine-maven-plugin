@@ -1,16 +1,6 @@
 package com.github.searls.jasmine.mojo;
 
-import static com.github.searls.jasmine.Matchers.empty;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.File;
-
+import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -27,7 +17,16 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import java.io.File;
+
+import static com.github.searls.jasmine.Matchers.empty;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractJasmineMojoTest {
@@ -68,7 +67,6 @@ public class AbstractJasmineMojoTest {
 	@Before
 	public void before() {
 		this.subject.sourceEncoding = ENCODING;
-		this.subject.scriptLoaderPath = null;
 		this.subject.locator = this.locator;
 	}
 
@@ -167,12 +165,6 @@ public class AbstractJasmineMojoTest {
 	public void testGetBaseDir() {
 		when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
 		assertThat(this.subject.getBasedir(),is(this.baseDir));
-	}
-
-	@Test
-	public void testGetScriptLoaderPath() {
-		this.subject.scriptLoaderPath = SCRIPT_LOADER_PATH;
-		assertThat(this.subject.getScriptLoaderPath(),is(SCRIPT_LOADER_PATH));
 	}
 
 	@Test

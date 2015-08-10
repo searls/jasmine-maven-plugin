@@ -4,7 +4,7 @@ import com.github.klieber.phantomjs.locate.PhantomJsLocator;
 import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
 import com.github.klieber.phantomjs.locate.RepositoryDetails;
 import com.github.searls.jasmine.mojo.Capability;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
@@ -44,7 +44,7 @@ public class WebDriverFactory {
   }
 
   public void setWebDriverCapabilities(List<Capability> webDriverCapabilities) {
-    this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.<Capability>emptyList());
+    this.webDriverCapabilities = MoreObjects.firstNonNull(webDriverCapabilities, Collections.<Capability>emptyList());
   }
 
   public PhantomJsLocatorOptions getPhantomJsLocatorOptions() {
