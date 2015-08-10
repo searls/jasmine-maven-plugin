@@ -12,7 +12,7 @@ jasmine-maven-plugin,com.github.searls.jasmine.io.scripts,ScriptResolverExceptio
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,HelpMojo,905,0,110,0,156,0,71,0,16,0
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,Capability,14,17,0,0,6,7,4,5,4,5
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,ServerMojo,104,0,2,0,16,0,7,0,6,0
-jasmine-maven-plugin,com.github.searls.jasmine.mojo,AbstractJasmineMojo,156,169,14,2,33,40,20,12,13,11
+jasmine-maven-plugin,com.github.searls.jasmine.mojo,AbstractJasmineMojo,105,166,6,2,23,39,15,11,12,10
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,TestMojo,299,0,12,0,56,0,17,0,11,0
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,PhantomJsOptions,66,0,0,0,26,0,13,0,13,0
 jasmine-maven-plugin,com.github.searls.jasmine.mojo,Context,26,0,0,0,11,0,6,0,6,0
@@ -26,7 +26,7 @@ jasmine-maven-plugin,com.github.searls.jasmine.model,ScriptSearch,0,21,0,0,0,8,0
 jasmine-maven-plugin,com.github.searls.jasmine.model,JasmineResult,0,30,0,0,0,7,0,6,0,6
 jasmine-maven-plugin,com.github.searls.jasmine.driver,QuietHtmlUnitDriver.new IncorrectnessListener() {...},1,6,0,0,1,1,1,1,1,1
 jasmine-maven-plugin,com.github.searls.jasmine.driver,QuietHtmlUnitDriver,0,26,0,2,0,8,0,3,0,2
-jasmine-maven-plugin,com.github.searls.jasmine.driver,WebDriverFactory,94,168,16,16,22,41,17,17,6,12
+jasmine-maven-plugin,com.github.searls.jasmine.driver,WebDriverFactory,93,168,16,16,22,41,17,17,6,12
 jasmine-maven-plugin,com.github.searls.jasmine.collections,CollectionHelper,0,9,0,2,0,2,0,3,0,2
 jasmine-maven-plugin,com.github.searls.jasmine.server,ResourceHandlerConfigurator,0,153,0,4,0,29,0,6,0,4
 jasmine-maven-plugin,com.github.searls.jasmine.server,ServerManager,0,51,0,0,0,17,0,6,0,6
@@ -36,11 +36,11 @@ jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,WebJarResourceHand
 jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,ProjectClassLoaderFactory,33,50,2,2,7,12,2,4,0,4
 jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,AbstractThirdPartyLibsResourceHandler,85,3,6,0,25,1,7,1,4,1
 jasmine-maven-plugin,com.github.searls.jasmine.thirdpartylibs,ClassPathResourceHandler,5,6,0,0,1,3,1,1,1,1
-jasmine-maven-plugin,com.github.searls.jasmine.runner,DefaultSpecRunnerHtmlGenerator,27,226,2,4,5,39,2,7,0,6
+jasmine-maven-plugin,com.github.searls.jasmine.runner,DefaultSpecRunnerHtmlGenerator,213,4,4,0,37,2,6,1,4,1
 jasmine-maven-plugin,com.github.searls.jasmine.runner,AbstractSpecRunnerHtmlGenerator,0,77,0,4,0,17,0,8,0,6
-jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,190,59,43,1,34,16,37,2,15,2
+jasmine-maven-plugin,com.github.searls.jasmine.runner,HtmlGeneratorConfiguration,187,55,43,1,33,15,36,2,14,2
 jasmine-maven-plugin,com.github.searls.jasmine.runner,ReporterType,9,39,0,0,0,2,2,2,2,2
-jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor,213,0,10,0,41,0,14,0,9,0
+jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor,232,0,10,0,45,0,14,0,9,0
 jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerTemplate,9,37,0,0,0,7,2,3,2,3
 jasmine-maven-plugin,com.github.searls.jasmine.runner,CreatesRunner,115,0,6,0,26,0,9,0,6,0
 jasmine-maven-plugin,com.github.searls.jasmine.runner,SpecRunnerExecutor.new Predicate() {...},16,0,0,0,2,0,2,0,2,0

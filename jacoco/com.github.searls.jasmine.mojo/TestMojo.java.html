@@ -16,7 +16,6 @@ import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -42,7 +41,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
   /**
    * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
-   * The plugin uses &lt;a href=&quot;http://htmlunit.sourceforge.net/&quot;&gt;HtmlUnit&lt;/a&gt; by default.
+   * The plugin uses &lt;a href=&quot;https://github.com/detro/ghostdriver&quot;&gt;PhantomJSDriver&lt;/a&gt; by default.
    *
    * &lt;p&gt;Some valid examples:&lt;/p&gt;
    * &lt;ul&gt;
@@ -52,7 +51,7 @@ public class TestMojo extends AbstractJasmineMojo {
    *   &lt;li&gt;org.openqa.selenium.ie.InternetExplorerDriver&lt;/li&gt;
    * &lt;/ul&gt;
    * &lt;p&gt;&lt;/p&gt;
-   * For org.openqa.selenium.phantomjs.PhantomJSDriver, see the webDriverCapabilities property.
+   * See the webDriverCapabilities property for configuring driver specific properties.
    *
    * @since 1.1.0
    */
@@ -89,7 +88,7 @@ public class TestMojo extends AbstractJasmineMojo {
    *
    * @since 1.3.1.1
    */
-<span class="nc" id="L92">  @Parameter</span>
+<span class="nc" id="L91">  @Parameter</span>
   protected List&lt;Capability&gt; webDriverCapabilities = Collections.emptyList();
 
   /**
@@ -170,7 +169,10 @@ public class TestMojo extends AbstractJasmineMojo {
   )
   private List&lt;RemoteRepository&gt; remoteRepositories;
 
-  @Component
+  @Parameter(
+      defaultValue = &quot;${session}&quot;,
+      readonly = true
+  )
   private MavenSession mavenSession;
 
   private RepositorySystem repositorySystem;
@@ -178,125 +180,125 @@ public class TestMojo extends AbstractJasmineMojo {
   private final RelativizesFilePaths relativizesFilePaths;
 
   @Inject
-<span class="nc" id="L181">  public TestMojo(RepositorySystem repositorySystem) {</span>
-<span class="nc" id="L182">    this.repositorySystem = repositorySystem;</span>
-<span class="nc" id="L183">    this.relativizesFilePaths = new RelativizesFilePaths();</span>
-<span class="nc" id="L184">  }</span>
+<span class="nc" id="L183">  public TestMojo(RepositorySystem repositorySystem) {</span>
+<span class="nc" id="L184">    this.repositorySystem = repositorySystem;</span>
+<span class="nc" id="L185">    this.relativizesFilePaths = new RelativizesFilePaths();</span>
+<span class="nc" id="L186">  }</span>
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-<span class="nc bnc" id="L188" title="All 2 branches missed.">    if(!this.isSkipTests()) {</span>
-<span class="nc" id="L189">      super.execute();</span>
+<span class="nc bnc" id="L190" title="All 2 branches missed.">    if(!this.isSkipTests()) {</span>
+<span class="nc" id="L191">      super.execute();</span>
     } else {
-<span class="nc" id="L191">      this.getLog().info(&quot;Skipping Jasmine Specs&quot;);</span>
+<span class="nc" id="L193">      this.getLog().info(&quot;Skipping Jasmine Specs&quot;);</span>
     }
-<span class="nc" id="L193">  }</span>
+<span class="nc" id="L195">  }</span>
 
   @Override
   public void run() throws Exception {
-<span class="nc" id="L197">    ServerManager serverManager = this.getServerManager();</span>
+<span class="nc" id="L199">    ServerManager serverManager = this.getServerManager();</span>
     try {
-<span class="nc" id="L199">      int port = serverManager.start();</span>
-<span class="nc" id="L200">      setPortProperty(port);</span>
-<span class="nc" id="L201">      this.getLog().info(&quot;Executing Jasmine Specs&quot;);</span>
-<span class="nc" id="L202">      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+&quot;://&quot; + this.serverHostname + &quot;:&quot; + port));</span>
-<span class="nc" id="L203">      this.logResults(result);</span>
-<span class="nc" id="L204">      this.throwAnySpecFailures(result);</span>
+<span class="nc" id="L201">      int port = serverManager.start();</span>
+<span class="nc" id="L202">      setPortProperty(port);</span>
+<span class="nc" id="L203">      this.getLog().info(&quot;Executing Jasmine Specs&quot;);</span>
+<span class="nc" id="L204">      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+&quot;://&quot; + this.serverHostname + &quot;:&quot; + port));</span>
+<span class="nc" id="L205">      this.logResults(result);</span>
+<span class="nc" id="L206">      this.throwAnySpecFailures(result);</span>
     } finally {
-<span class="nc bnc" id="L206" title="All 4 branches missed.">      if (!keepServerAlive) {</span>
-<span class="nc" id="L207">        serverManager.stop();</span>
+<span class="nc bnc" id="L208" title="All 4 branches missed.">      if (!keepServerAlive) {</span>
+<span class="nc" id="L209">        serverManager.stop();</span>
       }
     }
-<span class="nc" id="L210">  }</span>
+<span class="nc" id="L212">  }</span>
 
   private ServerManager getServerManager() throws MojoExecutionException {
-<span class="nc bnc" id="L213" title="All 2 branches missed.">    Log log = this.debug ? this.getLog() : new NullLog();</span>
+<span class="nc bnc" id="L215" title="All 2 branches missed.">    Log log = this.debug ? this.getLog() : new NullLog();</span>
 
-<span class="nc" id="L215">    CreatesRunner createsRunner = new CreatesRunner(</span>
+<span class="nc" id="L217">    CreatesRunner createsRunner = new CreatesRunner(</span>
         this,
         log,
         this.specRunnerHtmlFileName,
         ReporterType.JsApiReporter);
 
-<span class="nc" id="L221">    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(</span>
+<span class="nc" id="L223">    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(</span>
         this,
         this.relativizesFilePaths,
         createsRunner);
 
-<span class="nc" id="L226">    return new ServerManager(new Server(), getConnector(), configurator);</span>
+<span class="nc" id="L228">    return new ServerManager(new Server(), getConnector(), configurator);</span>
   }
 
   private void setPortProperty(int port) {
-<span class="nc" id="L230">    this.mavenProject.getProperties().setProperty(&quot;jasmine.serverPort&quot;, String.valueOf(port));</span>
-<span class="nc" id="L231">  }</span>
+<span class="nc" id="L232">    this.mavenProject.getProperties().setProperty(&quot;jasmine.serverPort&quot;, String.valueOf(port));</span>
+<span class="nc" id="L233">  }</span>
   private JasmineResult executeSpecs(URL runner) throws Exception {
-<span class="nc" id="L233">    WebDriver driver = this.createDriver();</span>
-<span class="nc" id="L234">    JasmineResult result = new SpecRunnerExecutor().execute(</span>
+<span class="nc" id="L235">    WebDriver driver = this.createDriver();</span>
+<span class="nc" id="L236">    JasmineResult result = new SpecRunnerExecutor().execute(</span>
         runner,
         new File(this.jasmineTargetDir,this.junitXmlReportFileName),
         driver,
         this.timeout, this.debug, this.getLog(), this.format);
-<span class="nc" id="L239">    return result;</span>
+<span class="nc" id="L241">    return result;</span>
   }
 
   private WebDriver createDriver() throws Exception {
-<span class="nc" id="L243">    RepositoryDetails details = new RepositoryDetails();</span>
-<span class="nc" id="L244">    details.setRemoteRepositories(remoteRepositories);</span>
-<span class="nc" id="L245">    details.setRepositorySystem(repositorySystem);</span>
-<span class="nc" id="L246">    details.setRepositorySystemSession(repositorySystemSession);</span>
+<span class="nc" id="L245">    RepositoryDetails details = new RepositoryDetails();</span>
+<span class="nc" id="L246">    details.setRemoteRepositories(remoteRepositories);</span>
+<span class="nc" id="L247">    details.setRepositorySystem(repositorySystem);</span>
+<span class="nc" id="L248">    details.setRepositorySystemSession(repositorySystemSession);</span>
 
-<span class="nc" id="L248">    configure(mavenSession.getUserProperties());</span>
+<span class="nc" id="L250">    configure(mavenSession.getUserProperties());</span>
 
-<span class="nc" id="L250">    WebDriverFactory factory = new WebDriverFactory();</span>
-<span class="nc" id="L251">    factory.setWebDriverCapabilities(webDriverCapabilities);</span>
-<span class="nc" id="L252">    factory.setWebDriverClassName(webDriverClassName);</span>
-<span class="nc" id="L253">    factory.setDebug(debug);</span>
-<span class="nc" id="L254">    factory.setBrowserVersion(browserVersion);</span>
-<span class="nc" id="L255">    factory.setPhantomJsLocatorOptions(phantomjs);</span>
-<span class="nc" id="L256">    factory.setRepositoryDetails(details);</span>
+<span class="nc" id="L252">    WebDriverFactory factory = new WebDriverFactory();</span>
+<span class="nc" id="L253">    factory.setWebDriverCapabilities(webDriverCapabilities);</span>
+<span class="nc" id="L254">    factory.setWebDriverClassName(webDriverClassName);</span>
+<span class="nc" id="L255">    factory.setDebug(debug);</span>
+<span class="nc" id="L256">    factory.setBrowserVersion(browserVersion);</span>
+<span class="nc" id="L257">    factory.setPhantomJsLocatorOptions(phantomjs);</span>
+<span class="nc" id="L258">    factory.setRepositoryDetails(details);</span>
 
-<span class="nc" id="L258">    return factory.createWebDriver();</span>
+<span class="nc" id="L260">    return factory.createWebDriver();</span>
   }
 
   private void configure(Properties properties) {
 
-<span class="nc" id="L263">    phantomjs.setVersion(</span>
+<span class="nc" id="L265">    phantomjs.setVersion(</span>
         properties.getProperty(&quot;phantomjs.version&quot;, phantomjs.getVersion())
     );
 
-<span class="nc" id="L267">    phantomjs.setSource(</span>
+<span class="nc" id="L269">    phantomjs.setSource(</span>
         PhantomJsLocatorOptions.Source.valueOf(
             properties.getProperty(&quot;phantomjs.source&quot;, phantomjs.getSource().toString())
         )
     );
 
-<span class="nc" id="L273">    phantomjs.setOutputDirectory(</span>
+<span class="nc" id="L275">    phantomjs.setOutputDirectory(</span>
         new File(properties.getProperty(&quot;phantomjs.outputDirectory&quot;, phantomjs.getOutputDirectory().toString()))
     );
 
-<span class="nc" id="L277">    phantomjs.setBaseUrl(</span>
+<span class="nc" id="L279">    phantomjs.setBaseUrl(</span>
         properties.getProperty(&quot;phantomjs.baseUrl&quot;, phantomjs.getBaseUrl())
     );
 
-<span class="nc" id="L281">    phantomjs.setCheckSystemPath(configureBoolean(properties, &quot;phantomjs.checkSystemPath&quot;, phantomjs.isCheckSystemPath()));</span>
+<span class="nc" id="L283">    phantomjs.setCheckSystemPath(configureBoolean(properties, &quot;phantomjs.checkSystemPath&quot;, phantomjs.isCheckSystemPath()));</span>
 
-<span class="nc" id="L283">    phantomjs.setEnforceVersion(configureBoolean(properties, &quot;phantomjs.enforceVersion&quot;, phantomjs.isEnforceVersion()));</span>
-<span class="nc" id="L284">  }</span>
+<span class="nc" id="L285">    phantomjs.setEnforceVersion(configureBoolean(properties, &quot;phantomjs.enforceVersion&quot;, phantomjs.isEnforceVersion()));</span>
+<span class="nc" id="L286">  }</span>
 
   private boolean configureBoolean(Properties properties, String property, boolean defaultValue) {
-<span class="nc" id="L287">    return Boolean.parseBoolean(properties.getProperty(property, Boolean.toString(defaultValue)));</span>
+<span class="nc" id="L289">    return Boolean.parseBoolean(properties.getProperty(property, Boolean.toString(defaultValue)));</span>
   }
 
   private void logResults(JasmineResult result) {
-<span class="nc" id="L291">    JasmineResultLogger resultLogger = new JasmineResultLogger();</span>
-<span class="nc" id="L292">    resultLogger.setLog(this.getLog());</span>
-<span class="nc" id="L293">    resultLogger.log(result);</span>
-<span class="nc" id="L294">  }</span>
+<span class="nc" id="L293">    JasmineResultLogger resultLogger = new JasmineResultLogger();</span>
+<span class="nc" id="L294">    resultLogger.setLog(this.getLog());</span>
+<span class="nc" id="L295">    resultLogger.log(result);</span>
+<span class="nc" id="L296">  }</span>
 
   private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
-<span class="nc bnc" id="L297" title="All 4 branches missed.">    if(this.haltOnFailure &amp;&amp; !result.didPass()) {</span>
-<span class="nc" id="L298">      throw new MojoFailureException(&quot;There were Jasmine spec failures.&quot;);</span>
+<span class="nc bnc" id="L299" title="All 4 branches missed.">    if(this.haltOnFailure &amp;&amp; !result.didPass()) {</span>
+<span class="nc" id="L300">      throw new MojoFailureException(&quot;There were Jasmine spec failures.&quot;);</span>
     }
-<span class="nc" id="L300">  }</span>
+<span class="nc" id="L302">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

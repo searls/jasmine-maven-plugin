@@ -12,7 +12,7 @@
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> com.github.klieber.phantomjs.locate.RepositoryDetails;
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> com.github.searls.jasmine.mojo.Capability;
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.google.common.base.Objects;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.google.common.base.MoreObjects;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> org.codehaus.plexus.util.StringUtils;
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> org.openqa.selenium.Capabilities;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> org.openqa.selenium.WebDriver;
@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>    }
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>  
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setWebDriverCapabilities(List&lt;Capability&gt; webDriverCapabilities) {
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">this</strong>.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.&lt;Capability&gt;emptyList());
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>      <strong class="jxr_keyword">this</strong>.webDriverCapabilities = MoreObjects.firstNonNull(webDriverCapabilities, Collections.&lt;Capability&gt;emptyList());
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>    }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>    <strong class="jxr_keyword">public</strong> PhantomJsLocatorOptions getPhantomJsLocatorOptions() {
@@ -146,7 +146,7 @@
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> 
 <a class="jxr_linenumber" name="L139" href="#L139">139</a>   <strong class="jxr_keyword">private</strong> WebDriver createPhantomJsWebDriver() <strong class="jxr_keyword">throws</strong> Exception {
 <a class="jxr_linenumber" name="L140" href="#L140">140</a>     DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
-<a class="jxr_linenumber" name="L141" href="#L141">141</a>     customizeCapabilities(getCapabilities());
+<a class="jxr_linenumber" name="L141" href="#L141">141</a>     customizeCapabilities(capabilities);
 <a class="jxr_linenumber" name="L142" href="#L142">142</a> 
 <a class="jxr_linenumber" name="L143" href="#L143">143</a>     <strong class="jxr_keyword">if</strong> (capabilities.getCapability(<span class="jxr_string">"phantomjs.binary.path"</span>) == <strong class="jxr_keyword">null</strong>) {
 <a class="jxr_linenumber" name="L144" href="#L144">144</a>       PhantomJsLocator locator = <strong class="jxr_keyword">new</strong> PhantomJsLocator(<strong class="jxr_keyword">this</strong>.phantomJsLocatorOptions, <strong class="jxr_keyword">this</strong>.repositoryDetails);

@@ -4,7 +4,7 @@ import com.github.klieber.phantomjs.locate.PhantomJsLocator;
 import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
 import com.github.klieber.phantomjs.locate.RepositoryDetails;
 import com.github.searls.jasmine.mojo.Capability;
-import com.google.common.base.Objects;
+import com.google.common.base.MoreObjects;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
@@ -44,7 +44,7 @@ public class WebDriverFactory {
 <span class="fc" id="L44">  }</span>
 
   public void setWebDriverCapabilities(List&lt;Capability&gt; webDriverCapabilities) {
-<span class="fc" id="L47">    this.webDriverCapabilities = Objects.firstNonNull(webDriverCapabilities, Collections.&lt;Capability&gt;emptyList());</span>
+<span class="fc" id="L47">    this.webDriverCapabilities = MoreObjects.firstNonNull(webDriverCapabilities, Collections.&lt;Capability&gt;emptyList());</span>
 <span class="fc" id="L48">  }</span>
 
   public PhantomJsLocatorOptions getPhantomJsLocatorOptions() {
@@ -138,7 +138,7 @@ public class WebDriverFactory {
 
   private WebDriver createPhantomJsWebDriver() throws Exception {
 <span class="nc" id="L140">    DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();</span>
-<span class="nc" id="L141">    customizeCapabilities(getCapabilities());</span>
+<span class="nc" id="L141">    customizeCapabilities(capabilities);</span>
 
 <span class="nc bnc" id="L143" title="All 2 branches missed.">    if (capabilities.getCapability(&quot;phantomjs.binary.path&quot;) == null) {</span>
 <span class="nc" id="L144">      PhantomJsLocator locator = new PhantomJsLocator(this.phantomJsLocatorOptions, this.repositoryDetails);</span>
