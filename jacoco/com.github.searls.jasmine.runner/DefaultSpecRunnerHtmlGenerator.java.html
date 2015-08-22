@@ -18,8 +18,8 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
   @Override
   public String generate() {
     try {
-<span class="nc" id="L21">      ScriptResolver resolver = this.getConfiguration().getScriptResolver();</span>
-<span class="nc" id="L22">      return this.generateHtml(</span>
+<span class="fc" id="L21">      ScriptResolver resolver = this.getConfiguration().getScriptResolver();</span>
+<span class="fc" id="L22">      return this.generateHtml(</span>
           resolver.getAllScripts(),
           resolver.getPreloads(),
           resolver.getSources(),
@@ -40,51 +40,51 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
                               Set&lt;String&gt; specs,
                               String sourceDirectory,
                               String specDirectory) throws IOException {
-<span class="nc" id="L43">    ST template = this.resolveHtmlTemplate();</span>
-<span class="nc" id="L44">    this.applyScriptTagsToTemplate(</span>
+<span class="fc" id="L43">    ST template = this.resolveHtmlTemplate();</span>
+<span class="fc" id="L44">    this.applyScriptTagsToTemplate(</span>
         JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
         Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_BOOT_JS),
         template);
-<span class="nc" id="L48">    this.applyCssToTemplate(Arrays.asList(JASMINE_CSS), template);</span>
-<span class="nc" id="L49">    this.applyScriptTagsToTemplate(&quot;allScriptTags&quot;, allScripts, template);</span>
-<span class="nc" id="L50">    this.applyScriptTagsToTemplate(&quot;preloadScriptTags&quot;, preloads, template);</span>
-<span class="nc" id="L51">    this.applyScriptTagsToTemplate(&quot;sourceScriptTags&quot;, sources, template);</span>
-<span class="nc" id="L52">    this.applyScriptTagsToTemplate(&quot;specScriptTags&quot;, specs, template);</span>
-<span class="nc" id="L53">    template.add(&quot;allScriptsList&quot;, this.createJsonArray(allScripts));</span>
-<span class="nc" id="L54">    template.add(&quot;preloadsList&quot;, this.createJsonArray(preloads));</span>
-<span class="nc" id="L55">    template.add(&quot;sourcesList&quot;, this.createJsonArray(sources));</span>
-<span class="nc" id="L56">    template.add(&quot;specsList&quot;, this.createJsonArray(specs));</span>
-<span class="nc" id="L57">    template.add(&quot;sourceDir&quot;, sourceDirectory);</span>
-<span class="nc" id="L58">    template.add(&quot;specDir&quot;, specDirectory);</span>
+<span class="fc" id="L48">    this.applyCssToTemplate(Arrays.asList(JASMINE_CSS), template);</span>
+<span class="fc" id="L49">    this.applyScriptTagsToTemplate(&quot;allScriptTags&quot;, allScripts, template);</span>
+<span class="fc" id="L50">    this.applyScriptTagsToTemplate(&quot;preloadScriptTags&quot;, preloads, template);</span>
+<span class="fc" id="L51">    this.applyScriptTagsToTemplate(&quot;sourceScriptTags&quot;, sources, template);</span>
+<span class="fc" id="L52">    this.applyScriptTagsToTemplate(&quot;specScriptTags&quot;, specs, template);</span>
+<span class="fc" id="L53">    template.add(&quot;allScriptsList&quot;, this.createJsonArray(allScripts));</span>
+<span class="fc" id="L54">    template.add(&quot;preloadsList&quot;, this.createJsonArray(preloads));</span>
+<span class="fc" id="L55">    template.add(&quot;sourcesList&quot;, this.createJsonArray(sources));</span>
+<span class="fc" id="L56">    template.add(&quot;specsList&quot;, this.createJsonArray(specs));</span>
+<span class="fc" id="L57">    template.add(&quot;sourceDir&quot;, sourceDirectory);</span>
+<span class="fc" id="L58">    template.add(&quot;specDir&quot;, specDirectory);</span>
 
-<span class="nc" id="L60">    template.add(&quot;autoRefresh&quot;, this.getConfiguration().getAutoRefresh());</span>
-<span class="nc" id="L61">    template.add(&quot;autoRefreshInterval&quot;, this.getConfiguration().getAutoRefreshInterval());</span>
+<span class="fc" id="L60">    template.add(&quot;autoRefresh&quot;, this.getConfiguration().getAutoRefresh());</span>
+<span class="fc" id="L61">    template.add(&quot;autoRefreshInterval&quot;, this.getConfiguration().getAutoRefreshInterval());</span>
 
-<span class="nc" id="L63">    this.setCustomRunnerConfig(template);</span>
-<span class="nc" id="L64">    template.add(REPORTER_ATTR_NAME, this.getConfiguration().getReporterType().name());</span>
-<span class="nc" id="L65">    this.setEncoding(this.getConfiguration(), template);</span>
+<span class="fc" id="L63">    this.setCustomRunnerConfig(template);</span>
+<span class="fc" id="L64">    template.add(REPORTER_ATTR_NAME, this.getConfiguration().getReporterType().name());</span>
+<span class="fc" id="L65">    this.setEncoding(this.getConfiguration(), template);</span>
 
     // these fields are being preserved for backwards compatibility
-<span class="nc" id="L68">    this.applyScriptTagsToTemplate(&quot;sources&quot;, allScripts, template);</span>
-<span class="nc" id="L69">    template.add(&quot;specs&quot;, this.createJsonArray(specs));</span>
-<span class="nc" id="L70">    template.add(&quot;priority&quot;, this.createJsonArray(preloads));</span>
+<span class="fc" id="L68">    this.applyScriptTagsToTemplate(&quot;sources&quot;, allScripts, template);</span>
+<span class="fc" id="L69">    template.add(&quot;specs&quot;, this.createJsonArray(specs));</span>
+<span class="fc" id="L70">    template.add(&quot;priority&quot;, this.createJsonArray(preloads));</span>
 
-<span class="nc" id="L72">    return template.render();</span>
+<span class="fc" id="L72">    return template.render();</span>
   }
 
   private String createJsonArray(Set&lt;String&gt; scripts) {
-<span class="nc bnc" id="L76" title="All 4 branches missed.">    if (null == scripts || scripts.isEmpty()) {</span>
-<span class="nc" id="L77">      return &quot;[]&quot;;</span>
+<span class="pc bpc" id="L76" title="1 of 4 branches missed.">    if (null == scripts || scripts.isEmpty()) {</span>
+<span class="fc" id="L77">      return &quot;[]&quot;;</span>
     }
-<span class="nc" id="L79">    StringBuilder builder = new StringBuilder(&quot;['&quot;);</span>
-<span class="nc" id="L80">    builder.append(StringUtils.join(scripts,&quot;', '&quot;));</span>
-<span class="nc" id="L81">    builder.append(&quot;']&quot;);</span>
-<span class="nc" id="L82">    return builder.toString();</span>
+<span class="fc" id="L79">    StringBuilder builder = new StringBuilder(&quot;['&quot;);</span>
+<span class="fc" id="L80">    builder.append(StringUtils.join(scripts,&quot;', '&quot;));</span>
+<span class="fc" id="L81">    builder.append(&quot;']&quot;);</span>
+<span class="fc" id="L82">    return builder.toString();</span>
   }
 
   private void setCustomRunnerConfig(ST template) throws IOException {
-<span class="nc" id="L86">    String customRunnerConfiguration = this.getConfiguration().getCustomRunnerConfiguration();</span>
-<span class="nc" id="L87">    template.add(&quot;customRunnerConfiguration&quot;, customRunnerConfiguration);</span>
-<span class="nc" id="L88">  }</span>
+<span class="fc" id="L86">    String customRunnerConfiguration = this.getConfiguration().getCustomRunnerConfiguration();</span>
+<span class="fc" id="L87">    template.add(&quot;customRunnerConfiguration&quot;, customRunnerConfiguration);</span>
+<span class="fc" id="L88">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>

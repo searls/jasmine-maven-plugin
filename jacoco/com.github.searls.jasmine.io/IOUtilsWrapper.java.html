@@ -8,11 +8,11 @@ import org.apache.commons.io.IOUtils;
 <span class="fc" id="L8">public class IOUtilsWrapper {</span>
 
 	public String toString(InputStream inputStream) throws IOException {
-<span class="nc" id="L11">		return IOUtils.toString(inputStream);</span>
+<span class="fc" id="L11">		return IOUtils.toString(inputStream);</span>
 	}
 
 	public String toString(String name) throws IOException {
-<span class="nc" id="L15">		return this.toString(this.getClass().getResourceAsStream(name));</span>
+<span class="fc" id="L15">		return this.toString(this.getClass().getResourceAsStream(name));</span>
 	}
 
 }
