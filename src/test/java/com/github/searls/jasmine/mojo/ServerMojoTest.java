@@ -15,15 +15,18 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
+import java.net.BindException;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
@@ -78,7 +81,7 @@ public class ServerMojoTest {
     when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
     when(this.relativizesFilePaths.relativize(this.baseDir,this.targetDir)).thenReturn(RELATIVE_TARGET_DIR);
     when(this.relativizesFilePaths.relativize(this.baseDir,this.sources.getDirectory())).thenReturn(SOURCE_DIR);
-    when(this.relativizesFilePaths.relativize(this.baseDir,this.specs.getDirectory())).thenReturn(SPECS_DIR);
+    when(this.relativizesFilePaths.relativize(this.baseDir, this.specs.getDirectory())).thenReturn(SPECS_DIR);
 
     whenNew(CreatesRunner.class).withArguments(
         this.subject,
@@ -92,22 +95,41 @@ public class ServerMojoTest {
         createsRunner).thenReturn(configurator);
 
     whenNew(ServerManager.class).withArguments(isA(Server.class), isA(connectorClass), eq(configurator)).thenReturn(serverManager);
-
-    this.subject.run();
   }
 
   @Test
-  public void logsInstructions() {
+  public void logsInstructions() throws Exception {
+    subject.run();
     verify(this.log).info(String.format(ServerMojo.INSTRUCTION_FORMAT, SCHEME, PORT, SOURCE_DIR, SPECS_DIR));
   }
 
   @Test
   public void startsTheServer() throws Exception {
+    subject.run();
     verify(this.serverManager).start(PORT);
   }
 
   @Test
+  public void startServerOnFreePort() throws Exception {
+    final int freePort = PORT+3;
+    doAnswer(new Answer<Void>() {
+      @Override
+      public Void answer(InvocationOnMock invocationOnMock) throws Throwable {
+          if ((Integer) invocationOnMock.getArguments()[0] < freePort) {
+              throw new BindException();
+          }
+          return null;
+      }
+    }).when(serverManager).start(anyInt());
+
+    subject.run();
+    verify(serverManager, atLeast(3)).start(anyInt());
+    verify(serverManager).start(freePort);
+  }
+
+  @Test
   public void joinsTheServer() throws Exception {
+    subject.run();
     verify(this.serverManager).join();
   }
 }

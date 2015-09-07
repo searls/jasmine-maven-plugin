@@ -14,6 +14,7 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.BindException;
 
 /**
  * Execute specs in a web browser. Monitors your sources/specs for changes as you develop.
@@ -31,6 +32,8 @@ public class ServerMojo extends AbstractJasmineMojo {
           "  spec directory: %s"+
           "\n\n"+
           "Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.";
+
+  public static final int NUMBER_OF_ATTEMPTS = 10;
 
   private final RelativizesFilePaths relativizesFilePaths;
 
@@ -53,11 +56,24 @@ public class ServerMojo extends AbstractJasmineMojo {
 
   @Override
   public void run() throws Exception {
-    ServerManager serverManager = this.getServerManager();
-
-    serverManager.start(this.serverPort);
+    ServerManager serverManager  = startServer(this.serverPort);
     this.getLog().info(this.buildServerInstructions());
     serverManager.join();
+  }
+
+  private ServerManager startServer(int port) throws Exception {
+      ServerManager serverManager = this.getServerManager();
+      try {
+          serverManager.start(port);
+      } catch(BindException e) {
+          if(port - this.serverPort < NUMBER_OF_ATTEMPTS) {
+              this.getLog().warn(String.format("Port %d in use, going on", port));
+              startServer(port + 1);
+          } else {
+              throw new MojoExecutionException(String.format("Cannot find a free port after %d attempts, giving up", NUMBER_OF_ATTEMPTS));
+          }
+      }
+      return serverManager;
   }
 
   private ServerManager getServerManager() throws MojoExecutionException {
