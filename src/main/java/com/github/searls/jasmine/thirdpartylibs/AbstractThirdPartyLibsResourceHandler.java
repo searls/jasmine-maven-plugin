@@ -26,6 +26,9 @@ public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHand
 
     if (resource != null) {
       String javascript = IOUtils.toString(resource, "UTF-8");
+      if ("/jasmine/boot.js".equals(target)) {
+        javascript = javascript.replaceAll("window.onload =", "jasmine.boot =");
+      }
       setHeaders(response, resourcePath, javascript);
       writeResponse(response, javascript);
       baseRequest.setHandled(true);

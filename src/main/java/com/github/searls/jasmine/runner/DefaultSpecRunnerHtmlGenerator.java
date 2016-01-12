@@ -43,7 +43,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     ST template = this.resolveHtmlTemplate();
     this.applyScriptTagsToTemplate(
         JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
-        Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_BOOT_JS),
+        Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_HTMLSPECFILTER_PATCH_JS, JASMINE_BOOT_JS),
         template);
     this.applyCssToTemplate(Arrays.asList(JASMINE_CSS), template);
     this.applyScriptTagsToTemplate("allScriptTags", allScripts, template);
