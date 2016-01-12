@@ -133,9 +133,10 @@
   </ciManagement>
   <properties>
     <powermock.version>1.6.2</powermock.version>
-    <jetty.version>8.1.14.v20131031</jetty.version>
-    <selenium.version>2.45.0</selenium.version>
+    <jetty.version>8.1.18.v20150929</jetty.version>
+    <selenium.version>2.48.2</selenium.version>
     <jasmine.version>2.3.0</jasmine.version>
+    <htmlunit.version>2.18</htmlunit.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -248,7 +249,7 @@
     <dependency>
       <groupId>net.sourceforge.htmlunit</groupId>
       <artifactId>htmlunit</artifactId>
-      <version>2.14</version>
+      <version>${htmlunit.version}</version>
     </dependency>
     <dependency>
       <groupId>com.github.klieber</groupId>

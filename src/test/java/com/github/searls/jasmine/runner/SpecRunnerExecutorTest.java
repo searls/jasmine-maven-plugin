@@ -52,7 +52,7 @@ public class SpecRunnerExecutorTest {
 		spy(FileUtils.class);
 
 		when(this.ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
-		driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_24);
+		driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
 		driver.setJavascriptEnabled(true);
 	}
 
