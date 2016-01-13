@@ -237,7 +237,11 @@ public class TestMojo extends AbstractJasmineMojo {
         runner,
         new File(this.jasmineTargetDir,this.junitXmlReportFileName),
         driver,
-        this.timeout, this.debug, this.getLog(), this.format);
+        this.timeout,
+        this.debug,
+        this.getLog(),
+        this.format
+    );
     return result;
   }
 
@@ -280,9 +284,13 @@ public class TestMojo extends AbstractJasmineMojo {
         properties.getProperty("phantomjs.baseUrl", phantomjs.getBaseUrl())
     );
 
-    phantomjs.setCheckSystemPath(configureBoolean(properties, "phantomjs.checkSystemPath", phantomjs.isCheckSystemPath()));
+    phantomjs.setCheckSystemPath(
+        configureBoolean(properties, "phantomjs.checkSystemPath", phantomjs.isCheckSystemPath())
+    );
 
-    phantomjs.setEnforceVersion(configureBoolean(properties, "phantomjs.enforceVersion", phantomjs.isEnforceVersion()));
+    phantomjs.setEnforceVersion(
+        properties.getProperty("phantomjs.enforceVersion", phantomjs.getEnforceVersion())
+    );
   }
 
   private boolean configureBoolean(Properties properties, String property, boolean defaultValue) {
