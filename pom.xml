@@ -132,7 +132,7 @@
     <url>https://travis-ci.org/searls/jasmine-maven-plugin</url>
   </ciManagement>
   <properties>
-    <powermock.version>1.6.2</powermock.version>
+    <powermock.version>1.6.4</powermock.version>
     <jetty.version>8.1.18.v20150929</jetty.version>
     <selenium.version>2.48.2</selenium.version>
     <jasmine.version>2.3.0</jasmine.version>
