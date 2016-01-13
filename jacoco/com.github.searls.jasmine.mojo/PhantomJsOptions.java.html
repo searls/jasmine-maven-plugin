@@ -13,7 +13,7 @@ public class PhantomJsOptions implements PhantomJsLocatorOptions {
 
   private String version;
   private boolean checkSystemPath;
-  private boolean enforceVersion;
+  private String enforceVersion;
 
   private String baseUrl;
   private File outputDirectory;
@@ -22,7 +22,7 @@ public class PhantomJsOptions implements PhantomJsLocatorOptions {
 <span class="nc" id="L22">    this.source = Source.REPOSITORY;</span>
 <span class="nc" id="L23">    this.version = DEFAULT_PHANTOMJS_VERSION;</span>
 <span class="nc" id="L24">    this.checkSystemPath = true;</span>
-<span class="nc" id="L25">    this.enforceVersion = true;</span>
+<span class="nc" id="L25">    this.enforceVersion = Boolean.TRUE.toString();</span>
 <span class="nc" id="L26">    this.outputDirectory = new File(DEFAULT_OUTPUT_DIRECTORY);</span>
 <span class="nc" id="L27">  }</span>
 
@@ -42,11 +42,11 @@ public class PhantomJsOptions implements PhantomJsLocatorOptions {
 <span class="nc" id="L42">    this.checkSystemPath = checkSystemPath;</span>
 <span class="nc" id="L43">  }</span>
 
-  public boolean isEnforceVersion() {
+  public String getEnforceVersion() {
 <span class="nc" id="L46">    return enforceVersion;</span>
   }
 
-  public void setEnforceVersion(boolean enforceVersion) {
+  public void setEnforceVersion(String enforceVersion) {
 <span class="nc" id="L50">    this.enforceVersion = enforceVersion;</span>
 <span class="nc" id="L51">  }</span>
 

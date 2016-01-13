@@ -24,38 +24,38 @@ public class WebJarResourceHandler extends AbstractThirdPartyLibsResourceHandler
 
   @Override
   protected InputStream findResource(String resourcePath) {
-<span class="nc" id="L27">    String fullPath = findFullPath(resourcePath);</span>
-<span class="nc bnc" id="L28" title="All 2 branches missed.">    return fullPath != null ? projectClassLoader.getResourceAsStream(fullPath) : null;</span>
+<span class="fc" id="L27">    String fullPath = findFullPath(resourcePath);</span>
+<span class="fc bfc" id="L28" title="All 2 branches covered.">    return fullPath != null ? projectClassLoader.getResourceAsStream(fullPath) : null;</span>
   }
 
   private String findFullPath(String resourcePath) {
-<span class="nc" id="L32">    String fullPath = null;</span>
-<span class="nc bnc" id="L33" title="All 2 branches missed.">    for (WebJarAssetLocator locator : webJarAssetLocators) {</span>
-<span class="nc" id="L34">      fullPath = findFullPath(locator, resourcePath);</span>
-<span class="nc bnc" id="L35" title="All 2 branches missed.">      if (fullPath != null) {</span>
-<span class="nc" id="L36">        break;</span>
+<span class="fc" id="L32">    String fullPath = null;</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">    for (WebJarAssetLocator locator : webJarAssetLocators) {</span>
+<span class="fc" id="L34">      fullPath = findFullPath(locator, resourcePath);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">      if (fullPath != null) {</span>
+<span class="fc" id="L36">        break;</span>
       }
-<span class="nc" id="L38">    }</span>
-<span class="nc" id="L39">    return fullPath;</span>
+<span class="fc" id="L38">    }</span>
+<span class="fc" id="L39">    return fullPath;</span>
   }
 
   private String findFullPath(WebJarAssetLocator locator, String resourcePath) {
-<span class="nc" id="L43">    String fullPath = null;</span>
+<span class="fc" id="L43">    String fullPath = null;</span>
     try {
-<span class="nc" id="L45">      fullPath = locator.getFullPath(resourcePath);</span>
-<span class="nc" id="L46">    } catch (Exception e) {</span>
-<span class="nc" id="L47">      fullPath = findFullPathByPartial(locator, resourcePath);</span>
-<span class="nc" id="L48">    }</span>
-<span class="nc" id="L49">    return fullPath;</span>
+<span class="fc" id="L45">      fullPath = locator.getFullPath(resourcePath);</span>
+<span class="fc" id="L46">    } catch (Exception e) {</span>
+<span class="fc" id="L47">      fullPath = findFullPathByPartial(locator, resourcePath);</span>
+<span class="fc" id="L48">    }</span>
+<span class="fc" id="L49">    return fullPath;</span>
   }
 
   private String findFullPathByPartial(WebJarAssetLocator locator, String resourcePath) {
 
-<span class="nc" id="L54">    String fullPath = null;</span>
+<span class="fc" id="L54">    String fullPath = null;</span>
 
-<span class="nc" id="L56">    int splitAt = resourcePath.indexOf(&quot;/&quot;);</span>
+<span class="fc" id="L56">    int splitAt = resourcePath.indexOf(&quot;/&quot;);</span>
 
-<span class="nc bnc" id="L58" title="All 2 branches missed.">    if (splitAt &gt; 0) {</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">    if (splitAt &gt; 0) {</span>
 <span class="nc" id="L59">      String webjar = resourcePath.substring(0, splitAt);</span>
 <span class="nc" id="L60">      String partialPath = resourcePath.substring(splitAt + 1);</span>
       try {
@@ -65,7 +65,7 @@ public class WebJarResourceHandler extends AbstractThirdPartyLibsResourceHandler
 <span class="nc" id="L65">      }</span>
     }
 
-<span class="nc" id="L68">    return fullPath;</span>
+<span class="fc" id="L68">    return fullPath;</span>
   }
 
   private List&lt;WebJarAssetLocator&gt; createWebJarAssetLocators(ClassLoader ... classLoaders) {

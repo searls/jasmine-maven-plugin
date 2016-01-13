@@ -34,25 +34,25 @@ public class JasmineResourceHandler extends ResourceHandler {
 
   @Override
   public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-<span class="nc" id="L37">    this.createSpecRunnerIfNecessary(target);</span>
-<span class="nc" id="L38">    Resource resource = this.getResource(baseRequest);</span>
-<span class="nc" id="L39">    response.addDateHeader(&quot;EXPIRES&quot;, 0L);</span>
-<span class="nc bnc" id="L40" title="All 4 branches missed.">    if (this.detectsCoffee.detect(target) &amp;&amp; this.weCanHandleIt(baseRequest, resource)) {</span>
-<span class="nc" id="L41">      this.handlesRequestsForCoffee.handle(baseRequest, response, resource);</span>
+<span class="fc" id="L37">    this.createSpecRunnerIfNecessary(target);</span>
+<span class="fc" id="L38">    Resource resource = this.getResource(baseRequest);</span>
+<span class="fc" id="L39">    response.addDateHeader(&quot;EXPIRES&quot;, 0L);</span>
+<span class="fc bfc" id="L40" title="All 4 branches covered.">    if (this.detectsCoffee.detect(target) &amp;&amp; this.weCanHandleIt(baseRequest, resource)) {</span>
+<span class="fc" id="L41">      this.handlesRequestsForCoffee.handle(baseRequest, response, resource);</span>
     } else {
       //Not testable. Who knew test-driving an LSP violation would be this hard. Sigh.  :-(
-<span class="nc" id="L44">      super.handle(target, baseRequest, baseRequest, response);</span>
+<span class="fc" id="L44">      super.handle(target, baseRequest, baseRequest, response);</span>
     }
-<span class="nc" id="L46">  }</span>
+<span class="fc" id="L46">  }</span>
 
   private void createSpecRunnerIfNecessary(String target) throws IOException {
-<span class="nc bnc" id="L49" title="All 2 branches missed.">    if (&quot;/&quot;.equals(target)) {</span>
-<span class="nc" id="L50">      this.createsRunner.create();</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">    if (&quot;/&quot;.equals(target)) {</span>
+<span class="fc" id="L50">      this.createsRunner.create();</span>
     }
-<span class="nc" id="L52">  }</span>
+<span class="fc" id="L52">  }</span>
 
   private boolean weCanHandleIt(Request baseRequest, Resource resource) {
-<span class="nc bnc" id="L55" title="All 6 branches missed.">    return !baseRequest.isHandled() &amp;&amp; resource != null &amp;&amp; resource.exists();</span>
+<span class="fc bfc" id="L55" title="All 6 branches covered.">    return !baseRequest.isHandled() &amp;&amp; resource != null &amp;&amp; resource.exists();</span>
   }
 
 }

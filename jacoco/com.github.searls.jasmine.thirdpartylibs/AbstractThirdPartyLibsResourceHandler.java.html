@@ -17,47 +17,50 @@ import java.util.Date;
 
   @Override
   public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-<span class="nc bnc" id="L20" title="All 2 branches missed.">    if (baseRequest.isHandled()) {</span>
+<span class="pc bpc" id="L20" title="1 of 2 branches missed.">    if (baseRequest.isHandled()) {</span>
 <span class="nc" id="L21">      return;</span>
     }
 
-<span class="nc" id="L24">    String resourcePath = getResourcePath(target);</span>
-<span class="nc" id="L25">    InputStream resource = findResource(resourcePath);</span>
+<span class="fc" id="L24">    String resourcePath = getResourcePath(target);</span>
+<span class="fc" id="L25">    InputStream resource = findResource(resourcePath);</span>
 
-<span class="nc bnc" id="L27" title="All 2 branches missed.">    if (resource != null) {</span>
-<span class="nc" id="L28">      String javascript = IOUtils.toString(resource, &quot;UTF-8&quot;);</span>
-<span class="nc" id="L29">      setHeaders(response, resourcePath, javascript);</span>
-<span class="nc" id="L30">      writeResponse(response, javascript);</span>
-<span class="nc" id="L31">      baseRequest.setHandled(true);</span>
+<span class="fc bfc" id="L27" title="All 2 branches covered.">    if (resource != null) {</span>
+<span class="fc" id="L28">      String javascript = IOUtils.toString(resource, &quot;UTF-8&quot;);</span>
+<span class="pc bpc" id="L29" title="1 of 2 branches missed.">      if (&quot;/jasmine/boot.js&quot;.equals(target)) {</span>
+<span class="nc" id="L30">        javascript = javascript.replaceAll(&quot;window.onload =&quot;, &quot;jasmine.boot =&quot;);</span>
+      }
+<span class="fc" id="L32">      setHeaders(response, resourcePath, javascript);</span>
+<span class="fc" id="L33">      writeResponse(response, javascript);</span>
+<span class="fc" id="L34">      baseRequest.setHandled(true);</span>
     }
-<span class="nc" id="L33">  }</span>
+<span class="fc" id="L36">  }</span>
 
   protected abstract InputStream findResource(String resourcePath);
 
   private String getResourcePath(String url) {
-<span class="nc" id="L38">    return url.replaceFirst(&quot;^/&quot;, &quot;&quot;);</span>
+<span class="fc" id="L41">    return url.replaceFirst(&quot;^/&quot;, &quot;&quot;);</span>
   }
 
   private void setHeaders(HttpServletResponse response, String resourcePath, String content) {
-<span class="nc" id="L42">    response.setCharacterEncoding(&quot;UTF-8&quot;);</span>
+<span class="fc" id="L45">    response.setCharacterEncoding(&quot;UTF-8&quot;);</span>
 
-<span class="nc bnc" id="L44" title="All 2 branches missed.">    if (resourcePath.endsWith(&quot;.css&quot;)) {</span>
-<span class="nc" id="L45">      response.setContentType(&quot;text/css&quot;);</span>
+<span class="pc bpc" id="L47" title="1 of 2 branches missed.">    if (resourcePath.endsWith(&quot;.css&quot;)) {</span>
+<span class="nc" id="L48">      response.setContentType(&quot;text/css&quot;);</span>
     } else {
-<span class="nc" id="L47">      response.setContentType(&quot;text/javascript&quot;);</span>
+<span class="fc" id="L50">      response.setContentType(&quot;text/javascript&quot;);</span>
     }
-<span class="nc" id="L49">    response.addDateHeader(&quot;EXPIRES&quot;, 0L);</span>
-<span class="nc" id="L50">    response.setDateHeader(HttpHeaders.LAST_MODIFIED, new Date().getTime());</span>
+<span class="fc" id="L52">    response.addDateHeader(&quot;EXPIRES&quot;, 0L);</span>
+<span class="fc" id="L53">    response.setDateHeader(HttpHeaders.LAST_MODIFIED, new Date().getTime());</span>
     try {
-<span class="nc" id="L52">      int contentLength = content.getBytes(&quot;UTF-8&quot;).length;</span>
-<span class="nc" id="L53">      response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(contentLength));</span>
-<span class="nc" id="L54">    } catch (UnsupportedEncodingException e) {</span>
-<span class="nc" id="L55">      throw new RuntimeException(&quot;The JVM does not support javascript default encoding.&quot;, e);</span>
-<span class="nc" id="L56">    }</span>
-<span class="nc" id="L57">  }</span>
+<span class="fc" id="L55">      int contentLength = content.getBytes(&quot;UTF-8&quot;).length;</span>
+<span class="fc" id="L56">      response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(contentLength));</span>
+<span class="nc" id="L57">    } catch (UnsupportedEncodingException e) {</span>
+<span class="nc" id="L58">      throw new RuntimeException(&quot;The JVM does not support javascript default encoding.&quot;, e);</span>
+<span class="fc" id="L59">    }</span>
+<span class="fc" id="L60">  }</span>
 
   private void writeResponse(HttpServletResponse response, String javascript) throws IOException {
-<span class="nc" id="L60">    response.getWriter().write(javascript);</span>
-<span class="nc" id="L61">  }</span>
+<span class="fc" id="L63">    response.getWriter().write(javascript);</span>
+<span class="fc" id="L64">  }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
