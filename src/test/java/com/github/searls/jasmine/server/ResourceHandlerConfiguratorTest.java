@@ -67,9 +67,9 @@ public class ResourceHandlerConfiguratorTest {
   public void before() {
     contexts = Arrays.asList(contextA, contextB);
     this.configurator = new ResourceHandlerConfigurator(
-        configuration,
-        relativizesFilePaths,
-        createsRunner);
+      configuration,
+      relativizesFilePaths,
+      createsRunner);
   }
 
   @Test

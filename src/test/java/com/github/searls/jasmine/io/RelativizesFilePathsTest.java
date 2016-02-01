@@ -1,12 +1,12 @@
 package com.github.searls.jasmine.io;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Test;
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 public class RelativizesFilePathsTest {
 
@@ -20,9 +20,9 @@ public class RelativizesFilePathsTest {
     from = new File("/panda/");
     to = new File("/panda/pants.txt");
 
-    String result = subject.relativize(from,to);
+    String result = subject.relativize(from, to);
 
-    assertThat(result,is("pants.txt"));
+    assertThat(result, is("pants.txt"));
   }
 
   @Test
@@ -30,9 +30,9 @@ public class RelativizesFilePathsTest {
     from = new File("/panda/");
     to = new File("/panda/target/jasmine/");
 
-    String result = subject.relativize(from,to);
+    String result = subject.relativize(from, to);
 
-    assertThat(result,is("target/jasmine"));
+    assertThat(result, is("target/jasmine"));
   }
 
 
@@ -41,9 +41,9 @@ public class RelativizesFilePathsTest {
     from = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/target/jasmine"));
     to = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/src/test/javascript/fun-spec.js"));
 
-    String result = subject.relativize(from,to);
+    String result = subject.relativize(from, to);
 
-    assertThat(result,is("../../src/test/javascript/fun-spec.js"));
+    assertThat(result, is("../../src/test/javascript/fun-spec.js"));
   }
 
   private String slash(String s) {

@@ -1,9 +1,6 @@
 package com.github.searls.jasmine.format;
 
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-
+import com.github.searls.jasmine.model.JasmineResult;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,15 +8,19 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.searls.jasmine.model.JasmineResult;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.verify;
 
 
 @RunWith(MockitoJUnitRunner.class)
 public class JasmineResultLoggerTest {
 
-  @InjectMocks private JasmineResultLogger subject = new JasmineResultLogger();
+  @InjectMocks
+  private JasmineResultLogger subject = new JasmineResultLogger();
 
-  @Mock private Log log;
+  @Mock
+  private Log log;
 
   @Test
   public void shouldLogHeader() {

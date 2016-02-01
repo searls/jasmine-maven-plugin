@@ -1,13 +1,7 @@
 package com.github.searls.jasmine.coffee;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
+import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
 import org.eclipse.jetty.http.HttpHeaders;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.resource.Resource;
@@ -19,23 +13,33 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.github.searls.jasmine.config.JasmineConfiguration;
-import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
-import com.github.searls.jasmine.runner.SpecRunnerTemplate;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HandlesRequestsForCoffeeTest {
   private static final String COFFEE = "coffee";
 
-  @InjectMocks HandlesRequestsForCoffee subject = new HandlesRequestsForCoffee(null);
+  @InjectMocks
+  HandlesRequestsForCoffee subject = new HandlesRequestsForCoffee(null);
 
-  @Mock private CoffeeScript coffeeScript = new CoffeeScript();
-  @Mock private BuildsJavaScriptToWriteFailureHtml buildsJavaScriptToWriteFailureHtml;
-  @Mock private JasmineConfiguration configuration;
-  
-  @Mock private Request baseRequest;
-  @Mock(answer=Answers.RETURNS_DEEP_STUBS) private HttpServletResponse response;
-  @Mock private Resource resource;
+  @Mock
+  private CoffeeScript coffeeScript = new CoffeeScript();
+  @Mock
+  private BuildsJavaScriptToWriteFailureHtml buildsJavaScriptToWriteFailureHtml;
+  @Mock
+  private JasmineConfiguration configuration;
+
+  @Mock
+  private Request baseRequest;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private HttpServletResponse response;
+  @Mock
+  private Resource resource;
 
   @Before
   public void stubResourceInputStream() throws IOException {
@@ -91,7 +95,7 @@ public class HandlesRequestsForCoffeeTest {
     subject.handle(baseRequest, response, resource);
 
     verify(response.getWriter()).write(expected);
-    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(expected.length()));
+    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(expected.length()));
   }
 
   @Test
@@ -102,14 +106,14 @@ public class HandlesRequestsForCoffeeTest {
     subject.handle(baseRequest, response, resource);
 
     verify(response.getWriter()).write(expected);
-    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(expected.getBytes("UTF-8").length));
+    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(expected.getBytes("UTF-8").length));
   }
 
   @Test
   public void whenCoffeeCompilationFailsThenWriteTheErrorOutInItsStead() throws IOException {
     String name = "some-file.coffee";
     String message = "messages";
-    String expected = "CoffeeScript Error: failed to compile <code>"+name+"</code>. <br/>Error message:<br/><br/><code>"+message+"</code>";
+    String expected = "CoffeeScript Error: failed to compile <code>" + name + "</code>. <br/>Error message:<br/><br/><code>" + message + "</code>";
     when(resource.getName()).thenReturn(name);
     when(coffeeScript.compile(COFFEE)).thenThrow(new RuntimeException(message));
     when(buildsJavaScriptToWriteFailureHtml.build(expected)).thenReturn("win");
@@ -121,12 +125,12 @@ public class HandlesRequestsForCoffeeTest {
 
   @Test
   public void whenCoffeeRequestWithREQUIRE_JSThenWriteCoffee() throws IOException {
-	when(configuration.isCoffeeScriptCompilationEnabled()).thenReturn(false);
-	  
+    when(configuration.isCoffeeScriptCompilationEnabled()).thenReturn(false);
+
     subject.handle(baseRequest, response, resource);
 
     verify(response.getWriter()).write(COFFEE);
-    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH,Integer.toString(COFFEE.length()));
+    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(COFFEE.length()));
   }
 
 }

@@ -13,7 +13,7 @@ public class ScriptResolverException extends Exception {
   }
 
   public ScriptResolverException(String message, Throwable cause) {
-    super(message,cause);
+    super(message, cause);
   }
 
   public ScriptResolverException(Throwable cause) {

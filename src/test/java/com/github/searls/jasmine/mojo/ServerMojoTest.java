@@ -41,18 +41,30 @@ public class ServerMojoTest {
   private static final String connectorClassString = "org.eclipse.jetty.server.nio.SelectChannelConnector";
   private static final Class<? extends Connector> connectorClass = org.eclipse.jetty.server.nio.SelectChannelConnector.class;
 
-  @Mock private Log log;
-  @Mock private MavenProject mavenProject;
-  @Mock private RelativizesFilePaths relativizesFilePaths;
-  @Mock private File baseDir;
-  @Mock private File targetDir;
-  @Mock private File sourceDir;
-  @Mock private File specDir;
-  @Mock private ScriptSearch sources;
-  @Mock private ScriptSearch specs;
-  @Mock private CreatesRunner createsRunner;
-  @Mock private ResourceHandlerConfigurator configurator;
-  @Mock private ServerManager serverManager;
+  @Mock
+  private Log log;
+  @Mock
+  private MavenProject mavenProject;
+  @Mock
+  private RelativizesFilePaths relativizesFilePaths;
+  @Mock
+  private File baseDir;
+  @Mock
+  private File targetDir;
+  @Mock
+  private File sourceDir;
+  @Mock
+  private File specDir;
+  @Mock
+  private ScriptSearch sources;
+  @Mock
+  private ScriptSearch specs;
+  @Mock
+  private CreatesRunner createsRunner;
+  @Mock
+  private ResourceHandlerConfigurator configurator;
+  @Mock
+  private ServerManager serverManager;
 
   private ServerMojo subject;
 
@@ -76,20 +88,20 @@ public class ServerMojoTest {
     when(this.specs.getDirectory()).thenReturn(this.specDir);
     when(this.baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
     when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
-    when(this.relativizesFilePaths.relativize(this.baseDir,this.targetDir)).thenReturn(RELATIVE_TARGET_DIR);
-    when(this.relativizesFilePaths.relativize(this.baseDir,this.sources.getDirectory())).thenReturn(SOURCE_DIR);
-    when(this.relativizesFilePaths.relativize(this.baseDir,this.specs.getDirectory())).thenReturn(SPECS_DIR);
+    when(this.relativizesFilePaths.relativize(this.baseDir, this.targetDir)).thenReturn(RELATIVE_TARGET_DIR);
+    when(this.relativizesFilePaths.relativize(this.baseDir, this.sources.getDirectory())).thenReturn(SOURCE_DIR);
+    when(this.relativizesFilePaths.relativize(this.baseDir, this.specs.getDirectory())).thenReturn(SPECS_DIR);
 
     whenNew(CreatesRunner.class).withArguments(
-        this.subject,
-        this.log,
-        MANUAL_SPEC_RUNNER_NAME,
-        ReporterType.HtmlReporter).thenReturn(createsRunner);
+      this.subject,
+      this.log,
+      MANUAL_SPEC_RUNNER_NAME,
+      ReporterType.HtmlReporter).thenReturn(createsRunner);
 
     whenNew(ResourceHandlerConfigurator.class).withArguments(
-        this.subject,
-        this.relativizesFilePaths,
-        createsRunner).thenReturn(configurator);
+      this.subject,
+      this.relativizesFilePaths,
+      createsRunner).thenReturn(configurator);
 
     whenNew(ServerManager.class).withArguments(isA(Server.class), isA(connectorClass), eq(configurator)).thenReturn(serverManager);
 

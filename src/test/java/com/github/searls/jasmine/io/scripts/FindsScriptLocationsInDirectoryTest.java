@@ -28,12 +28,16 @@ public class FindsScriptLocationsInDirectoryTest {
   private static final List<String> EXCLUDES = asList("So out");
   private static final String FILE_LOCATION = "blah/a.js";
 
-  @Mock private ScansDirectory scansDirectory;
-  @Mock private ConvertsFileToUriString convertsFileToUriString;
+  @Mock
+  private ScansDirectory scansDirectory;
+  @Mock
+  private ConvertsFileToUriString convertsFileToUriString;
 
-  @Spy private File directory = new File("Not quite a real directory");
+  @Spy
+  private File directory = new File("Not quite a real directory");
 
-  @InjectMocks private FindsScriptLocationsInDirectory subject;
+  @InjectMocks
+  private FindsScriptLocationsInDirectory subject;
 
   @Before
   public void directoryStubbing() {
@@ -42,20 +46,20 @@ public class FindsScriptLocationsInDirectoryTest {
 
   @Test
   public void returnsEmptyWhenDirectoryDoesNotExist() throws IOException {
-    List<String> result = subject.find(new ScriptSearch(new File("No way does this file exist"),null,null));
+    List<String> result = subject.find(new ScriptSearch(new File("No way does this file exist"), null, null));
 
-    assertThat(result,is(Collections.emptyList()));
+    assertThat(result, is(Collections.emptyList()));
   }
 
   @Test
   public void addsScriptLocationScannerFinds() throws IOException {
     String expected = "full blown file";
     when(scansDirectory.scan(directory, INCLUDES, EXCLUDES)).thenReturn(asList(FILE_LOCATION));
-    when(convertsFileToUriString.convert(new File(directory,FILE_LOCATION))).thenReturn(expected);
+    when(convertsFileToUriString.convert(new File(directory, FILE_LOCATION))).thenReturn(expected);
 
-    List<String> result = subject.find(new ScriptSearch(directory,INCLUDES,EXCLUDES));
+    List<String> result = subject.find(new ScriptSearch(directory, INCLUDES, EXCLUDES));
 
-    assertThat(result,hasItem(expected));
+    assertThat(result, hasItem(expected));
   }
 
 }

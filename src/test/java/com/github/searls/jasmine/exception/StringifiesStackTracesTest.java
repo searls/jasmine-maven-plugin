@@ -1,9 +1,9 @@
 package com.github.searls.jasmine.exception;
 
+import org.junit.Test;
+
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
-
-import org.junit.Test;
 
 public class StringifiesStackTracesTest {
 

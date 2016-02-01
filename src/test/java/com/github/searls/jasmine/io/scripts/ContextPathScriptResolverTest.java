@@ -1,16 +1,16 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ContextPathScriptResolverTest {
@@ -35,34 +35,34 @@ public class ContextPathScriptResolverTest {
 
   @Test
   public void testGetSourceDirectory() throws ScriptResolverException {
-    assertEquals(SOURCE_CONTEXT_PATH,this.contextPathScriptResolver.getSourceDirectory());
+    assertEquals(SOURCE_CONTEXT_PATH, this.contextPathScriptResolver.getSourceDirectory());
   }
 
   @Test
   public void testGetSpecDirectory() throws ScriptResolverException {
-    assertEquals(SPEC_CONTEXT_PATH,this.contextPathScriptResolver.getSpecDirectory());
+    assertEquals(SPEC_CONTEXT_PATH, this.contextPathScriptResolver.getSpecDirectory());
   }
 
   @Test
   public void testGetSources() throws ScriptResolverException {
-    String[] scripts = new String[] {"scriptA","scriptB","lib/scriptC"};
+    String[] scripts = new String[]{"scriptA", "scriptB", "lib/scriptC"};
 
     when(this.scriptResolver.getSourceDirectory()).thenReturn(SOURCE_DIRECTORY);
-    when(this.scriptResolver.getSources()).thenReturn(setOf(SOURCE_DIRECTORY,scripts));
+    when(this.scriptResolver.getSources()).thenReturn(setOf(SOURCE_DIRECTORY, scripts));
 
-    Set<String> expected = setOf(SOURCE_CONTEXT_PATH,scripts);
+    Set<String> expected = setOf(SOURCE_CONTEXT_PATH, scripts);
 
     assertEquals(expected, this.contextPathScriptResolver.getSources());
   }
 
   @Test
   public void testGetSpecs() throws ScriptResolverException {
-    String[] scripts = new String[] {"scriptA","scriptB","lib/scriptC"};
+    String[] scripts = new String[]{"scriptA", "scriptB", "lib/scriptC"};
 
     when(this.scriptResolver.getSpecDirectory()).thenReturn(SPEC_DIRECTORY);
-    when(this.scriptResolver.getSpecs()).thenReturn(setOf(SPEC_DIRECTORY,scripts));
+    when(this.scriptResolver.getSpecs()).thenReturn(setOf(SPEC_DIRECTORY, scripts));
 
-    Set<String> expected = setOf(SPEC_CONTEXT_PATH,scripts);
+    Set<String> expected = setOf(SPEC_CONTEXT_PATH, scripts);
 
     assertEquals(expected, this.contextPathScriptResolver.getSpecs());
   }
@@ -70,9 +70,9 @@ public class ContextPathScriptResolverTest {
   @Test
   public void testGetPreloads() throws ScriptResolverException {
     Set<String> preloads = new HashSet<String>();
-    preloads.add(BASE_DIRECTORY+"/lib/baseScript");
-    preloads.add(SPEC_DIRECTORY+"/specScript");
-    preloads.add(SOURCE_DIRECTORY+"/sourceScript");
+    preloads.add(BASE_DIRECTORY + "/lib/baseScript");
+    preloads.add(SPEC_DIRECTORY + "/specScript");
+    preloads.add(SOURCE_DIRECTORY + "/sourceScript");
     preloads.add("http://example.org/script.js");
 
     when(this.scriptResolver.getBaseDirectory()).thenReturn(BASE_DIRECTORY);
@@ -81,18 +81,18 @@ public class ContextPathScriptResolverTest {
     when(this.scriptResolver.getPreloads()).thenReturn(preloads);
 
     Set<String> expected = new HashSet<String>();
-    expected.add(ROOT_CONTEXT_PATH+"/lib/baseScript");
-    expected.add(SPEC_CONTEXT_PATH+"/specScript");
-    expected.add(SOURCE_CONTEXT_PATH+"/sourceScript");
+    expected.add(ROOT_CONTEXT_PATH + "/lib/baseScript");
+    expected.add(SPEC_CONTEXT_PATH + "/specScript");
+    expected.add(SOURCE_CONTEXT_PATH + "/sourceScript");
     expected.add("http://example.org/script.js");
 
     assertEquals(expected, this.contextPathScriptResolver.getPreloads());
   }
 
-  private static Set<String> setOf(String base, String ... strings) {
+  private static Set<String> setOf(String base, String... strings) {
     Set<String> set = new HashSet<String>();
     for (String string : strings) {
-      set.add(base+"/"+string);
+      set.add(base + "/" + string);
     }
     return set;
   }

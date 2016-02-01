@@ -31,150 +31,154 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractJasmineMojoTest {
 
-	private static final String ENCODING = "UTF-8";
-	private static final String SCRIPT_LOADER_PATH = "scriptloaderpath";
-	private static final String PARENT_PROJECT_PATH = "/parent/project/path";
+  private static final String ENCODING = "UTF-8";
+  private static final String SCRIPT_LOADER_PATH = "scriptloaderpath";
+  private static final String PARENT_PROJECT_PATH = "/parent/project/path";
 
-	@InjectMocks @Spy
-	private final AbstractJasmineMojo subject = new AbstractJasmineMojo() {
-		@Override
-		public void run() throws Exception {}
-	};
+  @InjectMocks
+  @Spy
+  private final AbstractJasmineMojo subject = new AbstractJasmineMojo() {
+    @Override
+    public void run() throws Exception {
+    }
+  };
 
-	@Mock private final StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
+  @Mock
+  private final StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
-	@Rule public ExpectedException expectedException = ExpectedException.none();
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
-	private static final String CUSTOM_RUNNER_CONFIG = "customRunnerConfiguration";
+  private static final String CUSTOM_RUNNER_CONFIG = "customRunnerConfiguration";
 
-	private static final String CUSTOM_RUNNER_TEMPLATE = "customRunnerTemplate";
+  private static final String CUSTOM_RUNNER_TEMPLATE = "customRunnerTemplate";
 
-	@Mock
-	private File baseDir;
+  @Mock
+  private File baseDir;
 
-	@Mock
-	private MavenProject mavenProject;
+  @Mock
+  private MavenProject mavenProject;
 
-	@Mock
-	private File projectFile;
+  @Mock
+  private File projectFile;
 
-	@Mock
-	private File parentProjectFile;
+  @Mock
+  private File parentProjectFile;
 
-	@Mock
-	private ResourceManager locator;
+  @Mock
+  private ResourceManager locator;
 
-	@Before
-	public void before() {
-		this.subject.sourceEncoding = ENCODING;
-		this.subject.locator = this.locator;
-	}
+  @Before
+  public void before() {
+    this.subject.sourceEncoding = ENCODING;
+    this.subject.locator = this.locator;
+  }
 
-	@Test
-	public void executeStringifiesStackTraces() throws Exception {
-		String expected = "panda";
-		this.expectedException.expectMessage(expected);
-		Exception e = new Exception();
-		when(this.stringifiesStackTraces.stringify(e)).thenReturn(expected);
-		doThrow(e).when(this.subject).run();
+  @Test
+  public void executeStringifiesStackTraces() throws Exception {
+    String expected = "panda";
+    this.expectedException.expectMessage(expected);
+    Exception e = new Exception();
+    when(this.stringifiesStackTraces.stringify(e)).thenReturn(expected);
+    doThrow(e).when(this.subject).run();
 
-		this.subject.execute();
+    this.subject.execute();
 
-		verify(this.stringifiesStackTraces).stringify(e);
-	}
+    verify(this.stringifiesStackTraces).stringify(e);
+  }
 
-	@Test
-	public void rethrowsMojoFailureExceptions() throws Exception {
-		String expected = "panda";
-		this.expectedException.expect(MojoFailureException.class);
-		this.expectedException.expectMessage(expected);
-		MojoFailureException e = new MojoFailureException(expected);
-		doThrow(e).when(this.subject).run();
+  @Test
+  public void rethrowsMojoFailureExceptions() throws Exception {
+    String expected = "panda";
+    this.expectedException.expect(MojoFailureException.class);
+    this.expectedException.expectMessage(expected);
+    MojoFailureException e = new MojoFailureException(expected);
+    doThrow(e).when(this.subject).run();
 
-		this.subject.execute();
-	}
+    this.subject.execute();
+  }
 
-	@Test
-	public void setsSourceIncludes() throws Exception {
-		this.subject.execute();
+  @Test
+  public void setsSourceIncludes() throws Exception {
+    this.subject.execute();
 
-		assertThat(this.subject.sources.getIncludes(),hasItem("**"+File.separator+"*.js"));
-	}
+    assertThat(this.subject.sources.getIncludes(), hasItem("**" + File.separator + "*.js"));
+  }
 
-	@Test
-	public void setsSourceExcludes() throws Exception {
-		this.subject.execute();
+  @Test
+  public void setsSourceExcludes() throws Exception {
+    this.subject.execute();
 
-		assertThat(this.subject.sources.getExcludes(),is(empty()));
-	}
+    assertThat(this.subject.sources.getExcludes(), is(empty()));
+  }
 
-	@Test
-	public void setsSpecIncludes() throws Exception {
-		this.subject.execute();
+  @Test
+  public void setsSpecIncludes() throws Exception {
+    this.subject.execute();
 
-		assertThat(this.subject.specs.getIncludes(),hasItem("**"+File.separator+"*.js"));
-	}
+    assertThat(this.subject.specs.getIncludes(), hasItem("**" + File.separator + "*.js"));
+  }
 
-	@Test
-	public void setsSpecExcludes() throws Exception {
-		this.subject.execute();
+  @Test
+  public void setsSpecExcludes() throws Exception {
+    this.subject.execute();
 
-		assertThat(this.subject.specs.getExcludes(),is(empty()));
-	}
+    assertThat(this.subject.specs.getExcludes(), is(empty()));
+  }
 
-	@Test
-	public void testGetSourceEncoding() {
-		assertThat(this.subject.getSourceEncoding(), is(ENCODING));
-	}
+  @Test
+  public void testGetSourceEncoding() {
+    assertThat(this.subject.getSourceEncoding(), is(ENCODING));
+  }
 
-	@Test
-	public void testGetCustomRunnerConfiguration() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
-		File customRunnerConfiguration = mock(File.class);
-		this.subject.customRunnerConfiguration = CUSTOM_RUNNER_CONFIG;
-		when(this.mavenProject.getFile()).thenReturn(this.projectFile);
-		when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
-		when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
-		when(this.locator.getResourceAsFile(CUSTOM_RUNNER_CONFIG)).thenReturn(customRunnerConfiguration);
-		this.subject.execute();
-		assertThat(this.subject.getCustomRunnerConfiguration(), is(customRunnerConfiguration));
-	}
+  @Test
+  public void testGetCustomRunnerConfiguration() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+    File customRunnerConfiguration = mock(File.class);
+    this.subject.customRunnerConfiguration = CUSTOM_RUNNER_CONFIG;
+    when(this.mavenProject.getFile()).thenReturn(this.projectFile);
+    when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
+    when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
+    when(this.locator.getResourceAsFile(CUSTOM_RUNNER_CONFIG)).thenReturn(customRunnerConfiguration);
+    this.subject.execute();
+    assertThat(this.subject.getCustomRunnerConfiguration(), is(customRunnerConfiguration));
+  }
 
-	@Test
-	public void testGetCustomRunnerTemplate() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
-		File customRunnerTemplate = mock(File.class);
-		this.subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
-		when(this.mavenProject.getFile()).thenReturn(this.projectFile);
-		when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
-		when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
-		when(this.locator.getResourceAsFile(CUSTOM_RUNNER_TEMPLATE)).thenReturn(customRunnerTemplate);
-		this.subject.execute();
-		assertThat(this.subject.getCustomRunnerTemplate(), is(customRunnerTemplate));
-	}
+  @Test
+  public void testGetCustomRunnerTemplate() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+    File customRunnerTemplate = mock(File.class);
+    this.subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
+    when(this.mavenProject.getFile()).thenReturn(this.projectFile);
+    when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
+    when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
+    when(this.locator.getResourceAsFile(CUSTOM_RUNNER_TEMPLATE)).thenReturn(customRunnerTemplate);
+    this.subject.execute();
+    assertThat(this.subject.getCustomRunnerTemplate(), is(customRunnerTemplate));
+  }
 
-	@Test(expected=MojoExecutionException.class)
-	public void testGetCustomRunnerTemplateNotFound() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
-		this.subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
-		when(this.mavenProject.getFile()).thenReturn(this.projectFile);
-		when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
-		when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
-		when(this.locator.getResourceAsFile(CUSTOM_RUNNER_TEMPLATE)).thenThrow(new FileResourceCreationException(CUSTOM_RUNNER_TEMPLATE));
-		this.subject.execute();
-	}
+  @Test(expected = MojoExecutionException.class)
+  public void testGetCustomRunnerTemplateNotFound() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+    this.subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
+    when(this.mavenProject.getFile()).thenReturn(this.projectFile);
+    when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
+    when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
+    when(this.locator.getResourceAsFile(CUSTOM_RUNNER_TEMPLATE)).thenThrow(new FileResourceCreationException(CUSTOM_RUNNER_TEMPLATE));
+    this.subject.execute();
+  }
 
-	@Test
-	public void testGetBaseDir() {
-		when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
-		assertThat(this.subject.getBasedir(),is(this.baseDir));
-	}
+  @Test
+  public void testGetBaseDir() {
+    when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
+    assertThat(this.subject.getBasedir(), is(this.baseDir));
+  }
 
-	@Test
-	public void testGetMavenProject() {
-		assertThat(this.subject.getMavenProject(), is(this.mavenProject));
-	}
+  @Test
+  public void testGetMavenProject() {
+    assertThat(this.subject.getMavenProject(), is(this.mavenProject));
+  }
 
-	@Test
-	public void testGetAutoRefreshInterval() {
-		this.subject.autoRefreshInterval = 5;
-		assertThat(this.subject.getAutoRefreshInterval(), is(5));
-	}
+  @Test
+  public void testGetAutoRefreshInterval() {
+    this.subject.autoRefreshInterval = 5;
+    assertThat(this.subject.getAutoRefreshInterval(), is(5));
+  }
 }

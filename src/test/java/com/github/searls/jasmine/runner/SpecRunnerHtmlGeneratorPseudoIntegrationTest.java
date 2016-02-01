@@ -23,7 +23,9 @@ import java.util.Set;
 
 import static com.github.searls.jasmine.Matchers.containsLinkTagWithSource;
 import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.*;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_CSS;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_HTML_JS;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_JS;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -44,13 +46,16 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   private SpecRunnerHtmlGenerator subject;
 
-  @Mock private ScriptResolver scriptResolver;
-  @Mock private HtmlGeneratorConfiguration generatorConfiguration;
-  @Rule public ExpectedException expectedException = ExpectedException.none();
+  @Mock
+  private ScriptResolver scriptResolver;
+  @Mock
+  private HtmlGeneratorConfiguration generatorConfiguration;
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
 
   @Before
-  public void setupGeneratorConfiguration() throws IOException{
+  public void setupGeneratorConfiguration() throws IOException {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.generatorConfiguration.getReporterType()).thenReturn(ReporterType.HtmlReporter);
     when(this.generatorConfiguration.getScriptResolver()).thenReturn(this.scriptResolver);

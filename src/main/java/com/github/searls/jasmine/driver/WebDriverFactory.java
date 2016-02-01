@@ -103,7 +103,7 @@ public class WebDriverFactory {
     if (constructor.getParameterTypes().length == 0) {
       return new Object[0];
     }
-    return new Object[] {getCapabilities()};
+    return new Object[]{getCapabilities()};
   }
 
   private DesiredCapabilities getCapabilities() {
@@ -117,12 +117,12 @@ public class WebDriverFactory {
 
     for (Capability capability : webDriverCapabilities) {
       Object value = capability.getValue();
-      if (value != null && (!String.class.isInstance(value) || StringUtils.isNotBlank((String)value))) {
-        capabilities.setCapability(capability.getName(),capability.getValue());
+      if (value != null && (!String.class.isInstance(value) || StringUtils.isNotBlank((String) value))) {
+        capabilities.setCapability(capability.getName(), capability.getValue());
       } else if (capability.getList() != null && !capability.getList().isEmpty()) {
-        capabilities.setCapability(capability.getName(),capability.getList());
+        capabilities.setCapability(capability.getName(), capability.getList());
       } else if (capability.getMap() != null && !capability.getMap().isEmpty()) {
-        capabilities.setCapability(capability.getName(),capability.getMap());
+        capabilities.setCapability(capability.getName(), capability.getMap());
       }
     }
   }

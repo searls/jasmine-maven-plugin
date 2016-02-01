@@ -1,20 +1,19 @@
 package com.github.searls.jasmine.io.scripts;
 
+import com.github.searls.jasmine.io.CreatesTempDirectories;
+import org.junit.After;
+import org.junit.Test;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Test;
-
-import com.github.searls.jasmine.io.CreatesTempDirectories;
 
 
 public class ResolvesLocationOfPreloadSourcesIntegrationTest {
@@ -41,49 +40,49 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
   public void returnsListWhenSourcesIsNull() {
     List<String> result = subject.resolve(null, sourceDir, specDir);
 
-    assertThat(result,is(not(nullValue())));
+    assertThat(result, is(not(nullValue())));
   }
 
 
   @Test
   public void loadsSourceFileWhenItExistsUnderSourceAndSpec() throws IOException {
     String expected = "panda";
-    new File(sourceDir,expected).createNewFile();
-    new File(specDir,expected).createNewFile();
+    new File(sourceDir, expected).createNewFile();
+    new File(specDir, expected).createNewFile();
     List<String> preloadSources = asList(expected);
 
-    List<String> result = subject.resolve(preloadSources ,sourceDir,specDir);
+    List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
 
-    assertThat(result.size(),is(1));
-    assertThat(result.get(0),containsString(SOURCE));
-    assertThat(result.get(0),containsString(expected));
+    assertThat(result.size(), is(1));
+    assertThat(result.get(0), containsString(SOURCE));
+    assertThat(result.get(0), containsString(expected));
   }
 
   @Test
   public void loadsSpecFileWhenItExistsUnderSpec() throws IOException {
     String expected = "panda";
-    new File(specDir,expected).createNewFile();
+    new File(specDir, expected).createNewFile();
     List<String> preloadSources = asList(expected);
 
-    List<String> result = subject.resolve(preloadSources ,sourceDir,specDir);
+    List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
 
-    assertThat(result.size(),is(1));
-    assertThat(result.get(0),containsString(SPEC));
-    assertThat(result.get(0),containsString(expected));
+    assertThat(result.size(), is(1));
+    assertThat(result.get(0), containsString(SPEC));
+    assertThat(result.get(0), containsString(expected));
   }
 
   @Test
   public void loadsExistentFileWithURIIfItIsNotInEitherSourceAndSpecFolders() throws Exception {
     String expected = "panda";
-    new File(separatedDir,expected).createNewFile();
+    new File(separatedDir, expected).createNewFile();
     List<String> preloadSources = asList(separatedDir.getAbsolutePath() + File.separator + expected);
 
-    List<String> result = subject.resolve(preloadSources,sourceDir,specDir);
+    List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
-    assertThat(result.size(),is(1));
-    assertThat(result.get(0),containsString("file:/"));
+    assertThat(result.size(), is(1));
+    assertThat(result.get(0), containsString("file:/"));
   }
 
   @Test
@@ -91,10 +90,10 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
     String expected = "telnet://woahItsTelnet";
     List<String> preloadSources = asList(expected);
 
-    List<String> result = subject.resolve(preloadSources ,sourceDir,specDir);
+    List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
-    assertThat(result.size(),is(1));
-    assertThat(result.get(0),is(expected));
+    assertThat(result.size(), is(1));
+    assertThat(result.get(0), is(expected));
   }
 //
 }

@@ -1,21 +1,20 @@
 package com.github.searls.jasmine.coffee;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.Map;
-import java.util.WeakHashMap;
-
-import org.apache.commons.lang3.StringEscapeUtils;
-
 import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.gargoylesoftware.htmlunit.ScriptResult;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 public class CoffeeScript {
 
-  private static Map<String,String> cache = Collections.synchronizedMap(new WeakHashMap<String,String>());
+  private static Map<String, String> cache = Collections.synchronizedMap(new WeakHashMap<String, String>());
 
   private final ThreadLocal<HtmlPage> htmlPage = new ThreadLocal<HtmlPage>() {
     @Override
@@ -43,7 +42,7 @@ public class CoffeeScript {
   private String compileAndCache(String input) {
     ScriptResult scriptResult = htmlPage.get().executeJavaScript(String.format("CoffeeScript.compile(\"%s\");", input));
     String result = (String) scriptResult.getJavaScriptResult();
-    cache.put(input,result);
+    cache.put(input, result);
     return result;
   }
 

@@ -31,7 +31,7 @@ public class ServerManagerTest {
 
   @Before
   public void before() {
-    this.serverManager = new ServerManager(server,connector,configurator);
+    this.serverManager = new ServerManager(server, connector, configurator);
   }
 
   @Test

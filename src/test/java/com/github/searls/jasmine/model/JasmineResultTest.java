@@ -1,17 +1,19 @@
 package com.github.searls.jasmine.model;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+
 public class JasmineResultTest {
 
-  private JasmineResult subject = new JasmineResult();;
+  private JasmineResult subject = new JasmineResult();
+  ;
 
   @Test
   public void shouldParseDescriptionWhenSuccessful() {
     subject.setDetails(
-        "Some results\n" +
+      "Some results\n" +
         "More results\n" +
         "1 spec, 0 failures");
 
@@ -23,7 +25,7 @@ public class JasmineResultTest {
   @Test
   public void shouldFailWhenFail() {
     subject.setDetails(
-        "Describe Kaka wants 0 failures \n" +
+      "Describe Kaka wants 0 failures \n" +
         "it is Swedish for cookie\n" +
         "Results: 2 specs, 1 failure");
 

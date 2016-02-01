@@ -1,14 +1,12 @@
 package com.github.searls.jasmine.runner;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-
+import com.github.searls.jasmine.format.FormatsScriptTags;
 import org.codehaus.plexus.util.StringUtils;
 import org.stringtemplate.v4.ST;
 
-import com.github.searls.jasmine.format.FormatsScriptTags;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 public abstract class AbstractSpecRunnerHtmlGenerator {
   private static final String SOURCE_ENCODING = "sourceEncoding";
@@ -29,7 +27,7 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
 
   protected ST resolveHtmlTemplate() throws IOException {
     String htmlTemplate = configuration.getRunnerTemplate();
-    return new ST(htmlTemplate,'$','$');
+    return new ST(htmlTemplate, '$', '$');
   }
 
   protected void applyCssToTemplate(List<String> styles, ST template) throws IOException {

@@ -1,10 +1,10 @@
 package com.github.searls.jasmine.io.scripts;
 
+import com.github.searls.jasmine.collections.CollectionHelper;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.github.searls.jasmine.collections.CollectionHelper;
 
 public class ResolvesLocationOfPreloadSources {
 
@@ -14,9 +14,9 @@ public class ResolvesLocationOfPreloadSources {
   public List<String> resolve(List<String> preloadSources, File sourceDir, File specDir) {
     List<String> sources = new ArrayList<String>();
     for (String source : collectionHelper.list(preloadSources)) {
-      if(fileCouldNotBeAdded(new File(sourceDir, source),sources)
-        && fileCouldNotBeAdded(new File(specDir, source),sources)
-          && fileCouldNotBeAdded(new File(source),sources)) {
+      if (fileCouldNotBeAdded(new File(sourceDir, source), sources)
+        && fileCouldNotBeAdded(new File(specDir, source), sources)
+        && fileCouldNotBeAdded(new File(source), sources)) {
         sources.add(source);
       }
     }

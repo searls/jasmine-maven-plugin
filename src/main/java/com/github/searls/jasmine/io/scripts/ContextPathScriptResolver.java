@@ -44,34 +44,34 @@ public class ContextPathScriptResolver implements ScriptResolver {
   @Override
   public Set<String> getSources() throws ScriptResolverException {
     return relativeToContextPath(
-        this.scriptResolver.getSourceDirectory(),
-        this.sourceContextPath,
-        this.scriptResolver.getSources());
+      this.scriptResolver.getSourceDirectory(),
+      this.sourceContextPath,
+      this.scriptResolver.getSources());
   }
 
   @Override
   public Set<String> getSpecs() throws ScriptResolverException {
     return relativeToContextPath(
-        this.scriptResolver.getSpecDirectory(),
-        this.specContextPath,
-        this.scriptResolver.getSpecs());
+      this.scriptResolver.getSpecDirectory(),
+      this.specContextPath,
+      this.scriptResolver.getSpecs());
   }
 
   @Override
   public Set<String> getPreloads() throws ScriptResolverException {
     Set<String> scripts = this.scriptResolver.getPreloads();
     scripts = relativeToContextPath(
-        this.scriptResolver.getSourceDirectory(),
-        this.sourceContextPath,
-        scripts);
+      this.scriptResolver.getSourceDirectory(),
+      this.sourceContextPath,
+      scripts);
     scripts = relativeToContextPath(
-        this.scriptResolver.getSpecDirectory(),
-        this.specContextPath,
-        scripts);
+      this.scriptResolver.getSpecDirectory(),
+      this.specContextPath,
+      scripts);
     scripts = relativeToContextPath(
-        this.scriptResolver.getBaseDirectory(),
-        this.baseContextPath,
-        scripts);
+      this.scriptResolver.getBaseDirectory(),
+      this.baseContextPath,
+      scripts);
     return scripts;
   }
 

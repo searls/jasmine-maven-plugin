@@ -33,53 +33,56 @@ import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 @PrepareForTest(FileUtils.class)
 public class SpecRunnerExecutorTest {
 
-	private static final String BUILD_REPORT_JS_CONTENTS = "var jasmineMavenPlugin = {printReport: function(){ return 'pants\\nkaka'; }};";
-	private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
-	private static HtmlUnitDriver driver;
+  private static final String BUILD_REPORT_JS_CONTENTS = "var jasmineMavenPlugin = {printReport: function(){ return 'pants\\nkaka'; }};";
+  private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
+  private static HtmlUnitDriver driver;
 
-	@Mock private IOUtilsWrapper ioUtilsWrapper;
+  @Mock
+  private IOUtilsWrapper ioUtilsWrapper;
 
-	@Mock private File file;
-	@Mock private Log log;
+  @Mock
+  private File file;
+  @Mock
+  private Log log;
 
-	private final URL resource = this.getClass().getResource("/example_nested_specrunner.html");
+  private final URL resource = this.getClass().getResource("/example_nested_specrunner.html");
 
-	@InjectMocks
-	private SpecRunnerExecutor subject;
+  @InjectMocks
+  private SpecRunnerExecutor subject;
 
-	@Before
-	public void stubResourceStreams() throws IOException {
-		spy(FileUtils.class);
+  @Before
+  public void stubResourceStreams() throws IOException {
+    spy(FileUtils.class);
 
-		when(this.ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_REPORT_JS_CONTENTS,JUNIT_RESULTS);
-		driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
-		driver.setJavascriptEnabled(true);
-	}
+    when(this.ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_REPORT_JS_CONTENTS, JUNIT_RESULTS);
+    driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
+    driver.setJavascriptEnabled(true);
+  }
 
-	@Test
-	public void shouldFindSpecsInResults() throws Exception {
-		doNothing().when(FileUtils.class);
-		FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
+  @Test
+  public void shouldFindSpecsInResults() throws Exception {
+    doNothing().when(FileUtils.class);
+    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
 
-		JasmineResult result = this.subject.execute(this.resource, this.file, driver, 300, false, this.log, null);
+    JasmineResult result = this.subject.execute(this.resource, this.file, driver, 300, false, this.log, null);
 
-		assertThat(result,is(not(nullValue())));
-		assertThat(result.getDescription(),containsString("kaka"));
-		assertThat(result.getDetails(),containsString("pants"));
-		assertThat(result.didPass(),is(false));
+    assertThat(result, is(not(nullValue())));
+    assertThat(result.getDescription(), containsString("kaka"));
+    assertThat(result.getDetails(), containsString("pants"));
+    assertThat(result.didPass(), is(false));
 
-		verifyStatic();
-		FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
-	}
+    verifyStatic();
+    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
+  }
 
-	@Test
-	public void shouldExportJUnitResults() throws Exception {
-		doNothing().when(FileUtils.class);
-		FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
+  @Test
+  public void shouldExportJUnitResults() throws Exception {
+    doNothing().when(FileUtils.class);
+    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
 
-		this.subject.execute(this.resource, this.file, driver, 300, false, this.log, null);
+    this.subject.execute(this.resource, this.file, driver, 300, false, this.log, null);
 
-		verifyStatic();
-		FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
-	}
+    verifyStatic();
+    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
+  }
 }

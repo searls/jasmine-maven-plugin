@@ -11,30 +11,34 @@ import java.util.List;
 public interface JasmineConfiguration {
 
   File getBasedir();
-	File getJasmineTargetDir();
 
-	String getSrcDirectoryName();
-	String getSpecDirectoryName();
+  File getJasmineTargetDir();
 
-	ScriptSearch getSources();
-	ScriptSearch getSpecs();
+  String getSrcDirectoryName();
+
+  String getSpecDirectoryName();
+
+  ScriptSearch getSources();
+
+  ScriptSearch getSpecs();
 
   List<Context> getContexts();
 
-	List<String> getPreloadSources();
+  List<String> getPreloadSources();
 
-	String getSourceEncoding();
+  String getSourceEncoding();
 
-	Log getLog();
+  Log getLog();
 
-	SpecRunnerTemplate getSpecRunnerTemplate();
+  SpecRunnerTemplate getSpecRunnerTemplate();
 
-	File getCustomRunnerTemplate();
-	File getCustomRunnerConfiguration();
+  File getCustomRunnerTemplate();
 
-	int getAutoRefreshInterval();
-	
-	boolean isCoffeeScriptCompilationEnabled();
+  File getCustomRunnerConfiguration();
 
-    ClassLoader getProjectClassLoader();
+  int getAutoRefreshInterval();
+
+  boolean isCoffeeScriptCompilationEnabled();
+
+  ClassLoader getProjectClassLoader();
 }

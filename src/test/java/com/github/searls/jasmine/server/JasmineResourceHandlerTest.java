@@ -29,17 +29,26 @@ import static org.mockito.Mockito.when;
 public class JasmineResourceHandlerTest {
   private static final String TARGET = "some url";
 
-  @Mock private DetectsCoffee detectsCoffee;
-  @Mock private HandlesRequestsForCoffee handlesRequestsForCoffee;
-  @Mock private CreatesRunner createsRunner;
-  @Mock private JasmineConfiguration configuration;
+  @Mock
+  private DetectsCoffee detectsCoffee;
+  @Mock
+  private HandlesRequestsForCoffee handlesRequestsForCoffee;
+  @Mock
+  private CreatesRunner createsRunner;
+  @Mock
+  private JasmineConfiguration configuration;
 
-  @Mock Request baseRequest;
-  @Mock HttpServletRequest request;
-  @Mock HttpServletResponse response;
-  @Mock Resource resource;
+  @Mock
+  Request baseRequest;
+  @Mock
+  HttpServletRequest request;
+  @Mock
+  HttpServletResponse response;
+  @Mock
+  Resource resource;
 
-  @Mock Log log;
+  @Mock
+  Log log;
 
   private JasmineResourceHandler subject;
 
@@ -61,16 +70,16 @@ public class JasmineResourceHandlerTest {
 
   @Test
   public void whenTargetIsSlashThenCreateManualRunner() throws IOException, ServletException {
-    this.subject.handle("/", this.baseRequest,this.request,this.response);
+    this.subject.handle("/", this.baseRequest, this.request, this.response);
 
     verify(this.createsRunner).create();
   }
 
   @Test
   public void whenTargetIsNotSlashThenCreateManualRunner() throws IOException, ServletException {
-    this.subject.handle("/notSlash", this.baseRequest,this.request,this.response);
+    this.subject.handle("/notSlash", this.baseRequest, this.request, this.response);
 
-    verify(this.createsRunner,never()).create();
+    verify(this.createsRunner, never()).create();
   }
 
   @Test
@@ -78,7 +87,7 @@ public class JasmineResourceHandlerTest {
     when(this.detectsCoffee.detect(TARGET)).thenReturn(true);
     when(this.resource.exists()).thenReturn(true);
 
-    this.subject.handle(TARGET, this.baseRequest,this.request,this.response);
+    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
 
     verify(this.handlesRequestsForCoffee).handle(this.baseRequest, this.response, this.resource);
   }
@@ -88,7 +97,7 @@ public class JasmineResourceHandlerTest {
     when(this.detectsCoffee.detect(TARGET)).thenReturn(false);
     when(this.resource.exists()).thenReturn(true);
 
-    this.subject.handle(TARGET, this.baseRequest,this.request,this.response);
+    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
 
     verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
   }
@@ -99,7 +108,7 @@ public class JasmineResourceHandlerTest {
     when(this.resource.exists()).thenReturn(true);
     when(this.baseRequest.isHandled()).thenReturn(true);
 
-    this.subject.handle(TARGET, this.baseRequest,this.request,this.response);
+    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
 
     verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
   }
@@ -109,7 +118,7 @@ public class JasmineResourceHandlerTest {
     when(this.detectsCoffee.detect(TARGET)).thenReturn(true);
     when(this.resource.exists()).thenReturn(false);
 
-    this.subject.handle(TARGET, this.baseRequest,this.request,this.response);
+    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
 
     verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
   }
@@ -119,7 +128,7 @@ public class JasmineResourceHandlerTest {
     when(this.detectsCoffee.detect(TARGET)).thenReturn(true);
     this.resource = null;
 
-    this.subject.handle(TARGET, this.baseRequest,this.request,this.response);
+    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
 
     verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
   }

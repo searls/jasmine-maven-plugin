@@ -36,33 +36,33 @@ import java.util.Properties;
 /**
  * Execute specs using Selenium Web Driver. Uses PhantomJsDriver for head-less execution by default.
  */
-@Mojo(name="test",defaultPhase=LifecyclePhase.TEST,requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = "test", defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 public class TestMojo extends AbstractJasmineMojo {
 
   /**
    * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
    * The plugin uses <a href="https://github.com/detro/ghostdriver">PhantomJSDriver</a> by default.
-   *
+   * <p/>
    * <p>Some valid examples:</p>
    * <ul>
-   *   <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
-   *   <li>org.openqa.selenium.phantomjs.PhantomJSDriver</li>
-   *   <li>org.openqa.selenium.firefox.FirefoxDriver</li>
-   *   <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
+   * <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
+   * <li>org.openqa.selenium.phantomjs.PhantomJSDriver</li>
+   * <li>org.openqa.selenium.firefox.FirefoxDriver</li>
+   * <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
    * </ul>
    * <p></p>
    * See the webDriverCapabilities property for configuring driver specific properties.
    *
    * @since 1.1.0
    */
-  @Parameter(defaultValue="org.openqa.selenium.phantomjs.PhantomJSDriver")
+  @Parameter(defaultValue = "org.openqa.selenium.phantomjs.PhantomJSDriver")
   protected String webDriverClassName;
 
   /**
    * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>
-   *
+   * <p/>
    * <p>Capabilities value can be either a String, a List, or a Map.</p>
-   *
+   * <p/>
    * <p>Example:</p>
    * <pre>
    * &lt;webDriverCapabilities&gt;
@@ -94,13 +94,13 @@ public class TestMojo extends AbstractJasmineMojo {
   /**
    * <p>Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
    * This maps 1-to-1 with the public static instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.</p>
-   *
+   * <p/>
    * <p>Some valid examples: CHROME, FIREFOX_17, INTERNET_EXPLORER_9, INTERNET_EXPLORER_10</p>
    *
    * @since 1.1.0
    * @deprecated Use the webDriverCapabilities parameter instead.
    */
-  @Parameter(defaultValue="FIREFOX_17")
+  @Parameter(defaultValue = "FIREFOX_17")
   @Deprecated
   protected String browserVersion;
 
@@ -108,13 +108,13 @@ public class TestMojo extends AbstractJasmineMojo {
    * <p>Determines the format that jasmine:test will print to console.</p>
    * <p>Valid options:</p>
    * <ul>
-   *   <li>"documentation" - (default) - print specs in a nested format</li>
-   *   <li>"progress" - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')</li>
+   * <li>"documentation" - (default) - print specs in a nested format</li>
+   * <li>"progress" - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')</li>
    * </ul>
    *
    * @since 1.1.0
    */
-  @Parameter(defaultValue="documentation")
+  @Parameter(defaultValue = "documentation")
   protected String format;
 
   /**
@@ -122,7 +122,7 @@ public class TestMojo extends AbstractJasmineMojo {
    * <a href="http://klieber.github.io/phantomjs-maven-plugin"></a>phantomjs-maven-plugin</a> is used to provide this
    * functionality and this parameter should match the configuration of the
    * <a href="http://kylelieber.com/phantomjs-maven-plugin/install-mojo.html">phantomjs-maven-plugin install</a> goal.</p>
-   *
+   * <p/>
    * <p>Default Options:</p>
    * <pre>
    * &lt;phantomjs&gt;
@@ -145,7 +145,7 @@ public class TestMojo extends AbstractJasmineMojo {
    *
    * @since 1.1.0
    */
-  @Parameter(defaultValue="TEST-jasmine.xml")
+  @Parameter(defaultValue = "TEST-jasmine.xml")
   protected String junitXmlReportFileName;
 
   /**
@@ -154,24 +154,24 @@ public class TestMojo extends AbstractJasmineMojo {
    *
    * @since 1.3.1.0
    */
-  @Parameter(property="keepServerAlive", defaultValue="false")
+  @Parameter(property = "keepServerAlive", defaultValue = "false")
   protected boolean keepServerAlive;
 
   @Parameter(
-      defaultValue = "${repositorySystemSession}",
-      readonly = true
+    defaultValue = "${repositorySystemSession}",
+    readonly = true
   )
   private RepositorySystemSession repositorySystemSession;
 
   @Parameter(
-      defaultValue = "${project.remoteProjectRepositories}",
-      readonly = true
+    defaultValue = "${project.remoteProjectRepositories}",
+    readonly = true
   )
   private List<RemoteRepository> remoteRepositories;
 
   @Parameter(
-      defaultValue = "${session}",
-      readonly = true
+    defaultValue = "${session}",
+    readonly = true
   )
   private MavenSession mavenSession;
 
@@ -187,7 +187,7 @@ public class TestMojo extends AbstractJasmineMojo {
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    if(!this.isSkipTests()) {
+    if (!this.isSkipTests()) {
       super.execute();
     } else {
       this.getLog().info("Skipping Jasmine Specs");
@@ -201,7 +201,7 @@ public class TestMojo extends AbstractJasmineMojo {
       int port = serverManager.start();
       setPortProperty(port);
       this.getLog().info("Executing Jasmine Specs");
-      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+"://" + this.serverHostname + ":" + port));
+      JasmineResult result = this.executeSpecs(new URL(this.uriScheme + "://" + this.serverHostname + ":" + port));
       this.logResults(result);
       this.throwAnySpecFailures(result);
     } finally {
@@ -215,15 +215,15 @@ public class TestMojo extends AbstractJasmineMojo {
     Log log = this.debug ? this.getLog() : new NullLog();
 
     CreatesRunner createsRunner = new CreatesRunner(
-        this,
-        log,
-        this.specRunnerHtmlFileName,
-        ReporterType.JsApiReporter);
+      this,
+      log,
+      this.specRunnerHtmlFileName,
+      ReporterType.JsApiReporter);
 
     ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(
-        this,
-        this.relativizesFilePaths,
-        createsRunner);
+      this,
+      this.relativizesFilePaths,
+      createsRunner);
 
     return new ServerManager(new Server(), getConnector(), configurator);
   }
@@ -231,16 +231,17 @@ public class TestMojo extends AbstractJasmineMojo {
   private void setPortProperty(int port) {
     this.mavenProject.getProperties().setProperty("jasmine.serverPort", String.valueOf(port));
   }
+
   private JasmineResult executeSpecs(URL runner) throws Exception {
     WebDriver driver = this.createDriver();
     JasmineResult result = new SpecRunnerExecutor().execute(
-        runner,
-        new File(this.jasmineTargetDir,this.junitXmlReportFileName),
-        driver,
-        this.timeout,
-        this.debug,
-        this.getLog(),
-        this.format
+      runner,
+      new File(this.jasmineTargetDir, this.junitXmlReportFileName),
+      driver,
+      this.timeout,
+      this.debug,
+      this.getLog(),
+      this.format
     );
     return result;
   }
@@ -267,29 +268,29 @@ public class TestMojo extends AbstractJasmineMojo {
   private void configure(Properties properties) {
 
     phantomjs.setVersion(
-        properties.getProperty("phantomjs.version", phantomjs.getVersion())
+      properties.getProperty("phantomjs.version", phantomjs.getVersion())
     );
 
     phantomjs.setSource(
-        PhantomJsLocatorOptions.Source.valueOf(
-            properties.getProperty("phantomjs.source", phantomjs.getSource().toString())
-        )
+      PhantomJsLocatorOptions.Source.valueOf(
+        properties.getProperty("phantomjs.source", phantomjs.getSource().toString())
+      )
     );
 
     phantomjs.setOutputDirectory(
-        new File(properties.getProperty("phantomjs.outputDirectory", phantomjs.getOutputDirectory().toString()))
+      new File(properties.getProperty("phantomjs.outputDirectory", phantomjs.getOutputDirectory().toString()))
     );
 
     phantomjs.setBaseUrl(
-        properties.getProperty("phantomjs.baseUrl", phantomjs.getBaseUrl())
+      properties.getProperty("phantomjs.baseUrl", phantomjs.getBaseUrl())
     );
 
     phantomjs.setCheckSystemPath(
-        configureBoolean(properties, "phantomjs.checkSystemPath", phantomjs.isCheckSystemPath())
+      configureBoolean(properties, "phantomjs.checkSystemPath", phantomjs.isCheckSystemPath())
     );
 
     phantomjs.setEnforceVersion(
-        properties.getProperty("phantomjs.enforceVersion", phantomjs.getEnforceVersion())
+      properties.getProperty("phantomjs.enforceVersion", phantomjs.getEnforceVersion())
     );
   }
 
@@ -304,7 +305,7 @@ public class TestMojo extends AbstractJasmineMojo {
   }
 
   private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
-    if(this.haltOnFailure && !result.didPass()) {
+    if (this.haltOnFailure && !result.didPass()) {
       throw new MojoFailureException("There were Jasmine spec failures.");
     }
   }

@@ -17,8 +17,8 @@ public class WebJarResourceHandler extends AbstractThirdPartyLibsResourceHandler
   public WebJarResourceHandler(ClassLoader projectClassLoader) {
     this.projectClassLoader = projectClassLoader;
     this.webJarAssetLocators = createWebJarAssetLocators(
-        WebJarResourceHandler.class.getClassLoader(),
-        projectClassLoader
+      WebJarResourceHandler.class.getClassLoader(),
+      projectClassLoader
     );
   }
 
@@ -68,7 +68,7 @@ public class WebJarResourceHandler extends AbstractThirdPartyLibsResourceHandler
     return fullPath;
   }
 
-  private List<WebJarAssetLocator> createWebJarAssetLocators(ClassLoader ... classLoaders) {
+  private List<WebJarAssetLocator> createWebJarAssetLocators(ClassLoader... classLoaders) {
     List<WebJarAssetLocator> locators = new ArrayList<WebJarAssetLocator>();
     for (ClassLoader classLoader : classLoaders) {
       locators.add(new WebJarAssetLocator(WebJarAssetLocator.getFullPathIndex(WILDCARD, classLoader)));

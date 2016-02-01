@@ -21,7 +21,7 @@ public class JasmineResult {
   }
 
   private <T> T last(T[] array) {
-      return array[array.length - 1];
+    return array[array.length - 1];
   }
 
 }

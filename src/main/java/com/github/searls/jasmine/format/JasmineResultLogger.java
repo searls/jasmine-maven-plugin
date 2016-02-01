@@ -1,15 +1,14 @@
 package com.github.searls.jasmine.format;
 
-import org.apache.maven.plugin.logging.Log;
-
 import com.github.searls.jasmine.model.JasmineResult;
+import org.apache.maven.plugin.logging.Log;
 
 
 public class JasmineResultLogger {
 
-  public static final String HEADER="\n"+
-    "-------------------------------------------------------\n"+
-    " J A S M I N E   S P E C S\n"+
+  public static final String HEADER = "\n" +
+    "-------------------------------------------------------\n" +
+    " J A S M I N E   S P E C S\n" +
     "-------------------------------------------------------";
 
   private Log log;

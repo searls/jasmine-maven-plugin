@@ -1,6 +1,6 @@
 package com.github.searls.jasmine.io;
 
-import static java.util.Arrays.asList;
+import org.codehaus.plexus.util.DirectoryScanner;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -9,11 +9,11 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.codehaus.plexus.util.DirectoryScanner;
+import static java.util.Arrays.asList;
 
 public class ScansDirectory {
 
-  public final static List<String> DEFAULT_INCLUDES = asList("**"+File.separator+"*.js","**"+File.separator+"*.coffee");
+  public final static List<String> DEFAULT_INCLUDES = asList("**" + File.separator + "*.js", "**" + File.separator + "*.coffee");
 
   private final DirectoryScanner directoryScanner = new DirectoryScanner();
 
@@ -27,7 +27,7 @@ public class ScansDirectory {
 
   private List<String> performScan(File directory, String include, List<String> excludes) {
     directoryScanner.setBasedir(directory);
-    directoryScanner.setIncludes(new String[]{ include });
+    directoryScanner.setIncludes(new String[]{include});
     directoryScanner.setExcludes(excludes.toArray(new String[]{}));
     directoryScanner.addDefaultExcludes();
     directoryScanner.scan();

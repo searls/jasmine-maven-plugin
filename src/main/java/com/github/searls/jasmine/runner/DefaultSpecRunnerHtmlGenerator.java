@@ -20,13 +20,13 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
     try {
       ScriptResolver resolver = this.getConfiguration().getScriptResolver();
       return this.generateHtml(
-          resolver.getAllScripts(),
-          resolver.getPreloads(),
-          resolver.getSources(),
-          resolver.getSpecs(),
-          resolver.getSourceDirectory(),
-          resolver.getSpecDirectory()
-          );
+        resolver.getAllScripts(),
+        resolver.getPreloads(),
+        resolver.getSources(),
+        resolver.getSpecs(),
+        resolver.getSourceDirectory(),
+        resolver.getSpecDirectory()
+      );
     } catch (ScriptResolverException e) {
       throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
     } catch (IOException e) {
@@ -42,9 +42,9 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
                               String specDirectory) throws IOException {
     ST template = this.resolveHtmlTemplate();
     this.applyScriptTagsToTemplate(
-        JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
-        Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_HTMLSPECFILTER_PATCH_JS, JASMINE_BOOT_JS),
-        template);
+      JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
+      Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_HTMLSPECFILTER_PATCH_JS, JASMINE_BOOT_JS),
+      template);
     this.applyCssToTemplate(Arrays.asList(JASMINE_CSS), template);
     this.applyScriptTagsToTemplate("allScriptTags", allScripts, template);
     this.applyScriptTagsToTemplate("preloadScriptTags", preloads, template);
@@ -77,7 +77,7 @@ public class DefaultSpecRunnerHtmlGenerator extends AbstractSpecRunnerHtmlGenera
       return "[]";
     }
     StringBuilder builder = new StringBuilder("['");
-    builder.append(StringUtils.join(scripts,"', '"));
+    builder.append(StringUtils.join(scripts, "', '"));
     builder.append("']");
     return builder.toString();
   }

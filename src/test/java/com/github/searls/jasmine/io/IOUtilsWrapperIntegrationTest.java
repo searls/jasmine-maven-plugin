@@ -1,21 +1,21 @@
 package com.github.searls.jasmine.io;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isA;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-
-import java.io.IOException;
-import java.io.InputStream;
-
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.isA;
+import static org.powermock.api.mockito.PowerMockito.mock;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(IOUtils.class)
@@ -31,11 +31,11 @@ public class IOUtilsWrapperIntegrationTest {
   @Test
   public void shouldDelegateToString() throws IOException {
     String expected = "pants";
-    when(IOUtils.toString(inputStream)).thenReturn(expected );
+    when(IOUtils.toString(inputStream)).thenReturn(expected);
 
     String result = subject.toString(inputStream);
 
-    assertThat(result,is(expected));
+    assertThat(result, is(expected));
   }
 
   @Test
@@ -45,6 +45,6 @@ public class IOUtilsWrapperIntegrationTest {
 
     String result = subject.toString("/ioUtils.txt");
 
-    assertThat(result,is(expected));
+    assertThat(result, is(expected));
   }
 }

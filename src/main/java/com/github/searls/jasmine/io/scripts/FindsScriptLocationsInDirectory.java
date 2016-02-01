@@ -24,9 +24,9 @@ public class FindsScriptLocationsInDirectory {
 
   public List<String> find(ScriptSearch search) {
     List<String> scriptLocations = new ArrayList<String>();
-    if(search.getDirectory().canRead()) {
-      for(String script : scansDirectory.scan(search.getDirectory(), search.getIncludes(), search.getExcludes())) {
-        scriptLocations.add(convertsFileToUriString.convert(new File(search.getDirectory(),script)));
+    if (search.getDirectory().canRead()) {
+      for (String script : scansDirectory.scan(search.getDirectory(), search.getIncludes(), search.getExcludes())) {
+        scriptLocations.add(convertsFileToUriString.convert(new File(search.getDirectory(), script)));
       }
     }
     return scriptLocations;

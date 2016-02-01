@@ -27,7 +27,8 @@ public class Context {
   private String contextRoot;
   private File directory;
 
-  public Context() { }
+  public Context() {
+  }
 
   public Context(String contextRoot,
                  File directory) {

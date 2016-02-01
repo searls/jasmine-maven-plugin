@@ -1,9 +1,9 @@
 package com.github.searls.jasmine.runner;
 
-import java.io.IOException;
-
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
+
+import java.io.IOException;
 
 public class SpecRunnerHtmlGeneratorFactory {
 

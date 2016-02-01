@@ -1,7 +1,11 @@
 package com.github.searls.jasmine.io.scripts;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import com.github.searls.jasmine.model.ScriptSearch;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.net.URI;
@@ -9,13 +13,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-
-import com.github.searls.jasmine.model.ScriptSearch;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class BasicScriptResolverTest {
@@ -65,7 +64,7 @@ public class BasicScriptResolverTest {
 
     this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
-    assertEquals(SOURCE_DIRECTORY,this.resolver.getSourceDirectory());
+    assertEquals(SOURCE_DIRECTORY, this.resolver.getSourceDirectory());
   }
 
   @Test
@@ -80,6 +79,6 @@ public class BasicScriptResolverTest {
 
     this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
-    assertEquals(SPEC_DIRECTORY,this.resolver.getSpecDirectory());
+    assertEquals(SPEC_DIRECTORY, this.resolver.getSpecDirectory());
   }
 }

@@ -1,18 +1,17 @@
 package com.github.searls.jasmine.runner;
 
+import com.github.searls.jasmine.io.scripts.ScriptResolver;
+import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.io.IOException;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
 
 public class SpecRunnerHtmlGeneratorFactoryTest {
 

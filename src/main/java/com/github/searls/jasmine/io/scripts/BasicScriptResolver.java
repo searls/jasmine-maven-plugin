@@ -1,13 +1,12 @@
 package com.github.searls.jasmine.io.scripts;
 
+import com.github.searls.jasmine.model.ScriptSearch;
+import org.codehaus.plexus.util.StringUtils;
+
 import java.io.File;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.codehaus.plexus.util.StringUtils;
-
-import com.github.searls.jasmine.model.ScriptSearch;
 
 public class BasicScriptResolver implements ScriptResolver {
 
@@ -36,9 +35,9 @@ public class BasicScriptResolver implements ScriptResolver {
 
   private void resolveScripts() {
     this.preloads = new LinkedHashSet<String>(RESOLVES_PRELOAD_SOURCES.resolve(
-        this.preloadList,
-        this.sourceScriptSearch.getDirectory(),
-        this.specScriptSearch.getDirectory()));
+      this.preloadList,
+      this.sourceScriptSearch.getDirectory(),
+      this.specScriptSearch.getDirectory()));
     this.sources = new LinkedHashSet<String>(FINDS_SCRIPT_LOCATIONS.find(this.sourceScriptSearch));
     this.sources.removeAll(this.preloads);
 

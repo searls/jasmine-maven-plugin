@@ -1,10 +1,10 @@
 package com.github.searls.jasmine.io;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class RelativizesFilePaths {
 
@@ -12,7 +12,7 @@ public class RelativizesFilePaths {
     String fromPath = from.getCanonicalPath();
     String toPath = to.getCanonicalPath();
 
-    String root = StringUtils.getCommonPrefix(new String[] { fromPath, toPath });
+    String root = StringUtils.getCommonPrefix(new String[]{fromPath, toPath});
     StringBuffer result = new StringBuffer();
     if (this.fromPathIsNotADirectAncestor(fromPath, root)) {
       for (@SuppressWarnings("unused") String dir : this.divergentDirectories(root, fromPath)) {
@@ -41,7 +41,7 @@ public class RelativizesFilePaths {
   }
 
   private String trimLeadingSlashIfNecessary(StringBuffer result) {
-    return StringUtils.removeStart(result.toString(),File.separator);
+    return StringUtils.removeStart(result.toString(), File.separator);
   }
 
 }

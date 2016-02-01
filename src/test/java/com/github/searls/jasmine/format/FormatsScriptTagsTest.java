@@ -1,12 +1,12 @@
 package com.github.searls.jasmine.format;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
+import org.junit.Test;
 
 import java.util.HashSet;
 
-import org.junit.Test;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.Assert.assertThat;
 
 public class FormatsScriptTagsTest {
   private FormatsScriptTags subject = new FormatsScriptTags();
@@ -17,7 +17,7 @@ public class FormatsScriptTagsTest {
 
     String result = subject.format(new HashSet<String>(asList(expected)));
 
-    assertThat(result,containsString(expectedScriptTagFormat(expected)));
+    assertThat(result, containsString(expectedScriptTagFormat(expected)));
   }
 
   @Test
@@ -25,9 +25,9 @@ public class FormatsScriptTagsTest {
     String first = "A";
     String second = "B";
 
-    String result = subject.format(new HashSet<String>(asList(first,second)));
+    String result = subject.format(new HashSet<String>(asList(first, second)));
 
-    assertThat(result,containsString(expectedScriptTagFormat(first)+"\n"+expectedScriptTagFormat(second)));
+    assertThat(result, containsString(expectedScriptTagFormat(first) + "\n" + expectedScriptTagFormat(second)));
   }
 
   private String expectedScriptTagFormat(String scriptName) {
@@ -35,7 +35,7 @@ public class FormatsScriptTagsTest {
   }
 
   private String expectedScriptTagFormat(String scriptName, String scriptType) {
-    return "<script type=\""+scriptType+"\" src=\""+scriptName+"\"></script>";
+    return "<script type=\"" + scriptType + "\" src=\"" + scriptName + "\"></script>";
   }
 
 }

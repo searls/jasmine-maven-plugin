@@ -29,11 +29,11 @@ public class ResourceHandlerConfigurator {
     this.createsRunner = createsRunner;
   }
 
-  public Handler createHandler() throws IOException  {
+  public Handler createHandler() throws IOException {
     ContextHandlerCollection contexts = new ContextHandlerCollection();
 
     for (Context context : this.configuration.getContexts()) {
-      String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(),"/");
+      String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(), "/");
       ContextHandler handler = contexts.addContext(contextRoot, "");
       handler.setAliases(true);
       handler.setHandler(this.createResourceHandler(true, context.getDirectory().getCanonicalPath(), null));

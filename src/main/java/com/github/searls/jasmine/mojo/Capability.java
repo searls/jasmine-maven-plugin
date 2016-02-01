@@ -8,7 +8,7 @@ public class Capability {
   private String name;
   private Object value;
   private List<Object> list;
-  private Map<String,Object> map;
+  private Map<String, Object> map;
 
   public String getName() {
     return name;
