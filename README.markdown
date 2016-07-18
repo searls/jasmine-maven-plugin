@@ -12,7 +12,6 @@ You can find the latest release along with release notes [here](https://github.c
 If you want to point at snapshot releases of the plugin (note that I don't deploy them often), they're hosted on the [Sonatype OSS snapshot repository](https://oss.sonatype.org/service/local/repositories/snapshots).
 
 ## Maintainers
-* [Justin Searls](http://about.me/searls), [Test Double](http://testdouble.com)
 * [Kyle Lieber](http://kylelieber.com)
 
 ## Issues
