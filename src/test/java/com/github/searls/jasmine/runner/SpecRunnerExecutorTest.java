@@ -1,88 +1,76 @@
 package com.github.searls.jasmine.runner;
 
-import com.gargoylesoftware.htmlunit.BrowserVersion;
+import com.github.searls.jasmine.io.FileUtilsWrapper;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.model.JasmineResult;
-import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
+import java.util.Collections;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.contains;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doNothing;
-import static org.powermock.api.mockito.PowerMockito.spy;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(FileUtils.class)
+@PrepareForTest(URL.class)
 public class SpecRunnerExecutorTest {
-
-  private static final String BUILD_REPORT_JS_CONTENTS = "var jasmineMavenPlugin = {printReport: function(){ return 'pants\\nkaka'; }};";
-  private static final String JUNIT_RESULTS = "var junitXmlReporter = { report: function(reporter) { return '<xml/>'; }};";
-  private static HtmlUnitDriver driver;
 
   @Mock
   private IOUtilsWrapper ioUtilsWrapper;
-
   @Mock
-  private File file;
+  private FileUtilsWrapper fileUtilsWrapper;
+  @Mock
+  private WebDriverWaiter webDriverWaiter;
+  @Mock
+  private ConsoleErrorChecker consoleErrorChecker;
+
+  private URL runnerUrl;
+  @Mock
+  private File junitXmlReport;
+  @Mock
+  private RemoteWebDriver webDriver;
+  private int timeout = 2;
+  private boolean debug = false;
   @Mock
   private Log log;
+  private String format = null;
+  @Mock
+  File reporter;
+  private String report = "report";
 
-  private final URL resource = this.getClass().getResource("/example_nested_specrunner.html");
-
-  @InjectMocks
   private SpecRunnerExecutor subject;
 
   @Before
-  public void stubResourceStreams() throws IOException {
-    spy(FileUtils.class);
+  public void setUp() throws Exception {
+    subject = new SpecRunnerExecutor(ioUtilsWrapper, fileUtilsWrapper, webDriverWaiter, consoleErrorChecker);
 
-    when(this.ioUtilsWrapper.toString(isA(String.class))).thenReturn(BUILD_REPORT_JS_CONTENTS, JUNIT_RESULTS);
-    driver = new HtmlUnitDriver(BrowserVersion.FIREFOX_38);
-    driver.setJavascriptEnabled(true);
+    runnerUrl = PowerMockito.mock(URL.class);
+
+    when(fileUtilsWrapper.readFileToString(reporter)).thenReturn("reporter");
+    when(ioUtilsWrapper.toString(SpecRunnerExecutor.CREATE_JUNIT_XML)).thenReturn("reporter");
+    when(webDriver.executeScript(contains("reporter"))).thenReturn(report);
   }
 
   @Test
-  public void shouldFindSpecsInResults() throws Exception {
-    doNothing().when(FileUtils.class);
-    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
+  public void shouldExecute() throws Exception {
+    JasmineResult result = subject.execute(runnerUrl, junitXmlReport, webDriver, timeout, debug, log, format, Collections.singletonList(reporter));
 
-    JasmineResult result = this.subject.execute(this.resource, this.file, driver, 300, false, this.log, null);
-
+    verify(webDriver).get(runnerUrl.toString());
+    verify(webDriverWaiter).waitForRunnerToFinish(webDriver, timeout, debug, log);
+    verify(fileUtilsWrapper).writeStringToFile(junitXmlReport, report);
     assertThat(result, is(not(nullValue())));
-    assertThat(result.getDescription(), containsString("kaka"));
-    assertThat(result.getDetails(), containsString("pants"));
-    assertThat(result.didPass(), is(false));
-
-    verifyStatic();
-    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
-  }
-
-  @Test
-  public void shouldExportJUnitResults() throws Exception {
-    doNothing().when(FileUtils.class);
-    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
-
-    this.subject.execute(this.resource, this.file, driver, 300, false, this.log, null);
-
-    verifyStatic();
-    FileUtils.writeStringToFile(this.file, "<xml/>", "UTF-8");
+    assertThat(result.getDetails(), containsString(report));
   }
 }

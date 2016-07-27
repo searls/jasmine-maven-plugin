@@ -241,7 +241,8 @@ public class TestMojo extends AbstractJasmineMojo {
       this.timeout,
       this.debug,
       this.getLog(),
-      this.format
+      this.format,
+      getReporters()
     );
     return result;
   }

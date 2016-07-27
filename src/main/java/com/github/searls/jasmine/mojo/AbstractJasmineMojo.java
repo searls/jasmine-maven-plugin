@@ -13,7 +13,6 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
-import org.codehaus.plexus.resource.loader.FileResourceLoader;
 import org.eclipse.jetty.server.Connector;
 
 import java.io.File;
@@ -22,8 +21,6 @@ import java.util.Collections;
 import java.util.List;
 
 public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {
-
-  private static final String ERROR_FILE_DNE = "Invalid value for parameter '%s'. File does not exist: %s";
 
   // Properties in order of most-to-least interesting for client projects to override
 
@@ -101,6 +98,19 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    */
   @Parameter
   protected String customRunnerConfiguration;
+
+  /**
+   * <p> Specify a custom reporter to be used to print the test report.</p>
+   * <p>Example usage:</p>
+   * <pre>
+   * &lt;reporters&gt;
+   *   &lt;reporter&gt;${project.basedir}/src/test/resources/myCustomReporter.js&lt;/reporter&gt;
+   *   &lt;reporter&gt;STANDARD&lt;/reporter&gt;
+   * &lt;/reporters&gt;
+   * </pre>
+   */
+  @Parameter
+  protected List<String> reporters = new ArrayList<String>();
 
   /**
    * Target directory for files created by the plugin.
@@ -364,20 +374,22 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   protected MavenProject mavenProject;
 
   @Component
-  protected ResourceManager locator;
+  ResourceManager resourceManager;
+
+  protected ResourceRetriever resourceRetriever;
+  protected ReporterRetriever reporterRetriever;
+
+  protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
 
   protected ScriptSearch sources;
   protected ScriptSearch specs;
 
-  protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
-
   private File customRunnerTemplateFile;
   private File customRunnerConfigurationFile;
-
+  private List<File> reporterFiles = new ArrayList<File>();
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-
     this.loadResources();
 
     this.sources = new ScriptSearch(this.jsSrcDir, this.sourceIncludes, this.sourceExcludes);
@@ -459,6 +471,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   }
 
   @Override
+  public List<File> getReporters() {
+    return this.reporterFiles;
+  }
+
+  @Override
   public File getBasedir() {
     return this.mavenProject.getBasedir();
   }
@@ -496,29 +513,22 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   }
 
   private void loadResources() throws MojoExecutionException {
-    this.customRunnerTemplateFile = this.getResourceAsFile("customRunnerTemplate", this.customRunnerTemplate);
-    this.customRunnerConfigurationFile = this.getResourceAsFile("customRunnerConfiguration", this.customRunnerConfiguration);
+    this.customRunnerTemplateFile = getResourceRetriever().getResourceAsFile("customRunnerTemplate", this.customRunnerTemplate, this.mavenProject);
+    this.customRunnerConfigurationFile = getResourceRetriever().getResourceAsFile("customRunnerConfiguration", this.customRunnerConfiguration, this.mavenProject);
+    this.reporterFiles = getReporterRetriever().retrieveReporters(this.reporters, this.mavenProject);
   }
 
-  private File getResourceAsFile(String parameter, String resourceLocation) throws MojoExecutionException {
-    File file = null;
-
-    if (resourceLocation != null) {
-      this.locator.addSearchPath("url", "");
-      this.locator.addSearchPath(FileResourceLoader.ID, this.mavenProject.getFile().getParentFile().getAbsolutePath());
-
-      ClassLoader origLoader = Thread.currentThread().getContextClassLoader();
-      try {
-        Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
-        try {
-          file = this.locator.getResourceAsFile(resourceLocation);
-        } catch (Exception e) {
-          throw new MojoExecutionException(String.format(ERROR_FILE_DNE, parameter, resourceLocation));
-        }
-      } finally {
-        Thread.currentThread().setContextClassLoader(origLoader);
-      }
+  private ResourceRetriever getResourceRetriever() {
+    if (resourceRetriever == null) {
+      resourceRetriever = new ResourceRetriever(resourceManager);
     }
-    return file;
+    return resourceRetriever;
+  }
+
+  private ReporterRetriever getReporterRetriever() {
+    if (reporterRetriever == null) {
+      reporterRetriever = new ReporterRetriever(getResourceRetriever());
+    }
+    return reporterRetriever;
   }
 }

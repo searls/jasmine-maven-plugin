@@ -36,6 +36,8 @@ public interface JasmineConfiguration {
 
   File getCustomRunnerConfiguration();
 
+  List<File> getReporters();
+
   int getAutoRefreshInterval();
 
   boolean isCoffeeScriptCompilationEnabled();
