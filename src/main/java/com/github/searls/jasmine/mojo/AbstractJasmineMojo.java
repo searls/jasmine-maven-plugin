@@ -3,6 +3,8 @@ package com.github.searls.jasmine.mojo;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.FileSystemReporter;
+import com.github.searls.jasmine.model.Reporter;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
@@ -104,13 +106,36 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * <p>Example usage:</p>
    * <pre>
    * &lt;reporters&gt;
-   *   &lt;reporter&gt;${project.basedir}/src/test/resources/myCustomReporter.js&lt;/reporter&gt;
-   *   &lt;reporter&gt;STANDARD&lt;/reporter&gt;
+   *   &lt;reporter&gt;
+   *     &lt;reporterName&gt;${project.basedir}/src/test/resources/myCustomReporter.js&lt;/reporterName&gt;
+   *   &lt;/reporter&gt;
+   *   &lt;reporter&gt;
+   *     &lt;reporterName&gt;STANDARD&lt;/reporterName&gt;
+   *   &lt;/reporter&gt;
    * &lt;/reporters&gt;
    * </pre>
    */
   @Parameter
-  protected List<String> reporters = new ArrayList<String>();
+  protected List<Reporter> reporters = new ArrayList<Reporter>();
+
+  /**
+   * <p> Specify a custom file system reporter to be used to store the test report.</p>
+   * <p>Example usage:</p>
+   * <pre>
+   * &lt;fileSystemReporters&gt;
+   *   &lt;reporter&gt;
+   *     &lt;fileName&gt;MyFile.log&lt;/fileName&gt;
+   *     &lt;reporterName&gt;${project.basedir}/src/test/resources/myCustomReporter.js&lt;/reporterName&gt;
+   *   &lt;/reporter&gt;
+   *   &lt;reporter&gt;
+   *     &lt;fileName&gt;Test-jasmine.xml&lt;/fileName&gt;
+   *     &lt;reporterName&gt;JUNIT_XML&lt;/reporterName&gt;
+   *   &lt;/reporter&gt;
+   * &lt;/fileSystemReporters&gt;
+   * </pre>
+   */
+  @Parameter
+  protected List<FileSystemReporter> fileSystemReporters = new ArrayList<FileSystemReporter>();
 
   /**
    * Target directory for files created by the plugin.
@@ -386,7 +411,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
   private File customRunnerTemplateFile;
   private File customRunnerConfigurationFile;
-  private List<File> reporterFiles = new ArrayList<File>();
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -471,8 +495,13 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   }
 
   @Override
-  public List<File> getReporters() {
-    return this.reporterFiles;
+  public List<Reporter> getReporters() {
+    return this.reporters;
+  }
+
+  @Override
+  public List<FileSystemReporter> getFileSystemReporters() {
+    return this.fileSystemReporters;
   }
 
   @Override
@@ -515,7 +544,8 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   private void loadResources() throws MojoExecutionException {
     this.customRunnerTemplateFile = getResourceRetriever().getResourceAsFile("customRunnerTemplate", this.customRunnerTemplate, this.mavenProject);
     this.customRunnerConfigurationFile = getResourceRetriever().getResourceAsFile("customRunnerConfiguration", this.customRunnerConfiguration, this.mavenProject);
-    this.reporterFiles = getReporterRetriever().retrieveReporters(this.reporters, this.mavenProject);
+    this.reporters = getReporterRetriever().retrieveReporters(this.reporters, this.mavenProject);
+    this.fileSystemReporters = getReporterRetriever().retrieveFileSystemReporters(this.fileSystemReporters, this.getJasmineTargetDir(), this.mavenProject);
   }
 
   private ResourceRetriever getResourceRetriever() {

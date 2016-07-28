@@ -20,10 +20,6 @@ public class JasmineResult {
     this.details = details;
   }
 
-  public void appendDetails(String details) {
-    this.details += details;
-  }
-
   private <T> T last(T[] array) {
     return array[array.length - 1];
   }

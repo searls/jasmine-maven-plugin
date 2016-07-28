@@ -1,7 +1,7 @@
 Providing Custom Reporters
 ==========================
 It is possible to configure your build to use custom reporters with the jasmine-maven-plugin.
-A list of reporters can be defined that will print to Standard Out during the build process.
+A list of reporters can be defined that will print to either standard out or save to the file system during the build process.
 
 This can be leveraged to support reporting on metadata within your test suite.
 Store information to `window` during your test execution, then retrieve it within your reporter.
@@ -28,14 +28,30 @@ Here is an example configuration:
       </executions>
       <configuration>
         <reporters>
-          <reporter>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}reporter.js</reporter>
-          <reporter>STANDARD</reporter>
+          <reporter>
+            <reporterName>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}reporter.js</reporterName>
+          </reporter>
+          <reporter>
+            <reporterName>STANDARD</reporterName>
+          </reporter>
         </reporters>
+        <fileSystemReporters>
+          <reporter>
+            <fileName>TEST-jasmine.log</fileName>
+            <reporterName>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}logger.js</reporterName>
+          </reporter>
+          <reporter>
+            <fileName>TEST-jasmine.xml</fileName>
+            <reporterName>JUNIT_XML</reporterName>
+          </reporter>
+        </fileSystemReporters>
       </configuration>
     </plugin>
   </plugins>
 </build>
 ```
+
+*Standard Out Reporter:*
 
 This example configuration will first print to standard out using the custom reporter, then using the `STANDARD` reporter.
 The Success of Failure of the build will be determined by the `STANDARD` reporter in this example.
@@ -48,6 +64,24 @@ To define a custom reporter, use this interface as a template:
 
   jasmineMavenPlugin.printReport = function(r, config) {
     return "Happy Reporting!";
+  };
+})();
+```
+
+*File System Reporter:*
+
+This example configuration will first execute the custom logger and store the output to `TEST-jasmine.log`, then using the standard `JUNIT_XML` reporter, store the junit xml report to `TEST-jasmine.xml`.
+
+To define a custom file system reporter, use this interface as a template:
+
+``` js
+var fileSystemReporter;
+
+(function() {
+  fileSystemReporter = {
+    report: function(reporter,debug) {
+      return "Happy Reporting!";
+    }
   };
 })();
 ```

@@ -1,4 +1,4 @@
-var junitXmlReporter;
+var fileSystemReporter;
 
 (function() {
   var resultForSpec = function(reporter, spec){
@@ -11,7 +11,7 @@ var junitXmlReporter;
     return {};
   };
 
-  junitXmlReporter = {
+  fileSystemReporter = {
     prolog: '<?xml version="1.0" encoding="UTF-8" ?>',
     report: function(reporter,debug) {
       if (!reporter)

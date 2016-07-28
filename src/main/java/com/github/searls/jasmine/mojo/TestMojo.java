@@ -141,14 +141,6 @@ public class TestMojo extends AbstractJasmineMojo {
   protected PhantomJsOptions phantomjs;
 
   /**
-   * The name of the generated JUnit XML report.
-   *
-   * @since 1.1.0
-   */
-  @Parameter(defaultValue = "TEST-jasmine.xml")
-  protected String junitXmlReportFileName;
-
-  /**
    * Keep the server alive after the <code>jasmine:test</code> goal exists.
    * Useful if you need to run further analysis on your tests, like collecting code coverage.
    *
@@ -236,13 +228,13 @@ public class TestMojo extends AbstractJasmineMojo {
     WebDriver driver = this.createDriver();
     JasmineResult result = new SpecRunnerExecutor().execute(
       runner,
-      new File(this.jasmineTargetDir, this.junitXmlReportFileName),
       driver,
       this.timeout,
       this.debug,
       this.getLog(),
       this.format,
-      getReporters()
+      getReporters(),
+      getFileSystemReporters()
     );
     return result;
   }

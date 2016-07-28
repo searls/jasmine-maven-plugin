@@ -1,8 +1,9 @@
 package com.github.searls.jasmine.runner;
 
 import com.github.searls.jasmine.io.FileUtilsWrapper;
-import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.model.FileSystemReporter;
 import com.github.searls.jasmine.model.JasmineResult;
+import com.github.searls.jasmine.model.Reporter;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +29,6 @@ import static org.mockito.Mockito.when;
 public class SpecRunnerExecutorTest {
 
   @Mock
-  private IOUtilsWrapper ioUtilsWrapper;
-  @Mock
   private FileUtilsWrapper fileUtilsWrapper;
   @Mock
   private WebDriverWaiter webDriverWaiter;
@@ -39,6 +38,8 @@ public class SpecRunnerExecutorTest {
   private URL runnerUrl;
   @Mock
   private File junitXmlReport;
+  @Mock
+  private File junitXmlReporter;
   @Mock
   private RemoteWebDriver webDriver;
   private int timeout = 2;
@@ -54,18 +55,18 @@ public class SpecRunnerExecutorTest {
 
   @Before
   public void setUp() throws Exception {
-    subject = new SpecRunnerExecutor(ioUtilsWrapper, fileUtilsWrapper, webDriverWaiter, consoleErrorChecker);
+    subject = new SpecRunnerExecutor(fileUtilsWrapper, webDriverWaiter, consoleErrorChecker);
 
     runnerUrl = PowerMockito.mock(URL.class);
 
     when(fileUtilsWrapper.readFileToString(reporter)).thenReturn("reporter");
-    when(ioUtilsWrapper.toString(SpecRunnerExecutor.CREATE_JUNIT_XML)).thenReturn("reporter");
+    when(fileUtilsWrapper.readFileToString(junitXmlReporter)).thenReturn("reporter");
     when(webDriver.executeScript(contains("reporter"))).thenReturn(report);
   }
 
   @Test
   public void shouldExecute() throws Exception {
-    JasmineResult result = subject.execute(runnerUrl, junitXmlReport, webDriver, timeout, debug, log, format, Collections.singletonList(reporter));
+    JasmineResult result = subject.execute(runnerUrl, webDriver, timeout, debug, log, format, Collections.singletonList(new Reporter(reporter)), Collections.singletonList(new FileSystemReporter(junitXmlReport, junitXmlReporter)));
 
     verify(webDriver).get(runnerUrl.toString());
     verify(webDriverWaiter).waitForRunnerToFinish(webDriver, timeout, debug, log);

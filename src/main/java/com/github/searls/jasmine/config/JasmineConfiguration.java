@@ -1,5 +1,7 @@
 package com.github.searls.jasmine.config;
 
+import com.github.searls.jasmine.model.FileSystemReporter;
+import com.github.searls.jasmine.model.Reporter;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.mojo.Context;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
@@ -36,7 +38,9 @@ public interface JasmineConfiguration {
 
   File getCustomRunnerConfiguration();
 
-  List<File> getReporters();
+  List<Reporter> getReporters();
+
+  List<FileSystemReporter> getFileSystemReporters();
 
   int getAutoRefreshInterval();
 

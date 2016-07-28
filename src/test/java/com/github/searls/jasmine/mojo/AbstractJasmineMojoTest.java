@@ -1,6 +1,8 @@
 package com.github.searls.jasmine.mojo;
 
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import com.github.searls.jasmine.model.FileSystemReporter;
+import com.github.searls.jasmine.model.Reporter;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -52,6 +54,9 @@ public class AbstractJasmineMojoTest {
   private MavenProject mavenProject;
 
   @Mock
+  private File targetDir;
+
+  @Mock
   private File projectFile;
 
   @Mock
@@ -66,6 +71,7 @@ public class AbstractJasmineMojoTest {
   @Before
   public void before() {
     this.subject.sourceEncoding = ENCODING;
+    this.subject.jasmineTargetDir = targetDir;
     this.subject.resourceRetriever = resourceRetriever;
     this.subject.reporterRetriever = reporterRetriever;
   }
@@ -153,16 +159,24 @@ public class AbstractJasmineMojoTest {
 
   @Test
   public void testGetReporters() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
-    File reporterFile = mock(File.class);
-    List<File> reporterFiles = Collections.singletonList(reporterFile);
-    String reporter = "/my/super/custom/reporter";
-    List<String> reporters = Collections.singletonList(reporter);
+    List<Reporter> reporters = Collections.singletonList(mock(Reporter.class));
     subject.reporters = reporters;
-    when(reporterRetriever.retrieveReporters(eq(reporters), eq(mavenProject))).thenReturn(reporterFiles);
+    when(reporterRetriever.retrieveReporters(reporters, mavenProject)).thenReturn(reporters);
 
     subject.execute();
 
-    assertThat(subject.getReporters(), is(reporterFiles));
+    assertThat(subject.getReporters(), is(reporters));
+  }
+
+  @Test
+  public void testGetFileSystemReporters() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+    List<FileSystemReporter> fsReporters = Collections.singletonList(mock(FileSystemReporter.class));
+    subject.fileSystemReporters = fsReporters;
+    when(reporterRetriever.retrieveFileSystemReporters(fsReporters, targetDir, mavenProject)).thenReturn(fsReporters);
+
+    subject.execute();
+
+    assertThat(subject.getFileSystemReporters(), is(fsReporters));
   }
 
   @Test

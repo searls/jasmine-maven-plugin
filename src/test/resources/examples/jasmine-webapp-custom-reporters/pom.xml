@@ -25,9 +25,23 @@
         </executions>
         <configuration>
           <reporters>
-            <reporter>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}reporter.js</reporter>
-            <reporter>STANDARD</reporter>
+            <reporter>
+              <reporterName>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}reporter.js</reporterName>
+            </reporter>
+            <reporter>
+              <reporterName>STANDARD</reporterName>
+            </reporter>
           </reporters>
+          <fileSystemReporters>
+            <reporter>
+              <fileName>TEST-jasmine.log</fileName>
+              <reporterName>${project.basedir}${file.separator}src${file.separator}test${file.separator}resources${file.separator}logger.js</reporterName>
+            </reporter>
+            <reporter>
+              <fileName>TEST-jasmine.xml</fileName>
+              <reporterName>JUNIT_XML</reporterName>
+            </reporter>
+        </fileSystemReporters>
         </configuration>
       </plugin>
     </plugins>

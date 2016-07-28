@@ -11,13 +11,13 @@ public class ResourceRetriever {
 
   private final ResourceManager locator;
 
-  static final String ERROR_FILE_DNE = "Invalid value for parameter '%s'. File does not exist: %s";
+  private static final String ERROR_FILE_DNE = "Invalid value for parameter '%s'. File does not exist: %s";
 
   public ResourceRetriever(final ResourceManager locator) {
     this.locator = locator;
   }
 
-  File getResourceAsFile(final String parameter, final String resourceLocation, final MavenProject mavenProject) throws MojoExecutionException {
+  public File getResourceAsFile(final String parameter, final String resourceLocation, final MavenProject mavenProject) throws MojoExecutionException {
     File file = null;
 
     if (resourceLocation != null) {
