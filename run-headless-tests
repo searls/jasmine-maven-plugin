@@ -1,0 +1,6 @@
+#!/bin/bash
+
+export DISPLAY=:99
+Xvfb :99 &
+bundle install
+rake cucumber

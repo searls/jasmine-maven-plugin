@@ -1,0 +1,12 @@
+test-suite:
+  build: .
+  volumes:
+    - .:/code
+  volumes_from:
+    - box
+
+box:
+  image: busybox
+  volumes:
+    - /bundler
+    - /root/.m2
