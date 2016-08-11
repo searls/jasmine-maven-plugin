@@ -1,10 +1,11 @@
 package com.github.searls.jasmine.mojo;
 
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import com.github.searls.jasmine.model.FileSystemReporter;
+import com.github.searls.jasmine.model.Reporter;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.junit.Before;
@@ -18,22 +19,19 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 import static com.github.searls.jasmine.Matchers.empty;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractJasmineMojoTest {
 
   private static final String ENCODING = "UTF-8";
-  private static final String SCRIPT_LOADER_PATH = "scriptloaderpath";
-  private static final String PARENT_PROJECT_PATH = "/parent/project/path";
 
   @InjectMocks
   @Spy
@@ -49,15 +47,14 @@ public class AbstractJasmineMojoTest {
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
-  private static final String CUSTOM_RUNNER_CONFIG = "customRunnerConfiguration";
-
-  private static final String CUSTOM_RUNNER_TEMPLATE = "customRunnerTemplate";
-
   @Mock
   private File baseDir;
 
   @Mock
   private MavenProject mavenProject;
+
+  @Mock
+  private File targetDir;
 
   @Mock
   private File projectFile;
@@ -66,12 +63,17 @@ public class AbstractJasmineMojoTest {
   private File parentProjectFile;
 
   @Mock
-  private ResourceManager locator;
+  private ResourceRetriever resourceRetriever;
+
+  @Mock
+  private ReporterRetriever reporterRetriever;
 
   @Before
   public void before() {
     this.subject.sourceEncoding = ENCODING;
-    this.subject.locator = this.locator;
+    this.subject.jasmineTargetDir = targetDir;
+    this.subject.resourceRetriever = resourceRetriever;
+    this.subject.reporterRetriever = reporterRetriever;
   }
 
   @Test
@@ -133,36 +135,48 @@ public class AbstractJasmineMojoTest {
 
   @Test
   public void testGetCustomRunnerConfiguration() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
-    File customRunnerConfiguration = mock(File.class);
-    this.subject.customRunnerConfiguration = CUSTOM_RUNNER_CONFIG;
-    when(this.mavenProject.getFile()).thenReturn(this.projectFile);
-    when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
-    when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
-    when(this.locator.getResourceAsFile(CUSTOM_RUNNER_CONFIG)).thenReturn(customRunnerConfiguration);
-    this.subject.execute();
-    assertThat(this.subject.getCustomRunnerConfiguration(), is(customRunnerConfiguration));
+    File configFile = mock(File.class);
+    String config = "/my/fancy/pants/config";
+    subject.customRunnerConfiguration = config;
+    when(resourceRetriever.getResourceAsFile("customRunnerConfiguration", config, mavenProject)).thenReturn(configFile);
+
+    subject.execute();
+
+    assertThat(subject.getCustomRunnerConfiguration(), is(configFile));
   }
 
   @Test
   public void testGetCustomRunnerTemplate() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
-    File customRunnerTemplate = mock(File.class);
-    this.subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
-    when(this.mavenProject.getFile()).thenReturn(this.projectFile);
-    when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
-    when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
-    when(this.locator.getResourceAsFile(CUSTOM_RUNNER_TEMPLATE)).thenReturn(customRunnerTemplate);
-    this.subject.execute();
-    assertThat(this.subject.getCustomRunnerTemplate(), is(customRunnerTemplate));
+    File templateFile = mock(File.class);
+    String template = "/my/super/sweet/template";
+    subject.customRunnerTemplate = template;
+    when(resourceRetriever.getResourceAsFile("customRunnerTemplate", template, mavenProject)).thenReturn(templateFile);
+
+    subject.execute();
+
+    assertThat(subject.getCustomRunnerTemplate(), is(templateFile));
   }
 
-  @Test(expected = MojoExecutionException.class)
-  public void testGetCustomRunnerTemplateNotFound() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
-    this.subject.customRunnerTemplate = CUSTOM_RUNNER_TEMPLATE;
-    when(this.mavenProject.getFile()).thenReturn(this.projectFile);
-    when(this.projectFile.getParentFile()).thenReturn(this.parentProjectFile);
-    when(this.parentProjectFile.getAbsolutePath()).thenReturn(PARENT_PROJECT_PATH);
-    when(this.locator.getResourceAsFile(CUSTOM_RUNNER_TEMPLATE)).thenThrow(new FileResourceCreationException(CUSTOM_RUNNER_TEMPLATE));
-    this.subject.execute();
+  @Test
+  public void testGetReporters() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+    List<Reporter> reporters = Collections.singletonList(mock(Reporter.class));
+    subject.reporters = reporters;
+    when(reporterRetriever.retrieveReporters(reporters, mavenProject)).thenReturn(reporters);
+
+    subject.execute();
+
+    assertThat(subject.getReporters(), is(reporters));
+  }
+
+  @Test
+  public void testGetFileSystemReporters() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+    List<FileSystemReporter> fsReporters = Collections.singletonList(mock(FileSystemReporter.class));
+    subject.fileSystemReporters = fsReporters;
+    when(reporterRetriever.retrieveFileSystemReporters(fsReporters, targetDir, mavenProject)).thenReturn(fsReporters);
+
+    subject.execute();
+
+    assertThat(subject.getFileSystemReporters(), is(fsReporters));
   }
 
   @Test

@@ -1,53 +1,52 @@
 package com.github.searls.jasmine.runner;
 
-import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.io.FileUtilsWrapper;
+import com.github.searls.jasmine.model.FileSystemReporter;
 import com.github.searls.jasmine.model.JasmineResult;
-import com.google.common.base.Predicate;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
+import com.github.searls.jasmine.model.Reporter;
 import org.apache.maven.plugin.logging.Log;
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class SpecRunnerExecutor {
 
-  public static final String BUILD_REPORT_JS = "/lib/buildReport.js";
-  public static final String CREATE_JUNIT_XML = "/lib/createJunitXml.js";
+  private final FileUtilsWrapper fileUtilsWrapper;
+  private final WebDriverWaiter webDriverWaiter;
+  private final ConsoleErrorChecker consoleErrorChecker;
 
-  private final IOUtilsWrapper ioUtilsWrapper;
-
-  public SpecRunnerExecutor(IOUtilsWrapper ioUtilsWrapper) {
-    this.ioUtilsWrapper = ioUtilsWrapper;
+  public SpecRunnerExecutor(FileUtilsWrapper fileUtilsWrapper, WebDriverWaiter webDriverWaiter, ConsoleErrorChecker consoleErrorChecker) {
+    this.fileUtilsWrapper = fileUtilsWrapper;
+    this.webDriverWaiter = webDriverWaiter;
+    this.consoleErrorChecker = consoleErrorChecker;
   }
 
   public SpecRunnerExecutor() {
-    this(new IOUtilsWrapper());
+    this(new FileUtilsWrapper(), new WebDriverWaiter(), new ConsoleErrorChecker());
   }
 
 
-  public JasmineResult execute(URL runnerUrl, File junitXmlReport, WebDriver driver, int timeout, boolean debug, Log log, String format) {
+  public JasmineResult execute(final URL runnerUrl, final WebDriver driver, final int timeout, final boolean debug, final Log log, final String format, final List<Reporter> reporters, final List<FileSystemReporter> fileSystemReporters) {
     try {
       if (!(driver instanceof JavascriptExecutor)) {
         throw new RuntimeException("The provided web driver can't execute JavaScript: " + driver.getClass());
       }
       JavascriptExecutor executor = (JavascriptExecutor) driver;
       driver.get(runnerUrl.toString());
-      this.waitForRunnerToFinish(driver, timeout, debug, log);
+      webDriverWaiter.waitForRunnerToFinish(driver, timeout, debug, log);
 
-      this.checkForConsoleErrors(driver, log);
+      consoleErrorChecker.checkForConsoleErrors(driver, log);
+
+      storeFileSystemReports(fileSystemReporters, executor, debug);
 
       JasmineResult jasmineResult = new JasmineResult();
-      jasmineResult.setDetails(this.buildReport(executor, format));
-      FileUtils.writeStringToFile(junitXmlReport, this.buildJunitXmlReport(executor, debug), "UTF-8");
-
+      jasmineResult.setDetails(buildReports(reporters, executor, format));
       return jasmineResult;
+
     } catch (Exception e) {
       throw new RuntimeException(e);
     } finally {
@@ -59,59 +58,35 @@ public class SpecRunnerExecutor {
     }
   }
 
-  private void checkForConsoleErrors(WebDriver driver, Log log) {
-    WebElement head = driver.findElement(By.tagName("head"));
-    if (head != null) {
-      String jserrors = head.getAttribute("jmp_jserror");
-      if (StringUtils.isNotBlank(jserrors)) {
-        log.warn("JavaScript Console Errors:\n\n  * " + jserrors.replaceAll(":!:", "\n  * ") + "\n\n");
-        throw new RuntimeException("There were javascript console errors.");
-      }
+  private void storeFileSystemReports(final List<FileSystemReporter> fileSystemReporters, final JavascriptExecutor executor, final boolean debug) throws IOException {
+    for (FileSystemReporter reporter : fileSystemReporters) {
+      fileUtilsWrapper.writeStringToFile(reporter.file, this.buildFileSystemReport(executor, reporter.reporterFile, debug));
     }
   }
 
-  private String buildReport(JavascriptExecutor driver, String format) throws IOException {
-    String script =
-      this.ioUtilsWrapper.toString(BUILD_REPORT_JS) +
-        "return jasmineMavenPlugin.printReport(window.jsApiReporter,{format:'" + format + "'});";
-    Object report = driver.executeScript(script);
+  private String buildFileSystemReport(final JavascriptExecutor driver, final File reporter, final boolean debug) throws IOException {
+    final String command = "return fileSystemReporter.report(window.jsApiReporter," + debug + ");";
+    return executeReportCommand(driver, reporter, command);
+  }
+
+  private String buildReports(final List<Reporter> reporters, final JavascriptExecutor executor, final String format) throws IOException {
+    final StringBuilder report = new StringBuilder();
+    for (Reporter reporter : reporters) {
+      report.append(buildReport(executor, reporter.reporterFile, format));
+    }
     return report.toString();
   }
 
-  private String buildJunitXmlReport(JavascriptExecutor driver, boolean debug) throws IOException {
-    Object junitReport = driver.executeScript(
-      this.ioUtilsWrapper.toString(CREATE_JUNIT_XML) +
-        "return junitXmlReporter.report(window.jsApiReporter," + debug + ");");
-    return junitReport.toString();
+  private String buildReport(final JavascriptExecutor driver, final File reporter, final String format) throws IOException {
+    final String command = "return jasmineMavenPlugin.printReport(window.jsApiReporter,{format:'" + format + "'});";
+    return executeReportCommand(driver, reporter, command);
   }
 
-  private void waitForRunnerToFinish(final WebDriver driver, int timeout, boolean debug, Log log) throws InterruptedException {
-    final JavascriptExecutor executor = (JavascriptExecutor) driver;
-    new WebDriverWait(driver, timeout, 1000).until(new Predicate<WebDriver>() {
-      @Override
-      public boolean apply(WebDriver input) {
-        return SpecRunnerExecutor.this.executionFinished(executor);
-      }
-    });
-
-    if (!this.executionFinished(executor)) {
-      this.handleTimeout(timeout, debug, log);
-    }
+  private String executeReportCommand(final JavascriptExecutor driver, final File reporter, final String command) throws IOException {
+    final String script = this.fileUtilsWrapper.readFileToString(reporter) + command;
+    final Object report = driver.executeScript(script);
+    return report.toString();
   }
 
-  private void handleTimeout(int timeout, boolean debug, Log log) {
-    log.warn("Attempted to wait for your specs to finish processing over the course of " +
-      timeout +
-      " seconds, but it still appears to be running.");
-    if (debug) {
-      log.warn("Debug mode: will attempt to parse the incomplete spec runner results");
-    } else {
-      throw new IllegalStateException("Timeout occurred. Aborting execution of specs. (Try configuring 'debug' to 'true' for more details.)");
-    }
-  }
-
-  private Boolean executionFinished(JavascriptExecutor driver) {
-    return (Boolean) driver.executeScript("return (window.jsApiReporter === undefined) ? false : window.jsApiReporter.finished");
-  }
 
 }

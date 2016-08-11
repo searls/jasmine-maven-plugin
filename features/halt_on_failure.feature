@@ -25,7 +25,7 @@ Feature: halt the build when a spec failure occurs
     When I run "mvn clean test"
     Then the build should fail
     And I should see ".*JavaScript Console Errors:"
-    And I should see ".*SyntaxError: Parse error"
+    And I should see ".*SyntaxError:"
 
   Scenario: project with no failures
   
