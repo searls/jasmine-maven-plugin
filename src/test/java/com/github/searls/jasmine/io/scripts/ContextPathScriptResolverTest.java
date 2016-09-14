@@ -9,7 +9,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -35,12 +35,12 @@ public class ContextPathScriptResolverTest {
 
   @Test
   public void testGetSourceDirectory() throws ScriptResolverException {
-    assertEquals(SOURCE_CONTEXT_PATH, this.contextPathScriptResolver.getSourceDirectory());
+    assertThat(this.contextPathScriptResolver.getSourceDirectory()).isEqualTo(SOURCE_CONTEXT_PATH);
   }
 
   @Test
   public void testGetSpecDirectory() throws ScriptResolverException {
-    assertEquals(SPEC_CONTEXT_PATH, this.contextPathScriptResolver.getSpecDirectory());
+    assertThat(this.contextPathScriptResolver.getSpecDirectory()).isEqualTo(SPEC_CONTEXT_PATH);
   }
 
   @Test
@@ -52,7 +52,7 @@ public class ContextPathScriptResolverTest {
 
     Set<String> expected = setOf(SOURCE_CONTEXT_PATH, scripts);
 
-    assertEquals(expected, this.contextPathScriptResolver.getSources());
+    assertThat(this.contextPathScriptResolver.getSources()).isEqualTo(expected);
   }
 
   @Test
@@ -64,7 +64,7 @@ public class ContextPathScriptResolverTest {
 
     Set<String> expected = setOf(SPEC_CONTEXT_PATH, scripts);
 
-    assertEquals(expected, this.contextPathScriptResolver.getSpecs());
+    assertThat(this.contextPathScriptResolver.getSpecs()).isEqualTo(expected);
   }
 
   @Test
@@ -86,7 +86,7 @@ public class ContextPathScriptResolverTest {
     expected.add(SOURCE_CONTEXT_PATH + "/sourceScript");
     expected.add("http://example.org/script.js");
 
-    assertEquals(expected, this.contextPathScriptResolver.getPreloads());
+    assertThat(this.contextPathScriptResolver.getPreloads()).isEqualTo(expected);
   }
 
   private static Set<String> setOf(String base, String... strings) {

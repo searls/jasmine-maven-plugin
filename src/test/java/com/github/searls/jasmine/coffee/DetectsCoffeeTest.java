@@ -1,12 +1,8 @@
 package com.github.searls.jasmine.coffee;
 
-import org.hamcrest.Description;
-import org.hamcrest.TypeSafeMatcher;
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DetectsCoffeeTest {
 
@@ -14,34 +10,21 @@ public class DetectsCoffeeTest {
 
   @Test
   public void whenAStringEndingInCoffeeThatsCoffee() {
-    assertThat("/some/path/to/pants.coffee", is(this.coffee()));
+    assertThat(subject.detect("/some/path/to/pants.coffee")).isTrue();
   }
 
   @Test
   public void whenAStringDoesNotEndInCoffeeThatsNotCoffee() {
-    assertThat("/some/path/to/pants.cafe", is(not(this.coffee())));
+    assertThat(subject.detect("/some/path/to/pants.cafe")).isFalse();
   }
 
   @Test
   public void whenCoffeeHasAQueryStringThatsCoffee() {
-    assertThat("/some/path/to/pants.coffee?stillCoffee=true", is(this.coffee()));
+    assertThat(subject.detect("/some/path/to/pants.coffee?stillCoffee=true")).isTrue();
   }
 
   @Test
   public void whenJavaScriptHasACoffeeQueryThatsNotCoffee() {
-    assertThat("/some/path/to/pants.js?extension=lulz.coffee", is(not(this.coffee())));
-  }
-
-  private TypeSafeMatcher<String> coffee() {
-    return new TypeSafeMatcher<String>() {
-      @Override
-      public boolean matchesSafely(String path) {
-        return DetectsCoffeeTest.this.subject.detect(path);
-      }
-
-      @Override
-      public void describeTo(Description desc) {
-      }
-    };
+    assertThat(subject.detect("/some/path/to/pants.cafe")).isFalse();
   }
 }

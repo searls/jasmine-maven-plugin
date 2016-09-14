@@ -7,8 +7,7 @@ import org.junit.Test;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 public class WebDriverFactoryTest {
@@ -24,21 +23,21 @@ public class WebDriverFactoryTest {
 
   @Test
   public void defaultDriverIsCustomHtmlUnitDriver() throws Exception {
-    assertEquals(QuietHtmlUnitDriver.class, factory.createWebDriver().getClass());
+    assertThat(factory.createWebDriver().getClass()).isEqualTo(QuietHtmlUnitDriver.class);
   }
 
   @Test
   public void defaultDriverEnablesJavascript() throws Exception {
     HtmlUnitDriver htmlUnitDriver = (HtmlUnitDriver) factory.createWebDriver();
 
-    assertTrue(htmlUnitDriver.isJavascriptEnabled());
+    assertThat(htmlUnitDriver.isJavascriptEnabled()).isTrue();
   }
 
   @Test
   public void customDriverIsCreatedWithDefaultConstructorIfNoCapabilitiesConstructorExists() throws Exception {
     factory.setWebDriverClassName(CustomDriverWithDefaultConstructor.class.getName());
 
-    assertEquals(CustomDriverWithDefaultConstructor.class, factory.createWebDriver().getClass());
+    assertThat(factory.createWebDriver().getClass()).isEqualTo(CustomDriverWithDefaultConstructor.class);
   }
 
 
@@ -46,7 +45,7 @@ public class WebDriverFactoryTest {
   public void customDriverIsCreatedWithCapabilitiesIfConstructorExists() throws Exception {
     factory.setWebDriverClassName(CustomDriverWithCapabilities.class.getName());
 
-    assertEquals(CustomDriverWithCapabilities.class, factory.createWebDriver().getClass());
+    assertThat(factory.createWebDriver().getClass()).isEqualTo(CustomDriverWithCapabilities.class);
   }
 
   private Capabilities createWebDriverAndReturnCapabilities() throws Exception {
@@ -57,7 +56,7 @@ public class WebDriverFactoryTest {
 
   @Test
   public void enablesJavascriptOnCustomDriver() throws Exception {
-    assertTrue(createWebDriverAndReturnCapabilities().isJavascriptEnabled());
+    assertThat(createWebDriverAndReturnCapabilities().isJavascriptEnabled()).isTrue();
   }
 
   @Test
@@ -67,6 +66,6 @@ public class WebDriverFactoryTest {
     capability.setValue("bar");
     factory.setWebDriverCapabilities(ImmutableList.of(capability));
 
-    assertEquals("bar", createWebDriverAndReturnCapabilities().getCapability("foo"));
+    assertThat(createWebDriverAndReturnCapabilities().getCapability("foo")).isEqualTo("bar");
   }
 }

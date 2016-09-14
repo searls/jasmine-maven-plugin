@@ -9,7 +9,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -36,7 +36,7 @@ public class QuietHtmlUnitDriverTest {
   public void enablesJavascript() {
     createDriver();
 
-    assertTrue(driver.isJavascriptEnabled());
+    assertThat(driver.isJavascriptEnabled()).isTrue();
   }
 
   private void modifyWebClient() {

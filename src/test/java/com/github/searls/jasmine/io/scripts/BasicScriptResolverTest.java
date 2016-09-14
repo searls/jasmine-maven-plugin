@@ -13,7 +13,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,7 +64,7 @@ public class BasicScriptResolverTest {
 
     this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
-    assertEquals(SOURCE_DIRECTORY, this.resolver.getSourceDirectory());
+    assertThat(this.resolver.getSourceDirectory()).isEqualTo(SOURCE_DIRECTORY);
   }
 
   @Test
@@ -79,6 +79,6 @@ public class BasicScriptResolverTest {
 
     this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
-    assertEquals(SPEC_DIRECTORY, this.resolver.getSpecDirectory());
+    assertThat(this.resolver.getSpecDirectory()).isEqualTo(SPEC_DIRECTORY);
   }
 }

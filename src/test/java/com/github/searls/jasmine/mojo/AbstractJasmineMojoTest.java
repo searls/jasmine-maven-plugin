@@ -22,11 +22,11 @@ import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
-import static com.github.searls.jasmine.Matchers.empty;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AbstractJasmineMojoTest {
@@ -103,34 +103,33 @@ public class AbstractJasmineMojoTest {
   @Test
   public void setsSourceIncludes() throws Exception {
     this.subject.execute();
-
-    assertThat(this.subject.sources.getIncludes(), hasItem("**" + File.separator + "*.js"));
+    assertThat(this.subject.sources.getIncludes()).contains("**" + File.separator + "*.js");
   }
 
   @Test
   public void setsSourceExcludes() throws Exception {
     this.subject.execute();
 
-    assertThat(this.subject.sources.getExcludes(), is(empty()));
+    assertThat(this.subject.sources.getExcludes()).isEmpty();
   }
 
   @Test
   public void setsSpecIncludes() throws Exception {
     this.subject.execute();
 
-    assertThat(this.subject.specs.getIncludes(), hasItem("**" + File.separator + "*.js"));
+    assertThat(this.subject.specs.getIncludes()).contains("**" + File.separator + "*.js");
   }
 
   @Test
   public void setsSpecExcludes() throws Exception {
     this.subject.execute();
 
-    assertThat(this.subject.specs.getExcludes(), is(empty()));
+    assertThat(this.subject.specs.getExcludes()).isEmpty();
   }
 
   @Test
   public void testGetSourceEncoding() {
-    assertThat(this.subject.getSourceEncoding(), is(ENCODING));
+    assertThat(this.subject.getSourceEncoding()).isEqualTo(ENCODING);
   }
 
   @Test
@@ -142,7 +141,7 @@ public class AbstractJasmineMojoTest {
 
     subject.execute();
 
-    assertThat(subject.getCustomRunnerConfiguration(), is(configFile));
+    assertThat(subject.getCustomRunnerConfiguration()).isEqualTo(configFile);
   }
 
   @Test
@@ -154,7 +153,7 @@ public class AbstractJasmineMojoTest {
 
     subject.execute();
 
-    assertThat(subject.getCustomRunnerTemplate(), is(templateFile));
+    assertThat(subject.getCustomRunnerTemplate()).isEqualTo(templateFile);
   }
 
   @Test
@@ -165,7 +164,7 @@ public class AbstractJasmineMojoTest {
 
     subject.execute();
 
-    assertThat(subject.getReporters(), is(reporters));
+    assertThat(subject.getReporters()).isEqualTo(reporters);
   }
 
   @Test
@@ -176,23 +175,23 @@ public class AbstractJasmineMojoTest {
 
     subject.execute();
 
-    assertThat(subject.getFileSystemReporters(), is(fsReporters));
+    assertThat(subject.getFileSystemReporters()).isEqualTo(fsReporters);
   }
 
   @Test
   public void testGetBaseDir() {
     when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
-    assertThat(this.subject.getBasedir(), is(this.baseDir));
+    assertThat(this.subject.getBasedir()).isEqualTo(baseDir);
   }
 
   @Test
   public void testGetMavenProject() {
-    assertThat(this.subject.getMavenProject(), is(this.mavenProject));
+    assertThat(this.subject.getMavenProject()).isEqualTo(mavenProject);
   }
 
   @Test
   public void testGetAutoRefreshInterval() {
     this.subject.autoRefreshInterval = 5;
-    assertThat(this.subject.getAutoRefreshInterval(), is(5));
+    assertThat(this.subject.getAutoRefreshInterval()).isEqualTo(5);
   }
 }

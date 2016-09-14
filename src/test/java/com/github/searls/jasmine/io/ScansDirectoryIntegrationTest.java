@@ -9,10 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @SuppressWarnings("unchecked")
 public class ScansDirectoryIntegrationTest {
@@ -29,7 +26,7 @@ public class ScansDirectoryIntegrationTest {
   public void shouldReturnNothingWhenThereIsNothing() {
     List<String> results = subject.scan(directory, DEFAULT_INCLUDES, DEFAULT_EXCLUDES);
 
-    assertThat(results, is(DEFAULT_EXCLUDES));
+    assertThat(results).isEqualTo(DEFAULT_EXCLUDES);
   }
 
   @Test
@@ -39,7 +36,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> results = subject.scan(directory, DEFAULT_INCLUDES, DEFAULT_EXCLUDES);
 
-    assertThat(results, hasItem(expected));
+    assertThat(results).contains(expected);
   }
 
   @Test
@@ -49,7 +46,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> results = subject.scan(directory, DEFAULT_INCLUDES, DEFAULT_EXCLUDES);
 
-    assertThat(results, not(hasItem(expected)));
+    assertThat(results).doesNotContain(expected);
   }
 
   @Test
@@ -59,7 +56,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> results = subject.scan(directory, DEFAULT_INCLUDES, asList("pants.js"));
 
-    assertThat(results, not(hasItem(expected)));
+    assertThat(results).doesNotContain(expected);
   }
 
   @Test
@@ -70,7 +67,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> results = subject.scan(directory, asList("**"), DEFAULT_EXCLUDES);
 
-    assertThat(results, not(hasItem(expected)));
+    assertThat(results).doesNotContain(expected);
   }
 
   @Test
@@ -79,7 +76,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> result = subject.scan(directory, asList("b.js", "a.js"), Collections.EMPTY_LIST);
 
-    assertThat(result, is(asList("b.js", "a.js")));
+    assertThat(result).containsExactly("b.js", "a.js");
   }
 
   @Test
@@ -89,7 +86,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> result = subject.scan(directory, asList("**"), Collections.EMPTY_LIST);
 
-    assertThat(result, is(asList("a", "b", "c" + File.separator + "a", "c" + File.separator + "d")));
+    assertThat(result).containsExactly("a", "b", "c" + File.separator + "a", "c" + File.separator + "d");
   }
 
 
@@ -100,7 +97,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> result = subject.scan(directory, ScansDirectory.DEFAULT_INCLUDES, Collections.EMPTY_LIST);
 
-    assertThat(result, is(asList("a.js", "b" + File.separator + "c.js")));
+    assertThat(result).containsExactly("a.js", "b" + File.separator + "c.js");
   }
 
   @Test
@@ -110,7 +107,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> result = subject.scan(directory, asList("lib/**/*.js", "**/*.js"), Collections.EMPTY_LIST);
 
-    assertThat(result, is(asList("lib" + File.separator + "a.js", "b.js")));
+    assertThat(result).containsExactly("lib" + File.separator + "a.js", "b.js");
   }
 
   @Test
@@ -147,7 +144,7 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> result = subject.scan(directory, asList("jquery/**/*.js", "yui2/**/*.js", "**/*.js"), Collections.EMPTY_LIST);
 
-    assertThat(result, is(slashify("jquery/cookie/jquery.cookie.js",
+    assertThat(result).isEqualTo(slashify("jquery/cookie/jquery.cookie.js",
       "jquery/jcrumb/jquery.jcrumbs-1.0.js",
       "jquery/jquery.formatCurrency-1.4.0.min.js",
       "jquery/underscore/underscore-min-1.1.2.js",
@@ -163,7 +160,7 @@ public class ScansDirectoryIntegrationTest {
       "customer/customcode/custom-code-preferences.js",
       "customer/view.js",
       "panda/sad.js",
-      "utils.js")));
+      "utils.js"));
   }
 
   private List<String> slashify(String... scripts) {
