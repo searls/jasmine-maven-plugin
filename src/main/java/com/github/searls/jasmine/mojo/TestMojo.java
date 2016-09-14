@@ -42,7 +42,7 @@ public class TestMojo extends AbstractJasmineMojo {
   /**
    * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
    * The plugin uses <a href="https://github.com/detro/ghostdriver">PhantomJSDriver</a> by default.
-   * <p/>
+   * <br>
    * <p>Some valid examples:</p>
    * <ul>
    * <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
@@ -50,7 +50,7 @@ public class TestMojo extends AbstractJasmineMojo {
    * <li>org.openqa.selenium.firefox.FirefoxDriver</li>
    * <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
    * </ul>
-   * <p></p>
+   * <br>
    * See the webDriverCapabilities property for configuring driver specific properties.
    *
    * @since 1.1.0
@@ -60,9 +60,9 @@ public class TestMojo extends AbstractJasmineMojo {
 
   /**
    * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>
-   * <p/>
+   * <br>
    * <p>Capabilities value can be either a String, a List, or a Map.</p>
-   * <p/>
+   * <br>
    * <p>Example:</p>
    * <pre>
    * &lt;webDriverCapabilities&gt;
@@ -94,7 +94,7 @@ public class TestMojo extends AbstractJasmineMojo {
   /**
    * <p>Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
    * This maps 1-to-1 with the public static instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.</p>
-   * <p/>
+   * <br>
    * <p>Some valid examples: CHROME, FIREFOX_17, INTERNET_EXPLORER_9, INTERNET_EXPLORER_10</p>
    *
    * @since 1.1.0
@@ -119,10 +119,10 @@ public class TestMojo extends AbstractJasmineMojo {
 
   /**
    * <p>Configure which version of PhantomJS should be used and how it should be found. The core of the
-   * <a href="http://klieber.github.io/phantomjs-maven-plugin"></a>phantomjs-maven-plugin</a> is used to provide this
+   * <a href="http://klieber.github.io/phantomjs-maven-plugin">phantomjs-maven-plugin</a> is used to provide this
    * functionality and this parameter should match the configuration of the
    * <a href="http://kylelieber.com/phantomjs-maven-plugin/install-mojo.html">phantomjs-maven-plugin install</a> goal.</p>
-   * <p/>
+   * <br>
    * <p>Default Options:</p>
    * <pre>
    * &lt;phantomjs&gt;

@@ -51,14 +51,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * before other sources (and specs) in a particular order. Each source will first be
    * searched for relative to <code>${jsSrcDir}</code>, then <code>${jsTestSrcDir}</code>,
    * then (if it's not found in either) it will be included exactly as it appears in your POM.</p>
-   * <p/>
+   * <br>
    * <p>Therefore, if jquery.js is in <code>${jsSrcDir}/vendor</code>, you would configure:</p>
    * <pre>
    * &lt;preloadSources&gt;
    *   &lt;source&gt;vendor/jquery.js&lt;/source&gt;
    * &lt;/preloadSources&gt;
    * </pre>
-   * <p/>
+   * <br>
    * <p>And jquery.js would load before all the other sources and specs.</p>
    *
    * @since 1.1.0
@@ -71,11 +71,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
    * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
    * and make the changes you need.</p>
-   * <p/>
+   * <br>
    * <p>Potential values are a filesystem path, a URL, or a classpath resource. The default template is
    * stored in <code>src/main/resources/jasmine-templates/SpecRunner.htmltemplate</code>, and the
    * required template strings are tokenized in "$*$" patterns.</p>
-   * <p/>
+   * <br>
    * <p>Example usage:</p>
    * <pre>
    * &lt;customRunnerTemplate&gt;${project.basedir}/src/test/resources/myCustomRunner.template&lt;/customRunnerTemplate&gt;
@@ -90,7 +90,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * <p>Sometimes you want to have full control over how scriptloaders are configured. In order to
    * interpolate custom configuration into the generated runnerTemplate, specify a file containing
    * the additional config. Potential values are a filesystem path, a URL, or a classpath resource.</p>
-   * <p/>
+   * <br>
    * <p>Example usage:</p>
    * <pre>
    * &lt;customRunnerConfiguration&gt;${project.basedir}/src/test/resources/myCustomConfig.txt&lt;/customRunnerConfiguration&gt;
@@ -245,7 +245,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
    * &lt;/sourceIncludes&gt;
    * </pre>
-   * <p/>
+   * <br>
    * <p>Default <code>sourceIncludes</code>:</p>
    * <pre>
    * &lt;sourceIncludes&gt;
@@ -279,7 +279,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
    * &lt;/specIncludes&gt;
    * </pre>
-   * <p/>
+   * <br>
    * <p>Default <code>specIncludes</code>:</p>
    * <pre>
    * &lt;specIncludes&gt;
@@ -304,7 +304,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
   /**
    * <p>Used by the <code>jasmine:bdd</code> goal to specify port to run the server under.</p>
-   * <p/>
+   * <br>
    * <p>The <code>jasmine:test</code> goal always uses a random available port so this property is ignored.</p>
    *
    * @since 1.1.0
@@ -322,7 +322,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
   /**
    * <p>Not used by the <code>jasmine:bdd</code> goal.</p>
-   * <p/>
+   * <br>
    * <p>The <code>jasmine:test</code> goal to specify hostname where the server is running.  Useful when using
    * the RemoteWebDriver.</p>
    *
@@ -334,7 +334,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   /**
    * <p>Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
    * implementation of the runner generator. Typically this is used when using different script runners.</p>
-   * <p/>
+   * <br>
    * <p>Some valid examples: DEFAULT, REQUIRE_JS</p>
    *
    * @since 1.1.0
@@ -363,7 +363,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
 
   /**
    * <p>Type of {@link org.eclipse.jetty.server.Connector} to use on the jetty server.</p>
-   * <p/>
+   * <br>
    * <p>Most users won't need to change this from the default value. It should only be used
    * by advanced users.</p>
    *
