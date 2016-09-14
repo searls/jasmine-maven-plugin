@@ -19,11 +19,11 @@
  */
 package com.github.searls.jasmine.runner;
 
-import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.MockWebConnection;
 import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlMeta;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.github.searls.jasmine.HtmlAssertions;
 import com.github.searls.jasmine.io.IOUtilsWrapper;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.io.scripts.ScriptResolverException;
@@ -37,18 +37,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import static com.github.searls.jasmine.Matchers.containsLinkTagWithSource;
-import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_CSS;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_HTML_JS;
 import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_JS;
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,7 +53,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
   private static final String SOURCE_ENCODING = "as9du20asd xanadu";
 
-  private final Set<String> scripts = new LinkedHashSet<String>(asList("A"));
+  private final Set<String> scripts = new LinkedHashSet<String>(Arrays.asList("A"));
 
   static {
     LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
@@ -67,11 +63,12 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   @Mock
   private ScriptResolver scriptResolver;
+
   @Mock
   private HtmlGeneratorConfiguration generatorConfiguration;
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
-
 
   @Before
   public void setupGeneratorConfiguration() throws IOException {
@@ -86,16 +83,16 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
     String html = this.subject.generate();
 
-    assertThat(html, containsString("<html>"));
-    assertThat(html, containsString("</html>"));
+    assertThat(html).contains("<html>");
+    assertThat(html).contains("</html>");
   }
 
   @Test
   public void shouldPutInADocTypeWhenNoDependenciesAreProvided() throws Exception {
     String html = this.subject.generate();
 
-    assertThat(html, containsString(HTML5_DOCTYPE));
-    assertThat(this.getPage(html).getDoctype().getName(), is("html"));
+    assertThat(html).contains(HTML5_DOCTYPE);
+    assertThat(this.getPage(html).getDoctype().getName()).isEqualTo("html");
   }
 
   @Test
@@ -103,7 +100,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     String html = this.subject.generate();
 
     HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
-    assertThat(contentType.getContentAttribute(), is("text/html; charset=" + SOURCE_ENCODING));
+    assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SOURCE_ENCODING);
   }
 
   @Test
@@ -113,28 +110,25 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     String html = this.subject.generate();
 
     HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
-    assertThat(contentType.getContentAttribute(), is("text/html; charset=" + SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING));
+    assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
   }
 
   @Test
   public void populatesJasmineSource() throws Exception {
     String html = this.subject.generate();
-
-    assertThat(html, containsScriptTagWithSource(JASMINE_JS));
+    HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_JS);
   }
 
   @Test
   public void populatesJasmineHtmlSource() throws Exception {
     String html = this.subject.generate();
-
-    assertThat(html, containsScriptTagWithSource(JASMINE_HTML_JS));
+    HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_HTML_JS);
   }
 
   @Test
   public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
     String html = this.subject.generate();
-
-    assertThat(html, containsLinkTagWithSource(JASMINE_CSS));
+    HtmlAssertions.assertThat(html).containsLinkTagWithSource(JASMINE_CSS);
   }
 
   @Test
@@ -144,7 +138,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
     String html = this.subject.generate();
 
-    assertThat(html, containsScriptTagWithSource(expected));
+    HtmlAssertions.assertThat(html).containsScriptTagWithSource(expected);
   }
 
   private HtmlPage getPage(String html) throws Exception {
@@ -153,11 +147,6 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     WebClient webClient = new WebClient();
     webClient.setWebConnection(webConnection);
     webClient.getOptions().setThrowExceptionOnScriptError(false);
-    webClient.setIncorrectnessListener(new IncorrectnessListener() {
-      @Override
-      public void notify(String arg0, Object arg1) {
-      }
-    });
     return webClient.getPage("http://blah");
   }
 }

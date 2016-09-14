@@ -21,8 +21,7 @@ package com.github.searls.jasmine.model;
 
 import org.junit.Test;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JasmineResultTest {
 
@@ -38,7 +37,7 @@ public class JasmineResultTest {
 
     boolean success = subject.didPass();
 
-    assertThat(success, is(true));
+    assertThat(success).isTrue();
   }
 
   @Test
@@ -50,7 +49,7 @@ public class JasmineResultTest {
 
     boolean success = subject.didPass();
 
-    assertThat(success, is(false));
+    assertThat(success).isFalse();
   }
 
 
@@ -60,7 +59,7 @@ public class JasmineResultTest {
 
     boolean success = subject.didPass();
 
-    assertThat(success, is(false));
+    assertThat(success).isFalse();
   }
 
 }

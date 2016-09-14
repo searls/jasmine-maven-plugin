@@ -26,7 +26,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.EndsWith;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
@@ -34,9 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -76,17 +73,17 @@ public class ReporterRetrieverTest {
 
     List<Reporter> reporters = subject.retrieveReporters(incomingReporters, mavenProject);
 
-    assertThat(reporters, hasSize(incomingReporters.size()));
-    assertThat(reporters.get(0).reporterFile, is(standardReporter));
-    assertThat(reporters.get(1).reporterFile, is(customReporter));
+    assertThat(reporters).hasSize(incomingReporters.size());
+    assertThat(reporters.get(0).reporterFile).isEqualTo(standardReporter);
+    assertThat(reporters.get(1).reporterFile).isEqualTo(customReporter);
   }
 
   @Test
   public void itShouldRetrieveStandardReporterAsDefault() throws Exception {
     List<Reporter> reporters = subject.retrieveReporters(new ArrayList<Reporter>(), mavenProject);
 
-    assertThat(reporters, hasSize(1));
-    assertThat(reporters.get(0).reporterFile, is(standardReporter));
+    assertThat(reporters).hasSize(1);
+    assertThat(reporters.get(0).reporterFile).isEqualTo(standardReporter);
   }
 
   @Test
@@ -98,19 +95,19 @@ public class ReporterRetrieverTest {
 
     List<FileSystemReporter> reporters = subject.retrieveFileSystemReporters(incomingReporters, targetDir, mavenProject);
 
-    assertThat(reporters, hasSize(incomingReporters.size()));
-    assertThat(reporters.get(0).reporterFile, is(junitXmlReporter));
-    assertThat(reporters.get(0).file.getAbsolutePath(), new EndsWith("TEST-file.xml"));
-    assertThat(reporters.get(1).reporterFile, is(customReporter));
-    assertThat(reporters.get(1).file.getAbsolutePath(), new EndsWith("TEST-custom.file"));
+    assertThat(reporters).hasSize(incomingReporters.size());
+    assertThat(reporters.get(0).reporterFile).isEqualTo(junitXmlReporter);
+    assertThat(reporters.get(0).file.getAbsolutePath()).endsWith("TEST-file.xml");
+    assertThat(reporters.get(1).reporterFile).isEqualTo(customReporter);
+    assertThat(reporters.get(1).file.getAbsolutePath()).endsWith("TEST-custom.file");
   }
 
   @Test
   public void itShouldRetrieveJUnitFileReporterAsDefault() throws Exception {
     List<FileSystemReporter> reporters = subject.retrieveFileSystemReporters(new ArrayList<FileSystemReporter>(), targetDir, mavenProject);
 
-    assertThat(reporters, hasSize(1));
-    assertThat(reporters.get(0).reporterFile, is(junitXmlReporter));
-    assertThat(reporters.get(0).file.getAbsolutePath(), new EndsWith("TEST-jasmine.xml"));
+    assertThat(reporters).hasSize(1);
+    assertThat(reporters.get(0).reporterFile).isEqualTo(junitXmlReporter);
+    assertThat(reporters.get(0).file.getAbsolutePath()).endsWith("TEST-jasmine.xml");
   }
 }

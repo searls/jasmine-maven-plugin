@@ -24,8 +24,7 @@ import org.junit.Test;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class FormatsScriptTagsTest {
   private FormatsScriptTags subject = new FormatsScriptTags();
@@ -36,7 +35,7 @@ public class FormatsScriptTagsTest {
 
     String result = subject.format(new HashSet<String>(asList(expected)));
 
-    assertThat(result, containsString(expectedScriptTagFormat(expected)));
+    assertThat(result).contains(expectedScriptTagFormat(expected));
   }
 
   @Test
@@ -46,7 +45,7 @@ public class FormatsScriptTagsTest {
 
     String result = subject.format(new HashSet<String>(asList(first, second)));
 
-    assertThat(result, containsString(expectedScriptTagFormat(first) + "\n" + expectedScriptTagFormat(second)));
+    assertThat(result).contains(expectedScriptTagFormat(first) + "\n" + expectedScriptTagFormat(second));
   }
 
   private String expectedScriptTagFormat(String scriptName) {

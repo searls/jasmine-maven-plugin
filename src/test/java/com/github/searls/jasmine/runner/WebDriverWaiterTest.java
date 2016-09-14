@@ -20,7 +20,6 @@
 package com.github.searls.jasmine.runner;
 
 import org.apache.maven.plugin.logging.Log;
-import org.hamcrest.core.StringContains;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -30,9 +29,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.contains;
+import static org.mockito.Matchers.matches;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -81,7 +79,7 @@ public class WebDriverWaiterTest {
 
     subject.waitForRunnerToFinish(webDriver, timeout, debug, log);
 
-    verify(log).warn(argThat(allOf(new StringContains("Attempted to wait"), new StringContains(timeout + " seconds"))));
+    verify(log).warn(matches("Attempted to wait.*" + timeout + " seconds.*"));
     verify(log).warn(contains("Debug mode:"));
   }
 }

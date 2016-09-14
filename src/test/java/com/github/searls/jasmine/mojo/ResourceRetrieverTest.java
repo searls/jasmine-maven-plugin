@@ -33,8 +33,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -67,7 +66,7 @@ public class ResourceRetrieverTest {
 
     File actualFile = subject.getResourceAsFile("param", resourceLocation, mavenProject);
 
-    assertThat(actualFile, is(expectedFile));
+    assertThat(actualFile).isEqualTo(expectedFile);
   }
 
   @Test(expected = MojoExecutionException.class)
