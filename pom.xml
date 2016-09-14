@@ -110,6 +110,10 @@
       <name>Todd Quessenberry</name>
       <url>https://github.com/toddq</url>
     </contributor>
+    <contributor>
+      <name>Sam Jones</name>
+      <url>https://github.com/samjonester</url>
+    </contributor>
   </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
