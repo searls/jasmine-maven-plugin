@@ -13,7 +13,7 @@ import static java.util.Arrays.asList;
 
 public class ScansDirectory {
 
-  public final static List<String> DEFAULT_INCLUDES = asList("**" + File.separator + "*.js", "**" + File.separator + "*.coffee");
+  public final static List<String> DEFAULT_INCLUDES = asList("**" + File.separator + "*.js");
 
   private final DirectoryScanner directoryScanner = new DirectoryScanner();
 

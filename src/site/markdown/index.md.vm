@@ -10,7 +10,6 @@ The good news
 
 * it helps you practice TDD/BDD as you write JavaScript
 * it can run as part of your build using PhantomJS with no added configuration on your part
-* it has full-on support for the burgeoning CoffeeScript language! Any files with a ".coffee" extension will be compiled just in time for your specs to run
 * it is extremely customizable
 
 Usage

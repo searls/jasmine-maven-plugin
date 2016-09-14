@@ -44,7 +44,6 @@
 
    <menu name="External Links">
      <item name="Jasmine Docs" href="http://jasmine.github.io/" />
-     <item name="CoffeeScript Docs" href="http://coffeescript.org/" />
      <item name="Try Jasmine in your browser" href="http://try-jasmine.heroku.com/" />
    </menu>
 
