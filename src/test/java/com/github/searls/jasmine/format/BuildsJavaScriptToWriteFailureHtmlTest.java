@@ -1,10 +1,8 @@
 package com.github.searls.jasmine.format;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 
 public class BuildsJavaScriptToWriteFailureHtmlTest {
@@ -16,17 +14,17 @@ public class BuildsJavaScriptToWriteFailureHtmlTest {
 
   @Test
   public void whenNothingIsPassedYouGetAnEmptyDiv() {
-    assertThat(subject.build(""), is(LEFT + RIGHT));
+    Assertions.assertThat(subject.build("")).isEqualTo(LEFT + RIGHT);
   }
 
   @Test
   public void printsASimpleMessage() {
-    assertThat(subject.build("pants"), is(LEFT + "pants" + RIGHT));
+    Assertions.assertThat(subject.build("pants")).isEqualTo(LEFT + "pants" + RIGHT);
   }
 
   @Test
   public void esacpesMessageString() {
-    assertThat(subject.build("<a>pant's</a>"), is(LEFT + "<a>pant\\'s<\\/a>" + RIGHT));
+    Assertions.assertThat(subject.build("<a>pant's</a>")).isEqualTo(LEFT + "<a>pant\\'s<\\/a>" + RIGHT);
   }
 
 }

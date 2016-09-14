@@ -1,12 +1,11 @@
 package com.github.searls.jasmine.format;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 
 public class FormatsScriptTagsTest {
   private FormatsScriptTags subject = new FormatsScriptTags();
@@ -17,7 +16,7 @@ public class FormatsScriptTagsTest {
 
     String result = subject.format(new HashSet<String>(asList(expected)));
 
-    assertThat(result, containsString(expectedScriptTagFormat(expected)));
+    Assertions.assertThat(result).contains(expectedScriptTagFormat(expected));
   }
 
   @Test
@@ -27,7 +26,7 @@ public class FormatsScriptTagsTest {
 
     String result = subject.format(new HashSet<String>(asList(first, second)));
 
-    assertThat(result, containsString(expectedScriptTagFormat(first) + "\n" + expectedScriptTagFormat(second)));
+    Assertions.assertThat(result).contains(expectedScriptTagFormat(first) + "\n" + expectedScriptTagFormat(second));
   }
 
   private String expectedScriptTagFormat(String scriptName) {

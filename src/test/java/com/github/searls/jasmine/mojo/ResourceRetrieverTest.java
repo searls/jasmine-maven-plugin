@@ -3,6 +3,7 @@ package com.github.searls.jasmine.mojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.assertj.core.api.Assertions;
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
@@ -14,8 +15,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -48,7 +47,7 @@ public class ResourceRetrieverTest {
 
     File actualFile = subject.getResourceAsFile("param", resourceLocation, mavenProject);
 
-    assertThat(actualFile, is(expectedFile));
+    Assertions.assertThat(actualFile).isEqualTo(expectedFile);
   }
 
   @Test(expected = MojoExecutionException.class)

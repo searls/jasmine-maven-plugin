@@ -1,20 +1,14 @@
 package com.github.searls.jasmine.io.scripts;
 
 import com.github.searls.jasmine.io.CreatesTempDirectories;
+import org.assertj.core.api.Assertions;
 import org.junit.After;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
-
 
 public class ResolvesLocationOfPreloadSourcesIntegrationTest {
 
@@ -40,7 +34,7 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
   public void returnsListWhenSourcesIsNull() {
     List<String> result = subject.resolve(null, sourceDir, specDir);
 
-    assertThat(result, is(not(nullValue())));
+    Assertions.assertThat(result).isNotNull();
   }
 
 
@@ -49,51 +43,51 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
     String expected = "panda";
     new File(sourceDir, expected).createNewFile();
     new File(specDir, expected).createNewFile();
-    List<String> preloadSources = asList(expected);
+    List<String> preloadSources = Arrays.asList(expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
 
-    assertThat(result.size(), is(1));
-    assertThat(result.get(0), containsString(SOURCE));
-    assertThat(result.get(0), containsString(expected));
+    Assertions.assertThat(result).hasSize(1);
+    Assertions.assertThat(result.get(0)).contains(SOURCE);
+    Assertions.assertThat(result.get(0)).contains(expected);
   }
 
   @Test
   public void loadsSpecFileWhenItExistsUnderSpec() throws IOException {
     String expected = "panda";
     new File(specDir, expected).createNewFile();
-    List<String> preloadSources = asList(expected);
+    List<String> preloadSources = Arrays.asList(expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
 
-    assertThat(result.size(), is(1));
-    assertThat(result.get(0), containsString(SPEC));
-    assertThat(result.get(0), containsString(expected));
+    Assertions.assertThat(result).hasSize(1);
+    Assertions.assertThat(result.get(0)).contains(SPEC);
+    Assertions.assertThat(result.get(0)).contains(expected);
   }
 
   @Test
   public void loadsExistentFileWithURIIfItIsNotInEitherSourceAndSpecFolders() throws Exception {
     String expected = "panda";
     new File(separatedDir, expected).createNewFile();
-    List<String> preloadSources = asList(separatedDir.getAbsolutePath() + File.separator + expected);
+    List<String> preloadSources = Arrays.asList(separatedDir.getAbsolutePath() + File.separator + expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
-    assertThat(result.size(), is(1));
-    assertThat(result.get(0), containsString("file:/"));
+    Assertions.assertThat(result).hasSize(1);
+    Assertions.assertThat(result.get(0)).contains("file:/");
   }
 
   @Test
   public void printsAsIsWhenItDoesNotExist() {
     String expected = "telnet://woahItsTelnet";
-    List<String> preloadSources = asList(expected);
+    List<String> preloadSources = Arrays.asList(expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
-    assertThat(result.size(), is(1));
-    assertThat(result.get(0), is(expected));
+    Assertions.assertThat(result).hasSize(1);
+    Assertions.assertThat(result.get(0)).isEqualTo(expected);
   }
 //
 }
