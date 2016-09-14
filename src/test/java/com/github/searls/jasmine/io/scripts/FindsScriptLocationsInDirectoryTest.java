@@ -2,7 +2,7 @@ package com.github.searls.jasmine.io.scripts;
 
 import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ScriptSearch;
-import edu.emory.mathcs.backport.java.util.Collections;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,9 +16,6 @@ import java.io.IOException;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -48,7 +45,7 @@ public class FindsScriptLocationsInDirectoryTest {
   public void returnsEmptyWhenDirectoryDoesNotExist() throws IOException {
     List<String> result = subject.find(new ScriptSearch(new File("No way does this file exist"), null, null));
 
-    assertThat(result, is(Collections.emptyList()));
+    Assertions.assertThat(result).isEmpty();
   }
 
   @Test
@@ -59,7 +56,7 @@ public class FindsScriptLocationsInDirectoryTest {
 
     List<String> result = subject.find(new ScriptSearch(directory, INCLUDES, EXCLUDES));
 
-    assertThat(result, hasItem(expected));
+    Assertions.assertThat(result).contains(expected);
   }
 
 }

@@ -1,9 +1,7 @@
 package com.github.searls.jasmine.exception;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
-
-import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 
 public class StringifiesStackTracesTest {
 
@@ -17,7 +15,7 @@ public class StringifiesStackTracesTest {
 
     String result = subject.stringify(deep);
 
-    assertThat(result, containsString(deepest.getMessage()));
+    Assertions.assertThat(result).contains(deepest.getMessage());
   }
 
 }

@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.coffee;
 
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,9 +10,6 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class CoffeeScriptIntegrationTest {
 
@@ -47,7 +45,7 @@ public class CoffeeScriptIntegrationTest {
   public void itCompiles() throws IOException {
     String result = subject.compile(COFFEE);
 
-    assertThat(result, is(JAVASCRIPT));
+    Assertions.assertThat(result).isEqualTo(JAVASCRIPT);
   }
 
   @Test
@@ -58,7 +56,7 @@ public class CoffeeScriptIntegrationTest {
 
     String result = subject.compile(COFFEE);
 
-    assertThat(result, is(expected));
+    Assertions.assertThat(result).isEqualTo(expected);
   }
 
   private void injectFakeCache(Map<String, String> cacheMap) throws Exception {

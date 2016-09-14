@@ -5,6 +5,7 @@ import com.github.searls.jasmine.model.FileSystemReporter;
 import com.github.searls.jasmine.model.JasmineResult;
 import com.github.searls.jasmine.model.Reporter;
 import org.apache.maven.plugin.logging.Log;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +19,6 @@ import java.io.File;
 import java.net.URL;
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,7 +70,7 @@ public class SpecRunnerExecutorTest {
     verify(webDriver).get(runnerUrl.toString());
     verify(webDriverWaiter).waitForRunnerToFinish(webDriver, timeout, debug, log);
     verify(fileUtilsWrapper).writeStringToFile(junitXmlReport, report);
-    assertThat(result, is(not(nullValue())));
-    assertThat(result.getDetails(), containsString(report));
+    Assertions.assertThat(result).isNotNull();
+    Assertions.assertThat(result.getDetails()).contains(report);
   }
 }

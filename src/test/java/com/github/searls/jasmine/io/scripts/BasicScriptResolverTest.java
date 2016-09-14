@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.io.scripts;
 
 import com.github.searls.jasmine.model.ScriptSearch;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -64,7 +64,7 @@ public class BasicScriptResolverTest {
 
     this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
-    assertEquals(SOURCE_DIRECTORY, this.resolver.getSourceDirectory());
+    Assertions.assertThat(this.resolver.getSourceDirectory()).isEqualTo(SOURCE_DIRECTORY);
   }
 
   @Test
@@ -79,6 +79,6 @@ public class BasicScriptResolverTest {
 
     this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
 
-    assertEquals(SPEC_DIRECTORY, this.resolver.getSpecDirectory());
+    Assertions.assertThat(this.resolver.getSpecDirectory()).isEqualTo(SPEC_DIRECTORY);
   }
 }

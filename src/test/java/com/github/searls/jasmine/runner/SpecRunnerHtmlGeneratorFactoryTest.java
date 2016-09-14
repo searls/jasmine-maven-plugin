@@ -2,14 +2,12 @@ package com.github.searls.jasmine.runner;
 
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.mojo.AbstractJasmineMojo;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,14 +28,14 @@ public class SpecRunnerHtmlGeneratorFactoryTest {
 
   @Test
   public void shouldReturnDefaultImplementationWhenCalledWithDefault() throws Exception {
-    assertThat(specRunnerHtmlGeneratorFactory.createHtmlGenerator(setupWithTemplate(SpecRunnerTemplate.DEFAULT)), instanceOf(DefaultSpecRunnerHtmlGenerator.class));
+    Assertions.assertThat(specRunnerHtmlGeneratorFactory.createHtmlGenerator(setupWithTemplate(SpecRunnerTemplate.DEFAULT))).isInstanceOf(DefaultSpecRunnerHtmlGenerator.class);
   }
 
   @Test
   public void shouldCreateHtmlGeneratorWhenPassedValidInput() {
     AbstractJasmineMojo mock = mock(AbstractJasmineMojo.class);
     when(mock.getSpecRunnerTemplate()).thenReturn(SpecRunnerTemplate.DEFAULT);
-    assertThat(specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock(ScriptResolver.class)), instanceOf(DefaultSpecRunnerHtmlGenerator.class));
+    Assertions.assertThat(specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock(ScriptResolver.class))).isInstanceOf(DefaultSpecRunnerHtmlGenerator.class);
   }
 
   @Test
@@ -49,8 +47,13 @@ public class SpecRunnerHtmlGeneratorFactoryTest {
     try {
       specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock1);
     } catch (InstantiationError e) {
-      assertThat(e.getMessage(), is("Foo"));
+      Assertions.assertThat(e.getMessage()).isEqualTo("Foo");
     }
+
+//    Assertions.assertThatExceptionOfType(InstantiationError.class)
+//      .isThrownBy(() -> specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock1))
+//      .withMessage("Foo");
+
 
   }
 }

@@ -3,13 +3,13 @@ package com.github.searls.jasmine.driver;
 import com.gargoylesoftware.htmlunit.IncorrectnessListener;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.WebClient;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -36,7 +36,7 @@ public class QuietHtmlUnitDriverTest {
   public void enablesJavascript() {
     createDriver();
 
-    assertTrue(driver.isJavascriptEnabled());
+    Assertions.assertThat(driver.isJavascriptEnabled()).isTrue();
   }
 
   private void modifyWebClient() {

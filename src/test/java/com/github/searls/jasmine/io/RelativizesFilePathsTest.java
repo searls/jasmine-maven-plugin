@@ -1,12 +1,10 @@
 package com.github.searls.jasmine.io;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
 
 public class RelativizesFilePathsTest {
 
@@ -22,7 +20,7 @@ public class RelativizesFilePathsTest {
 
     String result = subject.relativize(from, to);
 
-    assertThat(result, is("pants.txt"));
+    Assertions.assertThat(result).isEqualTo("pants.txt");
   }
 
   @Test
@@ -32,7 +30,7 @@ public class RelativizesFilePathsTest {
 
     String result = subject.relativize(from, to);
 
-    assertThat(result, is("target/jasmine"));
+    Assertions.assertThat(result).isEqualTo("target/jasmine");
   }
 
 
@@ -43,7 +41,7 @@ public class RelativizesFilePathsTest {
 
     String result = subject.relativize(from, to);
 
-    assertThat(result, is("../../src/test/javascript/fun-spec.js"));
+    Assertions.assertThat(result).isEqualTo("../../src/test/javascript/fun-spec.js");
   }
 
   private String slash(String s) {
