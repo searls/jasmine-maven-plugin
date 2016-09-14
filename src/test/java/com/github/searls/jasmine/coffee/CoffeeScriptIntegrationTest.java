@@ -10,8 +10,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class CoffeeScriptIntegrationTest {
 
@@ -47,7 +46,7 @@ public class CoffeeScriptIntegrationTest {
   public void itCompiles() throws IOException {
     String result = subject.compile(COFFEE);
 
-    assertThat(result, is(JAVASCRIPT));
+    assertThat(result).isEqualTo(JAVASCRIPT);
   }
 
   @Test
@@ -58,7 +57,7 @@ public class CoffeeScriptIntegrationTest {
 
     String result = subject.compile(COFFEE);
 
-    assertThat(result, is(expected));
+    assertThat(result).isEqualTo(expected);
   }
 
   private void injectFakeCache(Map<String, String> cacheMap) throws Exception {

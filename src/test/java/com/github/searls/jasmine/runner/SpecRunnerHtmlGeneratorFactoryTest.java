@@ -7,9 +7,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -30,14 +28,14 @@ public class SpecRunnerHtmlGeneratorFactoryTest {
 
   @Test
   public void shouldReturnDefaultImplementationWhenCalledWithDefault() throws Exception {
-    assertThat(specRunnerHtmlGeneratorFactory.createHtmlGenerator(setupWithTemplate(SpecRunnerTemplate.DEFAULT)), instanceOf(DefaultSpecRunnerHtmlGenerator.class));
+    assertThat(specRunnerHtmlGeneratorFactory.createHtmlGenerator(setupWithTemplate(SpecRunnerTemplate.DEFAULT))).isInstanceOf(DefaultSpecRunnerHtmlGenerator.class);
   }
 
   @Test
   public void shouldCreateHtmlGeneratorWhenPassedValidInput() {
     AbstractJasmineMojo mock = mock(AbstractJasmineMojo.class);
     when(mock.getSpecRunnerTemplate()).thenReturn(SpecRunnerTemplate.DEFAULT);
-    assertThat(specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock(ScriptResolver.class)), instanceOf(DefaultSpecRunnerHtmlGenerator.class));
+    assertThat(specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock(ScriptResolver.class))).isInstanceOf(DefaultSpecRunnerHtmlGenerator.class);
   }
 
   @Test
@@ -49,8 +47,13 @@ public class SpecRunnerHtmlGeneratorFactoryTest {
     try {
       specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock1);
     } catch (InstantiationError e) {
-      assertThat(e.getMessage(), is("Foo"));
+      assertThat(e.getMessage()).isEqualTo("Foo");
     }
+
+//    Assertions.assertThatExceptionOfType(InstantiationError.class)
+//      .isThrownBy(() -> specRunnerHtmlGeneratorFactory.create(ReporterType.HtmlReporter, mock, mock1))
+//      .withMessage("Foo");
+
 
   }
 }

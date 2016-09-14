@@ -10,8 +10,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.isA;
 import static org.powermock.api.mockito.PowerMockito.mock;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
@@ -35,7 +34,7 @@ public class IOUtilsWrapperIntegrationTest {
 
     String result = subject.toString(inputStream);
 
-    assertThat(result, is(expected));
+    assertThat(result).isEqualTo(expected);
   }
 
   @Test
@@ -45,6 +44,6 @@ public class IOUtilsWrapperIntegrationTest {
 
     String result = subject.toString("/ioUtils.txt");
 
-    assertThat(result, is(expected));
+    assertThat(result).isEqualTo(expected);
   }
 }

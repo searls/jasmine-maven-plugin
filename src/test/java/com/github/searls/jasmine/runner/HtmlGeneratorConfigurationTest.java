@@ -12,7 +12,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.Assert.assertSame;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,13 +58,13 @@ public class HtmlGeneratorConfigurationTest {
   @Test
   public void shouldHaveCorrectReporterType() throws IOException {
     this.generatorConfiguration = this.initGenerator(null, null, null);
-    assertSame(ReporterType.JsApiReporter, this.generatorConfiguration.getReporterType());
+    assertThat(this.generatorConfiguration.getReporterType()).isSameAs(ReporterType.JsApiReporter);
   }
 
   @Test
   public void shouldHaveCorrectSpecRunnerTemplate() throws IOException {
     this.generatorConfiguration = this.initGenerator(null, SpecRunnerTemplate.REQUIRE_JS, null);
-    assertSame(SpecRunnerTemplate.REQUIRE_JS, this.generatorConfiguration.getSpecRunnerTemplate());
+    assertThat(this.generatorConfiguration.getSpecRunnerTemplate()).isSameAs(SpecRunnerTemplate.REQUIRE_JS);
   }
 
   private HtmlGeneratorConfiguration initGenerator(IOUtilsWrapper ioUtilsWrapper, SpecRunnerTemplate template, File customTemplate) throws IOException {
