@@ -28,13 +28,13 @@
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>      <strong class="jxr_keyword">try</strong> {
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>        <a href="../../../../../com/github/searls/jasmine/io/scripts/ScriptResolver.html">ScriptResolver</a> resolver = <strong class="jxr_keyword">this</strong>.getConfiguration().getScriptResolver();
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>        <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.generateHtml(
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>            resolver.getAllScripts(),
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>            resolver.getPreloads(),
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>            resolver.getSources(),
-<a class="jxr_linenumber" name="L26" href="#L26">26</a>            resolver.getSpecs(),
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>            resolver.getSourceDirectory(),
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>            resolver.getSpecDirectory()
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>            );
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>          resolver.getAllScripts(),
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>          resolver.getPreloads(),
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>          resolver.getSources(),
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>          resolver.getSpecs(),
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>          resolver.getSourceDirectory(),
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>          resolver.getSpecDirectory()
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>        );
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>      } <strong class="jxr_keyword">catch</strong> (ScriptResolverException e) {
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>        <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> RuntimeException(<span class="jxr_string">"Failed to load files for dependencies, sources, or a custom runner"</span>, e);
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      } <strong class="jxr_keyword">catch</strong> (IOException e) {
@@ -50,9 +50,9 @@
 <a class="jxr_linenumber" name="L42" href="#L42">42</a>                                String specDirectory) <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L43" href="#L43">43</a>      ST template = <strong class="jxr_keyword">this</strong>.resolveHtmlTemplate();
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>      <strong class="jxr_keyword">this</strong>.applyScriptTagsToTemplate(
-<a class="jxr_linenumber" name="L45" href="#L45">45</a>          JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
-<a class="jxr_linenumber" name="L46" href="#L46">46</a>          Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_HTMLSPECFILTER_PATCH_JS, JASMINE_BOOT_JS),
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          template);
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>        JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>        Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_HTMLSPECFILTER_PATCH_JS, JASMINE_BOOT_JS),
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>        template);
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      <strong class="jxr_keyword">this</strong>.applyCssToTemplate(Arrays.asList(JASMINE_CSS), template);
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>      <strong class="jxr_keyword">this</strong>.applyScriptTagsToTemplate(<span class="jxr_string">"allScriptTags"</span>, allScripts, template);
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>      <strong class="jxr_keyword">this</strong>.applyScriptTagsToTemplate(<span class="jxr_string">"preloadScriptTags"</span>, preloads, template);
@@ -85,7 +85,7 @@
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>        <strong class="jxr_keyword">return</strong> <span class="jxr_string">"[]"</span>;
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      }
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>      StringBuilder builder = <strong class="jxr_keyword">new</strong> StringBuilder(<span class="jxr_string">"['"</span>);
-<a class="jxr_linenumber" name="L80" href="#L80">80</a>      builder.append(StringUtils.join(scripts,<span class="jxr_string">"', '"</span>));
+<a class="jxr_linenumber" name="L80" href="#L80">80</a>      builder.append(StringUtils.join(scripts, <span class="jxr_string">"', '"</span>));
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>      builder.append(<span class="jxr_string">"']"</span>);
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <strong class="jxr_keyword">return</strong> builder.toString();
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>    }

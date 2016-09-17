@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TestMojo.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">TestMojo.java</span></div><h1>TestMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TestMojo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">TestMojo.java</span></div><h1>TestMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
 
 import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
 import com.github.klieber.phantomjs.locate.RepositoryDetails;
@@ -36,33 +36,33 @@ import java.util.Properties;
 /**
  * Execute specs using Selenium Web Driver. Uses PhantomJsDriver for head-less execution by default.
  */
-@Mojo(name=&quot;test&quot;,defaultPhase=LifecyclePhase.TEST,requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = &quot;test&quot;, defaultPhase = LifecyclePhase.TEST, requiresDependencyResolution = ResolutionScope.TEST)
 public class TestMojo extends AbstractJasmineMojo {
 
   /**
    * Determines the Selenium WebDriver class we'll use to execute the tests. See the Selenium documentation for more details.
    * The plugin uses &lt;a href=&quot;https://github.com/detro/ghostdriver&quot;&gt;PhantomJSDriver&lt;/a&gt; by default.
-   *
+   * &lt;br&gt;
    * &lt;p&gt;Some valid examples:&lt;/p&gt;
    * &lt;ul&gt;
-   *   &lt;li&gt;org.openqa.selenium.htmlunit.HtmlUnitDriver&lt;/li&gt;
-   *   &lt;li&gt;org.openqa.selenium.phantomjs.PhantomJSDriver&lt;/li&gt;
-   *   &lt;li&gt;org.openqa.selenium.firefox.FirefoxDriver&lt;/li&gt;
-   *   &lt;li&gt;org.openqa.selenium.ie.InternetExplorerDriver&lt;/li&gt;
+   * &lt;li&gt;org.openqa.selenium.htmlunit.HtmlUnitDriver&lt;/li&gt;
+   * &lt;li&gt;org.openqa.selenium.phantomjs.PhantomJSDriver&lt;/li&gt;
+   * &lt;li&gt;org.openqa.selenium.firefox.FirefoxDriver&lt;/li&gt;
+   * &lt;li&gt;org.openqa.selenium.ie.InternetExplorerDriver&lt;/li&gt;
    * &lt;/ul&gt;
-   * &lt;p&gt;&lt;/p&gt;
+   * &lt;br&gt;
    * See the webDriverCapabilities property for configuring driver specific properties.
    *
    * @since 1.1.0
    */
-  @Parameter(defaultValue=&quot;org.openqa.selenium.phantomjs.PhantomJSDriver&quot;)
+  @Parameter(defaultValue = &quot;org.openqa.selenium.phantomjs.PhantomJSDriver&quot;)
   protected String webDriverClassName;
 
   /**
    * &lt;p&gt;Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.&lt;/p&gt;
-   *
+   * &lt;br&gt;
    * &lt;p&gt;Capabilities value can be either a String, a List, or a Map.&lt;/p&gt;
-   *
+   * &lt;br&gt;
    * &lt;p&gt;Example:&lt;/p&gt;
    * &lt;pre&gt;
    * &amp;lt;webDriverCapabilities&amp;gt;
@@ -89,18 +89,18 @@ public class TestMojo extends AbstractJasmineMojo {
    * @since 1.3.1.1
    */
 <span class="fc" id="L91">  @Parameter</span>
-  protected List&lt;Capability&gt; webDriverCapabilities = Collections.emptyList();
+<span class="fc" id="L92">  protected List&lt;Capability&gt; webDriverCapabilities = Collections.emptyList();</span>
 
   /**
    * &lt;p&gt;Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin is configured not to use HtmlUnit.
    * This maps 1-to-1 with the public static instances found in {@link com.gargoylesoftware.htmlunit.BrowserVersion}.&lt;/p&gt;
-   *
+   * &lt;br&gt;
    * &lt;p&gt;Some valid examples: CHROME, FIREFOX_17, INTERNET_EXPLORER_9, INTERNET_EXPLORER_10&lt;/p&gt;
    *
    * @since 1.1.0
    * @deprecated Use the webDriverCapabilities parameter instead.
    */
-  @Parameter(defaultValue=&quot;FIREFOX_17&quot;)
+  @Parameter(defaultValue = &quot;FIREFOX_17&quot;)
   @Deprecated
   protected String browserVersion;
 
@@ -108,21 +108,21 @@ public class TestMojo extends AbstractJasmineMojo {
    * &lt;p&gt;Determines the format that jasmine:test will print to console.&lt;/p&gt;
    * &lt;p&gt;Valid options:&lt;/p&gt;
    * &lt;ul&gt;
-   *   &lt;li&gt;&quot;documentation&quot; - (default) - print specs in a nested format&lt;/li&gt;
-   *   &lt;li&gt;&quot;progress&quot; - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')&lt;/li&gt;
+   * &lt;li&gt;&quot;documentation&quot; - (default) - print specs in a nested format&lt;/li&gt;
+   * &lt;li&gt;&quot;progress&quot; - more terse, with a period for a passed specs and an 'F' for failures (e.g. '...F...')&lt;/li&gt;
    * &lt;/ul&gt;
    *
    * @since 1.1.0
    */
-  @Parameter(defaultValue=&quot;documentation&quot;)
+  @Parameter(defaultValue = &quot;documentation&quot;)
   protected String format;
 
   /**
    * &lt;p&gt;Configure which version of PhantomJS should be used and how it should be found. The core of the
-   * &lt;a href=&quot;http://klieber.github.io/phantomjs-maven-plugin&quot;&gt;&lt;/a&gt;phantomjs-maven-plugin&lt;/a&gt; is used to provide this
+   * &lt;a href=&quot;http://klieber.github.io/phantomjs-maven-plugin&quot;&gt;phantomjs-maven-plugin&lt;/a&gt; is used to provide this
    * functionality and this parameter should match the configuration of the
    * &lt;a href=&quot;http://kylelieber.com/phantomjs-maven-plugin/install-mojo.html&quot;&gt;phantomjs-maven-plugin install&lt;/a&gt; goal.&lt;/p&gt;
-   *
+   * &lt;br&gt;
    * &lt;p&gt;Default Options:&lt;/p&gt;
    * &lt;pre&gt;
    * &amp;lt;phantomjs&amp;gt;
@@ -141,37 +141,29 @@ public class TestMojo extends AbstractJasmineMojo {
   protected PhantomJsOptions phantomjs;
 
   /**
-   * The name of the generated JUnit XML report.
-   *
-   * @since 1.1.0
-   */
-  @Parameter(defaultValue=&quot;TEST-jasmine.xml&quot;)
-  protected String junitXmlReportFileName;
-
-  /**
    * Keep the server alive after the &lt;code&gt;jasmine:test&lt;/code&gt; goal exists.
    * Useful if you need to run further analysis on your tests, like collecting code coverage.
    *
    * @since 1.3.1.0
    */
-  @Parameter(property=&quot;keepServerAlive&quot;, defaultValue=&quot;false&quot;)
+  @Parameter(property = &quot;keepServerAlive&quot;, defaultValue = &quot;false&quot;)
   protected boolean keepServerAlive;
 
   @Parameter(
-      defaultValue = &quot;${repositorySystemSession}&quot;,
-      readonly = true
+    defaultValue = &quot;${repositorySystemSession}&quot;,
+    readonly = true
   )
   private RepositorySystemSession repositorySystemSession;
 
   @Parameter(
-      defaultValue = &quot;${project.remoteProjectRepositories}&quot;,
-      readonly = true
+    defaultValue = &quot;${project.remoteProjectRepositories}&quot;,
+    readonly = true
   )
   private List&lt;RemoteRepository&gt; remoteRepositories;
 
   @Parameter(
-      defaultValue = &quot;${session}&quot;,
-      readonly = true
+    defaultValue = &quot;${session}&quot;,
+    readonly = true
   )
   private MavenSession mavenSession;
 
@@ -180,133 +172,135 @@ public class TestMojo extends AbstractJasmineMojo {
   private final RelativizesFilePaths relativizesFilePaths;
 
   @Inject
-<span class="fc" id="L183">  public TestMojo(RepositorySystem repositorySystem) {</span>
-<span class="fc" id="L184">    this.repositorySystem = repositorySystem;</span>
-<span class="fc" id="L185">    this.relativizesFilePaths = new RelativizesFilePaths();</span>
-<span class="fc" id="L186">  }</span>
+<span class="fc" id="L175">  public TestMojo(RepositorySystem repositorySystem) {</span>
+<span class="fc" id="L176">    this.repositorySystem = repositorySystem;</span>
+<span class="fc" id="L177">    this.relativizesFilePaths = new RelativizesFilePaths();</span>
+<span class="fc" id="L178">  }</span>
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-<span class="pc bpc" id="L190" title="1 of 2 branches missed.">    if(!this.isSkipTests()) {</span>
-<span class="nc" id="L191">      super.execute();</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">    if (!this.isSkipTests()) {</span>
+<span class="nc" id="L183">      super.execute();</span>
     } else {
-<span class="fc" id="L193">      this.getLog().info(&quot;Skipping Jasmine Specs&quot;);</span>
+<span class="fc" id="L185">      this.getLog().info(&quot;Skipping Jasmine Specs&quot;);</span>
     }
-<span class="fc" id="L195">  }</span>
+<span class="fc" id="L187">  }</span>
 
   @Override
   public void run() throws Exception {
-<span class="nc" id="L199">    ServerManager serverManager = this.getServerManager();</span>
+<span class="nc" id="L191">    ServerManager serverManager = this.getServerManager();</span>
     try {
-<span class="nc" id="L201">      int port = serverManager.start();</span>
-<span class="nc" id="L202">      setPortProperty(port);</span>
-<span class="nc" id="L203">      this.getLog().info(&quot;Executing Jasmine Specs&quot;);</span>
-<span class="nc" id="L204">      JasmineResult result = this.executeSpecs(new URL(this.uriScheme+&quot;://&quot; + this.serverHostname + &quot;:&quot; + port));</span>
-<span class="nc" id="L205">      this.logResults(result);</span>
-<span class="nc" id="L206">      this.throwAnySpecFailures(result);</span>
+<span class="nc" id="L193">      int port = serverManager.start();</span>
+<span class="nc" id="L194">      setPortProperty(port);</span>
+<span class="nc" id="L195">      this.getLog().info(&quot;Executing Jasmine Specs&quot;);</span>
+<span class="nc" id="L196">      JasmineResult result = this.executeSpecs(new URL(this.uriScheme + &quot;://&quot; + this.serverHostname + &quot;:&quot; + port));</span>
+<span class="nc" id="L197">      this.logResults(result);</span>
+<span class="nc" id="L198">      this.throwAnySpecFailures(result);</span>
     } finally {
-<span class="nc bnc" id="L208" title="All 4 branches missed.">      if (!keepServerAlive) {</span>
-<span class="nc" id="L209">        serverManager.stop();</span>
+<span class="nc bnc" id="L200" title="All 4 branches missed.">      if (!keepServerAlive) {</span>
+<span class="nc" id="L201">        serverManager.stop();</span>
       }
     }
-<span class="nc" id="L212">  }</span>
+<span class="nc" id="L204">  }</span>
 
   private ServerManager getServerManager() throws MojoExecutionException {
-<span class="nc bnc" id="L215" title="All 2 branches missed.">    Log log = this.debug ? this.getLog() : new NullLog();</span>
+<span class="nc bnc" id="L207" title="All 2 branches missed.">    Log log = this.debug ? this.getLog() : new NullLog();</span>
 
-<span class="nc" id="L217">    CreatesRunner createsRunner = new CreatesRunner(</span>
-        this,
-        log,
-        this.specRunnerHtmlFileName,
-        ReporterType.JsApiReporter);
+<span class="nc" id="L209">    CreatesRunner createsRunner = new CreatesRunner(</span>
+      this,
+      log,
+      this.specRunnerHtmlFileName,
+      ReporterType.JsApiReporter);
 
-<span class="nc" id="L223">    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(</span>
-        this,
-        this.relativizesFilePaths,
-        createsRunner);
+<span class="nc" id="L215">    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(</span>
+      this,
+      this.relativizesFilePaths,
+      createsRunner);
 
-<span class="nc" id="L228">    return new ServerManager(new Server(), getConnector(), configurator);</span>
+<span class="nc" id="L220">    return new ServerManager(new Server(), getConnector(), configurator);</span>
   }
 
   private void setPortProperty(int port) {
-<span class="nc" id="L232">    this.mavenProject.getProperties().setProperty(&quot;jasmine.serverPort&quot;, String.valueOf(port));</span>
-<span class="nc" id="L233">  }</span>
+<span class="nc" id="L224">    this.mavenProject.getProperties().setProperty(&quot;jasmine.serverPort&quot;, String.valueOf(port));</span>
+<span class="nc" id="L225">  }</span>
+
   private JasmineResult executeSpecs(URL runner) throws Exception {
-<span class="nc" id="L235">    WebDriver driver = this.createDriver();</span>
-<span class="nc" id="L236">    JasmineResult result = new SpecRunnerExecutor().execute(</span>
-        runner,
-        new File(this.jasmineTargetDir,this.junitXmlReportFileName),
-        driver,
-        this.timeout,
-        this.debug,
-        this.getLog(),
-        this.format
+<span class="nc" id="L228">    WebDriver driver = this.createDriver();</span>
+<span class="nc" id="L229">    JasmineResult result = new SpecRunnerExecutor().execute(</span>
+      runner,
+      driver,
+      this.timeout,
+      this.debug,
+<span class="nc" id="L234">      this.getLog(),</span>
+      this.format,
+<span class="nc" id="L236">      getReporters(),</span>
+<span class="nc" id="L237">      getFileSystemReporters()</span>
     );
-<span class="nc" id="L245">    return result;</span>
+<span class="nc" id="L239">    return result;</span>
   }
 
   private WebDriver createDriver() throws Exception {
-<span class="nc" id="L249">    RepositoryDetails details = new RepositoryDetails();</span>
-<span class="nc" id="L250">    details.setRemoteRepositories(remoteRepositories);</span>
-<span class="nc" id="L251">    details.setRepositorySystem(repositorySystem);</span>
-<span class="nc" id="L252">    details.setRepositorySystemSession(repositorySystemSession);</span>
+<span class="nc" id="L243">    RepositoryDetails details = new RepositoryDetails();</span>
+<span class="nc" id="L244">    details.setRemoteRepositories(remoteRepositories);</span>
+<span class="nc" id="L245">    details.setRepositorySystem(repositorySystem);</span>
+<span class="nc" id="L246">    details.setRepositorySystemSession(repositorySystemSession);</span>
 
-<span class="nc" id="L254">    configure(mavenSession.getUserProperties());</span>
+<span class="nc" id="L248">    configure(mavenSession.getUserProperties());</span>
 
-<span class="nc" id="L256">    WebDriverFactory factory = new WebDriverFactory();</span>
-<span class="nc" id="L257">    factory.setWebDriverCapabilities(webDriverCapabilities);</span>
-<span class="nc" id="L258">    factory.setWebDriverClassName(webDriverClassName);</span>
-<span class="nc" id="L259">    factory.setDebug(debug);</span>
-<span class="nc" id="L260">    factory.setBrowserVersion(browserVersion);</span>
-<span class="nc" id="L261">    factory.setPhantomJsLocatorOptions(phantomjs);</span>
-<span class="nc" id="L262">    factory.setRepositoryDetails(details);</span>
+<span class="nc" id="L250">    WebDriverFactory factory = new WebDriverFactory();</span>
+<span class="nc" id="L251">    factory.setWebDriverCapabilities(webDriverCapabilities);</span>
+<span class="nc" id="L252">    factory.setWebDriverClassName(webDriverClassName);</span>
+<span class="nc" id="L253">    factory.setDebug(debug);</span>
+<span class="nc" id="L254">    factory.setBrowserVersion(browserVersion);</span>
+<span class="nc" id="L255">    factory.setPhantomJsLocatorOptions(phantomjs);</span>
+<span class="nc" id="L256">    factory.setRepositoryDetails(details);</span>
 
-<span class="nc" id="L264">    return factory.createWebDriver();</span>
+<span class="nc" id="L258">    return factory.createWebDriver();</span>
   }
 
   private void configure(Properties properties) {
 
-<span class="nc" id="L269">    phantomjs.setVersion(</span>
-        properties.getProperty(&quot;phantomjs.version&quot;, phantomjs.getVersion())
+<span class="nc" id="L263">    phantomjs.setVersion(</span>
+<span class="nc" id="L264">      properties.getProperty(&quot;phantomjs.version&quot;, phantomjs.getVersion())</span>
     );
 
-<span class="nc" id="L273">    phantomjs.setSource(</span>
-        PhantomJsLocatorOptions.Source.valueOf(
-            properties.getProperty(&quot;phantomjs.source&quot;, phantomjs.getSource().toString())
-        )
+<span class="nc" id="L267">    phantomjs.setSource(</span>
+<span class="nc" id="L268">      PhantomJsLocatorOptions.Source.valueOf(</span>
+<span class="nc" id="L269">        properties.getProperty(&quot;phantomjs.source&quot;, phantomjs.getSource().toString())</span>
+      )
     );
 
-<span class="nc" id="L279">    phantomjs.setOutputDirectory(</span>
-        new File(properties.getProperty(&quot;phantomjs.outputDirectory&quot;, phantomjs.getOutputDirectory().toString()))
+<span class="nc" id="L273">    phantomjs.setOutputDirectory(</span>
+<span class="nc" id="L274">      new File(properties.getProperty(&quot;phantomjs.outputDirectory&quot;, phantomjs.getOutputDirectory().toString()))</span>
     );
 
-<span class="nc" id="L283">    phantomjs.setBaseUrl(</span>
-        properties.getProperty(&quot;phantomjs.baseUrl&quot;, phantomjs.getBaseUrl())
+<span class="nc" id="L277">    phantomjs.setBaseUrl(</span>
+<span class="nc" id="L278">      properties.getProperty(&quot;phantomjs.baseUrl&quot;, phantomjs.getBaseUrl())</span>
     );
 
-<span class="nc" id="L287">    phantomjs.setCheckSystemPath(</span>
-        configureBoolean(properties, &quot;phantomjs.checkSystemPath&quot;, phantomjs.isCheckSystemPath())
+<span class="nc" id="L281">    phantomjs.setCheckSystemPath(</span>
+<span class="nc" id="L282">      configureBoolean(properties, &quot;phantomjs.checkSystemPath&quot;, phantomjs.isCheckSystemPath())</span>
     );
 
-<span class="nc" id="L291">    phantomjs.setEnforceVersion(</span>
-        properties.getProperty(&quot;phantomjs.enforceVersion&quot;, phantomjs.getEnforceVersion())
+<span class="nc" id="L285">    phantomjs.setEnforceVersion(</span>
+<span class="nc" id="L286">      properties.getProperty(&quot;phantomjs.enforceVersion&quot;, phantomjs.getEnforceVersion())</span>
     );
-<span class="nc" id="L294">  }</span>
+<span class="nc" id="L288">  }</span>
 
   private boolean configureBoolean(Properties properties, String property, boolean defaultValue) {
-<span class="nc" id="L297">    return Boolean.parseBoolean(properties.getProperty(property, Boolean.toString(defaultValue)));</span>
+<span class="nc" id="L291">    return Boolean.parseBoolean(properties.getProperty(property, Boolean.toString(defaultValue)));</span>
   }
 
   private void logResults(JasmineResult result) {
-<span class="nc" id="L301">    JasmineResultLogger resultLogger = new JasmineResultLogger();</span>
-<span class="nc" id="L302">    resultLogger.setLog(this.getLog());</span>
-<span class="nc" id="L303">    resultLogger.log(result);</span>
-<span class="nc" id="L304">  }</span>
+<span class="nc" id="L295">    JasmineResultLogger resultLogger = new JasmineResultLogger();</span>
+<span class="nc" id="L296">    resultLogger.setLog(this.getLog());</span>
+<span class="nc" id="L297">    resultLogger.log(result);</span>
+<span class="nc" id="L298">  }</span>
 
   private void throwAnySpecFailures(JasmineResult result) throws MojoFailureException {
-<span class="nc bnc" id="L307" title="All 4 branches missed.">    if(this.haltOnFailure &amp;&amp; !result.didPass()) {</span>
-<span class="nc" id="L308">      throw new MojoFailureException(&quot;There were Jasmine spec failures.&quot;);</span>
+<span class="nc bnc" id="L301" title="All 4 branches missed.">    if (this.haltOnFailure &amp;&amp; !result.didPass()) {</span>
+<span class="nc" id="L302">      throw new MojoFailureException(&quot;There were Jasmine spec failures.&quot;);</span>
     }
-<span class="nc" id="L310">  }</span>
+<span class="nc" id="L304">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

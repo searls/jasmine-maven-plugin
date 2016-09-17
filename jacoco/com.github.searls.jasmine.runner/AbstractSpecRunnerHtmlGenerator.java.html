@@ -1,14 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractSpecRunnerHtmlGenerator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.runner</a> &gt; <span class="el_source">AbstractSpecRunnerHtmlGenerator.java</span></div><h1>AbstractSpecRunnerHtmlGenerator.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.runner;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractSpecRunnerHtmlGenerator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.runner</a> &gt; <span class="el_source">AbstractSpecRunnerHtmlGenerator.java</span></div><h1>AbstractSpecRunnerHtmlGenerator.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.runner;
+
+import com.github.searls.jasmine.format.FormatsScriptTags;
+import org.codehaus.plexus.util.StringUtils;
+import org.stringtemplate.v4.ST;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-
-import org.codehaus.plexus.util.StringUtils;
-import org.stringtemplate.v4.ST;
-
-import com.github.searls.jasmine.format.FormatsScriptTags;
 
 public abstract class AbstractSpecRunnerHtmlGenerator {
   private static final String SOURCE_ENCODING = &quot;sourceEncoding&quot;;
@@ -17,35 +15,35 @@ public abstract class AbstractSpecRunnerHtmlGenerator {
   protected static final String SOURCES_TEMPLATE_ATTR_NAME = &quot;sources&quot;;
   protected static final String REPORTER_ATTR_NAME = &quot;reporter&quot;;
   private final HtmlGeneratorConfiguration configuration;
-<span class="fc" id="L20">  private final FormatsScriptTags formatsScriptTags = new FormatsScriptTags();</span>
+<span class="fc" id="L18">  private final FormatsScriptTags formatsScriptTags = new FormatsScriptTags();</span>
 
-<span class="fc" id="L22">  protected AbstractSpecRunnerHtmlGenerator(HtmlGeneratorConfiguration configuration) {</span>
-<span class="fc" id="L23">    this.configuration = configuration;</span>
-<span class="fc" id="L24">  }</span>
+<span class="fc" id="L20">  protected AbstractSpecRunnerHtmlGenerator(HtmlGeneratorConfiguration configuration) {</span>
+<span class="fc" id="L21">    this.configuration = configuration;</span>
+<span class="fc" id="L22">  }</span>
 
   protected void setEncoding(HtmlGeneratorConfiguration htmlGeneratorConfiguration, ST template) {
-<span class="fc bfc" id="L27" title="All 2 branches covered.">    template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);</span>
-<span class="fc" id="L28">  }</span>
+<span class="nc bnc" id="L25" title="All 2 branches missed.">    template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);</span>
+<span class="nc" id="L26">  }</span>
 
   protected ST resolveHtmlTemplate() throws IOException {
-<span class="fc" id="L31">    String htmlTemplate = configuration.getRunnerTemplate();</span>
-<span class="fc" id="L32">    return new ST(htmlTemplate,'$','$');</span>
+<span class="nc" id="L29">    String htmlTemplate = configuration.getRunnerTemplate();</span>
+<span class="nc" id="L30">    return new ST(htmlTemplate, '$', '$');</span>
   }
 
   protected void applyCssToTemplate(List&lt;String&gt; styles, ST template) throws IOException {
-<span class="fc" id="L36">    StringBuilder css = new StringBuilder();</span>
-<span class="fc bfc" id="L37" title="All 2 branches covered.">    for (String cssFile : styles) {</span>
-<span class="fc" id="L38">      css.append(&quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot;).append(cssFile).append(&quot;\&quot;/&gt;&quot;);</span>
-<span class="fc" id="L39">    }</span>
-<span class="fc" id="L40">    template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());</span>
-<span class="fc" id="L41">  }</span>
+<span class="nc" id="L34">    StringBuilder css = new StringBuilder();</span>
+<span class="nc bnc" id="L35" title="All 2 branches missed.">    for (String cssFile : styles) {</span>
+<span class="nc" id="L36">      css.append(&quot;&lt;link rel=\&quot;stylesheet\&quot; type=\&quot;text/css\&quot; href=\&quot;&quot;).append(cssFile).append(&quot;\&quot;/&gt;&quot;);</span>
+<span class="nc" id="L37">    }</span>
+<span class="nc" id="L38">    template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());</span>
+<span class="nc" id="L39">  }</span>
 
   public HtmlGeneratorConfiguration getConfiguration() {
-<span class="fc" id="L44">    return configuration;</span>
+<span class="nc" id="L42">    return configuration;</span>
   }
 
   protected void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Collection&lt;String&gt; scripts, ST template) throws IOException {
-<span class="fc" id="L48">    template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));</span>
-<span class="fc" id="L49">  }</span>
+<span class="nc" id="L46">    template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));</span>
+<span class="nc" id="L47">  }</span>
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

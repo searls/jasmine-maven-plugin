@@ -8,11 +8,11 @@
 <div id="overview"><a href="../../../../../../../apidocs/com/github/searls/jasmine/io/scripts/ResolvesLocationOfPreloadSources.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.github.searls.jasmine.io.scripts;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> java.io.File;
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
-<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> java.util.List;
-<a class="jxr_linenumber" name="L6" href="#L6">6</a>   
-<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> com.github.searls.jasmine.collections.CollectionHelper;
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> com.github.searls.jasmine.collections.CollectionHelper;
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> java.io.File;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="L8" href="#L8">8</a>   
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/github/searls/jasmine/io/scripts/ResolvesLocationOfPreloadSources.html">ResolvesLocationOfPreloadSources</a> {
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  
@@ -22,9 +22,9 @@
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>    <strong class="jxr_keyword">public</strong> List&lt;String&gt; resolve(List&lt;String&gt; preloadSources, File sourceDir, File specDir) {
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>      List&lt;String&gt; sources = <strong class="jxr_keyword">new</strong> ArrayList&lt;String&gt;();
 <a class="jxr_linenumber" name="L16" href="#L16">16</a>      <strong class="jxr_keyword">for</strong> (String source : collectionHelper.list(preloadSources)) {
-<a class="jxr_linenumber" name="L17" href="#L17">17</a>        <strong class="jxr_keyword">if</strong>(fileCouldNotBeAdded(<strong class="jxr_keyword">new</strong> File(sourceDir, source),sources)
-<a class="jxr_linenumber" name="L18" href="#L18">18</a>          &amp;&amp; fileCouldNotBeAdded(<strong class="jxr_keyword">new</strong> File(specDir, source),sources)
-<a class="jxr_linenumber" name="L19" href="#L19">19</a>            &amp;&amp; fileCouldNotBeAdded(<strong class="jxr_keyword">new</strong> File(source),sources)) {
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>        <strong class="jxr_keyword">if</strong> (fileCouldNotBeAdded(<strong class="jxr_keyword">new</strong> File(sourceDir, source), sources)
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>          &amp;&amp; fileCouldNotBeAdded(<strong class="jxr_keyword">new</strong> File(specDir, source), sources)
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>          &amp;&amp; fileCouldNotBeAdded(<strong class="jxr_keyword">new</strong> File(source), sources)) {
 <a class="jxr_linenumber" name="L20" href="#L20">20</a>          sources.add(source);
 <a class="jxr_linenumber" name="L21" href="#L21">21</a>        }
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>      }

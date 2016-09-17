@@ -8,7 +8,7 @@
 <div id="overview"><a href="../../../../../../apidocs/com/github/searls/jasmine/io/ScansDirectory.html">View Javadoc</a></div><pre>
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <strong class="jxr_keyword">package</strong> com.github.searls.jasmine.io;
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   
-<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> java.util.Arrays.asList;
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   <strong class="jxr_keyword">import</strong> org.codehaus.plexus.util.DirectoryScanner;
 <a class="jxr_linenumber" name="L4" href="#L4">4</a>   
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> java.io.File;
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
@@ -17,11 +17,11 @@
 <a class="jxr_linenumber" name="L9" href="#L9">9</a>   <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> java.util.Set;
 <a class="jxr_linenumber" name="L11" href="#L11">11</a>  
-<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> org.codehaus.plexus.util.DirectoryScanner;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> java.util.Arrays.asList;
 <a class="jxr_linenumber" name="L13" href="#L13">13</a>  
 <a class="jxr_linenumber" name="L14" href="#L14">14</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/github/searls/jasmine/io/ScansDirectory.html">ScansDirectory</a> {
 <a class="jxr_linenumber" name="L15" href="#L15">15</a>  
-<a class="jxr_linenumber" name="L16" href="#L16">16</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">static</strong> List&lt;String&gt; DEFAULT_INCLUDES = asList(<span class="jxr_string">"**"</span>+File.separator+<span class="jxr_string">"*.js"</span>,<span class="jxr_string">"**"</span>+File.separator+<span class="jxr_string">"*.coffee"</span>);
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>    <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">static</strong> List&lt;String&gt; DEFAULT_INCLUDES = asList(<span class="jxr_string">"**"</span> + File.separator + <span class="jxr_string">"*.js"</span>, <span class="jxr_string">"**"</span> + File.separator + <span class="jxr_string">"*.coffee"</span>);
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>    <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> DirectoryScanner directoryScanner = <strong class="jxr_keyword">new</strong> DirectoryScanner();
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
@@ -35,7 +35,7 @@
 <a class="jxr_linenumber" name="L27" href="#L27">27</a>  
 <a class="jxr_linenumber" name="L28" href="#L28">28</a>    <strong class="jxr_keyword">private</strong> List&lt;String&gt; performScan(File directory, String include, List&lt;String&gt; excludes) {
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      directoryScanner.setBasedir(directory);
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>      directoryScanner.setIncludes(<strong class="jxr_keyword">new</strong> String[]{ include });
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      directoryScanner.setIncludes(<strong class="jxr_keyword">new</strong> String[]{include});
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>      directoryScanner.setExcludes(excludes.toArray(<strong class="jxr_keyword">new</strong> String[]{}));
 <a class="jxr_linenumber" name="L32" href="#L32">32</a>      directoryScanner.addDefaultExcludes();
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      directoryScanner.scan();

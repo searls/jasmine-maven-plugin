@@ -25,8 +25,8 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>    <strong class="jxr_keyword">public</strong> <a href="../../../../../com/github/searls/jasmine/thirdpartylibs/WebJarResourceHandler.html">WebJarResourceHandler</a>(ClassLoader projectClassLoader) {
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>      <strong class="jxr_keyword">this</strong>.projectClassLoader = projectClassLoader;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>      <strong class="jxr_keyword">this</strong>.webJarAssetLocators = createWebJarAssetLocators(
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>          WebJarResourceHandler.<strong class="jxr_keyword">class</strong>.getClassLoader(),
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>          projectClassLoader
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>        WebJarResourceHandler.<strong class="jxr_keyword">class</strong>.getClassLoader(),
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>        projectClassLoader
 <a class="jxr_linenumber" name="L22" href="#L22">22</a>      );
 <a class="jxr_linenumber" name="L23" href="#L23">23</a>    }
 <a class="jxr_linenumber" name="L24" href="#L24">24</a>  
@@ -76,7 +76,7 @@
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <strong class="jxr_keyword">return</strong> fullPath;
 <a class="jxr_linenumber" name="L69" href="#L69">69</a>    }
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>  
-<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">private</strong> List&lt;WebJarAssetLocator&gt; createWebJarAssetLocators(ClassLoader ... classLoaders) {
+<a class="jxr_linenumber" name="L71" href="#L71">71</a>    <strong class="jxr_keyword">private</strong> List&lt;WebJarAssetLocator&gt; createWebJarAssetLocators(ClassLoader... classLoaders) {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>      List&lt;WebJarAssetLocator&gt; locators = <strong class="jxr_keyword">new</strong> ArrayList&lt;WebJarAssetLocator&gt;();
 <a class="jxr_linenumber" name="L73" href="#L73">73</a>      <strong class="jxr_keyword">for</strong> (ClassLoader classLoader : classLoaders) {
 <a class="jxr_linenumber" name="L74" href="#L74">74</a>        locators.add(<strong class="jxr_keyword">new</strong> WebJarAssetLocator(WebJarAssetLocator.getFullPathIndex(WILDCARD, classLoader)));

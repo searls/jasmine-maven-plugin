@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebDriverWaiter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.runner</a> &gt; <span class="el_source">WebDriverWaiter.java</span></div><h1>WebDriverWaiter.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.runner;
+
+import com.google.common.base.Predicate;
+import org.apache.maven.plugin.logging.Log;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+<span class="fc" id="L10">class WebDriverWaiter {</span>
+  static final String EXECUTION_FINISHED_SCRIPT = &quot;return (window.jsApiReporter === undefined) ? false : window.jsApiReporter.finished&quot;;
+
+  void waitForRunnerToFinish(final WebDriver driver, final int timeout, final boolean debug, final Log log) throws InterruptedException {
+<span class="fc" id="L14">    final JavascriptExecutor executor = (JavascriptExecutor) driver;</span>
+    try {
+<span class="fc" id="L16">      new WebDriverWait(driver, timeout, 1000).until(new Predicate&lt;WebDriver&gt;() {</span>
+        @Override
+        public boolean apply(WebDriver input) {
+<span class="fc" id="L19">          return executionFinished(executor);</span>
+        }
+      });
+<span class="fc" id="L22">    } catch (TimeoutException e) {</span>
+<span class="fc" id="L23">      handleTimeout(timeout, debug, log);</span>
+<span class="fc" id="L24">    }</span>
+
+<span class="fc" id="L26">  }</span>
+
+  private Boolean executionFinished(final JavascriptExecutor driver) {
+<span class="fc" id="L29">    return (Boolean) driver.executeScript(EXECUTION_FINISHED_SCRIPT);</span>
+  }
+
+  private void handleTimeout(final int timeout, final boolean debug, final Log log) {
+<span class="fc" id="L33">    log.warn(&quot;Attempted to wait for your specs to finish processing over the course of &quot; +</span>
+      timeout +
+      &quot; seconds, but it still appears to be running.&quot;);
+<span class="fc bfc" id="L36" title="All 2 branches covered.">    if (debug) {</span>
+<span class="fc" id="L37">      log.warn(&quot;Debug mode: will attempt to parse the incomplete spec runner results&quot;);</span>
+    } else {
+<span class="fc" id="L39">      throw new IllegalStateException(&quot;Timeout occurred. Aborting execution of specs. (Try configuring 'debug' to 'true' for more details.)&quot;);</span>
+    }
+<span class="fc" id="L41">  }</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

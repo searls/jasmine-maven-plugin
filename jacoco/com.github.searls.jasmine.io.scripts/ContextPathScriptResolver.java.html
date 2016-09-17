@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ContextPathScriptResolver.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.io.scripts</a> &gt; <span class="el_source">ContextPathScriptResolver.java</span></div><h1>ContextPathScriptResolver.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.io.scripts;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ContextPathScriptResolver.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.io.scripts</a> &gt; <span class="el_source">ContextPathScriptResolver.java</span></div><h1>ContextPathScriptResolver.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.io.scripts;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -44,34 +44,34 @@ public class ContextPathScriptResolver implements ScriptResolver {
   @Override
   public Set&lt;String&gt; getSources() throws ScriptResolverException {
 <span class="fc" id="L46">    return relativeToContextPath(</span>
-        this.scriptResolver.getSourceDirectory(),
-        this.sourceContextPath,
-        this.scriptResolver.getSources());
+<span class="fc" id="L47">      this.scriptResolver.getSourceDirectory(),</span>
+      this.sourceContextPath,
+<span class="fc" id="L49">      this.scriptResolver.getSources());</span>
   }
 
   @Override
   public Set&lt;String&gt; getSpecs() throws ScriptResolverException {
 <span class="fc" id="L54">    return relativeToContextPath(</span>
-        this.scriptResolver.getSpecDirectory(),
-        this.specContextPath,
-        this.scriptResolver.getSpecs());
+<span class="fc" id="L55">      this.scriptResolver.getSpecDirectory(),</span>
+      this.specContextPath,
+<span class="fc" id="L57">      this.scriptResolver.getSpecs());</span>
   }
 
   @Override
   public Set&lt;String&gt; getPreloads() throws ScriptResolverException {
 <span class="fc" id="L62">    Set&lt;String&gt; scripts = this.scriptResolver.getPreloads();</span>
 <span class="fc" id="L63">    scripts = relativeToContextPath(</span>
-        this.scriptResolver.getSourceDirectory(),
-        this.sourceContextPath,
-        scripts);
+<span class="fc" id="L64">      this.scriptResolver.getSourceDirectory(),</span>
+      this.sourceContextPath,
+      scripts);
 <span class="fc" id="L67">    scripts = relativeToContextPath(</span>
-        this.scriptResolver.getSpecDirectory(),
-        this.specContextPath,
-        scripts);
+<span class="fc" id="L68">      this.scriptResolver.getSpecDirectory(),</span>
+      this.specContextPath,
+      scripts);
 <span class="fc" id="L71">    scripts = relativeToContextPath(</span>
-        this.scriptResolver.getBaseDirectory(),
-        this.baseContextPath,
-        scripts);
+<span class="fc" id="L72">      this.scriptResolver.getBaseDirectory(),</span>
+      this.baseContextPath,
+      scripts);
 <span class="fc" id="L75">    return scripts;</span>
   }
 
@@ -92,4 +92,4 @@ public class ContextPathScriptResolver implements ScriptResolver {
 <span class="fc" id="L92">    return relativeScripts;</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

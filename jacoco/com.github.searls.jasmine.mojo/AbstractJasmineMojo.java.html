@@ -1,8 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>AbstractJasmineMojo.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">AbstractJasmineMojo.java</span></div><h1>AbstractJasmineMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractJasmineMojo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">AbstractJasmineMojo.java</span></div><h1>AbstractJasmineMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.exception.StringifiesStackTraces;
 import com.github.searls.jasmine.io.ScansDirectory;
+import com.github.searls.jasmine.model.FileSystemReporter;
+import com.github.searls.jasmine.model.Reporter;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
@@ -13,7 +15,6 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
-import org.codehaus.plexus.resource.loader.FileResourceLoader;
 import org.eclipse.jetty.server.Connector;
 
 import java.io.File;
@@ -21,109 +22,145 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-<span class="fc" id="L24">public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {</span>
+<span class="fc" id="L25">public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {</span>
 
-	private static final String ERROR_FILE_DNE = &quot;Invalid value for parameter '%s'. File does not exist: %s&quot;;
+  // Properties in order of most-to-least interesting for client projects to override
 
-	// Properties in order of most-to-least interesting for client projects to override
+  /**
+   * Directory storing your JavaScript.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(
+    property = &quot;jsSrcDir&quot;,
+    defaultValue = &quot;${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript&quot;)
+  private File jsSrcDir;
 
-	/**
-	 * Directory storing your JavaScript.
-	 * @since 1.1.0
-	 */
-	@Parameter(
-			property=&quot;jsSrcDir&quot;,
-			defaultValue=&quot;${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript&quot;)
-	private File jsSrcDir;
+  /**
+   * Directory storing your Jasmine Specs.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(
+    property = &quot;jsTestSrcDir&quot;,
+    defaultValue = &quot;${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript&quot;)
+  private File jsTestSrcDir;
 
-	/**
-	 * Directory storing your Jasmine Specs.
-	 * @since 1.1.0
-	 */
-	@Parameter(
-			property=&quot;jsTestSrcDir&quot;,
-			defaultValue=&quot;${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript&quot;)
-	private File jsTestSrcDir;
+  /**
+   * &lt;p&gt;JavaScript sources (typically vendor/lib dependencies) that need to be loaded
+   * before other sources (and specs) in a particular order. Each source will first be
+   * searched for relative to &lt;code&gt;${jsSrcDir}&lt;/code&gt;, then &lt;code&gt;${jsTestSrcDir}&lt;/code&gt;,
+   * then (if it's not found in either) it will be included exactly as it appears in your POM.&lt;/p&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;Therefore, if jquery.js is in &lt;code&gt;${jsSrcDir}/vendor&lt;/code&gt;, you would configure:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;preloadSources&amp;gt;
+   *   &amp;lt;source&amp;gt;vendor/jquery.js&amp;lt;/source&amp;gt;
+   * &amp;lt;/preloadSources&amp;gt;
+   * &lt;/pre&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;And jquery.js would load before all the other sources and specs.&lt;/p&gt;
+   *
+   * @since 1.1.0
+   */
+  @Parameter
+  protected List&lt;String&gt; preloadSources;
 
-	/**
-	 * &lt;p&gt;JavaScript sources (typically vendor/lib dependencies) that need to be loaded
-	 * before other sources (and specs) in a particular order. Each source will first be
-	 * searched for relative to &lt;code&gt;${jsSrcDir}&lt;/code&gt;, then &lt;code&gt;${jsTestSrcDir}&lt;/code&gt;,
-	 * then (if it's not found in either) it will be included exactly as it appears in your POM.&lt;/p&gt;
-	 *
-	 * &lt;p&gt;Therefore, if jquery.js is in &lt;code&gt;${jsSrcDir}/vendor&lt;/code&gt;, you would configure:&lt;/p&gt;
-	 * &lt;pre&gt;
-	 * &amp;lt;preloadSources&amp;gt;
-	 *   &amp;lt;source&amp;gt;vendor/jquery.js&amp;lt;/source&amp;gt;
-	 * &amp;lt;/preloadSources&amp;gt;
-	 * &lt;/pre&gt;
-         *
-	 * &lt;p&gt;And jquery.js would load before all the other sources and specs.&lt;/p&gt;
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter
-	protected List&lt;String&gt; preloadSources;
+  /**
+   * &lt;p&gt;It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
+   * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
+   * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
+   * and make the changes you need.&lt;/p&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;Potential values are a filesystem path, a URL, or a classpath resource. The default template is
+   * stored in &lt;code&gt;src/main/resources/jasmine-templates/SpecRunner.htmltemplate&lt;/code&gt;, and the
+   * required template strings are tokenized in &quot;$*$&quot; patterns.&lt;/p&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;Example usage:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;customRunnerTemplate&amp;gt;${project.basedir}/src/test/resources/myCustomRunner.template&amp;lt;/customRunnerTemplate&amp;gt;
+   * &lt;/pre&gt;
+   *
+   * @since 1.1.0
+   */
+  @Parameter
+  protected String customRunnerTemplate;
 
-	/**
-	 * &lt;p&gt;It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
-	 * and as a result the generated SpecRunner HTML files are set up in a way that you can't run
-	 * your specs. Have no fear! Simply specify a custom spec runner template in the plugin configuration
-	 * and make the changes you need.&lt;/p&gt;
-         *
-	 * &lt;p&gt;Potential values are a filesystem path, a URL, or a classpath resource. The default template is
-	 * stored in &lt;code&gt;src/main/resources/jasmine-templates/SpecRunner.htmltemplate&lt;/code&gt;, and the
-	 * required template strings are tokenized in &quot;$*$&quot; patterns.&lt;/p&gt;
-	 *
-	 * &lt;p&gt;Example usage:&lt;/p&gt;
-	 * &lt;pre&gt;
-	 * &amp;lt;customRunnerTemplate&amp;gt;${project.basedir}/src/test/resources/myCustomRunner.template&amp;lt;/customRunnerTemplate&amp;gt;
-	 * &lt;/pre&gt;
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter
-	protected String customRunnerTemplate;
+  /**
+   * &lt;p&gt;Sometimes you want to have full control over how scriptloaders are configured. In order to
+   * interpolate custom configuration into the generated runnerTemplate, specify a file containing
+   * the additional config. Potential values are a filesystem path, a URL, or a classpath resource.&lt;/p&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;Example usage:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;customRunnerConfiguration&amp;gt;${project.basedir}/src/test/resources/myCustomConfig.txt&amp;lt;/customRunnerConfiguration&amp;gt;
+   * &lt;/pre&gt;
+   *
+   * @since 1.1.0
+   */
+  @Parameter
+  protected String customRunnerConfiguration;
 
-	/**
-	 * &lt;p&gt;Sometimes you want to have full control over how scriptloaders are configured. In order to
-	 * interpolate custom configuration into the generated runnerTemplate, specify a file containing
-	 * the additional config. Potential values are a filesystem path, a URL, or a classpath resource.&lt;/p&gt;
-	 *
-	 * &lt;p&gt;Example usage:&lt;/p&gt;
-	 * &lt;pre&gt;
-	 * &amp;lt;customRunnerConfiguration&amp;gt;${project.basedir}/src/test/resources/myCustomConfig.txt&amp;lt;/customRunnerConfiguration&amp;gt;
-	 * &lt;/pre&gt;
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter
-	protected String customRunnerConfiguration;
+  /**
+   * &lt;p&gt; Specify a custom reporter to be used to print the test report.&lt;/p&gt;
+   * &lt;p&gt;Example usage:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;reporters&amp;gt;
+   *   &amp;lt;reporter&amp;gt;
+   *     &amp;lt;reporterName&amp;gt;${project.basedir}/src/test/resources/myCustomReporter.js&amp;lt;/reporterName&amp;gt;
+   *   &amp;lt;/reporter&amp;gt;
+   *   &amp;lt;reporter&amp;gt;
+   *     &amp;lt;reporterName&amp;gt;STANDARD&amp;lt;/reporterName&amp;gt;
+   *   &amp;lt;/reporter&amp;gt;
+   * &amp;lt;/reporters&amp;gt;
+   * &lt;/pre&gt;
+   */
+<span class="fc" id="L118">  @Parameter</span>
+  protected List&lt;Reporter&gt; reporters = new ArrayList&lt;Reporter&gt;();
 
-	/**
-	 * Target directory for files created by the plugin.
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;${project.build.directory}${file.separator}jasmine&quot;)
-	protected File jasmineTargetDir;
+  /**
+   * &lt;p&gt; Specify a custom file system reporter to be used to store the test report.&lt;/p&gt;
+   * &lt;p&gt;Example usage:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;fileSystemReporters&amp;gt;
+   *   &amp;lt;reporter&amp;gt;
+   *     &amp;lt;fileName&amp;gt;MyFile.log&amp;lt;/fileName&amp;gt;
+   *     &amp;lt;reporterName&amp;gt;${project.basedir}/src/test/resources/myCustomReporter.js&amp;lt;/reporterName&amp;gt;
+   *   &amp;lt;/reporter&amp;gt;
+   *   &amp;lt;reporter&amp;gt;
+   *     &amp;lt;fileName&amp;gt;Test-jasmine.xml&amp;lt;/fileName&amp;gt;
+   *     &amp;lt;reporterName&amp;gt;JUNIT_XML&amp;lt;/reporterName&amp;gt;
+   *   &amp;lt;/reporter&amp;gt;
+   * &amp;lt;/fileSystemReporters&amp;gt;
+   * &lt;/pre&gt;
+   */
+<span class="fc" id="L137">  @Parameter</span>
+  protected List&lt;FileSystemReporter&gt; fileSystemReporters = new ArrayList&lt;FileSystemReporter&gt;();
 
-	/**
-	 * Skip execution of tests.
-         *
-	 * @since 1.1.0
-	 * @see &lt;a href=&quot;http://maven.apache.org/general.html#skip-test&quot;&gt;http://maven.apache.org/general.html#skip-test&lt;/a&gt;
-	 */
-	@Parameter(property=&quot;skipTests&quot;)
-	protected boolean skipTests;
+  /**
+   * Target directory for files created by the plugin.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;${project.build.directory}${file.separator}jasmine&quot;)
+  protected File jasmineTargetDir;
+
+  /**
+   * Skip execution of tests.
+   *
+   * @see &lt;a href=&quot;http://maven.apache.org/general.html#skip-test&quot;&gt;http://maven.apache.org/general.html#skip-test&lt;/a&gt;
+   * @since 1.1.0
+   */
+  @Parameter(property = &quot;skipTests&quot;)
+  protected boolean skipTests;
 
   /**
    * Skip compilation and execution of tests.
    *
-   * @since 1.3.1.3
    * @see &lt;a href=&quot;http://maven.apache.org/general.html#skip-test&quot;&gt;http://maven.apache.org/general.html#skip-test&lt;/a&gt;
+   * @since 1.3.1.3
    */
-	@Parameter(property=&quot;maven.test.skip&quot;)
+  @Parameter(property = &quot;maven.test.skip&quot;)
   protected boolean mvnTestSkip;
 
   /**
@@ -131,210 +168,210 @@ import java.util.List;
    *
    * @since 1.3.1.3
    */
-  @Parameter(property=&quot;skipJasmineTests&quot;)
+  @Parameter(property = &quot;skipJasmineTests&quot;)
   protected boolean skipJasmineTests;
 
-	/**
-	 * Halt the build on test failure.
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(property=&quot;haltOnFailure&quot;, defaultValue=&quot;true&quot;)
-	protected boolean haltOnFailure;
+  /**
+   * Halt the build on test failure.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(property = &quot;haltOnFailure&quot;, defaultValue = &quot;true&quot;)
+  protected boolean haltOnFailure;
 
-	/**
-	 * Timeout for spec execution in seconds.
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;300&quot;)
-	protected int timeout;
+  /**
+   * Timeout for spec execution in seconds.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;300&quot;)
+  protected int timeout;
 
-	/**
-	 * True to increase HtmlUnit output and attempt reporting on specs even if a timeout occurred.
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;false&quot;)
-	protected boolean debug;
+  /**
+   * True to increase HtmlUnit output and attempt reporting on specs even if a timeout occurred.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;false&quot;)
+  protected boolean debug;
 
-	/**
-	 * The name of the Spec Runner file.
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;SpecRunner.html&quot;)
-	protected String specRunnerHtmlFileName;
+  /**
+   * The name of the Spec Runner file.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;SpecRunner.html&quot;)
+  protected String specRunnerHtmlFileName;
 
-	/**
-	 * The name of the Manual Spec Runner.
-	 *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;ManualSpecRunner.html&quot;)
-	protected String manualSpecRunnerHtmlFileName;
+  /**
+   * The name of the Manual Spec Runner.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;ManualSpecRunner.html&quot;)
+  protected String manualSpecRunnerHtmlFileName;
 
-	/**
-	 * The name of the directory the specs will be deployed to on the server.
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;spec&quot;)
-	protected String specDirectoryName;
+  /**
+   * The name of the directory the specs will be deployed to on the server.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;spec&quot;)
+  protected String specDirectoryName;
 
-	/**
-	 * The name of the directory the sources will be deployed to on the server.
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;src&quot;)
-	protected String srcDirectoryName;
+  /**
+   * The name of the directory the sources will be deployed to on the server.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;src&quot;)
+  protected String srcDirectoryName;
 
-	/**
-	 * The source encoding.
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(defaultValue=&quot;${project.build.sourceEncoding}&quot;)
-	protected String sourceEncoding;
+  /**
+   * The source encoding.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = &quot;${project.build.sourceEncoding}&quot;)
+  protected String sourceEncoding;
 
-	/**
+  /**
    * &lt;p&gt;Allows specifying which source files should be included and in what order.&lt;/p&gt;
    * &lt;pre&gt;
-	 * &amp;lt;sourceIncludes&amp;gt;
-	 *   &amp;lt;include&amp;gt;vendor/&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;myBootstrapFile.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
-	 * &amp;lt;/sourceIncludes&amp;gt;
-	 * &lt;/pre&gt;
-         *
-	 * &lt;p&gt;Default &lt;code&gt;sourceIncludes&lt;/code&gt;:&lt;/p&gt;
-	 * &lt;pre&gt;
-	 * &amp;lt;sourceIncludes&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
-	 * &amp;lt;/sourceIncludes&amp;gt;
-	 * &lt;/pre&gt;
-         *
-	 * @since 1.1.0
-	 */
-<span class="fc" id="L222">	@Parameter</span>
-	private final List&lt;String&gt; sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
+   * &amp;lt;sourceIncludes&amp;gt;
+   *   &amp;lt;include&amp;gt;vendor/&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;myBootstrapFile.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
+   * &amp;lt;/sourceIncludes&amp;gt;
+   * &lt;/pre&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;Default &lt;code&gt;sourceIncludes&lt;/code&gt;:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;sourceIncludes&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
+   * &amp;lt;/sourceIncludes&amp;gt;
+   * &lt;/pre&gt;
+   *
+   * @since 1.1.0
+   */
+<span class="fc" id="L259">  @Parameter</span>
+  private final List&lt;String&gt; sourceIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
-	/**
-	 * &lt;p&gt;Just like &lt;code&gt;sourceIncludes&lt;/code&gt;, but will exclude anything matching the provided patterns.&lt;/p&gt;
-	 * &lt;p&gt;There are no &lt;code&gt;sourceExcludes&lt;/code&gt; by default.&lt;/p&gt;
-         *
-	 * @since 1.1.0
-	 */
-<span class="fc" id="L231">	@Parameter</span>
-	private final List&lt;String&gt; sourceExcludes = Collections.emptyList();
+  /**
+   * &lt;p&gt;Just like &lt;code&gt;sourceIncludes&lt;/code&gt;, but will exclude anything matching the provided patterns.&lt;/p&gt;
+   * &lt;p&gt;There are no &lt;code&gt;sourceExcludes&lt;/code&gt; by default.&lt;/p&gt;
+   *
+   * @since 1.1.0
+   */
+<span class="fc" id="L268">  @Parameter</span>
+<span class="fc" id="L269">  private final List&lt;String&gt; sourceExcludes = Collections.emptyList();</span>
 
-	/**
-	 * &lt;p&gt;I often find myself needing control of the spec include order
-	 * when I have some global spec helpers or spec-scoped dependencies, like:&lt;/p&gt;
-	 * &lt;pre&gt;
-	 * &amp;lt;specIncludes&amp;gt;
-	 *   &amp;lt;include&amp;gt;jasmine-jquery.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;spec-helper.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
-	 * &amp;lt;/specIncludes&amp;gt;
-	 * &lt;/pre&gt;
-         *
-	 * &lt;p&gt;Default &lt;code&gt;specIncludes&lt;/code&gt;:&lt;/p&gt;
-	 * &lt;pre&gt;
-	 * &amp;lt;specIncludes&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
-	 *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
-	 * &amp;lt;/specIncludes&amp;gt;
-	 * &lt;/pre&gt;
-         *
-	 * @since 1.1.0
-	 */
-<span class="fc" id="L256">	@Parameter</span>
-	private final List&lt;String&gt; specIncludes = ScansDirectory.DEFAULT_INCLUDES;
+  /**
+   * &lt;p&gt;I often find myself needing control of the spec include order
+   * when I have some global spec helpers or spec-scoped dependencies, like:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;specIncludes&amp;gt;
+   *   &amp;lt;include&amp;gt;jasmine-jquery.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;spec-helper.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
+   * &amp;lt;/specIncludes&amp;gt;
+   * &lt;/pre&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;Default &lt;code&gt;specIncludes&lt;/code&gt;:&lt;/p&gt;
+   * &lt;pre&gt;
+   * &amp;lt;specIncludes&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.js&amp;lt;/include&amp;gt;
+   *   &amp;lt;include&amp;gt;&amp;#42;&amp;#42;/&amp;#42;.coffee&amp;lt;/include&amp;gt;
+   * &amp;lt;/specIncludes&amp;gt;
+   * &lt;/pre&gt;
+   *
+   * @since 1.1.0
+   */
+<span class="fc" id="L293">  @Parameter</span>
+  private final List&lt;String&gt; specIncludes = ScansDirectory.DEFAULT_INCLUDES;
 
-	/**
-	 * &lt;p&gt;Just like &lt;code&gt;specIncludes&lt;/code&gt;, but will exclude anything matching the provided patterns.&lt;/p&gt;
-	 * &lt;p&gt;There are no &lt;code&gt;specExcludes&lt;/code&gt; by default.&lt;/p&gt;
-         *
-	 * @since 1.1.0
-	 */
-<span class="fc" id="L265">	@Parameter</span>
-	private final List&lt;String&gt; specExcludes = Collections.emptyList();
+  /**
+   * &lt;p&gt;Just like &lt;code&gt;specIncludes&lt;/code&gt;, but will exclude anything matching the provided patterns.&lt;/p&gt;
+   * &lt;p&gt;There are no &lt;code&gt;specExcludes&lt;/code&gt; by default.&lt;/p&gt;
+   *
+   * @since 1.1.0
+   */
+<span class="fc" id="L302">  @Parameter</span>
+<span class="fc" id="L303">  private final List&lt;String&gt; specExcludes = Collections.emptyList();</span>
 
-	/**
-	 * &lt;p&gt;Used by the &lt;code&gt;jasmine:bdd&lt;/code&gt; goal to specify port to run the server under.&lt;/p&gt;
-         *
-	 * &lt;p&gt;The &lt;code&gt;jasmine:test&lt;/code&gt; goal always uses a random available port so this property is ignored.&lt;/p&gt;
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(property=&quot;jasmine.serverPort&quot;, defaultValue=&quot;8234&quot;)
-	protected int serverPort;
+  /**
+   * &lt;p&gt;Used by the &lt;code&gt;jasmine:bdd&lt;/code&gt; goal to specify port to run the server under.&lt;/p&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;The &lt;code&gt;jasmine:test&lt;/code&gt; goal always uses a random available port so this property is ignored.&lt;/p&gt;
+   *
+   * @since 1.1.0
+   */
+  @Parameter(property = &quot;jasmine.serverPort&quot;, defaultValue = &quot;8234&quot;)
+  protected int serverPort;
 
   /**
    * &lt;p&gt;Specify the URI scheme in which to access the SpecRunner.&lt;/p&gt;
    *
    * @since 1.3.1.4
    */
-  @Parameter(property=&quot;jasmine.uriScheme&quot;, defaultValue=&quot;http&quot;)
+  @Parameter(property = &quot;jasmine.uriScheme&quot;, defaultValue = &quot;http&quot;)
   protected String uriScheme;
 
   /**
    * &lt;p&gt;Not used by the &lt;code&gt;jasmine:bdd&lt;/code&gt; goal.&lt;/p&gt;
-   *
+   * &lt;br&gt;
    * &lt;p&gt;The &lt;code&gt;jasmine:test&lt;/code&gt; goal to specify hostname where the server is running.  Useful when using
    * the RemoteWebDriver.&lt;/p&gt;
    *
    * @since 1.3.1.4
    */
-  @Parameter(property=&quot;jasmine.serverHostname&quot;, defaultValue = &quot;localhost&quot;)
+  @Parameter(property = &quot;jasmine.serverHostname&quot;, defaultValue = &quot;localhost&quot;)
   protected String serverHostname;
 
-	/**
-	 * &lt;p&gt;Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
-	 * implementation of the runner generator. Typically this is used when using different script runners.&lt;/p&gt;
-	 *
-	 * &lt;p&gt;Some valid examples: DEFAULT, REQUIRE_JS&lt;/p&gt;
-         *
-	 * @since 1.1.0
-	 */
-	@Parameter(property=&quot;jasmine.specRunnerTemplate&quot;, defaultValue=&quot;DEFAULT&quot;)
-	protected SpecRunnerTemplate specRunnerTemplate;
+  /**
+   * &lt;p&gt;Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
+   * implementation of the runner generator. Typically this is used when using different script runners.&lt;/p&gt;
+   * &lt;br&gt;
+   * &lt;p&gt;Some valid examples: DEFAULT, REQUIRE_JS&lt;/p&gt;
+   *
+   * @since 1.1.0
+   */
+  @Parameter(property = &quot;jasmine.specRunnerTemplate&quot;, defaultValue = &quot;DEFAULT&quot;)
+  protected SpecRunnerTemplate specRunnerTemplate;
 
-	/**
-	 * &lt;p&gt;Automatically refresh the test runner at the given interval (specified in seconds) when using the &lt;code&gt;jasmine:bdd&lt;/code&gt; goal.&lt;/p&gt;
-	 * &lt;p&gt;A value of &lt;code&gt;0&lt;/code&gt; disables the automatic refresh (which is the default).&lt;/p&gt;
-         *
-	 * @since 1.3.1.1
-	 */
-	@Parameter(property=&quot;jasmine.autoRefreshInterval&quot;, defaultValue=&quot;0&quot;)
-	protected int autoRefreshInterval;
+  /**
+   * &lt;p&gt;Automatically refresh the test runner at the given interval (specified in seconds) when using the &lt;code&gt;jasmine:bdd&lt;/code&gt; goal.&lt;/p&gt;
+   * &lt;p&gt;A value of &lt;code&gt;0&lt;/code&gt; disables the automatic refresh (which is the default).&lt;/p&gt;
+   *
+   * @since 1.3.1.1
+   */
+  @Parameter(property = &quot;jasmine.autoRefreshInterval&quot;, defaultValue = &quot;0&quot;)
+  protected int autoRefreshInterval;
 
-	/**
-	 * &lt;p&gt;Control the Coffee Script compilation.  e.g. When using RequireJS the compilation
-         * happens within the Coffee Script AMD loader plugin; we therefore need to disable the
-	 * compilation here.&lt;/p&gt;
-	 *
-	 * @since 1.3.1.4
-	 */
-	@Parameter(property=&quot;coffeeScriptCompilationEnabled&quot;, defaultValue=&quot;true&quot;)
-	protected boolean coffeeScriptCompilationEnabled;
+  /**
+   * &lt;p&gt;Control the Coffee Script compilation.  e.g. When using RequireJS the compilation
+   * happens within the Coffee Script AMD loader plugin; we therefore need to disable the
+   * compilation here.&lt;/p&gt;
+   *
+   * @since 1.3.1.4
+   */
+  @Parameter(property = &quot;coffeeScriptCompilationEnabled&quot;, defaultValue = &quot;true&quot;)
+  protected boolean coffeeScriptCompilationEnabled;
 
   /**
    * &lt;p&gt;Type of {@link org.eclipse.jetty.server.Connector} to use on the jetty server.&lt;/p&gt;
-   *
+   * &lt;br&gt;
    * &lt;p&gt;Most users won't need to change this from the default value. It should only be used
    * by advanced users.&lt;/p&gt;
    *
    * @since 1.3.1.4
    */
   @Parameter(
-      property=&quot;jasmine.connectorClass&quot;,
-      defaultValue=&quot;org.eclipse.jetty.server.nio.SelectChannelConnector&quot;
+    property = &quot;jasmine.connectorClass&quot;,
+    defaultValue = &quot;org.eclipse.jetty.server.nio.SelectChannelConnector&quot;
   )
   protected String connectorClass;
 
@@ -355,170 +392,174 @@ import java.util.List;
    *
    * @since 1.3.1.5
    */
-<span class="fc" id="L358">  @Parameter</span>
-  private List&lt;Context&gt; additionalContexts = Collections.emptyList();
+<span class="fc" id="L395">  @Parameter</span>
+<span class="fc" id="L396">  private List&lt;Context&gt; additionalContexts = Collections.emptyList();</span>
 
-  @Parameter(defaultValue=&quot;${project}&quot;, readonly=true)
-	protected MavenProject mavenProject;
+  @Parameter(defaultValue = &quot;${project}&quot;, readonly = true)
+  protected MavenProject mavenProject;
 
-	@Component
-	protected ResourceManager locator;
+  @Component
+  ResourceManager resourceManager;
 
-	protected ScriptSearch sources;
-	protected ScriptSearch specs;
+  protected ResourceRetriever resourceRetriever;
+  protected ReporterRetriever reporterRetriever;
 
-<span class="fc" id="L370">	protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();</span>
+<span class="fc" id="L407">  protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();</span>
 
-	private File customRunnerTemplateFile;
-	private File customRunnerConfigurationFile;
+  protected ScriptSearch sources;
+  protected ScriptSearch specs;
 
+  private File customRunnerTemplateFile;
+  private File customRunnerConfigurationFile;
 
-	@Override
-	public void execute() throws MojoExecutionException, MojoFailureException {
+  @Override
+  public void execute() throws MojoExecutionException, MojoFailureException {
+<span class="fc" id="L417">    this.loadResources();</span>
 
-<span class="fc" id="L379">		this.loadResources();</span>
+<span class="fc" id="L419">    this.sources = new ScriptSearch(this.jsSrcDir, this.sourceIncludes, this.sourceExcludes);</span>
+<span class="fc" id="L420">    this.specs = new ScriptSearch(this.jsTestSrcDir, this.specIncludes, this.specExcludes);</span>
 
-<span class="fc" id="L381">		this.sources = new ScriptSearch(this.jsSrcDir,this.sourceIncludes,this.sourceExcludes);</span>
-<span class="fc" id="L382">		this.specs = new ScriptSearch(this.jsTestSrcDir,this.specIncludes,this.specExcludes);</span>
+    try {
+<span class="fc" id="L423">      this.run();</span>
+<span class="fc" id="L424">    } catch (MojoFailureException e) {</span>
+<span class="fc" id="L425">      throw e;</span>
+<span class="fc" id="L426">    } catch (Exception e) {</span>
+<span class="fc" id="L427">      throw new MojoExecutionException(&quot;The jasmine-maven-plugin encountered an exception: \n&quot; + this.stringifiesStackTraces.stringify(e), e);</span>
+<span class="fc" id="L428">    }</span>
+<span class="fc" id="L429">  }</span>
 
-		try {
-<span class="fc" id="L385">			this.run();</span>
-<span class="fc" id="L386">		} catch(MojoFailureException e) {</span>
-<span class="fc" id="L387">			throw e;</span>
-<span class="fc" id="L388">		} catch(Exception e) {</span>
-<span class="fc" id="L389">			throw new MojoExecutionException(&quot;The jasmine-maven-plugin encountered an exception: \n&quot;+this.stringifiesStackTraces.stringify(e),e);</span>
-<span class="fc" id="L390">		}</span>
-<span class="fc" id="L391">	}</span>
+  public abstract void run() throws Exception;
 
-	public abstract void run() throws Exception;
+  @Override
+  public String getSourceEncoding() {
+<span class="fc" id="L435">    return this.sourceEncoding;</span>
+  }
 
-	@Override
-	public String getSourceEncoding() {
-<span class="fc" id="L397">		return this.sourceEncoding;</span>
-	}
+  @Override
+  public File getCustomRunnerTemplate() {
+<span class="fc" id="L440">    return this.customRunnerTemplateFile;</span>
+  }
 
-	@Override
-	public File getCustomRunnerTemplate() {
-<span class="fc" id="L402">		return this.customRunnerTemplateFile;</span>
-	}
+  @Override
+  public SpecRunnerTemplate getSpecRunnerTemplate() {
+<span class="nc" id="L445">    return this.specRunnerTemplate;</span>
+  }
 
-	@Override
-	public SpecRunnerTemplate getSpecRunnerTemplate() {
-<span class="nc" id="L407">		return this.specRunnerTemplate;</span>
-	}
+  @Override
+  public File getJasmineTargetDir() {
+<span class="fc" id="L450">    return this.jasmineTargetDir;</span>
+  }
 
-	@Override
-	public File getJasmineTargetDir() {
-<span class="nc" id="L412">		return this.jasmineTargetDir;</span>
-	}
+  @Override
+  public String getSrcDirectoryName() {
+<span class="nc" id="L455">    return this.srcDirectoryName;</span>
+  }
 
-	@Override
-	public String getSrcDirectoryName() {
-<span class="nc" id="L417">		return this.srcDirectoryName;</span>
-	}
+  @Override
+  public ScriptSearch getSources() {
+<span class="nc" id="L460">    return this.sources;</span>
+  }
 
-	@Override
-	public ScriptSearch getSources() {
-<span class="nc" id="L422">		return this.sources;</span>
-	}
+  @Override
+  public ScriptSearch getSpecs() {
+<span class="nc" id="L465">    return this.specs;</span>
+  }
 
-	@Override
-	public ScriptSearch getSpecs() {
-<span class="nc" id="L427">		return this.specs;</span>
-	}
+  @Override
+  public String getSpecDirectoryName() {
+<span class="nc" id="L470">    return this.specDirectoryName;</span>
+  }
 
-	@Override
-	public String getSpecDirectoryName() {
-<span class="nc" id="L432">		return this.specDirectoryName;</span>
-	}
+  @Override
+  public List&lt;String&gt; getPreloadSources() {
+<span class="nc" id="L475">    return this.preloadSources;</span>
+  }
 
-	@Override
-	public List&lt;String&gt; getPreloadSources() {
-<span class="nc" id="L437">		return this.preloadSources;</span>
-	}
+  @Override
+  public int getAutoRefreshInterval() {
+<span class="fc" id="L480">    return this.autoRefreshInterval;</span>
+  }
 
-	@Override
-	public int getAutoRefreshInterval() {
-<span class="fc" id="L442">		return this.autoRefreshInterval;</span>
-	}
+  @Override
+  public boolean isCoffeeScriptCompilationEnabled() {
+<span class="nc" id="L485">    return this.coffeeScriptCompilationEnabled;</span>
+  }
 
-	@Override
-	public boolean isCoffeeScriptCompilationEnabled() {
-<span class="nc" id="L447">		return this.coffeeScriptCompilationEnabled;</span>
-	}
+  public MavenProject getMavenProject() {
+<span class="fc" id="L489">    return this.mavenProject;</span>
+  }
 
-	public MavenProject getMavenProject() {
-<span class="fc" id="L451">		return this.mavenProject;</span>
-	}
+  @Override
+  public File getCustomRunnerConfiguration() {
+<span class="fc" id="L494">    return this.customRunnerConfigurationFile;</span>
+  }
 
-	@Override
-	public File getCustomRunnerConfiguration() {
-<span class="fc" id="L456">		return this.customRunnerConfigurationFile;</span>
-	}
+  @Override
+  public List&lt;Reporter&gt; getReporters() {
+<span class="fc" id="L499">    return this.reporters;</span>
+  }
 
-	@Override
-	public File getBasedir() {
-<span class="fc" id="L461">		return this.mavenProject.getBasedir();</span>
-	}
+  @Override
+  public List&lt;FileSystemReporter&gt; getFileSystemReporters() {
+<span class="fc" id="L504">    return this.fileSystemReporters;</span>
+  }
+
+  @Override
+  public File getBasedir() {
+<span class="fc" id="L509">    return this.mavenProject.getBasedir();</span>
+  }
 
   @Override
   public ClassLoader getProjectClassLoader() {
-<span class="nc" id="L466">     return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();</span>
+<span class="nc" id="L514">    return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();</span>
   }
 
   @Override
   public List&lt;Context&gt; getContexts() {
-<span class="nc" id="L471">    List&lt;Context&gt; contexts = new ArrayList&lt;Context&gt;();</span>
-<span class="nc" id="L472">    contexts.add(new Context(this.srcDirectoryName, this.jsSrcDir));</span>
-<span class="nc" id="L473">    contexts.add(new Context(this.specDirectoryName, this.jsTestSrcDir));</span>
-<span class="nc" id="L474">    contexts.addAll(additionalContexts);</span>
-<span class="nc" id="L475">    return contexts;</span>
+<span class="nc" id="L519">    List&lt;Context&gt; contexts = new ArrayList&lt;Context&gt;();</span>
+<span class="nc" id="L520">    contexts.add(new Context(this.srcDirectoryName, this.jsSrcDir));</span>
+<span class="nc" id="L521">    contexts.add(new Context(this.specDirectoryName, this.jsTestSrcDir));</span>
+<span class="nc" id="L522">    contexts.addAll(additionalContexts);</span>
+<span class="nc" id="L523">    return contexts;</span>
   }
 
   protected Connector getConnector() throws MojoExecutionException {
     try {
       @SuppressWarnings(&quot;unchecked&quot;)
-<span class="nc" id="L481">      Class&lt;? extends Connector&gt; c = (Class&lt;? extends Connector&gt;) Class.forName(connectorClass);</span>
-<span class="nc" id="L482">      return c.newInstance();</span>
-<span class="nc" id="L483">    } catch(InstantiationException e) {</span>
-<span class="nc" id="L484">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
-<span class="nc" id="L485">    } catch (IllegalAccessException e) {</span>
-<span class="nc" id="L486">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
-<span class="nc" id="L487">    } catch (ClassNotFoundException e) {</span>
-<span class="nc" id="L488">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;,e);</span>
+<span class="nc" id="L529">      Class&lt;? extends Connector&gt; c = (Class&lt;? extends Connector&gt;) Class.forName(connectorClass);</span>
+<span class="nc" id="L530">      return c.newInstance();</span>
+<span class="nc" id="L531">    } catch (InstantiationException e) {</span>
+<span class="nc" id="L532">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;, e);</span>
+<span class="nc" id="L533">    } catch (IllegalAccessException e) {</span>
+<span class="nc" id="L534">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;, e);</span>
+<span class="nc" id="L535">    } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L536">      throw new MojoExecutionException(&quot;Unable to instantiate.&quot;, e);</span>
     }
   }
 
   protected boolean isSkipTests() {
-<span class="pc bpc" id="L493" title="5 of 6 branches missed.">    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;</span>
+<span class="pc bpc" id="L541" title="5 of 6 branches missed.">    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;</span>
   }
 
-	private void loadResources() throws MojoExecutionException {
-<span class="fc" id="L497">		this.customRunnerTemplateFile = this.getResourceAsFile(&quot;customRunnerTemplate&quot;, this.customRunnerTemplate);</span>
-<span class="fc" id="L498">		this.customRunnerConfigurationFile = this.getResourceAsFile(&quot;customRunnerConfiguration&quot;, this.customRunnerConfiguration);</span>
-<span class="fc" id="L499">	}</span>
+  private void loadResources() throws MojoExecutionException {
+<span class="fc" id="L545">    this.customRunnerTemplateFile = getResourceRetriever().getResourceAsFile(&quot;customRunnerTemplate&quot;, this.customRunnerTemplate, this.mavenProject);</span>
+<span class="fc" id="L546">    this.customRunnerConfigurationFile = getResourceRetriever().getResourceAsFile(&quot;customRunnerConfiguration&quot;, this.customRunnerConfiguration, this.mavenProject);</span>
+<span class="fc" id="L547">    this.reporters = getReporterRetriever().retrieveReporters(this.reporters, this.mavenProject);</span>
+<span class="fc" id="L548">    this.fileSystemReporters = getReporterRetriever().retrieveFileSystemReporters(this.fileSystemReporters, this.getJasmineTargetDir(), this.mavenProject);</span>
+<span class="fc" id="L549">  }</span>
 
-	private File getResourceAsFile(String parameter, String resourceLocation) throws MojoExecutionException {
-<span class="fc" id="L502">		File file = null;</span>
+  private ResourceRetriever getResourceRetriever() {
+<span class="pc bpc" id="L552" title="1 of 2 branches missed.">    if (resourceRetriever == null) {</span>
+<span class="nc" id="L553">      resourceRetriever = new ResourceRetriever(resourceManager);</span>
+    }
+<span class="fc" id="L555">    return resourceRetriever;</span>
+  }
 
-<span class="fc bfc" id="L504" title="All 2 branches covered.">		if (resourceLocation != null) {</span>
-<span class="fc" id="L505">			this.locator.addSearchPath( &quot;url&quot;, &quot;&quot; );</span>
-<span class="fc" id="L506">			this.locator.addSearchPath( FileResourceLoader.ID, this.mavenProject.getFile().getParentFile().getAbsolutePath() );</span>
-
-<span class="fc" id="L508">			ClassLoader origLoader = Thread.currentThread().getContextClassLoader();</span>
-			try {
-<span class="fc" id="L510">				Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());</span>
-				try {
-<span class="fc" id="L512">					file = this.locator.getResourceAsFile(resourceLocation);</span>
-<span class="fc" id="L513">				} catch (Exception e) {</span>
-<span class="fc" id="L514">					throw new MojoExecutionException(String.format(ERROR_FILE_DNE,parameter,resourceLocation));</span>
-<span class="fc" id="L515">				}</span>
-			}
-			finally {
-<span class="fc" id="L518">				Thread.currentThread().setContextClassLoader( origLoader );</span>
-<span class="fc" id="L519">			}</span>
-		}
-<span class="fc" id="L521">		return file;</span>
-	}
+  private ReporterRetriever getReporterRetriever() {
+<span class="pc bpc" id="L559" title="1 of 2 branches missed.">    if (reporterRetriever == null) {</span>
+<span class="nc" id="L560">      reporterRetriever = new ReporterRetriever(getResourceRetriever());</span>
+    }
+<span class="fc" id="L562">    return reporterRetriever;</span>
+  }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

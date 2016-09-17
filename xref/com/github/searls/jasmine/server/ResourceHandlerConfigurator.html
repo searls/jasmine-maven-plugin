@@ -37,11 +37,11 @@
 <a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">this</strong>.createsRunner = createsRunner;
 <a class="jxr_linenumber" name="L30" href="#L30">30</a>    }
 <a class="jxr_linenumber" name="L31" href="#L31">31</a>  
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">public</strong> Handler createHandler() <strong class="jxr_keyword">throws</strong> IOException  {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>    <strong class="jxr_keyword">public</strong> Handler createHandler() <strong class="jxr_keyword">throws</strong> IOException {
 <a class="jxr_linenumber" name="L33" href="#L33">33</a>      ContextHandlerCollection contexts = <strong class="jxr_keyword">new</strong> ContextHandlerCollection();
 <a class="jxr_linenumber" name="L34" href="#L34">34</a>  
 <a class="jxr_linenumber" name="L35" href="#L35">35</a>      <strong class="jxr_keyword">for</strong> (Context context : <strong class="jxr_keyword">this</strong>.configuration.getContexts()) {
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>        String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(),<span class="jxr_string">"/"</span>);
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>        String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(), <span class="jxr_string">"/"</span>);
 <a class="jxr_linenumber" name="L37" href="#L37">37</a>        ContextHandler handler = contexts.addContext(contextRoot, <span class="jxr_string">""</span>);
 <a class="jxr_linenumber" name="L38" href="#L38">38</a>        handler.setAliases(<strong class="jxr_keyword">true</strong>);
 <a class="jxr_linenumber" name="L39" href="#L39">39</a>        handler.setHandler(<strong class="jxr_keyword">this</strong>.createResourceHandler(<strong class="jxr_keyword">true</strong>, context.getDirectory().getCanonicalPath(), <strong class="jxr_keyword">null</strong>));

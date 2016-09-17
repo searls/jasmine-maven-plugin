@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ServerMojo.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">ServerMojo.java</span></div><h1>ServerMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServerMojo.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">jasmine-maven-plugin</a> &gt; <a href="index.source.html" class="el_package">com.github.searls.jasmine.mojo</a> &gt; <span class="el_source">ServerMojo.java</span></div><h1>ServerMojo.java</h1><pre class="source lang-java linenums">package com.github.searls.jasmine.mojo;
 
 import com.github.searls.jasmine.NullLog;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
@@ -9,8 +9,8 @@ import com.github.searls.jasmine.server.ServerManager;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.eclipse.jetty.server.Server;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.eclipse.jetty.server.Server;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,19 +18,19 @@ import java.io.IOException;
 /**
  * Execute specs in a web browser. Monitors your sources/specs for changes as you develop.
  */
-@Mojo(name=&quot;bdd&quot;,requiresDirectInvocation=true,requiresDependencyResolution = ResolutionScope.TEST)
+@Mojo(name = &quot;bdd&quot;, requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
 public class ServerMojo extends AbstractJasmineMojo {
 
   public static final String INSTRUCTION_FORMAT =
+    &quot;\n\n&quot; +
+      &quot;Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n&quot; +
+      &quot; %s://localhost:%s&quot; +
       &quot;\n\n&quot; +
-          &quot;Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n&quot; +
-          &quot; %s://localhost:%s&quot;+
-          &quot;\n\n&quot; +
-          &quot;The server will monitor these two directories for scripts that you add, remove, and change:\n\n&quot; +
-          &quot;  source directory: %s\n\n&quot;+
-          &quot;  spec directory: %s&quot;+
-          &quot;\n\n&quot;+
-          &quot;Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.&quot;;
+      &quot;The server will monitor these two directories for scripts that you add, remove, and change:\n\n&quot; +
+      &quot;  source directory: %s\n\n&quot; +
+      &quot;  spec directory: %s&quot; +
+      &quot;\n\n&quot; +
+      &quot;Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.&quot;;
 
   private final RelativizesFilePaths relativizesFilePaths;
 
@@ -44,11 +44,11 @@ public class ServerMojo extends AbstractJasmineMojo {
 
   private String buildServerInstructions() throws IOException {
 <span class="nc" id="L46">    return String.format(</span>
-        INSTRUCTION_FORMAT,
-        this.uriScheme,
-        this.serverPort,
-        this.getRelativePath(this.sources.getDirectory()),
-        this.getRelativePath(this.specs.getDirectory()));
+      INSTRUCTION_FORMAT,
+      this.uriScheme,
+<span class="nc" id="L49">      this.serverPort,</span>
+<span class="nc" id="L50">      this.getRelativePath(this.sources.getDirectory()),</span>
+<span class="nc" id="L51">      this.getRelativePath(this.specs.getDirectory()));</span>
   }
 
   @Override
@@ -64,15 +64,15 @@ public class ServerMojo extends AbstractJasmineMojo {
 <span class="nc bnc" id="L64" title="All 2 branches missed.">    Log log = this.debug ? this.getLog() : new NullLog();</span>
 
 <span class="nc" id="L66">    CreatesRunner createsRunner = new CreatesRunner(</span>
-        this,
-        log,
-        this.manualSpecRunnerHtmlFileName,
-        ReporterType.HtmlReporter);
+      this,
+      log,
+      this.manualSpecRunnerHtmlFileName,
+      ReporterType.HtmlReporter);
 
 <span class="nc" id="L72">    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(</span>
-        this,
-        this.relativizesFilePaths,
-        createsRunner);
+      this,
+      this.relativizesFilePaths,
+      createsRunner);
 
 <span class="nc" id="L77">    return new ServerManager(new Server(), getConnector(), configurator);</span>
   }
@@ -81,4 +81,4 @@ public class ServerMojo extends AbstractJasmineMojo {
 <span class="nc" id="L81">    return this.relativizesFilePaths.relativize(this.mavenProject.getBasedir(), absolutePath);</span>
   }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.4.201502262128</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
