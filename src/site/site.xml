@@ -4,7 +4,7 @@
   <skin>
     <groupId>org.apache.maven.skins</groupId>
     <artifactId>maven-fluido-skin</artifactId>
-    <version>1.4</version>
+    <version>1.5</version>
   </skin>
   <custom>
     <fluidoSkin>
@@ -22,14 +22,14 @@
     </fluidoSkin>
   </custom>
   <body>
-    
+
    <menu name="Overview">
       <item name="Introduction" href="index.html"/>
       <item name="Goals" href="plugin-info.html"/>
       <item name="Usage" href="usage.html"/>
       <item name="Releases" href="http://github.com/searls/jasmine-maven-plugin/releases" />
    </menu>
-   
+
    <menu name="Examples">
       <item name="Spec Runner Templates" href="spec-runner-templates.html" />
       <item name="AMD Support" href="amd-support.html" />
@@ -39,7 +39,7 @@
       <item name="WebJars Support" href="webjars-support.html" />
       <item name="Override Jasmine Version" href="override-jasmine-version.html" />
    </menu>
-    
+
    <menu ref="reports"/>
 
    <menu name="External Links">

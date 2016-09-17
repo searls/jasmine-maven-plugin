@@ -497,18 +497,21 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>com.github.github</groupId>
-        <artifactId>site-maven-plugin</artifactId>
-        <version>0.12</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-scm-publish-plugin</artifactId>
+        <version>1.0</version>
         <configuration>
-          <message>Generating site for ${project.version}</message>
-          <server>github</server>
-          <noJekyll>true</noJekyll>
+          <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
+          <checkinComment>Generating site for ${project.version}</checkinComment>
+          <content>${project.reporting.outputDirectory}</content>
+          <skipDeletedFiles>true</skipDeletedFiles>
+          <pubScmUrl>scm:git:git@github.com:searls/jasmine-maven-plugin.git</pubScmUrl>
+          <scmBranch>gh-pages</scmBranch>
         </configuration>
         <executions>
           <execution>
             <goals>
-              <goal>site</goal>
+              <goal>publish-scm</goal>
             </goals>
             <phase>site-deploy</phase>
           </execution>
