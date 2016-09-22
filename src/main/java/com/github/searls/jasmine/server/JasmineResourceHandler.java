@@ -29,7 +29,6 @@ public class JasmineResourceHandler extends ResourceHandler {
     this.detectsCoffee = detectsCoffee;
     this.createsRunner = createsRunner;
     this.handlesRequestsForCoffee = handlesRequestsForCoffee;
-    setAliases(true);
   }
 
   @Override

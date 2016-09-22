@@ -128,7 +128,6 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     WebClient webClient = new WebClient();
     webClient.setWebConnection(webConnection);
     webClient.getOptions().setThrowExceptionOnScriptError(false);
-    webClient.setIncorrectnessListener((arg0, arg1) -> {});
     return webClient.getPage("http://blah");
   }
 }
