@@ -76,7 +76,7 @@ For instance, say you would prefer to use [testr.js](https://github.com/mattfysh
 </head>
 <body>
   <script type="text/javascript">
-    if(window.location.href.indexOf("ManualSpecRunner.html") !== -1) {
+    if(window.location.href.indexOf("SpecRunner.html") !== -1) {
       document.body.appendChild(document.createTextNode("Warning: opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
     }
     var sources = $sourcesList$;

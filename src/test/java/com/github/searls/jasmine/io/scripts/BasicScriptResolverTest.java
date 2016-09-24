@@ -23,6 +23,12 @@ public class BasicScriptResolverTest {
   private static final String SPEC_DIRECTORY = "/project/spec/directory";
 
   @Mock
+  private ResolvesLocationOfPreloadSources resolvesPreloadSources;
+
+  @Mock
+  private FindsScriptLocationsInDirectory findsScriptLocations;
+
+  @Mock
   private ScriptSearch sourceScriptSearch;
 
   @Mock
@@ -62,7 +68,14 @@ public class BasicScriptResolverTest {
     when(this.sourceScriptSearch.getDirectory()).thenReturn(sourceDirectory);
     when(this.specScriptSearch.getDirectory()).thenReturn(specDirectory);
 
-    this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
+    this.resolver = new BasicScriptResolver(
+      resolvesPreloadSources,
+      findsScriptLocations,
+      baseDirectory,
+      sourceScriptSearch,
+      specScriptSearch,
+      preloadList
+    );
 
     assertThat(this.resolver.getSourceDirectory()).isEqualTo(SOURCE_DIRECTORY);
   }
@@ -77,7 +90,14 @@ public class BasicScriptResolverTest {
     when(this.sourceScriptSearch.getDirectory()).thenReturn(sourceDirectory);
     when(this.specScriptSearch.getDirectory()).thenReturn(specDirectory);
 
-    this.resolver = new BasicScriptResolver(baseDirectory, sourceScriptSearch, specScriptSearch, preloadList);
+    this.resolver = new BasicScriptResolver(
+      resolvesPreloadSources,
+      findsScriptLocations,
+      baseDirectory,
+      sourceScriptSearch,
+      specScriptSearch,
+      preloadList
+    );
 
     assertThat(this.resolver.getSpecDirectory()).isEqualTo(SPEC_DIRECTORY);
   }

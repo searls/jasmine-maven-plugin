@@ -1,17 +1,19 @@
 package com.github.searls.jasmine.mojo;
 
+import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.config.ServerConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
 import com.github.searls.jasmine.model.ScriptSearch;
-import com.github.searls.jasmine.runner.CreatesRunner;
-import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
-import org.apache.maven.plugin.logging.Log;
+import com.github.searls.jasmine.server.ServerManagerFactory;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.jetty.server.Handler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -20,11 +22,9 @@ import java.io.File;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ServerMojo.class, ServerManager.class})
+@PrepareForTest({ServerMojo.class})
 public class ServerMojoTest {
 
   private static final String SPECS_DIR = "spec dir";
@@ -36,10 +36,13 @@ public class ServerMojoTest {
   private static final String BASE_DIR = "my-base-dir";
 
   @Mock
-  private Log log;
+  private MavenProject mavenProject;
 
   @Mock
-  private MavenProject mavenProject;
+  private ServerConfiguration serverConfiguration;
+
+  @Mock
+  private JasmineConfiguration jasmineConfiguration;
 
   @Mock
   private RelativizesFilePaths relativizesFilePaths;
@@ -63,68 +66,53 @@ public class ServerMojoTest {
   private ScriptSearch specs;
 
   @Mock
-  private CreatesRunner createsRunner;
-
-  @Mock
   private ResourceHandlerConfigurator configurator;
 
   @Mock
   private ServerManager serverManager;
 
+  @Mock
+  private ServerManagerFactory serverManagerFactory;
+
+  @Mock
+  private Handler handler;
+
+  @InjectMocks
   private ServerMojo subject;
 
   @Before
   public void arrangeAndAct() throws Exception {
-    this.subject = new ServerMojo(relativizesFilePaths);
-    this.subject.mavenProject = mavenProject;
-    this.subject.sources = this.sources;
-    this.subject.specs = this.specs;
-    this.subject.setLog(this.log);
-    this.subject.uriScheme = SCHEME;
-    this.subject.serverPort = PORT;
-    this.subject.jasmineTargetDir = this.targetDir;
-    this.subject.manualSpecRunnerHtmlFileName = MANUAL_SPEC_RUNNER_NAME;
-    this.subject.specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
-    this.subject.debug = true;
-    when(this.sourceDir.getAbsolutePath()).thenReturn(SOURCE_DIR);
-    when(this.specDir.getAbsolutePath()).thenReturn(SPECS_DIR);
-    when(this.sources.getDirectory()).thenReturn(this.sourceDir);
-    when(this.specs.getDirectory()).thenReturn(this.specDir);
-    when(this.baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
-    when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
-    when(this.relativizesFilePaths.relativize(this.baseDir, this.targetDir)).thenReturn(RELATIVE_TARGET_DIR);
-    when(this.relativizesFilePaths.relativize(this.baseDir, this.sources.getDirectory())).thenReturn(SOURCE_DIR);
-    when(this.relativizesFilePaths.relativize(this.baseDir, this.specs.getDirectory())).thenReturn(SPECS_DIR);
+    when(serverConfiguration.getUriScheme()).thenReturn(SCHEME);
+    when(serverConfiguration.getServerPort()).thenReturn(PORT);
 
-    whenNew(CreatesRunner.class).withArguments(
-      this.subject,
-      this.log,
-      MANUAL_SPEC_RUNNER_NAME,
-      ReporterType.HtmlReporter).thenReturn(createsRunner);
+    when(jasmineConfiguration.getSources()).thenReturn(sources);
+    when(jasmineConfiguration.getSpecs()).thenReturn(specs);
+    when(jasmineConfiguration.getJasmineTargetDir()).thenReturn(targetDir);
+    when(jasmineConfiguration.getSpecRunnerTemplate()).thenReturn(SpecRunnerTemplate.DEFAULT);
 
-    whenNew(ResourceHandlerConfigurator.class).withArguments(
-      this.subject,
-      this.relativizesFilePaths,
-      createsRunner).thenReturn(configurator);
+    when(sourceDir.getAbsolutePath()).thenReturn(SOURCE_DIR);
+    when(specDir.getAbsolutePath()).thenReturn(SPECS_DIR);
+    when(sources.getDirectory()).thenReturn(sourceDir);
+    when(specs.getDirectory()).thenReturn(specDir);
+    when(baseDir.getAbsolutePath()).thenReturn(BASE_DIR);
+    when(mavenProject.getBasedir()).thenReturn(baseDir);
+    when(relativizesFilePaths.relativize(baseDir, targetDir)).thenReturn(RELATIVE_TARGET_DIR);
+    when(relativizesFilePaths.relativize(baseDir, sources.getDirectory())).thenReturn(SOURCE_DIR);
+    when(relativizesFilePaths.relativize(baseDir, specs.getDirectory())).thenReturn(SPECS_DIR);
+    when(serverManagerFactory.create()).thenReturn(serverManager);
+    when(configurator.createHandler(jasmineConfiguration)).thenReturn(handler);
 
-    mockStatic(ServerManager.class);
-    when(ServerManager.newInstance(configurator)).thenReturn(serverManager);
 
-    this.subject.run();
-  }
-
-  @Test
-  public void logsInstructions() {
-    verify(this.log).info(String.format(ServerMojo.INSTRUCTION_FORMAT, SCHEME, PORT, SOURCE_DIR, SPECS_DIR));
+    subject.run(serverConfiguration, jasmineConfiguration);
   }
 
   @Test
   public void startsTheServer() throws Exception {
-    verify(this.serverManager).start(PORT);
+    verify(serverManager).start(PORT, handler);
   }
 
   @Test
   public void joinsTheServer() throws Exception {
-    verify(this.serverManager).join();
+    verify(serverManager).join();
   }
 }

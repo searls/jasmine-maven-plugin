@@ -6,7 +6,7 @@ public enum SpecRunnerTemplate {
 
   private String template;
 
-  private SpecRunnerTemplate(String template) {
+  SpecRunnerTemplate(String template) {
     this.template = template;
   }
 

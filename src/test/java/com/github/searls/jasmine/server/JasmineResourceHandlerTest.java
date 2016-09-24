@@ -2,7 +2,6 @@ package com.github.searls.jasmine.server;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.runner.CreatesRunner;
-import org.apache.maven.plugin.logging.Log;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.resource.Resource;
 import org.junit.Before;
@@ -21,10 +20,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @RunWith(PowerMockRunner.class)
-//@PrepareForTest(JasmineResourceHandler.class)
 public class JasmineResourceHandlerTest {
 
-  private static final String TARGET = "some url";
 
   @Mock
   private CreatesRunner createsRunner;
@@ -33,22 +30,22 @@ public class JasmineResourceHandlerTest {
   private JasmineConfiguration configuration;
 
   @Mock
-  Request baseRequest;
-  @Mock
-  HttpServletRequest request;
-  @Mock
-  HttpServletResponse response;
-  @Mock
-  Resource resource;
+  private Request baseRequest;
 
   @Mock
-  Log log;
+  private HttpServletRequest request;
+
+  @Mock
+  private HttpServletResponse response;
+
+  @Mock
+  private Resource resource;
 
   private JasmineResourceHandler subject;
 
   @Before
   public void before() {
-    subject = new JasmineResourceHandler(createsRunner) {
+    subject = new JasmineResourceHandler(createsRunner, configuration) {
       @Override
       protected Resource getResource(HttpServletRequest request) throws MalformedURLException {
         return JasmineResourceHandlerTest.this.resource;
@@ -60,14 +57,14 @@ public class JasmineResourceHandlerTest {
   public void whenTargetIsSlashThenCreateManualRunner() throws IOException, ServletException {
     this.subject.handle("/", this.baseRequest, this.request, this.response);
 
-    verify(this.createsRunner).create();
+    verify(this.createsRunner).create(configuration);
   }
 
   @Test
   public void whenTargetIsNotSlashThenCreateManualRunner() throws IOException, ServletException {
     this.subject.handle("/notSlash", this.baseRequest, this.request, this.response);
 
-    verify(this.createsRunner, never()).create();
+    verify(this.createsRunner, never()).create(configuration);
   }
 
 }

@@ -1,5 +1,6 @@
 package com.github.searls.jasmine.mojo;
 
+import com.google.common.base.Optional;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -9,12 +10,13 @@ import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.guava.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -22,16 +24,16 @@ import static org.mockito.Mockito.when;
 public class ResourceRetrieverTest {
 
   @Mock
-  ResourceManager locator;
+  private ResourceManager locator;
 
   @Mock
-  MavenProject mavenProject;
+  private MavenProject mavenProject;
 
-  ResourceRetriever subject;
+  @InjectMocks
+  private ResourceRetriever subject;
 
   @Before
   public void setUp() throws Exception {
-    subject = new ResourceRetriever(locator);
     File mavenFile = mock(File.class);
     when(mavenProject.getFile()).thenReturn(mavenFile);
     File mavenDir = mock(File.class);
@@ -45,9 +47,11 @@ public class ResourceRetrieverTest {
     String resourceLocation = "/foo/bar";
     when(locator.getResourceAsFile(resourceLocation)).thenReturn(expectedFile);
 
-    File actualFile = subject.getResourceAsFile("param", resourceLocation, mavenProject);
+    Optional<File> actualFile = subject.getResourceAsFile("param", resourceLocation, mavenProject);
 
-    assertThat(actualFile).isEqualTo(expectedFile);
+    assertThat(actualFile)
+      .isPresent()
+      .contains(expectedFile);
   }
 
   @Test(expected = MojoExecutionException.class)

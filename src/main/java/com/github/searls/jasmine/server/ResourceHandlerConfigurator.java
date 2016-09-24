@@ -13,35 +13,41 @@ import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 
+@Named
 public class ResourceHandlerConfigurator {
 
-  private final JasmineConfiguration configuration;
   private final RelativizesFilePaths relativizesFilePaths;
   private final CreatesRunner createsRunner;
 
-  public ResourceHandlerConfigurator(JasmineConfiguration configuration,
-                                     RelativizesFilePaths relativizesFilePaths,
+  @Inject
+  public ResourceHandlerConfigurator(RelativizesFilePaths relativizesFilePaths,
                                      CreatesRunner createsRunner) {
-    this.configuration = configuration;
     this.relativizesFilePaths = relativizesFilePaths;
     this.createsRunner = createsRunner;
   }
 
-  public Handler createHandler() throws IOException {
+  public Handler createHandler(JasmineConfiguration configuration) throws IOException {
     ContextHandlerCollection contexts = new ContextHandlerCollection();
 
-    for (Context context : this.configuration.getContexts()) {
+    for (Context context : configuration.getContexts()) {
       String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(), "/");
-      addContext(contexts, contextRoot, this.createResourceHandler(true, context.getDirectory().getCanonicalPath()));
+      addContext(
+        contexts,
+        contextRoot,
+        this.createResourceHandler(configuration, true, context.getDirectory().getCanonicalPath())
+      );
     }
 
     addContext(contexts, "/", this.createResourceHandler(
+      configuration,
       false,
-      this.configuration.getBasedir().getCanonicalPath(),
-      this.getWelcomeFilePath()
+      configuration.getBasedir().getCanonicalPath(),
+      this.getWelcomeFilePath(configuration)
     ));
     addContext(contexts, "/classpath", new ClassPathResourceHandler(configuration.getProjectClassLoader()));
     addContext(contexts, "/webjars", new WebJarResourceHandler(configuration.getProjectClassLoader()));
@@ -54,8 +60,11 @@ public class ResourceHandlerConfigurator {
     contextHandler.addAliasCheck(new AllowSymLinkAliasChecker());
   }
 
-  private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String ... welcomeFiles) {
-    ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner);
+  private ResourceHandler createResourceHandler(JasmineConfiguration configuration,
+                                                boolean directory,
+                                                String absolutePath,
+                                                String... welcomeFiles) {
+    ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner, configuration);
     resourceHandler.setDirectoriesListed(directory);
     if (welcomeFiles.length > 0) {
       resourceHandler.setWelcomeFiles(welcomeFiles);
@@ -64,7 +73,10 @@ public class ResourceHandlerConfigurator {
     return resourceHandler;
   }
 
-  private String getWelcomeFilePath() throws IOException {
-    return this.relativizesFilePaths.relativize(this.configuration.getBasedir(), this.configuration.getJasmineTargetDir()) + File.separator + createsRunner.getRunnerFile();
+  private String getWelcomeFilePath(JasmineConfiguration configuration) throws IOException {
+    return this.relativizesFilePaths.relativize(
+      configuration.getBasedir(),
+      configuration.getJasmineTargetDir()
+    ) + File.separator + configuration.getSpecRunnerHtmlFileName();
   }
 }

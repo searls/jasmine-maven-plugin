@@ -4,17 +4,17 @@ import java.util.Set;
 
 public interface ScriptResolver {
 
-  String getSourceDirectory() throws ScriptResolverException;
+  String getSourceDirectory();
 
-  String getSpecDirectory() throws ScriptResolverException;
+  String getSpecDirectory();
 
-  String getBaseDirectory() throws ScriptResolverException;
+  String getBaseDirectory();
 
-  Set<String> getSources() throws ScriptResolverException;
+  Set<String> getSources();
 
-  Set<String> getSpecs() throws ScriptResolverException;
+  Set<String> getSpecs();
 
-  Set<String> getPreloads() throws ScriptResolverException;
+  Set<String> getPreloads();
 
-  Set<String> getAllScripts() throws ScriptResolverException;
+  Set<String> getAllScripts();
 }

@@ -4,12 +4,15 @@ import com.github.searls.jasmine.model.FileSystemReporter;
 import com.github.searls.jasmine.model.Reporter;
 import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.mojo.Context;
+import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
-import org.apache.maven.plugin.logging.Log;
+import com.google.common.base.Optional;
+import org.immutables.value.Value;
 
 import java.io.File;
 import java.util.List;
 
+@Value.Immutable
 public interface JasmineConfiguration {
 
   File getBasedir();
@@ -30,13 +33,15 @@ public interface JasmineConfiguration {
 
   String getSourceEncoding();
 
-  Log getLog();
-
   SpecRunnerTemplate getSpecRunnerTemplate();
 
-  File getCustomRunnerTemplate();
+  Optional<File> getCustomRunnerTemplate();
 
-  File getCustomRunnerConfiguration();
+  Optional<File> getCustomRunnerConfiguration();
+
+  String getSpecRunnerHtmlFileName();
+
+  ReporterType getReporterType();
 
   List<Reporter> getReporters();
 

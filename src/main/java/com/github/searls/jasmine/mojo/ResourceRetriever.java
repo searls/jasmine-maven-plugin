@@ -1,23 +1,28 @@
 package com.github.searls.jasmine.mojo;
 
+import com.google.common.base.Optional;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceLoader;
 
+import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.File;
 
+@Named
 public class ResourceRetriever {
-
-  private final ResourceManager locator;
 
   private static final String ERROR_FILE_DNE = "Invalid value for parameter '%s'. File does not exist: %s";
 
-  public ResourceRetriever(final ResourceManager locator) {
+  private final ResourceManager locator;
+
+  @Inject
+  public ResourceRetriever(ResourceManager locator) {
     this.locator = locator;
   }
 
-  public File getResourceAsFile(final String parameter, final String resourceLocation, final MavenProject mavenProject) throws MojoExecutionException {
+  public Optional<File> getResourceAsFile(final String parameter, final String resourceLocation, final MavenProject mavenProject) throws MojoExecutionException {
     File file = null;
 
     if (resourceLocation != null) {
@@ -36,6 +41,6 @@ public class ResourceRetriever {
         Thread.currentThread().setContextClassLoader(origLoader);
       }
     }
-    return file;
+    return Optional.fromNullable(file);
   }
 }

@@ -2,6 +2,7 @@ package com.github.searls.jasmine.io;
 
 import org.codehaus.plexus.util.DirectoryScanner;
 
+import javax.inject.Named;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 import static java.util.Arrays.asList;
 
+@Named
 public class ScansDirectory {
 
   public final static List<String> DEFAULT_INCLUDES = asList("**" + File.separator + "*.js");

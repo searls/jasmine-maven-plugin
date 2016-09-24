@@ -8,41 +8,29 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-public class BasicScriptResolver implements ScriptResolver {
-
-  private static final ResolvesLocationOfPreloadSources RESOLVES_PRELOAD_SOURCES = new ResolvesLocationOfPreloadSources();
-  private static final FindsScriptLocationsInDirectory FINDS_SCRIPT_LOCATIONS = new FindsScriptLocationsInDirectory();
+public class BasicScriptResolver extends AbstractScriptResolver {
 
   private final File baseDirectory;
   private final ScriptSearch sourceScriptSearch;
   private final ScriptSearch specScriptSearch;
-  private final List<String> preloadList;
 
-  private Set<String> sources;
-  private Set<String> specs;
-  private Set<String> preloads;
+  private final Set<String> sources;
+  private final Set<String> specs;
+  private final Set<String> preloads;
 
-  public BasicScriptResolver(File baseDirectory,
+  public BasicScriptResolver(ResolvesLocationOfPreloadSources resolvesPreloadSources,
+                             FindsScriptLocationsInDirectory findsScriptLocations,
+                             File baseDirectory,
                              ScriptSearch sourceScriptSearch,
                              ScriptSearch specScriptSearch,
                              List<String> preloadList) {
     this.baseDirectory = baseDirectory;
     this.sourceScriptSearch = sourceScriptSearch;
     this.specScriptSearch = specScriptSearch;
-    this.preloadList = preloadList;
-    resolveScripts();
-  }
 
-  private void resolveScripts() {
-    this.preloads = new LinkedHashSet<String>(RESOLVES_PRELOAD_SOURCES.resolve(
-      this.preloadList,
-      this.sourceScriptSearch.getDirectory(),
-      this.specScriptSearch.getDirectory()));
-    this.sources = new LinkedHashSet<String>(FINDS_SCRIPT_LOCATIONS.find(this.sourceScriptSearch));
-    this.sources.removeAll(this.preloads);
-
-    this.specs = new LinkedHashSet<String>(FINDS_SCRIPT_LOCATIONS.find(this.specScriptSearch));
-    this.specs.removeAll(this.preloads);
+    this.preloads = findPreloadScripts(resolvesPreloadSources, preloadList, this.sourceScriptSearch, this.specScriptSearch);
+    this.sources = findWithoutPreloads(findsScriptLocations, this.sourceScriptSearch, this.preloads);
+    this.specs = findWithoutPreloads(findsScriptLocations, this.specScriptSearch, this.preloads);
   }
 
   @Override
@@ -75,16 +63,26 @@ public class BasicScriptResolver implements ScriptResolver {
     return preloads;
   }
 
-  @Override
-  public Set<String> getAllScripts() {
-    LinkedHashSet<String> allScripts = new LinkedHashSet<String>();
-    allScripts.addAll(this.getPreloads());
-    allScripts.addAll(this.getSources());
-    allScripts.addAll(this.getSpecs());
-    return allScripts;
-  }
-
   private String directoryToString(File directory) {
     return StringUtils.stripEnd(directory.toURI().toString(), "/");
+  }
+
+  private static Set<String> findPreloadScripts(ResolvesLocationOfPreloadSources resolvesPreloadSources,
+                                         List<String> preloadList,
+                                         ScriptSearch sourceScriptSearch,
+                                         ScriptSearch specScriptSearch) {
+    return new LinkedHashSet<String>(resolvesPreloadSources.resolve(
+      preloadList,
+      sourceScriptSearch.getDirectory(),
+      specScriptSearch.getDirectory())
+    );
+  }
+
+  private static Set<String> findWithoutPreloads(FindsScriptLocationsInDirectory findsScriptLocations,
+                                                 ScriptSearch scriptSearch,
+                                                 Set<String> preloads) {
+    Set<String> scripts = new LinkedHashSet<String>(findsScriptLocations.find(scriptSearch));
+    scripts.removeAll(preloads);
+    return scripts;
   }
 }

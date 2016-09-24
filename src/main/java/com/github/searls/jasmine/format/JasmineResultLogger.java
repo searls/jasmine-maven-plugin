@@ -1,25 +1,24 @@
 package com.github.searls.jasmine.format;
 
 import com.github.searls.jasmine.model.JasmineResult;
-import org.apache.maven.plugin.logging.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class JasmineResultLogger {
 
-  public static final String HEADER = "\n" +
+  private static final Logger LOGGER = LoggerFactory.getLogger(JasmineResultLogger.class);
+
+  protected static final String HEADER = "\n" +
     "-------------------------------------------------------\n" +
     " J A S M I N E   S P E C S\n" +
     "-------------------------------------------------------";
 
-  private Log log;
-
-  public void setLog(Log log) {
-    this.log = log;
-  }
-
   public void log(JasmineResult result) {
-    log.info(HEADER);
-    log.info(result.getDetails());
+    LOGGER.info(HEADER);
+    if (result != null && result.getDetails() != null) {
+      LOGGER.info(result.getDetails());
+    }
   }
 
 }

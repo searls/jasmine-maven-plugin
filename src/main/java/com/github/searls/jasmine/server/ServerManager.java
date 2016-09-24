@@ -1,5 +1,6 @@
 package com.github.searls.jasmine.server;
 
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 
@@ -8,25 +9,18 @@ public class ServerManager {
   private static final int ANY_PORT = 0;
 
   private final ServerConnector connector;
-  private final ResourceHandlerConfigurator configurator;
 
-  protected ServerManager(ServerConnector connector,
-                          ResourceHandlerConfigurator configurator) {
+  protected ServerManager(ServerConnector connector) {
     this.connector = connector;
-    this.configurator = configurator;
   }
 
-  public int start() throws Exception {
-    return this.startServer(ANY_PORT);
+  public int start(Handler handler) throws Exception {
+    return this.start(ANY_PORT, handler);
   }
 
-  public void start(int port) throws Exception {
-    this.startServer(port);
-  }
-
-  private int startServer(int port) throws Exception {
+  public int start(int port, Handler handler) throws Exception {
     connector.setPort(port);
-    connector.getServer().setHandler(this.configurator.createHandler());
+    connector.getServer().setHandler(handler);
     connector.getServer().start();
 
     return connector.getLocalPort();
@@ -40,10 +34,10 @@ public class ServerManager {
     connector.getServer().join();
   }
 
-  public static ServerManager newInstance(ResourceHandlerConfigurator configurator) {
+  public static ServerManager newInstance() {
     Server server = new Server();
     ServerConnector connector = new ServerConnector(server);
     server.addConnector(connector);
-    return new ServerManager(connector, configurator);
+    return new ServerManager(connector);
   }
 }

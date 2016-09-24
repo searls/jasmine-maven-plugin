@@ -30,21 +30,25 @@ public class ContextPathScriptResolverTest {
 
   @Before
   public void before() {
-    this.contextPathScriptResolver = new ContextPathScriptResolver(scriptResolver, ROOT_CONTEXT_PATH, SOURCE_CONTEXT_PATH, SPEC_CONTEXT_PATH);
+    this.contextPathScriptResolver = new ContextPathScriptResolver(
+      scriptResolver,
+      SOURCE_CONTEXT_PATH,
+      SPEC_CONTEXT_PATH
+    );
   }
 
   @Test
-  public void testGetSourceDirectory() throws ScriptResolverException {
+  public void testGetSourceDirectory() {
     assertThat(this.contextPathScriptResolver.getSourceDirectory()).isEqualTo(SOURCE_CONTEXT_PATH);
   }
 
   @Test
-  public void testGetSpecDirectory() throws ScriptResolverException {
+  public void testGetSpecDirectory() {
     assertThat(this.contextPathScriptResolver.getSpecDirectory()).isEqualTo(SPEC_CONTEXT_PATH);
   }
 
   @Test
-  public void testGetSources() throws ScriptResolverException {
+  public void testGetSources() {
     String[] scripts = new String[]{"scriptA", "scriptB", "lib/scriptC"};
 
     when(this.scriptResolver.getSourceDirectory()).thenReturn(SOURCE_DIRECTORY);
@@ -56,7 +60,7 @@ public class ContextPathScriptResolverTest {
   }
 
   @Test
-  public void testGetSpecs() throws ScriptResolverException {
+  public void testGetSpecs() {
     String[] scripts = new String[]{"scriptA", "scriptB", "lib/scriptC"};
 
     when(this.scriptResolver.getSpecDirectory()).thenReturn(SPEC_DIRECTORY);
@@ -68,7 +72,7 @@ public class ContextPathScriptResolverTest {
   }
 
   @Test
-  public void testGetPreloads() throws ScriptResolverException {
+  public void testGetPreloads() {
     Set<String> preloads = new HashSet<String>();
     preloads.add(BASE_DIRECTORY + "/lib/baseScript");
     preloads.add(SPEC_DIRECTORY + "/specScript");

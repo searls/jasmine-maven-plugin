@@ -26,7 +26,8 @@ public class FormatsScriptTagsTest {
 
     String result = subject.format(new HashSet<String>(asList(first, second)));
 
-    assertThat(result).contains(expectedScriptTagFormat(first) + "\n" + expectedScriptTagFormat(second));
+    assertThat(result)
+      .contains(expectedScriptTagFormat(first) + "\n" + expectedScriptTagFormat(second));
   }
 
   private String expectedScriptTagFormat(String scriptName) {

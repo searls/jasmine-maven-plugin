@@ -3,16 +3,18 @@ package com.github.searls.jasmine.io;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.inject.Named;
 import java.io.File;
 import java.io.IOException;
 
+@Named
 public class RelativizesFilePaths {
 
   public String relativize(File from, File to) throws IOException {
     String fromPath = from.getCanonicalPath();
     String toPath = to.getCanonicalPath();
 
-    String root = StringUtils.getCommonPrefix(new String[]{fromPath, toPath});
+    String root = StringUtils.getCommonPrefix(fromPath, toPath);
     StringBuffer result = new StringBuffer();
     if (this.fromPathIsNotADirectAncestor(fromPath, root)) {
       for (@SuppressWarnings("unused") String dir : this.divergentDirectories(root, fromPath)) {

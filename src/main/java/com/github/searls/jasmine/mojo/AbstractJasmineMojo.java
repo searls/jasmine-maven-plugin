@@ -1,29 +1,34 @@
 package com.github.searls.jasmine.mojo;
 
+import com.github.searls.jasmine.config.ImmutableJasmineConfiguration;
+import com.github.searls.jasmine.config.ImmutableServerConfiguration;
 import com.github.searls.jasmine.config.JasmineConfiguration;
-import com.github.searls.jasmine.exception.StringifiesStackTraces;
+import com.github.searls.jasmine.config.ServerConfiguration;
 import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.FileSystemReporter;
+import com.github.searls.jasmine.model.ImmutableScriptSearch;
 import com.github.searls.jasmine.model.Reporter;
 import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
+import com.google.common.base.Optional;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.codehaus.plexus.resource.ResourceManager;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractJasmineMojo extends AbstractMojo implements JasmineConfiguration {
+public abstract class AbstractJasmineMojo extends AbstractMojo {
+
+  protected static final String CUSTOM_RUNNER_CONFIGURATION_PARAM = "customRunnerConfiguration";
+  protected static final String CUSTOM_RUNNER_TEMPLATE_PARAM = "customRunnerTemplate";
 
   // Properties in order of most-to-least interesting for client projects to override
 
@@ -35,7 +40,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Parameter(
     property = "jsSrcDir",
     defaultValue = "${project.basedir}${file.separator}src${file.separator}main${file.separator}javascript")
-  private File jsSrcDir;
+  private File jsSrcDir = null;
 
   /**
    * Directory storing your Jasmine Specs.
@@ -45,7 +50,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Parameter(
     property = "jsTestSrcDir",
     defaultValue = "${project.basedir}${file.separator}src${file.separator}test${file.separator}javascript")
-  private File jsTestSrcDir;
+  private File jsTestSrcDir = null;
 
   /**
    * <p>JavaScript sources (typically vendor/lib dependencies) that need to be loaded
@@ -65,7 +70,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter
-  protected List<String> preloadSources;
+  private List<String> preloadSources = Collections.emptyList();
 
   /**
    * <p>It may be the case that the jasmine-maven-plugin doesn't currently suit all of your needs,
@@ -85,7 +90,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter
-  protected String customRunnerTemplate;
+  private String customRunnerTemplate = null;
 
   /**
    * <p>Sometimes you want to have full control over how scriptloaders are configured. In order to
@@ -100,7 +105,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter
-  protected String customRunnerConfiguration;
+  private String customRunnerConfiguration = null;
 
   /**
    * <p> Specify a custom reporter to be used to print the test report.</p>
@@ -117,7 +122,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * </pre>
    */
   @Parameter
-  protected List<Reporter> reporters = new ArrayList<Reporter>();
+  private List<Reporter> reporters = new ArrayList<Reporter>();
 
   /**
    * <p> Specify a custom file system reporter to be used to store the test report.</p>
@@ -136,7 +141,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * </pre>
    */
   @Parameter
-  protected List<FileSystemReporter> fileSystemReporters = new ArrayList<FileSystemReporter>();
+  private List<FileSystemReporter> fileSystemReporters = new ArrayList<FileSystemReporter>();
 
   /**
    * Target directory for files created by the plugin.
@@ -144,57 +149,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter(defaultValue = "${project.build.directory}${file.separator}jasmine")
-  protected File jasmineTargetDir;
-
-  /**
-   * Skip execution of tests.
-   *
-   * @see <a href="http://maven.apache.org/general.html#skip-test">http://maven.apache.org/general.html#skip-test</a>
-   * @since 1.1.0
-   */
-  @Parameter(property = "skipTests")
-  protected boolean skipTests;
-
-  /**
-   * Skip compilation and execution of tests.
-   *
-   * @see <a href="http://maven.apache.org/general.html#skip-test">http://maven.apache.org/general.html#skip-test</a>
-   * @since 1.3.1.3
-   */
-  @Parameter(property = "maven.test.skip")
-  protected boolean mvnTestSkip;
-
-  /**
-   * Skip only jasmine tests
-   *
-   * @since 1.3.1.3
-   */
-  @Parameter(property = "skipJasmineTests")
-  protected boolean skipJasmineTests;
-
-  /**
-   * Halt the build on test failure.
-   *
-   * @since 1.1.0
-   */
-  @Parameter(property = "haltOnFailure", defaultValue = "true")
-  protected boolean haltOnFailure;
-
-  /**
-   * Timeout for spec execution in seconds.
-   *
-   * @since 1.1.0
-   */
-  @Parameter(defaultValue = "300")
-  protected int timeout;
-
-  /**
-   * True to increase HtmlUnit output and attempt reporting on specs even if a timeout occurred.
-   *
-   * @since 1.1.0
-   */
-  @Parameter(defaultValue = "false")
-  protected boolean debug;
+  private File jasmineTargetDir = null;
 
   /**
    * The name of the Spec Runner file.
@@ -202,15 +157,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter(defaultValue = "SpecRunner.html")
-  protected String specRunnerHtmlFileName;
-
-  /**
-   * The name of the Manual Spec Runner.
-   *
-   * @since 1.1.0
-   */
-  @Parameter(defaultValue = "ManualSpecRunner.html")
-  protected String manualSpecRunnerHtmlFileName;
+  private String specRunnerHtmlFileName = "SpecRunner.html";
 
   /**
    * The name of the directory the specs will be deployed to on the server.
@@ -218,7 +165,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter(defaultValue = "spec")
-  protected String specDirectoryName;
+  private String specDirectoryName = "spec";
 
   /**
    * The name of the directory the sources will be deployed to on the server.
@@ -226,7 +173,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter(defaultValue = "src")
-  protected String srcDirectoryName;
+  private String srcDirectoryName = "src";
 
   /**
    * The source encoding.
@@ -234,7 +181,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter(defaultValue = "${project.build.sourceEncoding}")
-  protected String sourceEncoding;
+  private String sourceEncoding = StandardCharsets.UTF_8.name();
 
   /**
    * <p>Allows specifying which source files should be included and in what order.</p>
@@ -307,7 +254,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter(property = "jasmine.serverPort", defaultValue = "8234")
-  protected int serverPort;
+  private int serverPort = 8234;
 
   /**
    * <p>Specify the URI scheme in which to access the SpecRunner.</p>
@@ -315,7 +262,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.3.1.4
    */
   @Parameter(property = "jasmine.uriScheme", defaultValue = "http")
-  protected String uriScheme;
+  private String uriScheme = "http";
 
   /**
    * <p>Not used by the <code>jasmine:bdd</code> goal.</p>
@@ -326,7 +273,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.3.1.4
    */
   @Parameter(property = "jasmine.serverHostname", defaultValue = "localhost")
-  protected String serverHostname;
+  private String serverHostname = "localhost";
 
   /**
    * <p>Determines the strategy to use when generation the JasmineSpecRunner. This feature allows for custom
@@ -337,7 +284,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.1.0
    */
   @Parameter(property = "jasmine.specRunnerTemplate", defaultValue = "DEFAULT")
-  protected SpecRunnerTemplate specRunnerTemplate;
+  private SpecRunnerTemplate specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
 
   /**
    * <p>Automatically refresh the test runner at the given interval (specified in seconds) when using the <code>jasmine:bdd</code> goal.</p>
@@ -346,21 +293,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * @since 1.3.1.1
    */
   @Parameter(property = "jasmine.autoRefreshInterval", defaultValue = "0")
-  protected int autoRefreshInterval;
-
-  /**
-   * <p>Type of {@link org.eclipse.jetty.server.Connector} to use on the jetty server.</p>
-   * <br>
-   * <p>Most users won't need to change this from the default value. It should only be used
-   * by advanced users.</p>
-   *
-   * @since 1.3.1.4
-   */
-  @Parameter(
-    property = "jasmine.connectorClass",
-    defaultValue = "org.eclipse.jetty.server.nio.SelectChannelConnector"
-  )
-  protected String connectorClass;
+  private int autoRefreshInterval = 0;
 
   /**
    * <p>Specify additional contexts to make available.</p>
@@ -382,122 +315,104 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Parameter
   private List<Context> additionalContexts = Collections.emptyList();
 
-  @Parameter(defaultValue = "${project}", readonly = true)
-  protected MavenProject mavenProject;
+  private final MavenProject mavenProject;
+  private final ReporterType reporterType;
+  private final ResourceRetriever resourceRetriever;
+  private final ReporterRetriever reporterRetriever;
 
-  @Component
-  ResourceManager resourceManager;
-
-  protected ResourceRetriever resourceRetriever;
-  protected ReporterRetriever reporterRetriever;
-
-  protected StringifiesStackTraces stringifiesStackTraces = new StringifiesStackTraces();
-
-  protected ScriptSearch sources;
-  protected ScriptSearch specs;
-
-  private File customRunnerTemplateFile;
-  private File customRunnerConfigurationFile;
+  AbstractJasmineMojo(MavenProject mavenProject,
+                      ReporterType reporterType,
+                      ResourceRetriever resourceRetriever,
+                      ReporterRetriever reporterRetriever) {
+    this.mavenProject = mavenProject;
+    this.reporterType = reporterType;
+    this.resourceRetriever = resourceRetriever;
+    this.reporterRetriever = reporterRetriever;
+  }
 
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
-    this.loadResources();
-
-    this.sources = new ScriptSearch(this.jsSrcDir, this.sourceIncludes, this.sourceExcludes);
-    this.specs = new ScriptSearch(this.jsTestSrcDir, this.specIncludes, this.specExcludes);
-
     try {
-      this.run();
+      this.run(getServerConfiguration(), getJasmineConfiguration());
     } catch (MojoFailureException e) {
       throw e;
     } catch (Exception e) {
-      throw new MojoExecutionException("The jasmine-maven-plugin encountered an exception: \n" + this.stringifiesStackTraces.stringify(e), e);
+      throw new MojoExecutionException("The jasmine-maven-plugin encountered an exception:", e);
     }
   }
 
-  public abstract void run() throws Exception;
-
-  @Override
-  public String getSourceEncoding() {
-    return this.sourceEncoding;
+  protected final MavenProject getMavenProject() {
+    return mavenProject;
   }
 
-  @Override
-  public File getCustomRunnerTemplate() {
-    return this.customRunnerTemplateFile;
+  protected abstract void run(ServerConfiguration serverConfiguration,
+                              JasmineConfiguration jasmineConfiguration) throws Exception;
+
+
+  private ServerConfiguration getServerConfiguration() {
+    return ImmutableServerConfiguration.builder()
+      .uriScheme(this.uriScheme)
+      .serverHostname(this.serverHostname)
+      .serverPort(this.serverPort)
+      .build();
   }
 
-  @Override
-  public SpecRunnerTemplate getSpecRunnerTemplate() {
-    return this.specRunnerTemplate;
+  private JasmineConfiguration getJasmineConfiguration() throws MojoExecutionException {
+    return ImmutableJasmineConfiguration.builder()
+      .customRunnerConfiguration(getCustomRunnerConfigurationFile())
+      .customRunnerTemplate(getCustomRunnerTemplateFile())
+      .contexts(getContexts())
+      .projectClassLoader(getProjectClassLoader())
+      .autoRefreshInterval(this.autoRefreshInterval)
+      .preloadSources(this.preloadSources)
+      .basedir(this.mavenProject.getBasedir())
+      .srcDirectoryName(this.srcDirectoryName)
+      .sources(this.getSources())
+      .specDirectoryName(this.specDirectoryName)
+      .specs(this.getSpecs())
+      .specRunnerHtmlFileName(this.specRunnerHtmlFileName)
+      .specRunnerTemplate(this.specRunnerTemplate)
+      .reporters(getReporters())
+      .fileSystemReporters(getFileSystemReporters())
+      .reporterType(this.reporterType)
+      .jasmineTargetDir(this.jasmineTargetDir)
+      .sourceEncoding(this.sourceEncoding)
+      .build();
   }
 
-  @Override
-  public File getJasmineTargetDir() {
-    return this.jasmineTargetDir;
+  private List<FileSystemReporter> getFileSystemReporters() throws MojoExecutionException {
+    return reporterRetriever.retrieveFileSystemReporters(
+      this.fileSystemReporters,
+      this.jasmineTargetDir,
+      this.mavenProject
+    );
   }
 
-  @Override
-  public String getSrcDirectoryName() {
-    return this.srcDirectoryName;
+  private Optional<File> getCustomRunnerTemplateFile() throws MojoExecutionException {
+    return resourceRetriever.getResourceAsFile(
+      CUSTOM_RUNNER_TEMPLATE_PARAM,
+      this.customRunnerTemplate,
+      this.mavenProject
+    );
   }
 
-  @Override
-  public ScriptSearch getSources() {
-    return this.sources;
+  private Optional<File> getCustomRunnerConfigurationFile() throws MojoExecutionException {
+    return resourceRetriever.getResourceAsFile(
+      CUSTOM_RUNNER_CONFIGURATION_PARAM,
+      this.customRunnerConfiguration,
+      this.mavenProject
+    );
   }
 
-  @Override
-  public ScriptSearch getSpecs() {
-    return this.specs;
+  private List<Reporter> getReporters() throws MojoExecutionException {
+    return reporterRetriever.retrieveReporters(this.reporters, this.mavenProject);
   }
 
-  @Override
-  public String getSpecDirectoryName() {
-    return this.specDirectoryName;
-  }
-
-  @Override
-  public List<String> getPreloadSources() {
-    return this.preloadSources;
-  }
-
-  @Override
-  public int getAutoRefreshInterval() {
-    return this.autoRefreshInterval;
-  }
-
-  public MavenProject getMavenProject() {
-    return this.mavenProject;
-  }
-
-  @Override
-  public File getCustomRunnerConfiguration() {
-    return this.customRunnerConfigurationFile;
-  }
-
-  @Override
-  public List<Reporter> getReporters() {
-    return this.reporters;
-  }
-
-  @Override
-  public List<FileSystemReporter> getFileSystemReporters() {
-    return this.fileSystemReporters;
-  }
-
-  @Override
-  public File getBasedir() {
-    return this.mavenProject.getBasedir();
-  }
-
-  @Override
-  public ClassLoader getProjectClassLoader() {
+  private ClassLoader getProjectClassLoader() {
     return new ProjectClassLoaderFactory(mavenProject.getArtifacts()).create();
   }
 
-  @Override
-  public List<Context> getContexts() {
+  private List<Context> getContexts() {
     List<Context> contexts = new ArrayList<Context>();
     contexts.add(new Context(this.srcDirectoryName, this.jsSrcDir));
     contexts.add(new Context(this.specDirectoryName, this.jsTestSrcDir));
@@ -505,35 +420,20 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
     return contexts;
   }
 
-  protected ServerConnector getConnector() throws MojoExecutionException {
-    Server server = new Server();
-    ServerConnector connector = new ServerConnector(server);
-    server.addConnector(connector);
-    return connector;
+  private ScriptSearch getSpecs() {
+    return ImmutableScriptSearch.builder()
+      .directory(this.jsTestSrcDir)
+      .includes(this.specIncludes)
+      .excludes(this.specExcludes)
+      .build();
   }
 
-  protected boolean isSkipTests() {
-    return this.skipTests || this.mvnTestSkip || this.skipJasmineTests;
-  }
 
-  private void loadResources() throws MojoExecutionException {
-    this.customRunnerTemplateFile = getResourceRetriever().getResourceAsFile("customRunnerTemplate", this.customRunnerTemplate, this.mavenProject);
-    this.customRunnerConfigurationFile = getResourceRetriever().getResourceAsFile("customRunnerConfiguration", this.customRunnerConfiguration, this.mavenProject);
-    this.reporters = getReporterRetriever().retrieveReporters(this.reporters, this.mavenProject);
-    this.fileSystemReporters = getReporterRetriever().retrieveFileSystemReporters(this.fileSystemReporters, this.getJasmineTargetDir(), this.mavenProject);
-  }
-
-  private ResourceRetriever getResourceRetriever() {
-    if (resourceRetriever == null) {
-      resourceRetriever = new ResourceRetriever(resourceManager);
-    }
-    return resourceRetriever;
-  }
-
-  private ReporterRetriever getReporterRetriever() {
-    if (reporterRetriever == null) {
-      reporterRetriever = new ReporterRetriever(getResourceRetriever());
-    }
-    return reporterRetriever;
+  private ScriptSearch getSources() {
+    return ImmutableScriptSearch.builder()
+      .directory(this.jsSrcDir)
+      .includes(this.sourceIncludes)
+      .excludes(this.sourceExcludes)
+      .build();
   }
 }

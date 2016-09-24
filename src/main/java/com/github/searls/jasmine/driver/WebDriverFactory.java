@@ -3,8 +3,8 @@ package com.github.searls.jasmine.driver;
 import com.github.klieber.phantomjs.locate.PhantomJsLocator;
 import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
 import com.github.klieber.phantomjs.locate.RepositoryDetails;
+import com.github.searls.jasmine.config.WebDriverConfiguration;
 import com.github.searls.jasmine.mojo.Capability;
-import com.google.common.base.MoreObjects;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
@@ -12,75 +12,43 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import javax.inject.Named;
 import java.lang.reflect.Constructor;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Creates a WebDriver for TestMojo using configured properties.
  */
+@Named
 public class WebDriverFactory {
-  private boolean debug;
-  private String browserVersion;
-  private String webDriverClassName;
-  private List<Capability> webDriverCapabilities;
-  private PhantomJsLocatorOptions phantomJsLocatorOptions;
-  private RepositoryDetails repositoryDetails;
 
-  public WebDriverFactory() {
-    setWebDriverCapabilities(null);
-  }
+  private static final String PHANTOMJS_BINARY_PATH = "phantomjs.binary.path";
 
-  public void setDebug(boolean debug) {
-    this.debug = debug;
-  }
-
-  public void setBrowserVersion(String browserVersion) {
-    this.browserVersion = browserVersion;
-  }
-
-  public void setWebDriverClassName(String webDriverClassName) {
-    this.webDriverClassName = webDriverClassName;
-  }
-
-  public void setWebDriverCapabilities(List<Capability> webDriverCapabilities) {
-    this.webDriverCapabilities = MoreObjects.firstNonNull(webDriverCapabilities, Collections.<Capability>emptyList());
-  }
-
-  public PhantomJsLocatorOptions getPhantomJsLocatorOptions() {
-    return phantomJsLocatorOptions;
-  }
-
-  public void setPhantomJsLocatorOptions(PhantomJsLocatorOptions phantomJsLocatorOptions) {
-    this.phantomJsLocatorOptions = phantomJsLocatorOptions;
-  }
-
-  public RepositoryDetails getRepositoryDetails() {
-    return repositoryDetails;
-  }
-
-  public void setRepositoryDetails(RepositoryDetails repositoryDetails) {
-    this.repositoryDetails = repositoryDetails;
-  }
-
-  public WebDriver createWebDriver() throws Exception {
-    if (PhantomJSDriver.class.getName().equals(webDriverClassName)) {
-      return createPhantomJsWebDriver();
-    } else if (HtmlUnitDriver.class.getName().equals(webDriverClassName)) {
-      return createHtmlUnitWebDriver();
+  public WebDriver createWebDriver(WebDriverConfiguration config) throws Exception {
+    String className = config.getWebDriverClassName();
+    WebDriver driver;
+    if (PhantomJSDriver.class.getName().equals(className)) {
+      driver = createPhantomJsWebDriver(
+        config.getPhantomJsLocatorOptions(),
+        config.getRepositoryDetails(),
+        config.getWebDriverCapabilities()
+      );
+    } else if (HtmlUnitDriver.class.getName().equals(className)) {
+      driver = createHtmlUnitWebDriver(config.getBrowserVersion(), config.getWebDriverCapabilities(), config.isDebug());
     } else {
-      return createCustomWebDriver();
+      driver = createCustomWebDriver(className, config.getWebDriverCapabilities());
     }
+    return driver;
   }
 
   @SuppressWarnings("unchecked")
-  private Class<? extends WebDriver> getWebDriverClass() throws Exception {
-    return (Class<WebDriver>) Class.forName(webDriverClassName);
+  private Class<? extends WebDriver> getWebDriverClass(String className) throws Exception {
+    return (Class<WebDriver>) Class.forName(className);
   }
 
-  private Constructor<? extends WebDriver> getWebDriverConstructor() throws Exception {
-    Class<? extends WebDriver> webDriverClass = getWebDriverClass();
-    boolean hasCapabilities = !webDriverCapabilities.isEmpty();
+  private Constructor<? extends WebDriver> getWebDriverConstructor(String className, List<Capability> capabilities) throws Exception {
+    Class<? extends WebDriver> webDriverClass = getWebDriverClass(className);
+    boolean hasCapabilities = !capabilities.isEmpty();
     try {
       if (hasCapabilities) {
         return webDriverClass.getConstructor(Capabilities.class);
@@ -94,28 +62,29 @@ public class WebDriverFactory {
     }
   }
 
-  private WebDriver createCustomWebDriver() throws Exception {
-    Constructor<? extends WebDriver> constructor = getWebDriverConstructor();
-    return constructor.newInstance(getWebDriverConstructorArguments(constructor));
+  private WebDriver createCustomWebDriver(String className, List<Capability> capabilities) throws Exception {
+    Constructor<? extends WebDriver> constructor = getWebDriverConstructor(className, capabilities);
+    return constructor.newInstance(getWebDriverConstructorArguments(constructor, capabilities));
   }
 
-  private Object[] getWebDriverConstructorArguments(Constructor<? extends WebDriver> constructor) {
+  private Object[] getWebDriverConstructorArguments(Constructor<? extends WebDriver> constructor,
+                                                    List<Capability> customCapabilities) {
     if (constructor.getParameterTypes().length == 0) {
       return new Object[0];
     }
-    return new Object[]{getCapabilities()};
+    return new Object[]{getCapabilities(customCapabilities)};
   }
 
-  private DesiredCapabilities getCapabilities() {
+  private DesiredCapabilities getCapabilities(List<Capability> customCapabilities) {
     DesiredCapabilities capabilities = new DesiredCapabilities();
-    customizeCapabilities(capabilities);
+    customizeCapabilities(capabilities, customCapabilities);
     return capabilities;
   }
 
-  private void customizeCapabilities(DesiredCapabilities capabilities) {
+  private void customizeCapabilities(DesiredCapabilities capabilities, List<Capability> customCapabilities) {
     capabilities.setJavascriptEnabled(true);
 
-    for (Capability capability : webDriverCapabilities) {
+    for (Capability capability : customCapabilities) {
       Object value = capability.getValue();
       if (value != null && (!String.class.isInstance(value) || StringUtils.isNotBlank((String) value))) {
         capabilities.setCapability(capability.getName(), capability.getValue());
@@ -127,23 +96,27 @@ public class WebDriverFactory {
     }
   }
 
-  private WebDriver createHtmlUnitWebDriver() throws Exception {
+  private WebDriver createHtmlUnitWebDriver(String browserVersion,
+                                            List<Capability> customCapabilities,
+                                            boolean debug) throws Exception {
     DesiredCapabilities capabilities = DesiredCapabilities.htmlUnitWithJs();
     if (StringUtils.isNotBlank(capabilities.getVersion())) {
       capabilities.setVersion(browserVersion.replaceAll("(\\D+)_(\\d.*)?", "$1-$2").replaceAll("_", " ").toLowerCase());
     }
-    customizeCapabilities(capabilities);
+    customizeCapabilities(capabilities, customCapabilities);
     return new QuietHtmlUnitDriver(capabilities, debug);
   }
 
-  private WebDriver createPhantomJsWebDriver() throws Exception {
+  private WebDriver createPhantomJsWebDriver(PhantomJsLocatorOptions options,
+                                             RepositoryDetails repositoryDetails,
+                                             List<Capability> customCapabilities) throws Exception {
     DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
-    customizeCapabilities(capabilities);
+    customizeCapabilities(capabilities, customCapabilities);
 
-    if (capabilities.getCapability("phantomjs.binary.path") == null) {
-      PhantomJsLocator locator = new PhantomJsLocator(this.phantomJsLocatorOptions, this.repositoryDetails);
+    if (capabilities.getCapability(PHANTOMJS_BINARY_PATH) == null) {
+      PhantomJsLocator locator = new PhantomJsLocator(options, repositoryDetails);
       String phantomJsPath = locator.locate();
-      capabilities.setCapability("phantomjs.binary.path", phantomJsPath);
+      capabilities.setCapability(PHANTOMJS_BINARY_PATH, phantomJsPath);
     }
 
     return new PhantomJSDriver(capabilities);

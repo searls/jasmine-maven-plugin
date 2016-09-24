@@ -5,9 +5,9 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.html.HtmlMeta;
 import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.searls.jasmine.HtmlAssertions;
-import com.github.searls.jasmine.io.IOUtilsWrapper;
+import com.github.searls.jasmine.format.FormatsScriptTags;
+import com.github.searls.jasmine.io.IoUtilities;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import com.github.searls.jasmine.io.scripts.ScriptResolverException;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Rule;
@@ -56,21 +56,22 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.generatorConfiguration.getReporterType()).thenReturn(ReporterType.HtmlReporter);
     when(this.generatorConfiguration.getScriptResolver()).thenReturn(this.scriptResolver);
-    when(this.generatorConfiguration.getRunnerTemplate()).thenReturn(new IOUtilsWrapper().toString(SpecRunnerTemplate.DEFAULT.getTemplate()));
-    this.subject = new DefaultSpecRunnerHtmlGenerator(this.generatorConfiguration);
+    when(this.generatorConfiguration.getRunnerTemplate())
+      .thenReturn(new IoUtilities().resourceToString(SpecRunnerTemplate.DEFAULT.getTemplate()));
+
+    this.subject = new DefaultSpecRunnerHtmlGenerator(new FormatsScriptTags());
   }
 
   @Test
   public void shouldBuildBasicHtmlWhenNoDependenciesAreProvided() {
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
 
-    assertThat(html).contains("<html>");
-    assertThat(html).contains("</html>");
+    assertThat(html).contains("<html>").contains("</html>");
   }
 
   @Test
   public void shouldPutInADocTypeWhenNoDependenciesAreProvided() throws Exception {
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
 
     assertThat(html).contains(HTML5_DOCTYPE);
     assertThat(this.getPage(html).getDoctype().getName()).isEqualTo("html");
@@ -78,7 +79,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   @Test
   public void shouldAssignSpecifiedSourceEncoding() throws Exception {
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
 
     HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
     assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SOURCE_ENCODING);
@@ -88,7 +89,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(null);
 
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
 
     HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
     assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
@@ -96,28 +97,28 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   @Test
   public void populatesJasmineSource() throws Exception {
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_JS);
   }
 
   @Test
   public void populatesJasmineHtmlSource() throws Exception {
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_HTML_JS);
   }
 
   @Test
   public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsLinkTagWithSource(JASMINE_CSS);
   }
 
   @Test
-  public void containsScriptTagOfSource() throws ScriptResolverException {
+  public void containsScriptTagOfSource() {
     String expected = this.scripts.iterator().next();
     when(this.scriptResolver.getAllScripts()).thenReturn(this.scripts);
 
-    String html = this.subject.generate();
+    String html = this.subject.generate(generatorConfiguration);
 
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(expected);
   }

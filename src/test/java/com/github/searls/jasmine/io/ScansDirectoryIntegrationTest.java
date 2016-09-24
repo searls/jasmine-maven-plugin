@@ -86,7 +86,8 @@ public class ScansDirectoryIntegrationTest {
 
     List<String> result = subject.scan(directory, asList("**"), Collections.EMPTY_LIST);
 
-    assertThat(result).containsExactly("a", "b", "c" + File.separator + "a", "c" + File.separator + "d");
+    assertThat(result)
+      .containsExactly("a", "b", "c" + File.separator + "a", "c" + File.separator + "d");
   }
 
 

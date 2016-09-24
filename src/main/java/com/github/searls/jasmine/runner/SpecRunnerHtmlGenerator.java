@@ -8,5 +8,5 @@ public interface SpecRunnerHtmlGenerator {
   String JASMINE_CSS = "/webjars/jasmine/jasmine.css";
   String JASMINE_HTMLSPECFILTER_PATCH_JS = "/classpath/lib/htmlSpecFilterPatch.js";
 
-  String generate();
+  String generate(HtmlGeneratorConfiguration configuration);
 }

@@ -30,10 +30,9 @@
                     <jsSrcDir>${project.basedir}/src/main/webapp/js</jsSrcDir>
                     <jsTestSrcDir>${project.basedir}/src/test/javascript</jsTestSrcDir>
                     <preloadSources>
-                        <source>http://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.4/require.js</source>
+                        <source>require.js</source>
                         <source>require-config.js</source>
                     </preloadSources>
-                    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
 
                     <webDriverCapabilities>
                       <capability>

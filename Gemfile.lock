@@ -88,6 +88,3 @@ DEPENDENCIES
   relish
   rspec
   selenium-webdriver (~> 2.48.1)
-
-BUNDLED WITH
-   1.12.5

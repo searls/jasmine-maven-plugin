@@ -1,6 +1,7 @@
 package com.github.searls.jasmine.server;
 
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.junit.Before;
@@ -8,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -18,34 +20,34 @@ import static org.mockito.Mockito.when;
 public class ServerManagerTest {
 
   @Mock
-  private ResourceHandlerConfigurator configurator;
-
-  @Mock
   private Server server;
 
   @Mock
   private ServerConnector connector;
 
-  private ServerManager serverManager;
+  @Mock
+  private Handler handler;
 
   @Captor
   private ArgumentCaptor<Connector> connectorCaptor;
 
+  @InjectMocks
+  private ServerManager serverManager;
+
   @Before
   public void before() {
     when(connector.getServer()).thenReturn(server);
-    this.serverManager = new ServerManager(connector, configurator);
   }
 
   @Test
   public void testStartAnyPort() throws Exception {
-    this.serverManager.start();
+    this.serverManager.start(handler);
     verify(this.connector).setPort(0);
   }
 
   @Test
   public void testStartOnSpecificPort() throws Exception {
-    this.serverManager.start(1234);
+    this.serverManager.start(1234, handler);
     verify(this.connector).setPort(1234);
   }
 

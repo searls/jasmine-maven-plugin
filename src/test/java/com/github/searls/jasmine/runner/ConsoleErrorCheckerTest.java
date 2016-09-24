@@ -1,46 +1,45 @@
 package com.github.searls.jasmine.runner;
 
-import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import static org.mockito.Matchers.matches;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConsoleErrorCheckerTest {
 
+  private static final String ERROR = "Bad to the Bone!";
+
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
-  WebDriver webDriver;
+  private WebDriver webDriver;
+
 
   @Mock
-  Log log;
+  private WebElement headWithErrors;
+
 
   @Mock
-  WebElement headWithErrors;
-  private String error = "Bad to the Bone!";
+  private WebElement headWithoutErrors;
 
-  @Mock
-  WebElement headWithoutErrors;
-
-  ConsoleErrorChecker subject;
+  @InjectMocks
+  private ConsoleErrorChecker subject;
 
   @Before
   public void setUp() throws Exception {
     subject = new ConsoleErrorChecker();
-    when(headWithErrors.getAttribute("jmp_jserror")).thenReturn(error);
+    when(headWithErrors.getAttribute("jmp_jserror")).thenReturn(ERROR);
     when(headWithoutErrors.getAttribute("jmp_jserro")).thenReturn("");
   }
 
@@ -48,7 +47,7 @@ public class ConsoleErrorCheckerTest {
   public void shouldPassWhenNoErrors() throws Exception {
     when(webDriver.findElement(By.tagName("head"))).thenReturn(headWithoutErrors);
 
-    subject.checkForConsoleErrors(webDriver, log);
+    subject.checkForConsoleErrors(webDriver);
   }
 
   @Test
@@ -58,8 +57,6 @@ public class ConsoleErrorCheckerTest {
 
     when(webDriver.findElement(By.tagName("head"))).thenReturn(headWithErrors);
 
-    subject.checkForConsoleErrors(webDriver, log);
-
-    verify(log).warn(matches("JavaScript Console Errors:.*"+error));
+    subject.checkForConsoleErrors(webDriver);
   }
 }

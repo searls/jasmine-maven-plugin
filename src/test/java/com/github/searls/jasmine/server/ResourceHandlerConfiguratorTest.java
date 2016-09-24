@@ -9,6 +9,7 @@ import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -28,8 +29,6 @@ public class ResourceHandlerConfiguratorTest {
   private static final String BASE_DIRECTORY = "basedir";
   private static final String SOURCE_CONTEXT_ROOT = "sourceroot";
   private static final String SPEC_CONTEXT_ROOT = "specroot";
-
-  private ResourceHandlerConfigurator configurator;
 
   @Mock
   private JasmineConfiguration configuration;
@@ -63,18 +62,16 @@ public class ResourceHandlerConfiguratorTest {
 
   private List<Context> contexts;
 
+  @InjectMocks
+  private ResourceHandlerConfigurator configurator;
+
   @Before
   public void before() {
     contexts = Arrays.asList(contextA, contextB);
-    this.configurator = new ResourceHandlerConfigurator(
-      configuration,
-      relativizesFilePaths,
-      createsRunner);
   }
 
   @Test
   public void testCreateHandler() throws IOException {
-    when(createsRunner.getRunnerFile()).thenReturn(WELCOME_FILE);
 
     when(sourceDirectory.getCanonicalPath()).thenReturn(SOURCE_DIRECTORY);
     when(specDirectory.getCanonicalPath()).thenReturn(SPEC_DIRECTORY);
@@ -82,6 +79,8 @@ public class ResourceHandlerConfiguratorTest {
 
     when(configuration.getBasedir()).thenReturn(baseDirectory);
     when(configuration.getProjectClassLoader()).thenReturn(new ProjectClassLoaderFactory().create());
+    when(configuration.getSpecRunnerHtmlFileName()).thenReturn(WELCOME_FILE);
+    when(configuration.getContexts()).thenReturn(contexts);
 
     when(contextA.getContextRoot()).thenReturn(SOURCE_CONTEXT_ROOT);
     when(contextA.getDirectory()).thenReturn(sourceDirectory);
@@ -89,9 +88,7 @@ public class ResourceHandlerConfiguratorTest {
     when(contextB.getContextRoot()).thenReturn(SPEC_CONTEXT_ROOT);
     when(contextB.getDirectory()).thenReturn(specDirectory);
 
-    when(configuration.getContexts()).thenReturn(contexts);
-
-    this.configurator.createHandler();
+    this.configurator.createHandler(configuration);
   }
 
 }

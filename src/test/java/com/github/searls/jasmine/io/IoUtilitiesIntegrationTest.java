@@ -18,8 +18,9 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(IOUtils.class)
-public class IOUtilsWrapperIntegrationTest {
-  private final IOUtilsWrapper subject = new IOUtilsWrapper();
+public class IoUtilitiesIntegrationTest {
+
+  private final IoUtilities subject = new IoUtilities();
   private final InputStream inputStream = mock(InputStream.class);
 
   @Before
@@ -42,7 +43,7 @@ public class IOUtilsWrapperIntegrationTest {
     String expected = "banana";
     when(IOUtils.toString(isA(InputStream.class))).thenReturn(expected);
 
-    String result = subject.toString("/ioUtils.txt");
+    String result = subject.resourceToString("/ioUtils.txt");
 
     assertThat(result).isEqualTo(expected);
   }

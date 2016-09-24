@@ -1,16 +1,20 @@
 package com.github.searls.jasmine.mojo;
 
-import com.github.searls.jasmine.NullLog;
+import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.config.ServerConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
-import com.github.searls.jasmine.runner.CreatesRunner;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
+import com.github.searls.jasmine.server.ServerManagerFactory;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 
@@ -20,63 +24,66 @@ import java.io.IOException;
 @Mojo(name = "bdd", requiresDirectInvocation = true, requiresDependencyResolution = ResolutionScope.TEST)
 public class ServerMojo extends AbstractJasmineMojo {
 
-  public static final String INSTRUCTION_FORMAT =
-    "\n\n" +
-      "Server started--it's time to spec some JavaScript! You can run your specs as you develop by visiting this URL in a web browser: \n\n" +
-      " %s://localhost:%s" +
-      "\n\n" +
-      "The server will monitor these two directories for scripts that you add, remove, and change:\n\n" +
-      "  source directory: %s\n\n" +
-      "  spec directory: %s" +
-      "\n\n" +
-      "Just leave this process running as you test-drive your code, refreshing your browser window to re-run your specs. You can kill the server with Ctrl-C when you're done.";
+  private static final Logger LOGGER = LoggerFactory.getLogger(ServerMojo.class);
+
+  private static final String INSTRUCTION_FORMAT = getInstructionsTemplate();
 
   private final RelativizesFilePaths relativizesFilePaths;
+  private final ResourceHandlerConfigurator resourceHandlerConfigurator;
+  private final ServerManagerFactory serverManagerFactory;
 
-  public ServerMojo() {
-    this(new RelativizesFilePaths());
-  }
-
-  public ServerMojo(RelativizesFilePaths relativizesFilePaths) {
+  @Inject
+  public ServerMojo(MavenProject mavenProject,
+                    ResourceRetriever resourceRetriever,
+                    ReporterRetriever reporterRetriever,
+                    RelativizesFilePaths relativizesFilePaths,
+                    ResourceHandlerConfigurator resourceHandlerConfigurator,
+                    ServerManagerFactory serverManagerFactory) {
+    super(mavenProject, ReporterType.HtmlReporter, resourceRetriever, reporterRetriever);
     this.relativizesFilePaths = relativizesFilePaths;
-  }
-
-  private String buildServerInstructions() throws IOException {
-    return String.format(
-      INSTRUCTION_FORMAT,
-      this.uriScheme,
-      this.serverPort,
-      this.getRelativePath(this.sources.getDirectory()),
-      this.getRelativePath(this.specs.getDirectory()));
+    this.resourceHandlerConfigurator = resourceHandlerConfigurator;
+    this.serverManagerFactory = serverManagerFactory;
   }
 
   @Override
-  public void run() throws Exception {
-    ServerManager serverManager = this.getServerManager();
-
-    serverManager.start(this.serverPort);
-    this.getLog().info(this.buildServerInstructions());
+  public void run(ServerConfiguration serverConfiguration,
+                  JasmineConfiguration jasmineConfiguration) throws Exception {
+    ServerManager serverManager = serverManagerFactory.create();
+    serverManager.start(serverConfiguration.getServerPort(), resourceHandlerConfigurator.createHandler(jasmineConfiguration));
+    LOGGER.info(this.buildServerInstructions(serverConfiguration, jasmineConfiguration));
     serverManager.join();
   }
 
-  private ServerManager getServerManager() throws MojoExecutionException {
-    Log log = this.debug ? this.getLog() : new NullLog();
-
-    CreatesRunner createsRunner = new CreatesRunner(
-      this,
-      log,
-      this.manualSpecRunnerHtmlFileName,
-      ReporterType.HtmlReporter);
-
-    ResourceHandlerConfigurator configurator = new ResourceHandlerConfigurator(
-      this,
-      this.relativizesFilePaths,
-      createsRunner);
-
-    return ServerManager.newInstance(configurator);
+  private String buildServerInstructions(ServerConfiguration serverConfiguration,
+                                         JasmineConfiguration jasmineConfiguration) throws IOException {
+    return String.format(
+      INSTRUCTION_FORMAT,
+      serverConfiguration.getServerURL(),
+      getSourcePath(jasmineConfiguration),
+      getSpecPath(jasmineConfiguration)
+    );
   }
 
-  private String getRelativePath(File absolutePath) throws IOException {
-    return this.relativizesFilePaths.relativize(this.mavenProject.getBasedir(), absolutePath);
+  private String getSourcePath(JasmineConfiguration config) throws IOException {
+    return this.getRelativePath(config.getBasedir(), config.getSources().getDirectory());
+  }
+
+  private String getSpecPath(JasmineConfiguration config) throws IOException {
+    return this.getRelativePath(config.getBasedir(), config.getSpecs().getDirectory());
+  }
+
+  private String getRelativePath(File basedir, File absolutePath) throws IOException {
+    return this.relativizesFilePaths.relativize(basedir, absolutePath);
+  }
+
+  private static String getInstructionsTemplate() {
+    String template;
+    try {
+      template = IOUtils.toString(ServerMojo.class.getResourceAsStream("/instructions.template"));
+    } catch (IOException e) {
+      template = "";
+      LOGGER.error("Unable to read instructions template: ", e);
+    }
+    return template;
   }
 }
