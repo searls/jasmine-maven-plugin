@@ -34,15 +34,14 @@ public class RelativizesFilePathsTest {
     assertThat(result).isEqualTo("target/jasmine");
   }
 
-
   @Test
   public void resolvesDeepChild() throws IOException {
-    from = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/target/jasmine"));
-    to = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-coffee/src/test/javascript/fun-spec.js"));
+    from = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-passing/target/jasmine"));
+    to = new File(slash("/Volumes/blah/Users/justin/code/workspaces/jasmine_maven/jasmine-maven-plugin/src/test/resources/examples/jasmine-webapp-passing/src/test/javascript/HelloWorldSpec.js"));
 
     String result = subject.relativize(from, to);
 
-    assertThat(result).isEqualTo("../../src/test/javascript/fun-spec.js");
+    assertThat(result).isEqualTo("../../src/test/javascript/HelloWorldSpec.js");
   }
 
   private String slash(String s) {
