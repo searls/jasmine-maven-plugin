@@ -19,21 +19,18 @@
  */
 package com.github.searls.jasmine.server;
 
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 
 public class ServerManager {
 
   private static final int ANY_PORT = 0;
 
-  private final Server server;
-  private final Connector connector;
+  private final ServerConnector connector;
   private final ResourceHandlerConfigurator configurator;
 
-  public ServerManager(Server server,
-                       Connector connector,
-                       ResourceHandlerConfigurator configurator) {
-    this.server = server;
+  protected ServerManager(ServerConnector connector,
+                          ResourceHandlerConfigurator configurator) {
     this.connector = connector;
     this.configurator = configurator;
   }
@@ -48,20 +45,24 @@ public class ServerManager {
 
   private int startServer(int port) throws Exception {
     connector.setPort(port);
-
-    this.server.setHandler(this.configurator.createHandler());
-    this.server.addConnector(connector);
-
-    this.server.start();
+    connector.getServer().setHandler(this.configurator.createHandler());
+    connector.getServer().start();
 
     return connector.getLocalPort();
   }
 
   public void stop() throws Exception {
-    this.server.stop();
+    connector.getServer().stop();
   }
 
   public void join() throws Exception {
-    this.server.join();
+    connector.getServer().join();
+  }
+
+  public static ServerManager newInstance(ResourceHandlerConfigurator configurator) {
+    Server server = new Server();
+    ServerConnector connector = new ServerConnector(server);
+    server.addConnector(connector);
+    return new ServerManager(connector, configurator);
   }
 }

@@ -29,6 +29,7 @@ import java.net.MalformedURLException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 
+
 public class ConvertsFileToUriStringIntegrationTest {
 
   private final ConvertsFileToUriString subject = new ConvertsFileToUriString();

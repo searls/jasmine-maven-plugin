@@ -24,6 +24,10 @@ import org.eclipse.jetty.util.component.Container;
 //Link Seam for jetty server.
 public class Server {
 
+  public static String getVersion() {
+    return "";
+  }
+
   public void addConnector(Connector connector) {
   }
 

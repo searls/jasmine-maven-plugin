@@ -28,8 +28,6 @@ import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Server;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,14 +37,13 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import static org.powermock.api.mockito.PowerMockito.whenNew;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(ServerMojo.class)
+@PrepareForTest({ServerMojo.class, ServerManager.class})
 public class ServerMojoTest {
 
   private static final String SPECS_DIR = "spec dir";
@@ -57,31 +54,39 @@ public class ServerMojoTest {
   private static final String MANUAL_SPEC_RUNNER_NAME = "nacho specs";
   private static final String BASE_DIR = "my-base-dir";
 
-  private static final String connectorClassString = "org.eclipse.jetty.server.nio.SelectChannelConnector";
-  private static final Class<? extends Connector> connectorClass = org.eclipse.jetty.server.nio.SelectChannelConnector.class;
-
   @Mock
   private Log log;
+
   @Mock
   private MavenProject mavenProject;
+
   @Mock
   private RelativizesFilePaths relativizesFilePaths;
+
   @Mock
   private File baseDir;
+
   @Mock
   private File targetDir;
+
   @Mock
   private File sourceDir;
+
   @Mock
   private File specDir;
+
   @Mock
   private ScriptSearch sources;
+
   @Mock
   private ScriptSearch specs;
+
   @Mock
   private CreatesRunner createsRunner;
+
   @Mock
   private ResourceHandlerConfigurator configurator;
+
   @Mock
   private ServerManager serverManager;
 
@@ -100,7 +105,6 @@ public class ServerMojoTest {
     this.subject.manualSpecRunnerHtmlFileName = MANUAL_SPEC_RUNNER_NAME;
     this.subject.specRunnerTemplate = SpecRunnerTemplate.DEFAULT;
     this.subject.debug = true;
-    this.subject.connectorClass = connectorClassString;
     when(this.sourceDir.getAbsolutePath()).thenReturn(SOURCE_DIR);
     when(this.specDir.getAbsolutePath()).thenReturn(SPECS_DIR);
     when(this.sources.getDirectory()).thenReturn(this.sourceDir);
@@ -122,7 +126,8 @@ public class ServerMojoTest {
       this.relativizesFilePaths,
       createsRunner).thenReturn(configurator);
 
-    whenNew(ServerManager.class).withArguments(isA(Server.class), isA(connectorClass), eq(configurator)).thenReturn(serverManager);
+    mockStatic(ServerManager.class);
+    when(ServerManager.newInstance(configurator)).thenReturn(serverManager);
 
     this.subject.run();
   }

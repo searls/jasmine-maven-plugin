@@ -27,6 +27,7 @@ import com.github.searls.jasmine.thirdpartylibs.ClassPathResourceHandler;
 import com.github.searls.jasmine.thirdpartylibs.WebJarResourceHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.handler.AllowSymLinkAliasChecker;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.server.handler.ResourceHandler;
@@ -53,30 +54,29 @@ public class ResourceHandlerConfigurator {
 
     for (Context context : this.configuration.getContexts()) {
       String contextRoot = StringUtils.prependIfMissing(context.getContextRoot(), "/");
-      ContextHandler handler = contexts.addContext(contextRoot, "");
-      handler.setAliases(true);
-      handler.setHandler(this.createResourceHandler(true, context.getDirectory().getCanonicalPath(), null));
+      addContext(contexts, contextRoot, this.createResourceHandler(true, context.getDirectory().getCanonicalPath()));
     }
 
-    ContextHandler rootContextHandler = contexts.addContext("/", "");
-    rootContextHandler.setHandler(this.createResourceHandler(false, this.configuration.getBasedir().getCanonicalPath(), new String[]{this.getWelcomeFilePath()}));
-    rootContextHandler.setAliases(true);
-
-    ContextHandler classPathContextHandler = contexts.addContext("/classpath", "");
-    classPathContextHandler.setHandler(new ClassPathResourceHandler(configuration.getProjectClassLoader()));
-    classPathContextHandler.setAliases(true);
-
-    ContextHandler webJarsContextHandler = contexts.addContext("/webjars", "");
-    webJarsContextHandler.setHandler(new WebJarResourceHandler(configuration.getProjectClassLoader()));
-    webJarsContextHandler.setAliases(true);
-
+    addContext(contexts, "/", this.createResourceHandler(
+      false,
+      this.configuration.getBasedir().getCanonicalPath(),
+      this.getWelcomeFilePath()
+    ));
+    addContext(contexts, "/classpath", new ClassPathResourceHandler(configuration.getProjectClassLoader()));
+    addContext(contexts, "/webjars", new WebJarResourceHandler(configuration.getProjectClassLoader()));
     return contexts;
   }
 
-  private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String[] welcomeFiles) {
+  private void addContext(ContextHandlerCollection contexts, String contextPath, Handler handler) {
+    ContextHandler contextHandler = contexts.addContext(contextPath, "");
+    contextHandler.setHandler(handler);
+    contextHandler.addAliasCheck(new AllowSymLinkAliasChecker());
+  }
+
+  private ResourceHandler createResourceHandler(boolean directory, String absolutePath, String ... welcomeFiles) {
     ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner, this.configuration);
     resourceHandler.setDirectoriesListed(directory);
-    if (welcomeFiles != null) {
+    if (welcomeFiles.length > 0) {
       resourceHandler.setWelcomeFiles(welcomeFiles);
     }
     resourceHandler.setResourceBase(absolutePath);

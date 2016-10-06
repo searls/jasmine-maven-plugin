@@ -142,7 +142,7 @@
   </ciManagement>
   <properties>
     <powermock.version>1.6.5</powermock.version>
-    <jetty.version>8.2.0.v20160908</jetty.version>
+    <jetty.version>9.2.19.v20160908</jetty.version>
     <selenium.version>2.53.1</selenium.version>
     <jasmine.version>2.4.1</jasmine.version>
     <htmlunit.version>2.19</htmlunit.version>

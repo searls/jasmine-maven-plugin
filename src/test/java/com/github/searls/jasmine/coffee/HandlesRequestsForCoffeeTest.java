@@ -21,7 +21,7 @@ package com.github.searls.jasmine.coffee;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
-import org.eclipse.jetty.http.HttpHeaders;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.resource.Resource;
 import org.junit.Before;
@@ -103,7 +103,7 @@ public class HandlesRequestsForCoffeeTest {
 
     subject.handle(baseRequest, response, resource);
 
-    verify(response).setDateHeader(HttpHeaders.LAST_MODIFIED, expected);
+    verify(response).setDateHeader(HttpHeader.LAST_MODIFIED.asString(), expected);
   }
 
   @Test
@@ -114,7 +114,7 @@ public class HandlesRequestsForCoffeeTest {
     subject.handle(baseRequest, response, resource);
 
     verify(response.getWriter()).write(expected);
-    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(expected.length()));
+    verify(response).setHeader(HttpHeader.CONTENT_LENGTH.asString(), Integer.toString(expected.length()));
   }
 
   @Test
@@ -125,7 +125,7 @@ public class HandlesRequestsForCoffeeTest {
     subject.handle(baseRequest, response, resource);
 
     verify(response.getWriter()).write(expected);
-    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(expected.getBytes("UTF-8").length));
+    verify(response).setHeader(HttpHeader.CONTENT_LENGTH.asString(), Integer.toString(expected.getBytes("UTF-8").length));
   }
 
   @Test
@@ -149,7 +149,7 @@ public class HandlesRequestsForCoffeeTest {
     subject.handle(baseRequest, response, resource);
 
     verify(response.getWriter()).write(COFFEE);
-    verify(response).setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(COFFEE.length()));
+    verify(response).setHeader(HttpHeader.CONTENT_LENGTH.asString(), Integer.toString(COFFEE.length()));
   }
 
 }
