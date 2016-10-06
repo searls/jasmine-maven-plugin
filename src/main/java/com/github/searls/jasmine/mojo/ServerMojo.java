@@ -10,7 +10,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-import org.eclipse.jetty.server.Server;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,7 +73,7 @@ public class ServerMojo extends AbstractJasmineMojo {
       this.relativizesFilePaths,
       createsRunner);
 
-    return new ServerManager(new Server(), getConnector(), configurator);
+    return ServerManager.newInstance(configurator);
   }
 
   private String getRelativePath(File absolutePath) throws IOException {

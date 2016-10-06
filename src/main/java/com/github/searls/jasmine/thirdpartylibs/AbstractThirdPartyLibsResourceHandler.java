@@ -1,7 +1,7 @@
 package com.github.searls.jasmine.thirdpartylibs;
 
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jetty.http.HttpHeaders;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 
@@ -50,10 +50,10 @@ public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHand
       response.setContentType("text/javascript");
     }
     response.addDateHeader("EXPIRES", 0L);
-    response.setDateHeader(HttpHeaders.LAST_MODIFIED, new Date().getTime());
+    response.setDateHeader(HttpHeader.LAST_MODIFIED.asString(), new Date().getTime());
     try {
       int contentLength = content.getBytes("UTF-8").length;
-      response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(contentLength));
+      response.setHeader(HttpHeader.CONTENT_LENGTH.asString(), Integer.toString(contentLength));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException("The JVM does not support javascript default encoding.", e);
     }

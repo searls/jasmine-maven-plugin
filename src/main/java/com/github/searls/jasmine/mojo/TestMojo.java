@@ -23,7 +23,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
-import org.eclipse.jetty.server.Server;
 import org.openqa.selenium.WebDriver;
 
 import javax.inject.Inject;
@@ -217,7 +216,7 @@ public class TestMojo extends AbstractJasmineMojo {
       this.relativizesFilePaths,
       createsRunner);
 
-    return new ServerManager(new Server(), getConnector(), configurator);
+    return ServerManager.newInstance(configurator);
   }
 
   private void setPortProperty(int port) {

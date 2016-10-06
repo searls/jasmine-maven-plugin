@@ -15,7 +15,8 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
-import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.ServerConnector;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -523,18 +524,11 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
     return contexts;
   }
 
-  protected Connector getConnector() throws MojoExecutionException {
-    try {
-      @SuppressWarnings("unchecked")
-      Class<? extends Connector> c = (Class<? extends Connector>) Class.forName(connectorClass);
-      return c.newInstance();
-    } catch (InstantiationException e) {
-      throw new MojoExecutionException("Unable to instantiate.", e);
-    } catch (IllegalAccessException e) {
-      throw new MojoExecutionException("Unable to instantiate.", e);
-    } catch (ClassNotFoundException e) {
-      throw new MojoExecutionException("Unable to instantiate.", e);
-    }
+  protected ServerConnector getConnector() throws MojoExecutionException {
+    Server server = new Server();
+    ServerConnector connector = new ServerConnector(server);
+    server.addConnector(connector);
+    return connector;
   }
 
   protected boolean isSkipTests() {

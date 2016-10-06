@@ -3,7 +3,7 @@ package com.github.searls.jasmine.coffee;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.format.BuildsJavaScriptToWriteFailureHtml;
 import org.apache.commons.io.IOUtils;
-import org.eclipse.jetty.http.HttpHeaders;
+import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.resource.Resource;
 
@@ -41,10 +41,10 @@ public class HandlesRequestsForCoffee {
   private void setHeaders(HttpServletResponse response, Resource resource, String javascript) {
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/javascript");
-    response.setDateHeader(HttpHeaders.LAST_MODIFIED, resource.lastModified());
+    response.setDateHeader(HttpHeader.LAST_MODIFIED.asString(), resource.lastModified());
     try {
       int contentLength = javascript.getBytes("UTF-8").length;
-      response.setHeader(HttpHeaders.CONTENT_LENGTH, Integer.toString(contentLength));
+      response.setHeader(HttpHeader.CONTENT_LENGTH.asString(), Integer.toString(contentLength));
     } catch (UnsupportedEncodingException e) {
       throw new RuntimeException(
         "The JVM does not support the compiler's default encoding.", e);
