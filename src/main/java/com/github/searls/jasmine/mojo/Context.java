@@ -46,7 +46,9 @@ public class Context {
   private String contextRoot;
   private File directory;
 
+  @SuppressWarnings("unused")
   public Context() {
+    // no-args constructor required by maven
   }
 
   public Context(String contextRoot,
@@ -59,15 +61,7 @@ public class Context {
     return contextRoot;
   }
 
-  public void setContextRoot(String contextRoot) {
-    this.contextRoot = contextRoot;
-  }
-
   public File getDirectory() {
     return directory;
-  }
-
-  public void setDirectory(File directory) {
-    this.directory = directory;
   }
 }

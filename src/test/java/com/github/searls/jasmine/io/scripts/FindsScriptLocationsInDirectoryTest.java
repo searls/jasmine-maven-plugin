@@ -20,7 +20,7 @@
 package com.github.searls.jasmine.io.scripts;
 
 import com.github.searls.jasmine.io.ScansDirectory;
-import com.github.searls.jasmine.model.ScriptSearch;
+import com.github.searls.jasmine.model.ImmutableScriptSearch;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -46,6 +46,7 @@ public class FindsScriptLocationsInDirectoryTest {
 
   @Mock
   private ScansDirectory scansDirectory;
+
   @Mock
   private ConvertsFileToUriString convertsFileToUriString;
 
@@ -62,7 +63,9 @@ public class FindsScriptLocationsInDirectoryTest {
 
   @Test
   public void returnsEmptyWhenDirectoryDoesNotExist() throws IOException {
-    List<String> result = subject.find(new ScriptSearch(new File("No way does this file exist"), null, null));
+    List<String> result = subject.find(
+      ImmutableScriptSearch.builder().directory(new File("No way does this file exist")).build()
+    );
 
     assertThat(result).isEmpty();
   }
@@ -73,7 +76,9 @@ public class FindsScriptLocationsInDirectoryTest {
     when(scansDirectory.scan(directory, INCLUDES, EXCLUDES)).thenReturn(asList(FILE_LOCATION));
     when(convertsFileToUriString.convert(new File(directory, FILE_LOCATION))).thenReturn(expected);
 
-    List<String> result = subject.find(new ScriptSearch(directory, INCLUDES, EXCLUDES));
+    List<String> result = subject.find(
+      ImmutableScriptSearch.builder().directory(directory).includes(INCLUDES).excludes(EXCLUDES).build()
+    );
 
     assertThat(result).contains(expected);
   }

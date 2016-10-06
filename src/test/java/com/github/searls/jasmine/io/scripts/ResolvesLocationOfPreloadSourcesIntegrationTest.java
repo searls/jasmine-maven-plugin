@@ -36,7 +36,9 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
   private static final String SOURCE = "source";
   private static final String SEPARATED_DIR = "separatedDir";
 
-  private ResolvesLocationOfPreloadSources subject = new ResolvesLocationOfPreloadSources();
+  private ResolvesLocationOfPreloadSources subject = new ResolvesLocationOfPreloadSources(
+    new ConvertsFileToUriString()
+  );
 
   private CreatesTempDirectories createsTempDirectories = new CreatesTempDirectories();
   private File sourceDir = createsTempDirectories.create(SOURCE);
@@ -109,5 +111,4 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
     assertThat(result).hasSize(1);
     assertThat(result.get(0)).isEqualTo(expected);
   }
-//
 }

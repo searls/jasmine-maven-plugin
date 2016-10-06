@@ -24,26 +24,26 @@
 </head>
 <body>
   <script type="text/javascript">
-    if(window.location.href.indexOf("ManualSpecRunner.html") !== -1) {
+    if(window.location.href.indexOf("SpecRunner.html") !== -1) {
       document.body.appendChild(document.createTextNode("Warning: Opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
     }
-    
+
     var specs = $specsList$;
-				
+
     var configuration = {
       $if(customRunnerConfiguration)$
       $customRunnerConfiguration$
       $endif$
     };
-    
+
     if (!configuration.baseUrl) {
     	configuration.baseUrl = '$sourceDir$';
     }
-    
+
     if (!configuration.paths) {
     	configuration.paths = {};
     }
-    
+
     if (!configuration.paths.specs) {
     	var specDir = '$specDir$';
     	if (!specDir.match(/^file/)) {
@@ -51,9 +51,9 @@
     	}
     	configuration.paths.specs = specDir;
     }
-          
+
     require.config(configuration);
-		
+
     require(specs, function() {
       jasmine.boot();
     });
