@@ -262,7 +262,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    *   &lt;include&gt;vendor/&#42;&#42;/&#42;.js&lt;/include&gt;
    *   &lt;include&gt;myBootstrapFile.js&lt;/include&gt;
    *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
-   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
    * &lt;/sourceIncludes&gt;
    * </pre>
    * <br>
@@ -270,7 +269,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * <pre>
    * &lt;sourceIncludes&gt;
    *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
-   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
    * &lt;/sourceIncludes&gt;
    * </pre>
    *
@@ -296,7 +294,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    *   &lt;include&gt;jasmine-jquery.js&lt;/include&gt;
    *   &lt;include&gt;spec-helper.js&lt;/include&gt;
    *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
-   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
    * &lt;/specIncludes&gt;
    * </pre>
    * <br>
@@ -304,7 +301,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    * <pre>
    * &lt;specIncludes&gt;
    *   &lt;include&gt;&#42;&#42;/&#42;.js&lt;/include&gt;
-   *   &lt;include&gt;&#42;&#42;/&#42;.coffee&lt;/include&gt;
    * &lt;/specIncludes&gt;
    * </pre>
    *
@@ -370,16 +366,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
    */
   @Parameter(property = "jasmine.autoRefreshInterval", defaultValue = "0")
   protected int autoRefreshInterval;
-
-  /**
-   * <p>Control the Coffee Script compilation.  e.g. When using RequireJS the compilation
-   * happens within the Coffee Script AMD loader plugin; we therefore need to disable the
-   * compilation here.</p>
-   *
-   * @since 1.3.1.4
-   */
-  @Parameter(property = "coffeeScriptCompilationEnabled", defaultValue = "true")
-  protected boolean coffeeScriptCompilationEnabled;
 
   /**
    * <p>Type of {@link org.eclipse.jetty.server.Connector} to use on the jetty server.</p>
@@ -498,11 +484,6 @@ public abstract class AbstractJasmineMojo extends AbstractMojo implements Jasmin
   @Override
   public int getAutoRefreshInterval() {
     return this.autoRefreshInterval;
-  }
-
-  @Override
-  public boolean isCoffeeScriptCompilationEnabled() {
-    return this.coffeeScriptCompilationEnabled;
   }
 
   public MavenProject getMavenProject() {

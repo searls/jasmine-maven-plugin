@@ -1,7 +1,7 @@
 Feature: running a local server
 
   In order to do all sorts of wonderful things:
-    like test ajax in browsers that don't like file:// ajax or load coffeescript
+    like test ajax in browsers that don't like file:// ajax
     I want to be able to hit a server and see mah specs
 
   @server

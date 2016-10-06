@@ -19,8 +19,6 @@
  */
 package com.github.searls.jasmine.server;
 
-import com.github.searls.jasmine.coffee.DetectsCoffee;
-import com.github.searls.jasmine.coffee.HandlesRequestsForCoffee;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.runner.CreatesRunner;
 import org.apache.maven.plugin.logging.Log;
@@ -38,22 +36,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 //@PrepareForTest(JasmineResourceHandler.class)
 public class JasmineResourceHandlerTest {
+
   private static final String TARGET = "some url";
 
   @Mock
-  private DetectsCoffee detectsCoffee;
-  @Mock
-  private HandlesRequestsForCoffee handlesRequestsForCoffee;
-  @Mock
   private CreatesRunner createsRunner;
+
   @Mock
   private JasmineConfiguration configuration;
 
@@ -73,19 +67,13 @@ public class JasmineResourceHandlerTest {
 
   @Before
   public void before() {
-    subject = new JasmineResourceHandler(createsRunner, handlesRequestsForCoffee, detectsCoffee) {
+    subject = new JasmineResourceHandler(createsRunner) {
       @Override
       protected Resource getResource(HttpServletRequest request) throws MalformedURLException {
         return JasmineResourceHandlerTest.this.resource;
       }
     };
   }
-
-  //  @Test
-  //  public void constructorSetsLoggingLow() throws Exception {
-  //    new JasmineResourceHandler(createsRunner);
-  //    assertThat(Whitebox.getInternalState(createsRunner, Log.class), is(instanceOf(NullLog.class)));
-  //  }
 
   @Test
   public void whenTargetIsSlashThenCreateManualRunner() throws IOException, ServletException {
@@ -99,57 +87,6 @@ public class JasmineResourceHandlerTest {
     this.subject.handle("/notSlash", this.baseRequest, this.request, this.response);
 
     verify(this.createsRunner, never()).create();
-  }
-
-  @Test
-  public void whenCoffeeDelegatesToCoffeeHandler() throws IOException, ServletException {
-    when(this.detectsCoffee.detect(TARGET)).thenReturn(true);
-    when(this.resource.exists()).thenReturn(true);
-
-    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
-
-    verify(this.handlesRequestsForCoffee).handle(this.baseRequest, this.response, this.resource);
-  }
-
-  @Test
-  public void whenNotCoffeeDoesNotDelegateToCoffeeHandler() throws IOException, ServletException {
-    when(this.detectsCoffee.detect(TARGET)).thenReturn(false);
-    when(this.resource.exists()).thenReturn(true);
-
-    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
-
-    verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
-  }
-
-  @Test
-  public void whenCoffeeButResourceIsHandledDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
-    when(this.detectsCoffee.detect(TARGET)).thenReturn(true);
-    when(this.resource.exists()).thenReturn(true);
-    when(this.baseRequest.isHandled()).thenReturn(true);
-
-    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
-
-    verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
-  }
-
-  @Test
-  public void whenCoffeeButDoesNotExistDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
-    when(this.detectsCoffee.detect(TARGET)).thenReturn(true);
-    when(this.resource.exists()).thenReturn(false);
-
-    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
-
-    verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
-  }
-
-  @Test
-  public void whenCoffeeButResourceIsNullDoNotDelegateToCoffeeHandler() throws IOException, ServletException {
-    when(this.detectsCoffee.detect(TARGET)).thenReturn(true);
-    this.resource = null;
-
-    this.subject.handle(TARGET, this.baseRequest, this.request, this.response);
-
-    verify(this.handlesRequestsForCoffee, never()).handle(any(Request.class), any(HttpServletResponse.class), any(Resource.class));
   }
 
 }
