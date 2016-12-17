@@ -1,5 +1,6 @@
 package com.github.searls.jasmine.driver;
 
+import com.github.klieber.phantomjs.locate.PhantomJsLocator;
 import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
 import com.github.klieber.phantomjs.locate.RepositoryDetails;
 import com.github.searls.jasmine.mojo.Capability;
@@ -138,6 +139,13 @@ public class WebDriverFactory {
   private WebDriver createPhantomJsWebDriver() throws Exception {
     DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
     customizeCapabilities(capabilities);
+
+    if (capabilities.getCapability("phantomjs.binary.path") == null) {
+      PhantomJsLocator locator = new PhantomJsLocator(this.phantomJsLocatorOptions, this.repositoryDetails);
+      String phantomJsPath = locator.locate();
+      capabilities.setCapability("phantomjs.binary.path", phantomJsPath);
+    }
+
     return new PhantomJSDriver(capabilities);
   }
 }
