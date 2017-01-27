@@ -26,7 +26,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -59,7 +59,6 @@ public class ConsoleErrorCheckerTest {
   public void setUp() throws Exception {
     subject = new ConsoleErrorChecker();
     when(headWithErrors.getAttribute("jmp_jserror")).thenReturn(ERROR);
-    when(headWithoutErrors.getAttribute("jmp_jserro")).thenReturn("");
   }
 
   @Test

@@ -31,6 +31,7 @@ import com.github.searls.jasmine.model.ScriptSearch;
 import com.github.searls.jasmine.runner.ReporterType;
 import com.github.searls.jasmine.runner.SpecRunnerTemplate;
 import com.github.searls.jasmine.thirdpartylibs.ProjectClassLoaderFactory;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Optional;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -454,5 +455,49 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
       .includes(this.sourceIncludes)
       .excludes(this.sourceExcludes)
       .build();
+  }
+
+  @VisibleForTesting
+  void setJsSrcDir(File jsSrcDir) {
+    this.jsSrcDir = jsSrcDir;
+  }
+
+  @VisibleForTesting
+  void setJsTestSrcDir(File jsTestSrcDir) {
+    this.jsTestSrcDir = jsTestSrcDir;
+  }
+
+  @VisibleForTesting
+  void setJasmineTargetDir(File jasmineTargetDir) {
+    this.jasmineTargetDir = jasmineTargetDir;
+  }
+
+  @VisibleForTesting
+  void setSourceEncoding(String sourceEncoding) {
+    this.sourceEncoding = sourceEncoding;
+  }
+
+  @VisibleForTesting
+  void setCustomRunnerConfiguration(String customRunnerConfiguration) {
+    this.customRunnerConfiguration = customRunnerConfiguration;
+  }
+
+  @VisibleForTesting
+  void setCustomRunnerTemplate(String customRunnerTemplate) {
+    this.customRunnerTemplate = customRunnerTemplate;
+  }
+
+  @VisibleForTesting
+  void setReporters(List<Reporter> reporters) {
+    this.reporters = reporters;
+  }
+
+  @VisibleForTesting
+  void setFileSystemReporters(List<FileSystemReporter> fileSystemReporters) {
+    this.fileSystemReporters = fileSystemReporters;
+  }
+
+  void setAutoRefreshInterval(int autoRefreshInterval) {
+    this.autoRefreshInterval = autoRefreshInterval;
   }
 }

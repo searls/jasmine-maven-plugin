@@ -30,8 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Properties;
 
@@ -67,7 +66,7 @@ public class TestMojoTest {
 
   @Test
   public void testExecuteIfSkipIsTrue() throws Exception {
-    Whitebox.setInternalState(this.mojo, "skipTests", true);
+    this.mojo.setSkipTests(true);
     this.mojo.execute();
   }
 }

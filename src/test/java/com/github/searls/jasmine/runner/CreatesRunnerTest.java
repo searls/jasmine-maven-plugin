@@ -30,7 +30,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -44,8 +44,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class CreatesRunnerTest {
 
-  private static final String SOURCE_DIR = "sauces";
-  private static final String SPEC_DIR = "specks";
   private static final String SOURCE_ENCODING = "UTF-Pandaz";
   private static final String MANUAL_RUNNER_NAME = "Jerry. That's a nice name.";
 
@@ -97,19 +95,13 @@ public class CreatesRunnerTest {
     when(this.config.getSpecs()).thenReturn(this.specs);
     when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.config.getJasmineTargetDir()).thenReturn(this.jasmineTargetDir);
-    when(this.config.getReporterType()).thenReturn(ReporterType.HtmlReporter);
     when(this.config.getSpecRunnerHtmlFileName()).thenReturn(MANUAL_RUNNER_NAME);
   }
 
   @Before
   public void fakeOutDirectories() {
     when(this.sources.getDirectory()).thenReturn(this.sourceDirectory);
-    when(this.sourceDirectory.getAbsolutePath()).thenReturn(SOURCE_DIR);
-    when(this.sourceDirectory.exists()).thenReturn(true);
-
     when(this.specs.getDirectory()).thenReturn(this.specDirectory);
-    when(this.specDirectory.getAbsolutePath()).thenReturn(SPEC_DIR);
-    when(this.specDirectory.exists()).thenReturn(true);
   }
 
   @Before

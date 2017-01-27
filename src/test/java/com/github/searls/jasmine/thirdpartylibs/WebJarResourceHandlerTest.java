@@ -25,7 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,7 +77,6 @@ public class WebJarResourceHandlerTest {
   public void whenResourceIsMissingThenDoNotProcess() throws Exception {
     // given
     when(baseRequest.isHandled()).thenReturn(false);
-    when(response.getWriter()).thenReturn(writer);
 
     // when
     subject.handle("/notExistingResource", baseRequest, request, response);

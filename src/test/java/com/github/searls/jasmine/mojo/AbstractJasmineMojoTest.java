@@ -38,8 +38,7 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,14 +97,14 @@ public class AbstractJasmineMojoTest {
   private ReporterRetriever reporterRetriever;
 
   @InjectMocks
-  private MockJasmineMojo subject;
+  private MockJasmineMojo mojo;
 
   @Before
   public void before() throws MojoExecutionException {
-    Whitebox.setInternalState(this.subject, "sourceEncoding", ENCODING);
-    Whitebox.setInternalState(this.subject, "jasmineTargetDir", targetDir);
-    Whitebox.setInternalState(this.subject, "jsSrcDir", sourceDirectory);
-    Whitebox.setInternalState(this.subject, "jsTestSrcDir", specDirectory);
+    mojo.setJsSrcDir(sourceDirectory);
+    mojo.setJsTestSrcDir(specDirectory);
+    mojo.setJasmineTargetDir(targetDir);
+    mojo.setSourceEncoding(ENCODING);
 
     when(mavenProject.getBasedir()).thenReturn(baseDir);
 
@@ -116,48 +115,48 @@ public class AbstractJasmineMojoTest {
   @Test
   public void rethrowsMojoFailureExceptions() throws Exception {
     MojoFailureException mojoException = new MojoFailureException("mock exception");
-    this.subject.setExceptionToThrow(mojoException);
+    mojo.setExceptionToThrow(mojoException);
     this.expectedException.expect(equalTo(mojoException));
-    this.subject.execute();
+    mojo.execute();
   }
 
   @Test
   public void wrapsNonMojoFailureExceptions() throws Exception {
     IOException ioException = new IOException("mock exception");
-    this.subject.setExceptionToThrow(ioException);
+    mojo.setExceptionToThrow(ioException);
     this.expectedException.expect(MojoExecutionException.class);
     this.expectedException.expectMessage("The jasmine-maven-plugin encountered an exception:");
     this.expectedException.expectCause(equalTo(ioException));
-    this.subject.execute();
+    mojo.execute();
   }
 
   @Test
   public void setsSourceIncludes() throws Exception {
-    this.subject.execute();
+    mojo.execute();
     assertThat(getJasmineConfig().getSources().getIncludes()).contains("**" + File.separator + "*.js");
   }
 
   @Test
   public void setsSourceExcludes() throws Exception {
-    this.subject.execute();
+    mojo.execute();
     assertThat(getJasmineConfig().getSources().getExcludes()).isEmpty();
   }
 
   @Test
   public void setsSpecIncludes() throws Exception {
-    this.subject.execute();
+    mojo.execute();
     assertThat(getJasmineConfig().getSpecs().getIncludes()).contains("**" + File.separator + "*.js");
   }
 
   @Test
   public void setsSpecExcludes() throws Exception {
-    this.subject.execute();
+    mojo.execute();
     assertThat(getJasmineConfig().getSpecs().getExcludes()).isEmpty();
   }
 
   @Test
   public void testGetSourceEncoding() throws MojoFailureException, MojoExecutionException {
-    this.subject.execute();
+    mojo.execute();
     assertThat(getJasmineConfig().getSourceEncoding()).isEqualTo(ENCODING);
   }
 
@@ -169,7 +168,7 @@ public class AbstractJasmineMojoTest {
                                                  FileResourceCreationException {
     File configFile = mock(File.class);
 
-    Whitebox.setInternalState(this.subject, CUSTOM_RUNNER_CONFIGURATION_PARAM, CUSTOM_RUNNER_CONFIGURATION);
+    mojo.setCustomRunnerConfiguration(CUSTOM_RUNNER_CONFIGURATION);
 
     when(resourceRetriever.getResourceAsFile(
       CUSTOM_RUNNER_CONFIGURATION_PARAM,
@@ -177,7 +176,7 @@ public class AbstractJasmineMojoTest {
       mavenProject
     )).thenReturn(Optional.of(configFile));
 
-    subject.execute();
+    mojo.execute();
 
     assertThat(getJasmineConfig().getCustomRunnerConfiguration())
       .isPresent()
@@ -188,12 +187,12 @@ public class AbstractJasmineMojoTest {
   public void testGetCustomRunnerTemplate() throws Exception {
     File templateFile = mock(File.class);
 
-    Whitebox.setInternalState(this.subject, CUSTOM_RUNNER_TEMPLATE_PARAM, CUSTOM_RUNNER_TEMPLATE);
+    mojo.setCustomRunnerTemplate(CUSTOM_RUNNER_TEMPLATE);
 
     when(resourceRetriever.getResourceAsFile(CUSTOM_RUNNER_TEMPLATE_PARAM, CUSTOM_RUNNER_TEMPLATE, mavenProject))
       .thenReturn(Optional.of(templateFile));
 
-    subject.execute();
+    mojo.execute();
 
     assertThat(getJasmineConfig().getCustomRunnerTemplate())
       .isPresent()
@@ -207,10 +206,10 @@ public class AbstractJasmineMojoTest {
                                  MojoFailureException,
                                  FileResourceCreationException {
     List<Reporter> reporters = Collections.singletonList(mock(Reporter.class));
-    Whitebox.setInternalState(subject, "reporters", reporters);
+    mojo.setReporters(reporters);
     when(reporterRetriever.retrieveReporters(reporters, mavenProject)).thenReturn(reporters);
 
-    subject.execute();
+    mojo.execute();
 
     assertThat(getJasmineConfig().getReporters()).isEqualTo(reporters);
   }
@@ -222,10 +221,11 @@ public class AbstractJasmineMojoTest {
                                            MojoFailureException,
                                            FileResourceCreationException {
     List<FileSystemReporter> fsReporters = Collections.singletonList(mock(FileSystemReporter.class));
-    Whitebox.setInternalState(subject, "fileSystemReporters", fsReporters);
+    mojo.setFileSystemReporters(fsReporters);
+
     when(reporterRetriever.retrieveFileSystemReporters(fsReporters, targetDir, mavenProject)).thenReturn(fsReporters);
 
-    subject.execute();
+    mojo.execute();
 
     assertThat(getJasmineConfig().getFileSystemReporters()).isEqualTo(fsReporters);
   }
@@ -233,24 +233,24 @@ public class AbstractJasmineMojoTest {
   @Test
   public void testGetBaseDir() throws MojoFailureException, MojoExecutionException {
     when(this.mavenProject.getBasedir()).thenReturn(this.baseDir);
-    subject.execute();
+    mojo.execute();
     assertThat(getJasmineConfig().getBasedir()).isEqualTo(this.baseDir);
   }
 
   @Test
   public void testGetMavenProject() {
-    Assertions.assertThat(this.subject.getProject()).isEqualTo(this.mavenProject);
+    Assertions.assertThat(mojo.getProject()).isEqualTo(this.mavenProject);
   }
 
   @Test
   public void testGetAutoRefreshInterval() throws MojoFailureException, MojoExecutionException {
-    Whitebox.setInternalState(this.subject, "autoRefreshInterval", 5);
-    subject.execute();
+    mojo.setAutoRefreshInterval(5);
+    mojo.execute();
     Assertions.assertThat(getJasmineConfig().getAutoRefreshInterval()).isEqualTo(5);
   }
 
   private JasmineConfiguration getJasmineConfig() {
-    return this.subject.getJasmineConfiguration();
+    return mojo.getJasmineConfiguration();
   }
 
   static class MockJasmineMojo extends AbstractJasmineMojo {

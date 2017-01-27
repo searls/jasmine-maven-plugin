@@ -24,7 +24,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.File;
 import java.net.URI;
@@ -81,9 +81,6 @@ public class BasicScriptResolverTest {
   public void testGetSourceDirectory() {
     when(sourceDirectory.toURI()).thenReturn(this.sourceURI);
 
-    when(sourceDirectory.canRead()).thenReturn(true);
-    when(specDirectory.canRead()).thenReturn(true);
-
     when(this.sourceScriptSearch.getDirectory()).thenReturn(sourceDirectory);
     when(this.specScriptSearch.getDirectory()).thenReturn(specDirectory);
 
@@ -102,9 +99,6 @@ public class BasicScriptResolverTest {
   @Test
   public void testGetSpecDirectory() {
     when(specDirectory.toURI()).thenReturn(this.specURI);
-
-    when(sourceDirectory.canRead()).thenReturn(true);
-    when(specDirectory.canRead()).thenReturn(true);
 
     when(this.sourceScriptSearch.getDirectory()).thenReturn(sourceDirectory);
     when(this.specScriptSearch.getDirectory()).thenReturn(specDirectory);
