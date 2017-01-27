@@ -20,18 +20,17 @@
 package com.github.searls.jasmine.runner;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.io.IoUtilities;
 import com.github.searls.jasmine.io.scripts.FindsScriptLocationsInDirectory;
 import com.github.searls.jasmine.io.scripts.ResolvesLocationOfPreloadSources;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.model.ScriptSearch;
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,13 +38,10 @@ import java.io.IOException;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
-import static org.powermock.api.mockito.PowerMockito.verifyStatic;
-import static org.powermock.api.mockito.PowerMockito.when;
-import static org.powermock.api.mockito.PowerMockito.whenNew;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({CreatesRunner.class, FileUtils.class})
+@RunWith(MockitoJUnitRunner.class)
 public class CreatesRunnerTest {
 
   private static final String SOURCE_DIR = "sauces";
@@ -89,13 +85,14 @@ public class CreatesRunnerTest {
   @Mock
   private JasmineConfiguration config;
 
+  @Mock
+  private IoUtilities ioUtilities;
+
   @InjectMocks
   private CreatesRunner subject;
 
   @Before
   public void before() {
-    mockStatic(FileUtils.class);
-
     when(this.config.getSources()).thenReturn(this.sources);
     when(this.config.getSpecs()).thenReturn(this.specs);
     when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
@@ -117,8 +114,7 @@ public class CreatesRunnerTest {
 
   @Before
   public void stubConstructionOfExistingRunnerFile() throws Exception {
-    whenNew(File.class).withParameterTypes(File.class, String.class)
-      .withArguments(this.jasmineTargetDir, MANUAL_RUNNER_NAME)
+    when(ioUtilities.createFile(this.jasmineTargetDir, MANUAL_RUNNER_NAME))
       .thenReturn(this.runnerDestination);
   }
 
@@ -138,28 +134,26 @@ public class CreatesRunnerTest {
 
     this.subject.create(config);
 
-    verifyStatic();
-    FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
+    verify(ioUtilities).writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
   }
 
   @Test
   public void whenRunnerExistsAndDiffersThenWriteNewOne() throws IOException {
     String expected = "HTRML!!!!111!111oneoneone";
     when(this.runnerDestination.exists()).thenReturn(true);
-    when(FileUtils.readFileToString(this.runnerDestination)).thenReturn("old and crusty runner");
+    when(ioUtilities.readFileToString(this.runnerDestination)).thenReturn("old and crusty runner");
     when(this.specRunnerHtmlGenerator.generate(htmlGeneratorConfiguration)).thenReturn(expected);
 
     this.subject.create(config);
 
-    verifyStatic();
-    FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
+    verify(ioUtilities).writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
   }
 
   @Test
   public void whenRunnerExistsAndIsSameThenDoNothing() throws IOException {
     String existing = "HTRML!!!!111!111oneoneone";
     when(this.runnerDestination.exists()).thenReturn(true);
-    when(FileUtils.readFileToString(this.runnerDestination)).thenReturn(existing);
+    when(ioUtilities.readFileToString(this.runnerDestination)).thenReturn(existing);
     when(this.specRunnerHtmlGenerator.generate(htmlGeneratorConfiguration)).thenReturn(existing);
 
     this.subject.create(config);
@@ -171,17 +165,15 @@ public class CreatesRunnerTest {
   public void whenExistingRunnerFailsToLoadThenWriteNewOne() throws IOException {
     String expected = "HTRML!!!!111!111oneoneone";
     when(this.runnerDestination.exists()).thenReturn(true);
-    when(FileUtils.readFileToString(this.runnerDestination)).thenThrow(new IOException());
+    when(ioUtilities.readFileToString(this.runnerDestination)).thenThrow(new IOException());
     when(this.specRunnerHtmlGenerator.generate(htmlGeneratorConfiguration)).thenReturn(expected);
 
     this.subject.create(config);
 
-    verifyStatic();
-    FileUtils.writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
+    verify(ioUtilities).writeStringToFile(this.runnerDestination, expected, SOURCE_ENCODING);
   }
 
   private void neverWriteAFile() throws IOException {
-    verifyStatic(never());
-    FileUtils.writeStringToFile(any(File.class), anyString(), anyString());
+    verify(ioUtilities, never()).writeStringToFile(any(File.class), anyString(), anyString());
   }
 }

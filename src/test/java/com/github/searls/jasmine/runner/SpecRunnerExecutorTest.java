@@ -27,10 +27,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.File;
 import java.net.URL;
@@ -41,8 +39,7 @@ import static org.mockito.Matchers.contains;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(URL.class)
+@RunWith(MockitoJUnitRunner.class)
 public class SpecRunnerExecutorTest {
 
   private static final int TIMEOUT = 2;
@@ -79,7 +76,7 @@ public class SpecRunnerExecutorTest {
   public void setUp() throws Exception {
     subject = new SpecRunnerExecutor(ioUtilities, webDriverWaiter, consoleErrorChecker);
 
-    runnerUrl = PowerMockito.mock(URL.class);
+    runnerUrl = this.getClass().getResource("/ioUtils.txt");
 
     when(ioUtilities.readFileToString(reporter)).thenReturn("reporter");
     when(ioUtilities.readFileToString(junitXmlReporter)).thenReturn("reporter");

@@ -13,12 +13,20 @@ import java.nio.charset.StandardCharsets;
 public class IoUtilities {
 
 
+  public File createFile(File parent, String child) {
+    return new File(parent, child);
+  }
+
   public String readFileToString(final File file) throws IOException {
     return FileUtils.readFileToString(file, StandardCharsets.UTF_8);
   }
 
   public void writeStringToFile(final File file, final String contents) throws IOException {
     FileUtils.writeStringToFile(file, contents, StandardCharsets.UTF_8);
+  }
+
+  public void writeStringToFile(final File file, final String contents, String encoding) throws IOException {
+    FileUtils.writeStringToFile(file, contents, encoding);
   }
 
   public String toString(InputStream inputStream) throws IOException {

@@ -20,12 +20,12 @@
 package com.github.searls.jasmine.runner;
 
 import com.github.searls.jasmine.config.JasmineConfiguration;
+import com.github.searls.jasmine.io.IoUtilities;
 import com.github.searls.jasmine.io.scripts.BasicScriptResolver;
 import com.github.searls.jasmine.io.scripts.ContextPathScriptResolver;
 import com.github.searls.jasmine.io.scripts.FindsScriptLocationsInDirectory;
 import com.github.searls.jasmine.io.scripts.ResolvesLocationOfPreloadSources;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,16 +44,19 @@ public class CreatesRunner {
   private final HtmlGeneratorConfigurationFactory htmlGeneratorConfigurationFactory;
   private final FindsScriptLocationsInDirectory findsScriptLocation;
   private final ResolvesLocationOfPreloadSources resolvesPreloadSources;
+  private final IoUtilities ioUtilities;
 
   @Inject
   public CreatesRunner(SpecRunnerHtmlGenerator specRunnerHtmlGenerator,
                        HtmlGeneratorConfigurationFactory htmlGeneratorConfigurationFactory,
                        FindsScriptLocationsInDirectory findsScriptLocation,
-                       ResolvesLocationOfPreloadSources resolvesPreloadSources) {
+                       ResolvesLocationOfPreloadSources resolvesPreloadSources,
+                       IoUtilities ioUtilities) {
     this.specRunnerHtmlGenerator = specRunnerHtmlGenerator;
     this.htmlGeneratorConfigurationFactory = htmlGeneratorConfigurationFactory;
     this.findsScriptLocation = findsScriptLocation;
     this.resolvesPreloadSources = resolvesPreloadSources;
+    this.ioUtilities = ioUtilities;
   }
 
   public void create(JasmineConfiguration config) throws IOException {
@@ -63,7 +66,7 @@ public class CreatesRunner {
       htmlGeneratorConfigurationFactory.create(config, resolver)
     );
 
-    File runnerDestination = new File(config.getJasmineTargetDir(), config.getSpecRunnerHtmlFileName());
+    File runnerDestination = ioUtilities.createFile(config.getJasmineTargetDir(), config.getSpecRunnerHtmlFileName());
     if (this.newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
       this.saveRunner(runnerDestination, newRunnerHtml, config.getSourceEncoding());
     } else {
@@ -91,7 +94,7 @@ public class CreatesRunner {
     String existingRunner = null;
     try {
       if (destination.exists()) {
-        existingRunner = FileUtils.readFileToString(destination);
+        existingRunner = ioUtilities.readFileToString(destination);
       }
     } catch (IOException e) {
       LOGGER.warn("An error occurred while trying to open an existing manual spec runner. Continuing.");
@@ -104,6 +107,6 @@ public class CreatesRunner {
   }
 
   private void saveRunner(File runnerDestination, String newRunner, String encoding) throws IOException {
-    FileUtils.writeStringToFile(runnerDestination, newRunner, encoding);
+    ioUtilities.writeStringToFile(runnerDestination, newRunner, encoding);
   }
 }

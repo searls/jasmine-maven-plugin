@@ -4,14 +4,12 @@ import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.IoUtilities;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.google.common.base.Optional;
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,10 +17,8 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(FileUtils.class)
+@RunWith(MockitoJUnitRunner.class)
 public class HtmlGeneratorConfigurationFactoryTest {
 
   private static final String CUSTOM_TEMPLATE_STRING = "custom-template";
@@ -51,7 +47,6 @@ public class HtmlGeneratorConfigurationFactoryTest {
 
   @Before
   public void before() throws IOException {
-    mockStatic(FileUtils.class);
     when(ioUtilities.readFileToString(customTemplateFile)).thenReturn(CUSTOM_TEMPLATE_STRING);
     when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
     when(ioUtilities.resourceToString(SpecRunnerTemplate.DEFAULT.getTemplate())).thenReturn(RUNNER_TEMPLATE_STRING);
