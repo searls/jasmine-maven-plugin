@@ -17,6 +17,11 @@
       <comments>Copyright Justin Searls</comments>
     </license>
   </licenses>
+  <organization>
+    <name>Justin Searls</name>
+    <url>https://twitter.com/searls</url>
+  </organization>
+  <inceptionYear>2010</inceptionYear>
   <developers>
     <developer>
       <id>searls</id>
@@ -392,6 +397,23 @@
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
           <version>0.7.7.201606060606</version>
+        </plugin>
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>1.12</version>
+          <configuration>
+            <licenseName>apache-v2</licenseName>
+            <licenseResolver>${project.baseUri}src/main/config/license</licenseResolver>
+            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+            <roots>
+              <root>src/main/java</root>
+              <root>src/test/java</root>
+            </roots>
+            <includes>
+              <include>**/*.java</include>
+            </includes>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>
