@@ -1,11 +1,20 @@
 language: java
+sudo: false
+addons:
+  sonarqube:
+    organization: "klieber-github"
+    token:
+      secure: "DQAuVUJIQG3w9TlsIU24rcCjZUnqtkGa2uFWjyN4dYL/VRZp9J8SYhpsqef8dOtGgzPVsxyRumqhXwFo1/h1HJp1O9d8IVMC+AGgzLZeH1kApODcHNTIaAMs15h+LDHwKSODMV9wjlssL3q5qD97DbjBbjOrQymkGyga4/gNc6Q="
 jdk:
-  - oraclejdk7
   - oraclejdk8
 before_install:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
 install: travis_retry bundle install
-script: bundle exec rake cucumber
+script: bundle exec rake cucumber && mvn sonar:sonar
 after_success:
   - mvn clean test jacoco:report coveralls:report
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
