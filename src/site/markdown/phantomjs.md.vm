@@ -84,7 +84,7 @@ Here's an example using `phantomjs-maven-plugin` with the `jasmine-maven-plugin`
         </execution>
       </executions>
       <configuration>
-        <version>1.9.2</version>
+        <version>2.1.1</version>
       </configuration>
     </plugin>
     <plugin>
