@@ -1,0 +1,53 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.github.searls</groupId>
+    <artifactId>jasmine-example-superpom</artifactId>
+    <version>%{project.version}</version>
+  </parent>
+  <artifactId>jasmine-webapp-jscover-integration</artifactId>
+  <packaging>war</packaging>
+  <name>Example using Jasmine Maven Plugin with JSCover Proxy Maven Plugin</name>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>com.github.searls</groupId>
+        <artifactId>jasmine-maven-plugin</artifactId>
+        <version>%{project.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <keepServerAlive>true</keepServerAlive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>ch.digitalfondue.jscover</groupId>
+        <artifactId>jscoverproxy-maven-plugin</artifactId>
+        <version>1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>coverage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <baseUrl>http://localhost:${jasmine.serverPort}</baseUrl>
+          <jsSrcDir>src/main/javascript</jsSrcDir>
+          <outputDir>${project.build.directory}</outputDir>
+          <noInstruments>
+            <pattern>classpath/</pattern>
+            <pattern>webjars/</pattern>
+            <pattern>spec/</pattern>
+          </noInstruments>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
