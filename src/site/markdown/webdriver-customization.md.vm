@@ -14,7 +14,7 @@ Here is an example using FirefoxDriver:
     <plugin>
       <groupId>${project.groupId}</groupId>
       <artifactId>${project.artifactId}</artifactId>
-      <version>${currentStableVersion}<version>
+      <version>${currentStableVersion}</version>
       <executions>
         <execution>
           <goals>
@@ -85,7 +85,7 @@ Configuring the default HtmlUnitDriver to use a proxy:
 <plugin>
   <groupId>${project.groupId}</groupId>
   <artifactId>${project.artifactId}</artifactId>
-  <version>${currentStableVersion}<version>
+  <version>${currentStableVersion}</version>
   <executions>
     <execution>
       <goals>
@@ -112,7 +112,7 @@ Configuring PhantomJSDriver with custom binary path and caching settings:
 <plugin>
   <groupId>${project.groupId}</groupId>
   <artifactId>${project.artifactId}</artifactId>
-  <version>${currentStableVersion}<version>
+  <version>${currentStableVersion}</version>
   <executions>
     <execution>
       <goals>
