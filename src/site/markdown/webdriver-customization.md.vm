@@ -19,7 +19,7 @@ Here is an example using FirefoxDriver:
     <plugin>
       <groupId>${project.groupId}</groupId>
       <artifactId>${project.artifactId}</artifactId>
-      <version>${currentStableVersion}<version>
+      <version>${currentStableVersion}</version>
       <executions>
         <execution>
           <goals>
@@ -94,7 +94,7 @@ plugin. If you still need HtmlUnit then you can use it by configuring your build
 <plugin>
   <groupId>${project.groupId}</groupId>
   <artifactId>${project.artifactId}</artifactId>
-  <version>${currentStableVersion}<version>
+  <version>${currentStableVersion}</version>
   <executions>
     <execution>
       <goals>

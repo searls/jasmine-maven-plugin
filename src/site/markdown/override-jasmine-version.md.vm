@@ -6,7 +6,7 @@ The `${project.artifactId}` comes with Jasmine `${jasmineVersion}` but you can e
 <plugin>
   <groupId>com.github.searls</groupId>
   <artifactId>jasmine-maven-plugin</artifactId>
-  <version>${currentStableVersion}<version>
+  <version>${currentStableVersion}</version>
   <executions>
     <execution>
       <goals>

@@ -9,7 +9,7 @@ Here is an example configuration:
 <plugin>
   <groupId>${project.groupId}</groupId>
   <artifactId>${project.artifactId}</artifactId>
-  <version>${currentStableVersion}<version>
+  <version>${currentStableVersion}</version>
   <executions>
     <execution>
       <goals>
@@ -126,7 +126,7 @@ The configuration for the template would just look something like this:
 <plugin>
   <groupId>${project.groupId}</groupId>
   <artifactId>${project.artifactId}</artifactId>
-  <version>${currentStableVersion}<version>
+  <version>${currentStableVersion}</version>
   <executions>
     <execution>
       <goals>

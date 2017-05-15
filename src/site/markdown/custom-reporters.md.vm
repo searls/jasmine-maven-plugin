@@ -18,7 +18,7 @@ Here is an example configuration:
     <plugin>
       <groupId>${project.groupId}</groupId>
       <artifactId>${project.artifactId}</artifactId>
-      <version>${currentStableVersion}<version>
+      <version>${currentStableVersion}</version>
       <executions>
         <execution>
           <goals>

@@ -16,7 +16,7 @@ Here is an example configuration:
     <plugin>
       <groupId>${project.groupId}</groupId>
       <artifactId>${project.artifactId}</artifactId>
-      <version>${currentStableVersion}<version>
+      <version>${currentStableVersion}</version>
       <executions>
         <execution>
           <goals>
@@ -39,7 +39,7 @@ The above configuration assumes that the `phantomjs` binary is on your systems `
     <plugin>
       <groupId>${project.groupId}</groupId>
       <artifactId>${project.artifactId}</artifactId>
-      <version>${currentStableVersion}<version>
+      <version>${currentStableVersion}</version>
       <executions>
         <execution>
           <goals>
@@ -90,7 +90,7 @@ Here's an example using `phantomjs-maven-plugin` with the `jasmine-maven-plugin`
     <plugin>
       <groupId>${project.groupId}</groupId>
       <artifactId>${project.artifactId}</artifactId>
-      <version>${currentStableVersion}<version>
+      <version>${currentStableVersion}</version>
       <executions>
         <execution>
           <goals>
