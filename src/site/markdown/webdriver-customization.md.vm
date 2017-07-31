@@ -138,3 +138,38 @@ Configuring PhantomJSDriver with custom binary path and caching settings:
   </configuration>
 </plugin>
 ```
+
+Configure Chrome Driver for running chrome in headless mode
+
+```xml
+<plugin>
+  <groupId>${project.groupId}</groupId>
+  <artifactId>${project.artifactId}</artifactId>
+  <version>${currentStableVersion}<version>
+  <executions>
+    <execution>
+      <goals>
+        <goal>test</goal>
+      </goals>
+    </execution>
+  </executions>
+	<configuration>
+    <webDriverClassName>org.openqa.selenium.chrome.ChromeDriver</webDriverClassName>
+		<webDriverCapabilities>
+			<capability>
+				<name>browserName</name>
+				<value>chrome</value>
+			</capability>
+			<capability>
+				<name>chromeOptions</name>
+				<value implementation="org.openqa.selenium.chrome.ChromeOptions" >
+					<args>
+						<value>--headless</value>
+						<value>--disable-gpu</value>
+					</args>
+				</value>
+			</capability>
+		</webDriverCapabilities>
+	</configuration>
+</plugin>
+```
