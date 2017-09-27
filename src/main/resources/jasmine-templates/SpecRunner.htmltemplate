@@ -13,7 +13,7 @@
         if (jserror) {
           jserror += ':!:';
         }
-        jserror += msg;
+        jserror += msg + ' (' + url + ':' + line + ')';
         document.head.setAttribute('jmp_jserror',jserror);
       }
     };
