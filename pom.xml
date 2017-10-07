@@ -141,10 +141,10 @@
     <url>https://travis-ci.org/searls/jasmine-maven-plugin</url>
   </ciManagement>
   <properties>
-    <jetty.version>9.2.19.v20160908</jetty.version>
-    <selenium.version>2.53.1</selenium.version>
+    <jetty.version>9.4.5.v20170502</jetty.version>
+    <selenium.version>3.6.0</selenium.version>
     <jasmine.version>2.4.1</jasmine.version>
-    <htmlunit.version>2.19</htmlunit.version>
+    <htmlunit.version>2.27</htmlunit.version>
     <mockito.version>2.6.8</mockito.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,7 +19,7 @@
  */
 package com.github.searls.jasmine.runner;
 
-import com.google.common.base.Predicate;
+import com.google.common.base.Function;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -51,9 +51,9 @@ class WebDriverWaiter {
                                     final boolean debug) throws InterruptedException {
     final JavascriptExecutor executor = (JavascriptExecutor) driver;
     try {
-      new WebDriverWait(driver, timeout, 1000).until(new Predicate<WebDriver>() {
+      new WebDriverWait(driver, timeout, 1000).until(new Function<WebDriver, Boolean>() {
         @Override
-        public boolean apply(WebDriver input) {
+        public Boolean apply(WebDriver input) {
           return executionFinished(executor);
         }
       });
