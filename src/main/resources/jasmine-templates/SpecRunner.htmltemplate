@@ -21,7 +21,7 @@
   $cssDependencies$
   $javascriptDependencies$
   <script type="text/javascript">
-    window.onload = jasmine.boot;
+    //window.onload = jasmine.boot;
   </script>
   $allScriptTags$
 </head>
