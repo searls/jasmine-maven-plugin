@@ -1,5 +1,4 @@
 language: java
-dist: trusty
 sudo: false
 addons:
   sonarqube:
@@ -14,7 +13,6 @@ script: bundle exec rake cucumber && mvn sonar:sonar
 after_success:
   - mvn clean test jacoco:report coveralls:report
 cache:
-  bundler
   directories:
     - '$HOME/.m2/repository'
     - '$HOME/.sonar/cache'
