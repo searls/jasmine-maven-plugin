@@ -4,7 +4,8 @@ addons:
   sonarqube:
     organization: "ndrew-github"
     token:
-      secure: "0e3a878376cb853420f840aef4f2ac6e600045a7"
+      secure: "e51f1b81a7ae4f675afa16b2cc01c137dbcfb901"
 jdk:
   - oraclejdk8
-script: mvn sonar:sonar
+script:
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
