@@ -1,4 +1,5 @@
 language: java
+dist: trusty
 sudo: false
 addons:
   sonarqube:
@@ -8,15 +9,12 @@ addons:
 jdk:
   - oraclejdk8
 before_install:
-  - gem update --system 2.1.11
-  - gem --version
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
 install: travis_retry bundle install
 script: bundle exec rake cucumber && mvn sonar:sonar
 after_success:
   - mvn clean test jacoco:report coveralls:report
 cache:
+  bundler
   directories:
     - '$HOME/.m2/repository'
     - '$HOME/.sonar/cache'
