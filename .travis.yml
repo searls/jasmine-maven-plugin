@@ -2,9 +2,9 @@ language: java
 sudo: false
 addons:
   sonarqube:
-    organization: "klieber-github"
+    organization: "ndrew-github"
     token:
-      secure: "DQAuVUJIQG3w9TlsIU24rcCjZUnqtkGa2uFWjyN4dYL/VRZp9J8SYhpsqef8dOtGgzPVsxyRumqhXwFo1/h1HJp1O9d8IVMC+AGgzLZeH1kApODcHNTIaAMs15h+LDHwKSODMV9wjlssL3q5qD97DbjBbjOrQymkGyga4/gNc6Q="
+      secure: "0e3a878376cb853420f840aef4f2ac6e600045a7"
 jdk:
   - oraclejdk8
 before_install:
