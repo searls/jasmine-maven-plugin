@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -37,14 +37,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static com.github.searls.jasmine.Matchers.containsLinkTagWithSource;
 import static com.github.searls.jasmine.Matchers.containsScriptTagWithSource;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_CSS;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_HTML_JS;
-import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_JS;
+import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.*;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
@@ -150,6 +150,12 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   private HtmlPage getPage(String html) throws Exception {
     MockWebConnection webConnection = new MockWebConnection();
     webConnection.setDefaultResponse(html);
+
+    for (String s : Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_HTMLSPECFILTER_PATCH_JS, JASMINE_BOOT_JS)) {
+      URL url = new URL("http://blah" + s);
+      webConnection.setResponse(url, "", "application/javascript");
+    }
+
     WebClient webClient = new WebClient();
     webClient.setWebConnection(webConnection);
     webClient.getOptions().setThrowExceptionOnScriptError(false);
