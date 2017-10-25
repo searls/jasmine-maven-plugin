@@ -7,12 +7,4 @@ addons:
       secure: "0e3a878376cb853420f840aef4f2ac6e600045a7"
 jdk:
   - oraclejdk8
-before_install:
-install: travis_retry bundle install
-script: bundle exec rake cucumber && mvn sonar:sonar
-after_success:
-  - mvn clean test jacoco:report coveralls:report
-cache:
-  directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.sonar/cache'
+script: mvn sonar:sonar
