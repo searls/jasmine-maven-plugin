@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ScansDirectoryIntegrationTest {
 
   private static final List<String> DEFAULT_EXCLUDES = Collections.EMPTY_LIST;
-  private static final List<String> DEFAULT_INCLUDES = asList("**/*.js");
+  private static final List<String> DEFAULT_INCLUDES = Collections.singletonList("**/*.js");
 
   private ScansDirectory subject = new ScansDirectory();
 
@@ -73,7 +73,7 @@ public class ScansDirectoryIntegrationTest {
     String expected = "pants.js";
     createFile(expected);
 
-    List<String> results = subject.scan(directory, DEFAULT_INCLUDES, asList("pants.js"));
+    List<String> results = subject.scan(directory, DEFAULT_INCLUDES, Collections.singletonList("pants.js"));
 
     assertThat(results).doesNotContain(expected);
   }
@@ -84,7 +84,7 @@ public class ScansDirectoryIntegrationTest {
     String expected = ".svn/logs";
     createFile(expected);
 
-    List<String> results = subject.scan(directory, asList("**"), DEFAULT_EXCLUDES);
+    List<String> results = subject.scan(directory, Collections.singletonList("**"), DEFAULT_EXCLUDES);
 
     assertThat(results).doesNotContain(expected);
   }
@@ -103,7 +103,7 @@ public class ScansDirectoryIntegrationTest {
     createSubDir("c");
     createFile("c/d", "c/a", "b", "a");
 
-    List<String> result = subject.scan(directory, asList("**"), Collections.EMPTY_LIST);
+    List<String> result = subject.scan(directory, Collections.singletonList("**"), Collections.EMPTY_LIST);
 
     assertThat(result)
       .containsExactly("a", "b", "c" + File.separator + "a", "c" + File.separator + "d");
@@ -184,7 +184,7 @@ public class ScansDirectoryIntegrationTest {
   }
 
   private List<String> slashify(String... scripts) {
-    List<String> slashed = new ArrayList<String>();
+    List<String> slashed = new ArrayList<>();
     for (String s : scripts) {
       slashed.add(s.replace('/', File.separatorChar));
     }

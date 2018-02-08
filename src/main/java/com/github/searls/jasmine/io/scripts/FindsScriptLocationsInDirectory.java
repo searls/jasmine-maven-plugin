@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -42,7 +42,7 @@ public class FindsScriptLocationsInDirectory {
   }
 
   public List<String> find(ScriptSearch search) {
-    List<String> scriptLocations = new ArrayList<String>();
+    List<String> scriptLocations = new ArrayList<>();
     if (search.getDirectory().canRead()) {
       for (String script : scansDirectory.scan(search.getDirectory(), search.getIncludes(), search.getExcludes())) {
         scriptLocations.add(convertsFileToUriString.convert(new File(search.getDirectory(), script)));

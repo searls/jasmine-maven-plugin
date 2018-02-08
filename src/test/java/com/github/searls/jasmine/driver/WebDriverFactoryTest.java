@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -33,6 +33,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebDriverFactoryTest {
@@ -50,7 +51,6 @@ public class WebDriverFactoryTest {
 
   @Test
   public void createsQuietHtmlUnitDriver() throws Exception {
-    when(config.getBrowserVersion()).thenReturn("FIREFOX_3_6");
     when(config.getWebDriverClassName()).thenReturn(HtmlUnitDriver.class.getName());
     assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(QuietHtmlUnitDriver.class);
   }
@@ -70,7 +70,7 @@ public class WebDriverFactoryTest {
 
   @Test
   public void enablesJavascriptOnCustomDriver() throws Exception {
-    assertThat(createWebDriverAndReturnCapabilities().isJavascriptEnabled()).isTrue();
+    assertThat(createWebDriverAndReturnCapabilities().is(SUPPORTS_JAVASCRIPT)).isTrue();
   }
 
   @Test
@@ -78,6 +78,7 @@ public class WebDriverFactoryTest {
     Capability capability = new Capability();
     capability.setName("foo");
     capability.setValue("bar");
+
     when(config.getWebDriverCapabilities()).thenReturn(ImmutableList.of(capability));
 
     assertThat(createWebDriverAndReturnCapabilities().getCapability("foo")).isEqualTo("bar");
@@ -86,6 +87,6 @@ public class WebDriverFactoryTest {
   private Capabilities createWebDriverAndReturnCapabilities() throws Exception {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithCapabilities.class.getName());
     CustomDriverWithCapabilities driver = (CustomDriverWithCapabilities) factory.createWebDriver(config);
-    return driver.capabilities;
+    return driver.getCapabilities();
   }
 }

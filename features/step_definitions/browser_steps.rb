@@ -2,7 +2,7 @@
 When /^I run "([^"]*)" in a new process$/ do |command|
   @process = ChildProcess.send(:build,*command.split(' '))
   @process.start
-  sleep 10 
+  sleep 10
 end
 
 

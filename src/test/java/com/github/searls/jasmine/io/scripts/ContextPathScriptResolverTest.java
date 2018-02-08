@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -92,7 +92,7 @@ public class ContextPathScriptResolverTest {
 
   @Test
   public void testGetPreloads() {
-    Set<String> preloads = new HashSet<String>();
+    Set<String> preloads = new HashSet<>();
     preloads.add(BASE_DIRECTORY + "/lib/baseScript");
     preloads.add(SPEC_DIRECTORY + "/specScript");
     preloads.add(SOURCE_DIRECTORY + "/sourceScript");
@@ -103,7 +103,7 @@ public class ContextPathScriptResolverTest {
     when(this.scriptResolver.getSpecDirectory()).thenReturn(SPEC_DIRECTORY);
     when(this.scriptResolver.getPreloads()).thenReturn(preloads);
 
-    Set<String> expected = new HashSet<String>();
+    Set<String> expected = new HashSet<>();
     expected.add(ROOT_CONTEXT_PATH + "/lib/baseScript");
     expected.add(SPEC_CONTEXT_PATH + "/specScript");
     expected.add(SOURCE_CONTEXT_PATH + "/sourceScript");
@@ -113,7 +113,7 @@ public class ContextPathScriptResolverTest {
   }
 
   private static Set<String> setOf(String base, String... strings) {
-    Set<String> set = new HashSet<String>();
+    Set<String> set = new HashSet<>();
     for (String string : strings) {
       set.add(base + "/" + string);
     }

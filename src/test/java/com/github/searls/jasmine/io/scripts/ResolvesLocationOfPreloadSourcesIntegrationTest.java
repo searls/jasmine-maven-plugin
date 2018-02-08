@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,7 +25,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -65,7 +65,7 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
     String expected = "panda";
     new File(sourceDir, expected).createNewFile();
     new File(specDir, expected).createNewFile();
-    List<String> preloadSources = Arrays.asList(expected);
+    List<String> preloadSources = Collections.singletonList(expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
@@ -79,7 +79,7 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
   public void loadsSpecFileWhenItExistsUnderSpec() throws IOException {
     String expected = "panda";
     new File(specDir, expected).createNewFile();
-    List<String> preloadSources = Arrays.asList(expected);
+    List<String> preloadSources = Collections.singletonList(expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
@@ -93,7 +93,7 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
   public void loadsExistentFileWithURIIfItIsNotInEitherSourceAndSpecFolders() throws Exception {
     String expected = "panda";
     new File(separatedDir, expected).createNewFile();
-    List<String> preloadSources = Arrays.asList(separatedDir.getAbsolutePath() + File.separator + expected);
+    List<String> preloadSources = Collections.singletonList(separatedDir.getAbsolutePath() + File.separator + expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 
@@ -104,7 +104,7 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
   @Test
   public void printsAsIsWhenItDoesNotExist() {
     String expected = "telnet://woahItsTelnet";
-    List<String> preloadSources = Arrays.asList(expected);
+    List<String> preloadSources = Collections.singletonList(expected);
 
     List<String> result = subject.resolve(preloadSources, sourceDir, specDir);
 

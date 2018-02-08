@@ -19,21 +19,25 @@
  */
 package com.github.searls.jasmine.driver;
 
-import com.github.klieber.phantomjs.locate.PhantomJsLocator;
-import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
-import com.github.klieber.phantomjs.locate.RepositoryDetails;
 import com.github.searls.jasmine.config.WebDriverConfiguration;
 import com.github.searls.jasmine.mojo.Capability;
+import com.google.common.collect.ImmutableMap;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.codehaus.plexus.util.StringUtils;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import javax.inject.Named;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Creates a WebDriver for TestMojo using configured properties.
@@ -41,68 +45,96 @@ import java.util.List;
 @Named
 public class WebDriverFactory {
 
-  private static final String PHANTOMJS_BINARY_PATH = "phantomjs.binary.path";
+  private static final Map<String, Function<WebDriverConfiguration, WebDriver>> SUPPORTED_DRIVERS =
+    ImmutableMap.<String, Function<WebDriverConfiguration, WebDriver>>builder()
+      .put(ChromeDriver.class.getName(), WebDriverFactory::createChromeDriver)
+      .put(HtmlUnitDriver.class.getName(), WebDriverFactory::createHtmlUnitWebDriver)
+      .build();
 
-  public WebDriver createWebDriver(WebDriverConfiguration config) throws Exception {
-    String className = config.getWebDriverClassName();
-    WebDriver driver;
-    if (PhantomJSDriver.class.getName().equals(className)) {
-      driver = createPhantomJsWebDriver(
-        config.getPhantomJsLocatorOptions(),
-        config.getRepositoryDetails(),
-        config.getWebDriverCapabilities()
-      );
-    } else if (HtmlUnitDriver.class.getName().equals(className)) {
-      driver = createHtmlUnitWebDriver(config.getBrowserVersion(), config.getWebDriverCapabilities(), config.isDebug());
-    } else {
-      driver = createCustomWebDriver(className, config.getWebDriverCapabilities());
-    }
-    return driver;
+  public WebDriver createWebDriver(WebDriverConfiguration config) {
+    return SUPPORTED_DRIVERS
+      .getOrDefault(config.getWebDriverClassName(), WebDriverFactory::createCustomWebDriver)
+      .apply(config);
   }
 
   @SuppressWarnings("unchecked")
-  private Class<? extends WebDriver> getWebDriverClass(String className) throws Exception {
-    return (Class<WebDriver>) Class.forName(className);
-  }
-
-  private Constructor<? extends WebDriver> getWebDriverConstructor(String className, List<Capability> capabilities) throws Exception {
-    Class<? extends WebDriver> webDriverClass = getWebDriverClass(className);
-    boolean hasCapabilities = !capabilities.isEmpty();
+  private static Class<? extends WebDriver> getWebDriverClass(String className) {
     try {
-      if (hasCapabilities) {
-        return webDriverClass.getConstructor(Capabilities.class);
-      }
-      return webDriverClass.getConstructor();
-    } catch (Exception exception) {
-      if (hasCapabilities) {
-        return webDriverClass.getConstructor();
-      }
-      return webDriverClass.getConstructor(Capabilities.class);
+      return (Class<WebDriver>) Class.forName(className);
+    } catch (ClassNotFoundException e) {
+      throw new WebDriverFactoryException(e);
     }
   }
 
-  private WebDriver createCustomWebDriver(String className, List<Capability> capabilities) throws Exception {
-    Constructor<? extends WebDriver> constructor = getWebDriverConstructor(className, capabilities);
-    return constructor.newInstance(getWebDriverConstructorArguments(constructor, capabilities));
+  private static Constructor<? extends WebDriver> getWebDriverConstructor(Class<? extends WebDriver> webDriverClass,
+                                                                          List<Capability> capabilities) {
+
+    WebDriverManager.getInstance(webDriverClass).setup();
+
+    boolean hasCapabilities = !capabilities.isEmpty();
+    if (hasCapabilities) {
+      return getConstructorWithCapabilities(webDriverClass);
+    } else {
+      return getConstructorWithoutCapabilities(webDriverClass);
+    }
   }
 
-  private Object[] getWebDriverConstructorArguments(Constructor<? extends WebDriver> constructor,
-                                                    List<Capability> customCapabilities) {
+  private static <E extends WebDriver> Constructor<E> getConstructorWithoutCapabilities(Class<E> webDriverClass) {
+    try {
+      return webDriverClass.getConstructor();
+    } catch (NoSuchMethodException originalException) {
+      try {
+        return webDriverClass.getConstructor(Capabilities.class);
+      } catch (NoSuchMethodException e) {
+        throw new WebDriverFactoryException(originalException);
+      }
+    }
+  }
+
+  private static <E extends WebDriver> Constructor<E> getConstructorWithCapabilities(Class<E> webDriverClass) {
+
+    try {
+      return webDriverClass.getConstructor(Capabilities.class);
+    } catch (NoSuchMethodException originalException) {
+      try {
+        return webDriverClass.getConstructor();
+      } catch (NoSuchMethodException e) {
+        throw new WebDriverFactoryException(originalException);
+      }
+    }
+  }
+
+  private static WebDriver createCustomWebDriver(WebDriverConfiguration config) {
+    Class<? extends WebDriver> webDriverClass = getWebDriverClass(config.getWebDriverClassName());
+    return createCustomWebDriver(webDriverClass, config.getWebDriverCapabilities());
+  }
+
+  private static WebDriver createCustomWebDriver(Class<? extends WebDriver> webDriverClass, List<Capability> capabilities) {
+    Constructor<? extends WebDriver> constructor = getWebDriverConstructor(webDriverClass, capabilities);
+    try {
+      return constructor.newInstance(getWebDriverConstructorArguments(constructor, capabilities));
+    } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
+      throw new WebDriverFactoryException(e);
+    }
+  }
+
+  private static Object[] getWebDriverConstructorArguments(Constructor<? extends WebDriver> constructor,
+                                                           List<Capability> customCapabilities) {
     if (constructor.getParameterTypes().length == 0) {
       return new Object[0];
     }
     return new Object[]{getCapabilities(customCapabilities)};
   }
 
-  private DesiredCapabilities getCapabilities(List<Capability> customCapabilities) {
-    DesiredCapabilities capabilities = new DesiredCapabilities();
-    customizeCapabilities(capabilities, customCapabilities);
-    return capabilities;
+  private static DesiredCapabilities getCapabilities(List<Capability> customCapabilities) {
+    return customizeCapabilities(new DesiredCapabilities(), customCapabilities);
   }
 
-  private void customizeCapabilities(DesiredCapabilities capabilities, List<Capability> customCapabilities) {
-    capabilities.setJavascriptEnabled(true);
+  private static <E extends MutableCapabilities> E customizeCapabilities(E capabilities, WebDriverConfiguration config) {
+    return customizeCapabilities(capabilities, config.getWebDriverCapabilities());
+  }
 
+  private static <E extends MutableCapabilities> E customizeCapabilities(E capabilities, List<Capability> customCapabilities) {
     for (Capability capability : customCapabilities) {
       Object value = capability.getValue();
       if (value != null && (!String.class.isInstance(value) || StringUtils.isNotBlank((String) value))) {
@@ -113,31 +145,16 @@ public class WebDriverFactory {
         capabilities.setCapability(capability.getName(), capability.getMap());
       }
     }
+
+    return capabilities;
   }
 
-  private WebDriver createHtmlUnitWebDriver(String browserVersion,
-                                            List<Capability> customCapabilities,
-                                            boolean debug) throws Exception {
-    DesiredCapabilities capabilities = DesiredCapabilities.htmlUnit();
-    if (StringUtils.isNotBlank(capabilities.getVersion())) {
-      capabilities.setVersion(browserVersion.replaceAll("(\\D+)_(\\d.*)?", "$1-$2").replaceAll("_", " ").toLowerCase());
-    }
-    customizeCapabilities(capabilities, customCapabilities);
-    return new QuietHtmlUnitDriver(capabilities, debug);
+  private static WebDriver createHtmlUnitWebDriver(WebDriverConfiguration config) {
+    return new QuietHtmlUnitDriver(customizeCapabilities(DesiredCapabilities.htmlUnit(), config), config.isDebug());
   }
 
-  private WebDriver createPhantomJsWebDriver(PhantomJsLocatorOptions options,
-                                             RepositoryDetails repositoryDetails,
-                                             List<Capability> customCapabilities) throws Exception {
-    DesiredCapabilities capabilities = DesiredCapabilities.phantomjs();
-    customizeCapabilities(capabilities, customCapabilities);
-
-    if (capabilities.getCapability(PHANTOMJS_BINARY_PATH) == null) {
-      PhantomJsLocator locator = new PhantomJsLocator(options, repositoryDetails);
-      String phantomJsPath = locator.locate();
-      capabilities.setCapability(PHANTOMJS_BINARY_PATH, phantomJsPath);
-    }
-
-    return new PhantomJSDriver(capabilities);
+  private static WebDriver createChromeDriver(WebDriverConfiguration config) {
+    WebDriverManager.getInstance(ChromeDriver.class).setup();
+    return new ChromeDriver(customizeCapabilities(new ChromeOptions().setHeadless(true), config));
   }
 }

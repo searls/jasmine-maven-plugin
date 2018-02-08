@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -90,17 +90,18 @@ public class BasicScriptResolver extends AbstractScriptResolver {
                                          List<String> preloadList,
                                          ScriptSearch sourceScriptSearch,
                                          ScriptSearch specScriptSearch) {
-    return new LinkedHashSet<String>(resolvesPreloadSources.resolve(
+    return new LinkedHashSet<>(resolvesPreloadSources.resolve(
       preloadList,
       sourceScriptSearch.getDirectory(),
-      specScriptSearch.getDirectory())
+      specScriptSearch.getDirectory()
+    )
     );
   }
 
   private static Set<String> findWithoutPreloads(FindsScriptLocationsInDirectory findsScriptLocations,
                                                  ScriptSearch scriptSearch,
                                                  Set<String> preloads) {
-    Set<String> scripts = new LinkedHashSet<String>(findsScriptLocations.find(scriptSearch));
+    Set<String> scripts = new LinkedHashSet<>(findsScriptLocations.find(scriptSearch));
     scripts.removeAll(preloads);
     return scripts;
   }

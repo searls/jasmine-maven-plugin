@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -29,6 +29,7 @@ import javax.inject.Named;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -62,20 +63,16 @@ public class DefaultSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
 
   @Override
   public String generate(HtmlGeneratorConfiguration configuration) {
-    try {
-      ScriptResolver resolver = configuration.getScriptResolver();
-      return this.generateHtml(
-        configuration,
-        resolver.getAllScripts(),
-        resolver.getPreloads(),
-        resolver.getSources(),
-        resolver.getSpecs(),
-        resolver.getSourceDirectory(),
-        resolver.getSpecDirectory()
-      );
-    } catch (IOException e) {
-      throw new RuntimeException("Failed to load files for dependencies, sources, or a custom runner", e);
-    }
+    ScriptResolver resolver = configuration.getScriptResolver();
+    return this.generateHtml(
+      configuration,
+      resolver.getAllScripts(),
+      resolver.getPreloads(),
+      resolver.getSources(),
+      resolver.getSpecs(),
+      resolver.getSourceDirectory(),
+      resolver.getSpecDirectory()
+    );
   }
 
   private String generateHtml(HtmlGeneratorConfiguration configuration,
@@ -84,13 +81,13 @@ public class DefaultSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
                               Set<String> sources,
                               Set<String> specs,
                               String sourceDirectory,
-                              String specDirectory) throws IOException {
+                              String specDirectory) {
     ST template = this.resolveHtmlTemplate(configuration.getRunnerTemplate());
     this.applyScriptTagsToTemplate(
       JAVASCRIPT_DEPENDENCIES_TEMPLATE_ATTR_NAME,
       Arrays.asList(JASMINE_JS, JASMINE_HTML_JS, JASMINE_HTMLSPECFILTER_PATCH_JS, JASMINE_BOOT_JS),
       template);
-    this.applyCssToTemplate(Arrays.asList(JASMINE_CSS), template);
+    this.applyCssToTemplate(Collections.singletonList(JASMINE_CSS), template);
     this.applyScriptTagsToTemplate(ALL_SCRIPT_TAGS, allScripts, template);
     this.applyScriptTagsToTemplate(PRELOAD_SCRIPT_TAGS, preloads, template);
     this.applyScriptTagsToTemplate(SOURCE_SCRIPT_TAGS, sources, template);
@@ -113,24 +110,18 @@ public class DefaultSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
   }
 
   private String createJsonArray(Set<String> scripts) {
-    if (null == scripts || scripts.isEmpty()) {
-      return "[]";
-    }
-    StringBuilder builder = new StringBuilder("['");
-    builder.append(StringUtils.join(scripts, "', '"));
-    builder.append("']");
-    return builder.toString();
+    return scripts == null || scripts.isEmpty() ? "[]" : "['" + StringUtils.join(scripts, "', '") + "']";
   }
 
   private void setEncoding(HtmlGeneratorConfiguration htmlGeneratorConfiguration, ST template) {
     template.add(SOURCE_ENCODING, StringUtils.isNotBlank(htmlGeneratorConfiguration.getSourceEncoding()) ? htmlGeneratorConfiguration.getSourceEncoding() : SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
   }
 
-  private ST resolveHtmlTemplate(String htmlTemplate) throws IOException {
+  private ST resolveHtmlTemplate(String htmlTemplate) {
     return new ST(htmlTemplate, '$', '$');
   }
 
-  private void applyCssToTemplate(List<String> styles, ST template) throws IOException {
+  private void applyCssToTemplate(List<String> styles, ST template) {
     StringBuilder css = new StringBuilder();
     for (String cssFile : styles) {
       css.append("<link rel=\"stylesheet\" type=\"text/css\" href=\"").append(cssFile).append("\"/>");
@@ -138,7 +129,7 @@ public class DefaultSpecRunnerHtmlGenerator implements SpecRunnerHtmlGenerator {
     template.add(CSS_DEPENDENCIES_TEMPLATE_ATTR_NAME, css.toString());
   }
 
-  private void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Collection<String> scripts, ST template) throws IOException {
+  private void applyScriptTagsToTemplate(String sourcesTemplateAttrName, Collection<String> scripts, ST template) {
     template.add(sourcesTemplateAttrName, formatsScriptTags.format(scripts));
   }
 

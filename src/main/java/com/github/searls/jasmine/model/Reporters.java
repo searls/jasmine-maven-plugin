@@ -17,19 +17,20 @@
  * limitations under the License.
  * #L%
  */
-package com.github.searls.jasmine.runner;
+package com.github.searls.jasmine.model;
 
-public enum SpecRunnerTemplate {
-  DEFAULT("/jasmine-templates/SpecRunner.htmltemplate"),
-  REQUIRE_JS("/jasmine-templates/RequireJsSpecRunner.htmltemplate");
+public final class Reporters {
 
-  private final String template;
+  public static final Reporter STANDARD_REPORTER = new Reporter(
+    "STANDARD"
+  );
 
-  SpecRunnerTemplate(String template) {
-    this.template = template;
-  }
+  public static final FileSystemReporter JUNIT_REPORTER = new FileSystemReporter(
+    "TEST-jasmine.xml",
+    "JUNIT_XML"
+  );
 
-  public String getTemplate() {
-    return this.template;
+  private Reporters() {
+
   }
 }

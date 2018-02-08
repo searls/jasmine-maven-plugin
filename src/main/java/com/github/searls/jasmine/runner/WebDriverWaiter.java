@@ -48,15 +48,12 @@ class WebDriverWaiter {
 
   public void waitForRunnerToFinish(final WebDriver driver,
                                     final int timeout,
-                                    final boolean debug) throws InterruptedException {
+                                    final boolean debug) {
     final JavascriptExecutor executor = (JavascriptExecutor) driver;
     try {
-      new WebDriverWait(driver, timeout, 1000).until(new Function<WebDriver, Boolean>() {
-        @Override
-        public Boolean apply(WebDriver input) {
-          return executionFinished(executor);
-        }
-      });
+      new WebDriverWait(driver, timeout, 1000).until(
+        (Function<WebDriver, Boolean>) input -> executionFinished(executor)
+      );
     } catch (TimeoutException e) {
       handleTimeout(timeout, debug);
     }
@@ -68,7 +65,7 @@ class WebDriverWaiter {
   }
 
   private void handleTimeout(final int timeout, final boolean debug) {
-    LOGGER.warn(String.format(TIMEOUT_WARNING, timeout));
+    LOGGER.warn(TIMEOUT_WARNING, timeout);
     if (debug) {
       LOGGER.warn(DEBUG_MODE_TIMEOUT_WARNING);
     } else {
