@@ -23,9 +23,6 @@
             </goals>
           </execution>
         </executions>
-        <configuration>
-          <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
-        </configuration>
       </plugin>
     </plugins>
   </build>

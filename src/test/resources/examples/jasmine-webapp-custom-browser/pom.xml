@@ -25,7 +25,12 @@
         </executions>
         <configuration>
           <webDriverClassName>org.openqa.selenium.htmlunit.HtmlUnitDriver</webDriverClassName>
-          <browserVersion>INTERNET_EXPLORER_6</browserVersion>
+          <webDriverCapabilities>
+            <capability>
+              <name>browserVersion</name>
+              <value>firefox-45</value>
+            </capability>
+          </webDriverCapabilities>
         </configuration>
       </plugin>
     </plugins>

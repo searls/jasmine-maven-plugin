@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -24,7 +24,6 @@ import com.github.searls.jasmine.config.ServerConfiguration;
 import com.github.searls.jasmine.model.FileSystemReporter;
 import com.github.searls.jasmine.model.Reporter;
 import com.github.searls.jasmine.runner.ReporterType;
-import com.google.common.base.Optional;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
@@ -44,15 +43,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.github.searls.jasmine.mojo.AbstractJasmineMojo.CUSTOM_RUNNER_CONFIGURATION_PARAM;
 import static com.github.searls.jasmine.mojo.AbstractJasmineMojo.CUSTOM_RUNNER_TEMPLATE_PARAM;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.guava.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
+import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -108,8 +107,8 @@ public class AbstractJasmineMojoTest {
 
     when(mavenProject.getBasedir()).thenReturn(baseDir);
 
-    when(resourceRetriever.getResourceAsFile(anyString(), isNull(String.class), eq(mavenProject)))
-      .thenReturn(Optional.<File>absent());
+    when(resourceRetriever.getResourceAsFile(anyString(), isNull(), eq(mavenProject)))
+      .thenReturn(Optional.empty());
   }
 
   @Test

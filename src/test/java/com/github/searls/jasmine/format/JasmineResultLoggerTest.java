@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -20,7 +20,6 @@
 package com.github.searls.jasmine.format;
 
 import com.github.searls.jasmine.model.JasmineResult;
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.assertj.core.api.Assertions;
 import org.junit.After;
@@ -35,6 +34,8 @@ import uk.org.lidalia.slf4jtest.TestLoggerFactory;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.mockito.Mockito.when;
 
@@ -80,7 +81,11 @@ public class JasmineResultLoggerTest {
   }
 
   private void assertMessage(String ... expectedMessages) {
-    List<String> messages = Lists.transform(logger.getLoggingEvents(), EVENT_MESSAGE_FUNCTION);
+    List<String> messages = logger.getLoggingEvents()
+      .stream()
+      .map(loggingEvent -> loggingEvent != null ? loggingEvent.getMessage() : null)
+      .collect(Collectors.toList());
+
     for (String expectedMessage : expectedMessages) {
       Assertions.assertThat(messages)
         .describedAs("Expected %s to be logged.", expectedMessage)

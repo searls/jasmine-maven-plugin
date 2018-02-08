@@ -1,0 +1,21 @@
+version: "3"
+services:
+  test-suite:
+    image: klieber/jmp-build
+    command: ./build.sh
+    working_dir: /home/build/project
+    volumes:
+      - .:/home/build/project
+      - mvn-home:/home/build/.m2
+      - bundler:/home/build/.bundle
+    environment:
+      - MAVEN_CONFIG=/home/build/.m2
+      - DBUS_SESSION_BUS_ADDRESS=/dev/null
+    stdin_open: true
+    tty: true
+    ports:
+      - "8234:8234"
+    privileged: true
+volumes:
+  mvn-home:
+  bundler:

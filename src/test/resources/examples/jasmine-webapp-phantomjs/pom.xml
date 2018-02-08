@@ -33,17 +33,6 @@
                         <source>require.js</source>
                         <source>require-config.js</source>
                     </preloadSources>
-
-                    <webDriverCapabilities>
-                      <capability>
-                        <name>phantomjs.cli.args</name>
-                        <list>
-                          <value>--disk-cache=true</value>
-                          <value>--max-disk-cache-size=256</value>
-                        </list>
-                      </capability>
-                    </webDriverCapabilities>
-
                 </configuration>
             </plugin>
         </plugins>

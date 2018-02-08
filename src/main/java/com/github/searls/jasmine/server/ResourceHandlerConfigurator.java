@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -58,13 +58,12 @@ public class ResourceHandlerConfigurator {
       addContext(
         contexts,
         contextRoot,
-        this.createResourceHandler(configuration, true, context.getDirectory().getCanonicalPath())
+        this.createResourceHandler(configuration, context.getDirectory().getCanonicalPath())
       );
     }
 
     addContext(contexts, "/", this.createResourceHandler(
       configuration,
-      false,
       configuration.getBasedir().getCanonicalPath(),
       this.getWelcomeFilePath(configuration)
     ));
@@ -80,11 +79,10 @@ public class ResourceHandlerConfigurator {
   }
 
   private ResourceHandler createResourceHandler(JasmineConfiguration configuration,
-                                                boolean directory,
                                                 String absolutePath,
                                                 String... welcomeFiles) {
     ResourceHandler resourceHandler = new JasmineResourceHandler(this.createsRunner, configuration);
-    resourceHandler.setDirectoriesListed(directory);
+    resourceHandler.setDirectoriesListed(false);
     if (welcomeFiles.length > 0) {
       resourceHandler.setWelcomeFiles(welcomeFiles);
     }

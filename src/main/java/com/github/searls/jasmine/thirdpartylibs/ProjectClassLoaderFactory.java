@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,7 +34,7 @@ public class ProjectClassLoaderFactory {
   private final Set<Artifact> artifacts;
 
   public ProjectClassLoaderFactory() {
-    this(new HashSet<Artifact>());
+    this(new HashSet<>());
   }
 
   public ProjectClassLoaderFactory(Set<Artifact> artifacts) {
@@ -42,7 +42,7 @@ public class ProjectClassLoaderFactory {
   }
 
   public ClassLoader create() {
-    final List<String> classpathElements = new ArrayList<String>();
+    final List<String> classpathElements = new ArrayList<>();
     for (Artifact artifact : artifacts) {
       classpathElements.add(artifact.getFile().getAbsolutePath());
     }
@@ -50,7 +50,7 @@ public class ProjectClassLoaderFactory {
   }
 
   private ClassLoader createURLClassLoader(final List<String> classpathElements) {
-    final List<URL> urls = new ArrayList<URL>();
+    final List<URL> urls = new ArrayList<>();
     try {
       for (final String element : classpathElements) {
         final File elementFile = new File(element);

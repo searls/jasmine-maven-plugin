@@ -19,8 +19,6 @@
  */
 package com.github.searls.jasmine.mojo;
 
-import com.github.klieber.phantomjs.locate.PhantomJsLocatorOptions;
-import com.github.klieber.phantomjs.locate.RepositoryDetails;
 import com.github.searls.jasmine.config.ImmutableServerConfiguration;
 import com.github.searls.jasmine.config.ImmutableWebDriverConfiguration;
 import com.github.searls.jasmine.config.JasmineConfiguration;
@@ -42,18 +40,14 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
-import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.RepositorySystemSession;
-import org.eclipse.aether.repository.RemoteRepository;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.io.File;
 import java.util.Collections;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Execute specs using Selenium Web Driver. Uses PhantomJsDriver for head-less execution by default.
@@ -69,8 +63,8 @@ public class TestMojo extends AbstractJasmineMojo {
    * <br>
    * <p>Some valid examples:</p>
    * <ul>
+   * <li>org.openqa.selenium.chrome.ChromeDriver</li>
    * <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
-   * <li>org.openqa.selenium.phantomjs.PhantomJSDriver</li>
    * <li>org.openqa.selenium.firefox.FirefoxDriver</li>
    * <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
    * </ul>
@@ -79,8 +73,8 @@ public class TestMojo extends AbstractJasmineMojo {
    *
    * @since 1.1.0
    */
-  @Parameter(defaultValue = "org.openqa.selenium.phantomjs.PhantomJSDriver")
-  private String webDriverClassName = "org.openqa.selenium.phantomjs.PhantomJSDriver";
+  @Parameter(defaultValue = "org.openqa.selenium.chrome.ChromeDriver")
+  private String webDriverClassName = ChromeDriver.class.getName();
 
   /**
    * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>
@@ -116,20 +110,6 @@ public class TestMojo extends AbstractJasmineMojo {
   private List<Capability> webDriverCapabilities = Collections.emptyList();
 
   /**
-   * <p>Determines the browser and version profile that HtmlUnit will simulate. This setting does nothing if the plugin
-   * is configured not to use HtmlUnit. This maps 1-to-1 with the public static instances found in
-   * {@link com.gargoylesoftware.htmlunit.BrowserVersion}.</p>
-   * <br>
-   * <p>Some valid examples: CHROME, FIREFOX_17, INTERNET_EXPLORER_9, INTERNET_EXPLORER_10</p>
-   *
-   * @since 1.1.0
-   * @deprecated Use the webDriverCapabilities parameter instead.
-   */
-  @Parameter(defaultValue = "FIREFOX_17")
-  @Deprecated
-  private String browserVersion = "FIREFOX_17";
-
-  /**
    * <p>Determines the format that jasmine:test will print to console.</p>
    * <p>Valid options:</p>
    * <ul>
@@ -141,29 +121,6 @@ public class TestMojo extends AbstractJasmineMojo {
    */
   @Parameter(defaultValue = "documentation")
   private String format = "documentation";
-
-  /**
-   * <p>Configure which version of PhantomJS should be used and how it should be found. The core of the
-   * <a href="http://klieber.github.io/phantomjs-maven-plugin">phantomjs-maven-plugin</a> is used to provide this
-   * functionality and this parameter should match the configuration of the
-   * <a href="http://kylelieber.com/phantomjs-maven-plugin/install-mojo.html">phantomjs-maven-plugin install</a> goal.</p>
-   * <br>
-   * <p>Default Options:</p>
-   * <pre>
-   * &lt;phantomjs&gt;
-   *   &lt;version&gt;2.0.0&lt;/version&gt;
-   *   &lt;checkSystemPath&gt;true&lt;/checkSystemPath&gt;
-   *   &lt;enforceVersion&gt;true&lt;/enforceVersion&gt;
-   *   &lt;source&gt;REPOSITORY&lt;/source&gt;
-   *   &lt;baseUrl&gt;&lt;/baseUrl&gt;
-   *   &lt;outputDirectory&gt;target/phantomjs&lt;/outputDirectory&gt;
-   * &lt;/phantomjs&gt;
-   * </pre>
-   *
-   * @since 2.0
-   */
-  @Parameter(property = "phantomjs", defaultValue = "${phantomJs}")
-  private PhantomJsOptions phantomjs = new PhantomJsOptions();
 
   /**
    * Keep the server alive after the <code>jasmine:test</code> goal exists.
@@ -225,24 +182,11 @@ public class TestMojo extends AbstractJasmineMojo {
   private boolean skipJasmineTests = false;
 
   @Parameter(
-    defaultValue = "${repositorySystemSession}",
-    readonly = true
-  )
-  private RepositorySystemSession repositorySystemSession = null;
-
-  @Parameter(
-    defaultValue = "${project.remoteProjectRepositories}",
-    readonly = true
-  )
-  private List<RemoteRepository> remoteRepositories = null;
-
-  @Parameter(
     defaultValue = "${session}",
     readonly = true
   )
   private MavenSession mavenSession = null;
 
-  private final RepositorySystem repositorySystem;
   private final WebDriverFactory webDriverFactory;
   private final SpecRunnerExecutor specRunnerExecutor;
   private final JasmineResultLogger jasmineResultLogger;
@@ -252,13 +196,11 @@ public class TestMojo extends AbstractJasmineMojo {
   public TestMojo(MavenProject mavenProject,
                   ResourceRetriever resourceRetriever,
                   ReporterRetriever reporterRetriever,
-                  RepositorySystem repositorySystem,
                   WebDriverFactory webDriverFactory,
                   SpecRunnerExecutor specRunnerExecutor,
                   JasmineResultLogger jasmineResultLogger,
                   ResourceHandlerConfigurator resourceHandlerConfigurator) {
     super(mavenProject, ReporterType.JsApiReporter, resourceRetriever, reporterRetriever);
-    this.repositorySystem = repositorySystem;
     this.webDriverFactory = webDriverFactory;
     this.specRunnerExecutor = specRunnerExecutor;
     this.jasmineResultLogger = jasmineResultLogger;
@@ -313,42 +255,8 @@ public class TestMojo extends AbstractJasmineMojo {
     );
   }
 
-  private WebDriver createDriver() throws Exception {
-    configure(mavenSession.getUserProperties());
+  private WebDriver createDriver() {
     return webDriverFactory.createWebDriver(getWebDriverConfiguration());
-  }
-
-  private void configure(Properties properties) {
-
-    phantomjs.setVersion(
-      properties.getProperty("phantomjs.version", phantomjs.getVersion())
-    );
-
-    phantomjs.setSource(
-      PhantomJsLocatorOptions.Source.valueOf(
-        properties.getProperty("phantomjs.source", phantomjs.getSource().toString())
-      )
-    );
-
-    phantomjs.setOutputDirectory(
-      new File(properties.getProperty("phantomjs.outputDirectory", phantomjs.getOutputDirectory().toString()))
-    );
-
-    phantomjs.setBaseUrl(
-      properties.getProperty("phantomjs.baseUrl", phantomjs.getBaseUrl())
-    );
-
-    phantomjs.setCheckSystemPath(
-      configureBoolean(properties, "phantomjs.checkSystemPath", phantomjs.isCheckSystemPath())
-    );
-
-    phantomjs.setEnforceVersion(
-      properties.getProperty("phantomjs.enforceVersion", phantomjs.getEnforceVersion())
-    );
-  }
-
-  private boolean configureBoolean(Properties properties, String property, boolean defaultValue) {
-    return Boolean.parseBoolean(properties.getProperty(property, Boolean.toString(defaultValue)));
   }
 
   private void logResults(JasmineResult result) {
@@ -364,20 +272,9 @@ public class TestMojo extends AbstractJasmineMojo {
   private WebDriverConfiguration getWebDriverConfiguration() {
     return ImmutableWebDriverConfiguration.builder()
       .debug(this.debug)
-      .browserVersion(this.browserVersion)
-      .phantomJsLocatorOptions(this.phantomjs)
       .webDriverCapabilities(webDriverCapabilities)
       .webDriverClassName(webDriverClassName)
-      .repositoryDetails(getRepositoryDetails())
       .build();
-  }
-
-  private RepositoryDetails getRepositoryDetails() {
-    RepositoryDetails details = new RepositoryDetails();
-    details.setRemoteRepositories(remoteRepositories);
-    details.setRepositorySystem(repositorySystem);
-    details.setRepositorySystemSession(repositorySystemSession);
-    return details;
   }
 
   private boolean isSkipTests() {

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -34,16 +34,16 @@ import static java.util.Arrays.asList;
 @Named
 public class ScansDirectory {
 
-  public final static List<String> DEFAULT_INCLUDES = asList("**" + File.separator + "*.js");
+  public final static List<String> DEFAULT_INCLUDES = Collections.singletonList("**" + File.separator + "*.js");
 
   private final DirectoryScanner directoryScanner = new DirectoryScanner();
 
   public List<String> scan(File directory, List<String> includes, List<String> excludes) {
-    Set<String> set = new LinkedHashSet<String>();
+    Set<String> set = new LinkedHashSet<>();
     for (String include : includes) {
       set.addAll(performScan(directory, include, excludes));
     }
-    return new ArrayList<String>(set);
+    return new ArrayList<>(set);
   }
 
   private List<String> performScan(File directory, String include, List<String> excludes) {
@@ -52,7 +52,7 @@ public class ScansDirectory {
     directoryScanner.setExcludes(excludes.toArray(new String[]{}));
     directoryScanner.addDefaultExcludes();
     directoryScanner.scan();
-    ArrayList<String> result = new ArrayList<String>(asList(directoryScanner.getIncludedFiles()));
+    ArrayList<String> result = new ArrayList<>(asList(directoryScanner.getIncludedFiles()));
     Collections.sort(result);
     return result;
   }
