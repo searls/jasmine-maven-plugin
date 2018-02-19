@@ -20,6 +20,7 @@
 package com.github.searls.jasmine.driver;
 
 import com.github.searls.jasmine.config.WebDriverConfiguration;
+import com.github.searls.jasmine.driver.support.QuietHtmlUnitDriver;
 import com.github.searls.jasmine.mojo.Capability;
 import com.google.common.collect.ImmutableList;
 import org.junit.Before;

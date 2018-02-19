@@ -32,7 +32,6 @@ import com.github.searls.jasmine.runner.SpecRunnerExecutor;
 import com.github.searls.jasmine.server.ResourceHandlerConfigurator;
 import com.github.searls.jasmine.server.ServerManager;
 import com.google.common.annotations.VisibleForTesting;
-import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
@@ -180,12 +179,6 @@ public class TestMojo extends AbstractJasmineMojo {
    */
   @Parameter(property = "skipJasmineTests")
   private boolean skipJasmineTests = false;
-
-  @Parameter(
-    defaultValue = "${session}",
-    readonly = true
-  )
-  private MavenSession mavenSession = null;
 
   private final WebDriverFactory webDriverFactory;
   private final SpecRunnerExecutor specRunnerExecutor;

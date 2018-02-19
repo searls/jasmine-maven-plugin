@@ -26,7 +26,6 @@ import org.stringtemplate.v4.ST;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
