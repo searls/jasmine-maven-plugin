@@ -22,32 +22,32 @@ package com.github.searls.jasmine.driver;
 import com.github.searls.jasmine.config.WebDriverConfiguration;
 import com.github.searls.jasmine.mojo.Capability;
 import com.google.common.collect.ImmutableList;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
 
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(MockitoJUnitRunner.Silent.class)
 public class WebDriverFactoryTest {
 
   @Mock
   private WebDriverConfiguration config;
 
-  @InjectMocks
-  private WebDriverFactory factory;
+  @Mock
+  private DriverManagerAdapter driverManagerAdapter;
 
-  @Before
-  public void setUp() {
-    factory = new WebDriverFactory();
-  }
+  @InjectMocks
+  private WebDriverFactory factory = new WebDriverFactory();
 
   @Test
   public void createsQuietHtmlUnitDriver() throws Exception {
@@ -61,7 +61,6 @@ public class WebDriverFactoryTest {
     assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(CustomDriverWithDefaultConstructor.class);
   }
 
-
   @Test
   public void customDriverIsCreatedWithCapabilitiesIfConstructorExists() throws Exception {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithCapabilities.class.getName());
@@ -71,6 +70,30 @@ public class WebDriverFactoryTest {
   @Test
   public void enablesJavascriptOnCustomDriver() throws Exception {
     assertThat(createWebDriverAndReturnCapabilities().is(SUPPORTS_JAVASCRIPT)).isTrue();
+  }
+
+  @Test
+  public void webDriverManagerIsUsedForChromeDriverIfDownloadIsEnabled() throws Exception {
+    ChromeDriver chromeDriver = mock(ChromeDriver.class);
+    when(config.getWebDriverClassName()).thenReturn(ChromeDriver.class.getName());
+    when(config.isWebDriverDownloadEnabled()).thenReturn(true);
+
+    when(driverManagerAdapter.createChromeDriver(any(ChromeOptions.class))).thenReturn(chromeDriver);
+
+    assertThat(factory.createWebDriver(config)).isInstanceOf(ChromeDriver.class);
+    verify(driverManagerAdapter).setupDriver(ChromeDriver.class);
+  }
+
+  @Test
+  public void webDriverManagerIsNotUsedForChromeDriverIfDownloadIsNotEnabled() throws Exception {
+    ChromeDriver chromeDriver = mock(ChromeDriver.class);
+    when(config.getWebDriverClassName()).thenReturn(ChromeDriver.class.getName());
+    when(config.isWebDriverDownloadEnabled()).thenReturn(false);
+
+    when(driverManagerAdapter.createChromeDriver(any(ChromeOptions.class))).thenReturn(chromeDriver);
+    doThrow(new RuntimeException("Should not call setupDriver")).when(driverManagerAdapter).setupDriver(any());
+
+    assertThat(factory.createWebDriver(config)).isInstanceOf(ChromeDriver.class);
   }
 
   @Test

@@ -110,6 +110,14 @@ public class TestMojo extends AbstractJasmineMojo {
   private List<Capability> webDriverCapabilities = Collections.emptyList();
 
   /**
+   * <p>Controls whether the configured web driver should be automatically downloaded</p>
+   * <br/>
+   * <p>Default value is <i>true</i>. If set to <i>false</i> the environment must be configured manually.</p>
+   */
+  @Parameter
+  private Boolean webDriverDownloadEnabled = Boolean.TRUE;
+
+  /**
    * <p>Determines the format that jasmine:test will print to console.</p>
    * <p>Valid options:</p>
    * <ul>
@@ -274,6 +282,7 @@ public class TestMojo extends AbstractJasmineMojo {
       .debug(this.debug)
       .webDriverCapabilities(webDriverCapabilities)
       .webDriverClassName(webDriverClassName)
+      .webDriverDownloadEnabled(webDriverDownloadEnabled)
       .build();
   }
 

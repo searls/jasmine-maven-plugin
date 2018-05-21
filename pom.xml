@@ -119,6 +119,10 @@
       <name>Sam Jones</name>
       <url>https://github.com/samjonester</url>
     </contributor>
+    <contributor>
+      <name>Sven Johansson</name>
+      <url>https://github.com/svjson</url>
+    </contributor>
   </contributors>
   <scm>
     <url>https://github.com/searls/jasmine-maven-plugin</url>
