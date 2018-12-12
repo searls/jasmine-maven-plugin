@@ -21,6 +21,25 @@
   $cssDependencies$
   $javascriptDependencies$
   <script type="text/javascript">
+    var progress = [],
+        indentLevel = 0;
+    window.jsApiReporter.originalSuiteStarted = window.jsApiReporter.suiteStarted;
+    window.jsApiReporter.originalSuiteDone = window.jsApiReporter.suiteDone;
+    window.jsApiReporter.originalSpecDone = window.jsApiReporter.specDone;
+
+    window.jsApiReporter.suiteStarted = function(result) {
+      progress.push(new Array(indentLevel).join(' ') + ' * ' + result.description);
+      indentLevel += 2;
+      this.originalSuiteStarted(result);
+    }
+    window.jsApiReporter.specDone = function(result) {
+      progress.push(new Array(indentLevel).join(' ') + (result.status === 'passed' ? ' - ' : ' X - ERROR - ') + result.description);
+      this.originalSpecDone(result);
+    }
+    window.jsApiReporter.suiteDone = function(result) {
+      indentLevel -= 2;
+      this.originalSuiteDone(result);
+    }
     window.onload = jasmine.boot;
   </script>
   $allScriptTags$

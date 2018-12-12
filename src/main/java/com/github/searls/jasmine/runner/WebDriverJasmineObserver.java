@@ -20,6 +20,7 @@
 package com.github.searls.jasmine.runner;
 
 import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -28,14 +29,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Named;
+import java.util.List;
 
 @Named
-class WebDriverWaiter {
+class WebDriverJasmineObserver {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverWaiter.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebDriverJasmineObserver.class);
 
   protected static final String EXECUTION_FINISHED_SCRIPT =
     "return (window.jsApiReporter === undefined) ? false : window.jsApiReporter.finished";
+
+  protected static final String RETRIEVE_PROGRESS_SCRIPT =
+    "return window.progress.slice(arguments[0])";
 
   private static final String TIMEOUT_WARNING =
     "Attempted to wait for your specs to finish processing over the course of {} seconds, but it still appears to be running.";
@@ -49,10 +54,11 @@ class WebDriverWaiter {
   public void waitForRunnerToFinish(final WebDriver driver,
                                     final int timeout,
                                     final boolean debug) {
+    final List<String> progress = Lists.newArrayList();
     final JavascriptExecutor executor = (JavascriptExecutor) driver;
     try {
       new WebDriverWait(driver, timeout, 1000).until(
-        (Function<WebDriver, Boolean>) input -> executionFinished(executor)
+        (Function<WebDriver, Boolean>) input -> pollRemoteStatus(executor, progress)
       );
     } catch (TimeoutException e) {
       handleTimeout(timeout, debug);
@@ -60,7 +66,12 @@ class WebDriverWaiter {
 
   }
 
-  private Boolean executionFinished(final JavascriptExecutor driver) {
+  private Boolean pollRemoteStatus(final JavascriptExecutor driver, final List<String> progress) {
+    List<String> jsProgress = (List<String>) driver.executeScript(RETRIEVE_PROGRESS_SCRIPT, progress.size());
+    if (jsProgress != null) {
+      jsProgress.forEach(LOGGER::info);
+      progress.addAll(jsProgress);
+    }
     return (Boolean) driver.executeScript(EXECUTION_FINISHED_SCRIPT);
   }
 
