@@ -154,7 +154,12 @@ public class WebDriverFactory {
   }
 
   private static WebDriver createChromeDriver(WebDriverConfiguration config) {
-    WebDriverManager.getInstance(ChromeDriver.class).setup();
+    WebDriverManager webDriverManager = WebDriverManager.getInstance(ChromeDriver.class);
+    if (StringUtils.isNotBlank(config.getWebDriverVersion())) {
+      webDriverManager.version(config.getWebDriverVersion());
+    }
+
+    webDriverManager.setup();
     return new ChromeDriver(customizeCapabilities(new ChromeOptions().setHeadless(true), config));
   }
 }

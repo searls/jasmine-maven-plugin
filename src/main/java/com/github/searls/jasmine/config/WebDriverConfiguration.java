@@ -29,4 +29,5 @@ public interface WebDriverConfiguration {
   boolean isDebug();
   String getWebDriverClassName();
   List<Capability> getWebDriverCapabilities();
+  String getWebDriverVersion();
 }

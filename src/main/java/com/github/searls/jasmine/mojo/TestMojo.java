@@ -77,6 +77,14 @@ public class TestMojo extends AbstractJasmineMojo {
   private String webDriverClassName = ChromeDriver.class.getName();
 
   /**
+   * <p>Determines the version of the WebDriver implementation to download and use</p>
+   * <p>Currently only applicable for ChromeDriver</p>
+   * <p>If not configured, the latest available version will be used</p>
+   */
+  @Parameter(defaultValue = "")
+  private String webDriverVersion = "";
+
+  /**
    * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>
    * <br>
    * <p>Capabilities value can be either a String, a List, or a Map.</p>
@@ -274,6 +282,7 @@ public class TestMojo extends AbstractJasmineMojo {
       .debug(this.debug)
       .webDriverCapabilities(webDriverCapabilities)
       .webDriverClassName(webDriverClassName)
+      .webDriverVersion(webDriverVersion)
       .build();
   }
 
