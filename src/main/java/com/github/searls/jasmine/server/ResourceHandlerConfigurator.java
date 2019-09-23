@@ -34,7 +34,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.File;
 import java.io.IOException;
 
 @Named
@@ -97,6 +96,6 @@ public class ResourceHandlerConfigurator {
     return this.relativizesFilePaths.relativize(
       configuration.getBasedir(),
       configuration.getJasmineTargetDir()
-    ) + File.separator + configuration.getSpecRunnerHtmlFileName();
+    ) + '/' + configuration.getSpecRunnerHtmlFileName();
   }
 }
