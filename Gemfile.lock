@@ -67,7 +67,7 @@ GEM
     powerbar (1.0.18)
       hashie (>= 1.1.0)
     public_suffix (3.0.0)
-    rack (2.0.3)
+    rack (2.0.8)
     rack-test (0.7.0)
       rack (>= 1.0, < 3)
     rake (12.1.0)
