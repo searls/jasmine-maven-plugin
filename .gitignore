@@ -1,6 +1,7 @@
 .DS_Store
 .metadata
 target
+.factorypath
 .classpath
 .settings
 .project

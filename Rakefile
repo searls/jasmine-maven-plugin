@@ -1,7 +1,7 @@
 task :default => [:install]
 
 task :install do
-  sh "mvn clean install" do |ok, res|
+  sh "./mvnw clean install" do |ok, res|
     ok or fail "Failed to install with status #{res.exitstatus}"
   end
 end
@@ -19,7 +19,7 @@ task :relish => [:cucumber] do
 end
 
 task :deploy => [:install, :cucumber] do
-  sh "mvn deploy" do |ok, res|
+  sh "./mvnw deploy" do |ok, res|
     ok or fail "Failed to deploy with status #{res.exitstatus}"
   end
 end

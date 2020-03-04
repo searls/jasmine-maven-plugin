@@ -7,7 +7,7 @@ Feature: Support custom reporter
   Scenario: project with javascript using a custom reporter
 
     Given I am currently in the "jasmine-webapp-custom-reporters" project
-    When I run "mvn clean test"
+    When I run "../../../../mvnw clean test"
     Then the build should succeed
     And I should see "Results: 2 specs, 0 failures, 0 pending"
     And I should see "Hello World"

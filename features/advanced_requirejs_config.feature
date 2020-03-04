@@ -7,7 +7,7 @@ Feature: Support custom require.js configuration
   Scenario: project with javascript using require.js and custom configuration
 
     Given I am currently in the "jasmine-webapp-advanced-requirejs" project
-    When I run "mvn clean test"
+    When I run "../../../../mvnw clean test"
     Then the build should succeed
     And I should see "Results: 1 specs, 0 failures"
 
@@ -15,6 +15,6 @@ Feature: Support custom require.js configuration
   Scenario: project with javascript using require.js and custom configuration running in browser
 
     Given I am currently in the "jasmine-webapp-advanced-requirejs" project
-    When I run "mvn clean jasmine:bdd" in a new process
+    When I run "../../../../mvnw clean jasmine:bdd" in a new process
     And I load "http://localhost:8234" in a browser
     Then the page should contain "1 spec, 0 failures"

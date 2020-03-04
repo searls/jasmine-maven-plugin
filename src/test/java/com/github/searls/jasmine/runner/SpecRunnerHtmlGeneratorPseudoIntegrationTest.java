@@ -19,10 +19,6 @@
  */
 package com.github.searls.jasmine.runner;
 
-import com.gargoylesoftware.htmlunit.MockWebConnection;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlMeta;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.searls.jasmine.HtmlAssertions;
 import com.github.searls.jasmine.format.FormatsScriptTags;
 import com.github.searls.jasmine.io.IoUtilities;
@@ -37,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -56,7 +53,10 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   private final Set<String> scripts = new LinkedHashSet<>(Collections.singletonList("A"));
 
   static {
-    LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
+    LogFactory.getFactory().setAttribute(
+      "org.apache.commons.logging.Log",
+      "org.apache.commons.logging.impl.NoOpLog"
+    );
   }
 
   private SpecRunnerHtmlGenerator subject;
@@ -93,41 +93,37 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     String html = this.subject.generate(generatorConfiguration);
 
     assertThat(html).contains(HTML5_DOCTYPE);
-    assertThat(this.getPage(html).getDoctype().getName()).isEqualTo("html");
   }
 
   @Test
-  public void shouldAssignSpecifiedSourceEncoding() throws Exception {
-    String html = this.subject.generate(generatorConfiguration);
-
-    HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
-    assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SOURCE_ENCODING);
+  public void shouldAssignSpecifiedSourceEncoding(){
+    assertThat(this.subject.generate(generatorConfiguration))
+      .contains("content=\"text/html; charset=" + SOURCE_ENCODING + "\"");
   }
 
   @Test
-  public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
+  public void shouldDefaultSourceEncodingWhenUnspecified() {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(null);
 
-    String html = this.subject.generate(generatorConfiguration);
+    assertThat(this.subject.generate(generatorConfiguration))
+      .contains("content=\"text/html; charset=" + StandardCharsets.UTF_8.name() + "\"");
 
-    HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
-    assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
   }
 
   @Test
-  public void populatesJasmineSource() throws Exception {
+  public void populatesJasmineSource() {
     String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_JS);
   }
 
   @Test
-  public void populatesJasmineHtmlSource() throws Exception {
+  public void populatesJasmineHtmlSource() {
     String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_HTML_JS);
   }
 
   @Test
-  public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
+  public void shouldPopulateCSSIntoHtmlWhenProvided() {
     String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsLinkTagWithSource(JASMINE_CSS);
   }
@@ -140,14 +136,5 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     String html = this.subject.generate(generatorConfiguration);
 
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(expected);
-  }
-
-  private HtmlPage getPage(String html) throws Exception {
-    MockWebConnection webConnection = new MockWebConnection();
-    webConnection.setDefaultResponse(html);
-    WebClient webClient = new WebClient();
-    webClient.setWebConnection(webConnection);
-    webClient.getOptions().setThrowExceptionOnScriptError(false);
-    return webClient.getPage("http://blah");
   }
 }

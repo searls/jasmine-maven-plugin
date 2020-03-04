@@ -6,7 +6,7 @@ Feature: Additional contexts can be configured.
   Scenario: Reference a vendor script outside of the source directory
 
     Given I am currently in the "jasmine-webapp-additional-contexts" project
-    When I run "mvn clean install"
+    When I run "../../../../mvnw clean install"
     Then the build should succeed
     And I should see "Results: 2 specs, 0 failures"
 
@@ -14,6 +14,6 @@ Feature: Additional contexts can be configured.
   Scenario: Reference a vendor script outside of the source directory in browser
 
     Given I am currently in the "jasmine-webapp-additional-contexts" project
-    When I run "mvn clean jasmine:bdd" in a new process
+    When I run "../../../../mvnw clean jasmine:bdd" in a new process
     And I load "http://localhost:8234" in a browser
     Then the page should contain "2 specs, 0 failures"

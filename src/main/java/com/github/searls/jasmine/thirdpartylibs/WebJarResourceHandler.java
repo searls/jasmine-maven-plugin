@@ -90,7 +90,7 @@ public class WebJarResourceHandler extends AbstractThirdPartyLibsResourceHandler
   private List<WebJarAssetLocator> createWebJarAssetLocators(ClassLoader... classLoaders) {
     List<WebJarAssetLocator> locators = new ArrayList<>();
     for (ClassLoader classLoader : classLoaders) {
-      locators.add(new WebJarAssetLocator(WebJarAssetLocator.getFullPathIndex(WILDCARD, classLoader)));
+      locators.add(new WebJarAssetLocator(classLoader));
     }
     return locators;
   }

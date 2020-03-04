@@ -19,7 +19,6 @@
  */
 package com.github.searls.jasmine.runner;
 
-import com.google.common.base.Function;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -51,9 +50,7 @@ class WebDriverWaiter {
                                     final boolean debug) {
     final JavascriptExecutor executor = (JavascriptExecutor) driver;
     try {
-      new WebDriverWait(driver, timeout, 1000).until(
-        (Function<WebDriver, Boolean>) input -> executionFinished(executor)
-      );
+      new WebDriverWait(driver, timeout, 1000).until(input -> executionFinished(executor));
     } catch (TimeoutException e) {
       handleTimeout(timeout, debug);
     }

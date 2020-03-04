@@ -8,7 +8,7 @@ Feature: running a local server
   Scenario: running the specs in a browser
 
     Given I am currently in the "jasmine-webapp-passing" project
-    When I run "mvn clean jasmine:bdd" in a new process
+    When I run "../../../../mvnw clean jasmine:bdd" in a new process
     And I load "http://localhost:8234" in a browser
     Then the page should contain "1 spec, 0 failures"
 

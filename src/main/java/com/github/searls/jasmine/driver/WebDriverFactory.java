@@ -29,7 +29,6 @@ import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import javax.inject.Named;
@@ -48,7 +47,6 @@ public class WebDriverFactory {
   private static final Map<String, Function<WebDriverConfiguration, WebDriver>> SUPPORTED_DRIVERS =
     ImmutableMap.<String, Function<WebDriverConfiguration, WebDriver>>builder()
       .put(ChromeDriver.class.getName(), WebDriverFactory::createChromeDriver)
-      .put(HtmlUnitDriver.class.getName(), WebDriverFactory::createHtmlUnitWebDriver)
       .build();
 
   public WebDriver createWebDriver(WebDriverConfiguration config) {
@@ -149,12 +147,8 @@ public class WebDriverFactory {
     return capabilities;
   }
 
-  private static WebDriver createHtmlUnitWebDriver(WebDriverConfiguration config) {
-    return new QuietHtmlUnitDriver(customizeCapabilities(DesiredCapabilities.htmlUnit(), config), config.isDebug());
-  }
-
   private static WebDriver createChromeDriver(WebDriverConfiguration config) {
-    WebDriverManager.getInstance(ChromeDriver.class).setup();
+    WebDriverManager.chromedriver().version("80.0.3987.106").setup();
     return new ChromeDriver(customizeCapabilities(new ChromeOptions().setHeadless(true), config));
   }
 }

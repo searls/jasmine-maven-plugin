@@ -22,6 +22,7 @@ package com.github.searls.jasmine.driver;
 import com.github.searls.jasmine.config.WebDriverConfiguration;
 import com.github.searls.jasmine.mojo.Capability;
 import com.google.common.collect.ImmutableList;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,7 +30,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -50,20 +50,19 @@ public class WebDriverFactoryTest {
   }
 
   @Test
-  public void createsQuietHtmlUnitDriver() throws Exception {
-    when(config.getWebDriverClassName()).thenReturn(HtmlUnitDriver.class.getName());
-    assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(QuietHtmlUnitDriver.class);
+  public void test() {
+    WebDriverManager.chromedriver().setup();
   }
 
   @Test
-  public void customDriverIsCreatedWithDefaultConstructorIfNoCapabilitiesConstructorExists() throws Exception {
+  public void customDriverIsCreatedWithDefaultConstructorIfNoCapabilitiesConstructorExists() {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithDefaultConstructor.class.getName());
     assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(CustomDriverWithDefaultConstructor.class);
   }
 
 
   @Test
-  public void customDriverIsCreatedWithCapabilitiesIfConstructorExists() throws Exception {
+  public void customDriverIsCreatedWithCapabilitiesIfConstructorExists() {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithCapabilities.class.getName());
     assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(CustomDriverWithCapabilities.class);
   }

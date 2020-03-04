@@ -6,6 +6,6 @@ Feature: custom source and spec directories
   Scenario: custom spec and source directories
 
     Given I am currently in the "jasmine-webapp-custom-dirs" project
-    When I run "mvn clean test"
+    When I run "../../../../mvnw clean test"
     Then the build should succeed
     And I should see "Results: 1 specs, 0 failures"
