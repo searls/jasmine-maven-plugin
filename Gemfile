@@ -7,7 +7,6 @@ gem 'relish'
 gem 'capybara'
 gem 'rake'
 gem 'selenium-webdriver'
-gem 'chromedriver-helper'
-gem 'geckodriver-helper'
+gem 'webdrivers', '~> 4.0'
 #gem 'ruby-debug19'
 

@@ -155,6 +155,12 @@ public class WebDriverFactory {
 
   private static WebDriver createChromeDriver(WebDriverConfiguration config) {
     WebDriverManager.getInstance(ChromeDriver.class).setup();
-    return new ChromeDriver(customizeCapabilities(new ChromeOptions().setHeadless(true), config));
+    return new ChromeDriver(customizeCapabilities(
+      new ChromeOptions()
+        .setHeadless(true)
+        .addArguments("--no-sandbox")
+        .addArguments("--disable-dev-shm-usage"),
+      config
+    ));
   }
 }

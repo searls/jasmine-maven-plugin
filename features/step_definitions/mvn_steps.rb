@@ -3,8 +3,11 @@ Given /^I am currently in the "([^"]*)" project$/ do |project_name|
   Dir.chdir("target/test-classes/examples/"+project_name)
 end
 
-When /^I run "([^"]*)"$/ do |command|
-  @output = `#{command} 2>&1`
+When /^I run "([^"\s]*)\s+([^"]*)"$/ do |command, args|
+  if command == 'mvn'
+    command = '../../../../mvnw'
+  end
+  @output = `#{command} #{args} 2>&1`
 end
 
 Then /^the build should fail$/ do

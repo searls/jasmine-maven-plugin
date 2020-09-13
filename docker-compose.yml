@@ -3,14 +3,13 @@ services:
   test-suite:
     image: klieber/jmp-build
     command: ./build.sh
-    working_dir: /home/build/project
+    working_dir: /project
     volumes:
-      - .:/home/build/project
-      - mvn-home:/home/build/.m2
-      - bundler:/home/build/.bundle
+      - .:/project
+      - mvn-home:/root/.m2
+      - bundle:/root/.bundle
     environment:
-      - MAVEN_CONFIG=/home/build/.m2
-      - DBUS_SESSION_BUS_ADDRESS=/dev/null
+      - BUNDLE_PATH=/root/.bundle
     stdin_open: true
     tty: true
     ports:
@@ -18,4 +17,4 @@ services:
     privileged: true
 volumes:
   mvn-home:
-  bundler:
+  bundle:

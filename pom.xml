@@ -145,8 +145,8 @@
     <selenium.version>3.8.1</selenium.version>
     <jasmine.version>2.6.0</jasmine.version>
     <htmlunit.version>2.29</htmlunit.version>
-    <mockito.version>2.10.0</mockito.version>
-    <webdrivermanager.version>2.1.0</webdrivermanager.version>
+    <mockito.version>3.5.10</mockito.version>
+    <webdrivermanager.version>4.2.0</webdrivermanager.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>1.8</java.version>
@@ -155,25 +155,35 @@
   </properties>
 
   <prerequisites>
-    <maven>3.1.0</maven>
+    <maven>3.5.4</maven>
   </prerequisites>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>net.bytebuddy</groupId>
+        <artifactId>byte-buddy</artifactId>
+        <version>1.10.13</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <dependencies>
     <!-- Mojo Dependencies -->
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-plugin-api</artifactId>
-      <version>3.1.1</version>
+      <version>3.6.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-core</artifactId>
-      <version>3.1.1</version>
+      <version>3.6.3</version>
     </dependency>
     <dependency>
       <groupId>org.apache.maven.plugin-tools</groupId>
       <artifactId>maven-plugin-annotations</artifactId>
-      <version>3.2</version>
+      <version>3.6.0</version>
       <scope>provided</scope>
     </dependency>
 
@@ -191,12 +201,12 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-lang3</artifactId>
-      <version>3.7</version>
+      <version>3.11</version>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
-      <version>2.6</version>
+      <version>2.8.0</version>
     </dependency>
     <dependency>
       <groupId>commons-logging</groupId>
@@ -274,11 +284,16 @@
       <artifactId>slf4j-api</artifactId>
       <version>1.7.21</version>
     </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+      <version>29.0-jre</version>
+    </dependency>
 
     <dependency>
       <groupId>org.immutables</groupId>
       <artifactId>value</artifactId>
-      <version>2.5.6</version>
+      <version>2.8.8</version>
       <scope>provided</scope>
     </dependency>
 
@@ -292,19 +307,19 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.8.0</version>
+      <version>3.17.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-guava</artifactId>
-      <version>3.1.0</version>
+      <version>3.4.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.12</version>
+      <version>4.13</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -338,7 +353,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.1.0</version>
           <configuration>
             <useDefaultDelimiters>false</useDefaultDelimiters>
             <delimiters>
@@ -349,7 +364,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-site-plugin</artifactId>
-          <version>3.5.1</version>
+          <version>3.8.2</version>
           <configuration>
             <skipDeploy>true</skipDeploy>
             <attributes>
@@ -362,14 +377,14 @@
             <dependency>
               <groupId>org.apache.maven.doxia</groupId>
               <artifactId>doxia-module-markdown</artifactId>
-              <version>1.7</version>
+              <version>1.9.1</version>
             </dependency>
           </dependencies>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-clean-plugin</artifactId>
-          <version>3.0.0</version>
+          <version>3.1.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -389,27 +404,27 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-jar-plugin</artifactId>
-          <version>3.0.2</version>
+          <version>3.2.0</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-source-plugin</artifactId>
-          <version>3.0.1</version>
+          <version>3.2.1</version>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.4</version>
+          <version>3.1.1</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
           <artifactId>jacoco-maven-plugin</artifactId>
-          <version>0.7.7.201606060606</version>
+          <version>0.8.5</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <version>1.12</version>
+          <version>2.0.0</version>
           <configuration>
             <licenseName>apache-v2</licenseName>
             <licenseResolver>${project.baseUri}src/main/config/license</licenseResolver>
@@ -429,7 +444,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.5</version>
+        <version>3.6.0</version>
         <configuration>
           <goalPrefix>jasmine</goalPrefix>
           <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
@@ -453,12 +468,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.8.1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>2.22.2</version>
         <configuration>
           <excludes>
             <exclude>**/*IntegrationTest.java</exclude>
@@ -468,7 +483,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>2.22.2</version>
         <executions>
           <execution>
             <id>integration-test</id>
@@ -511,12 +526,12 @@
       <plugin>
         <groupId>org.eluder.coveralls</groupId>
         <artifactId>coveralls-maven-plugin</artifactId>
-        <version>4.2.0</version>
+        <version>4.3.0</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>1.12</version>
+        <version>3.0.0</version>
         <executions>
           <execution>
             <phase>pre-site</phase>
@@ -529,7 +544,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-scm-publish-plugin</artifactId>
-        <version>1.0</version>
+        <version>3.0.0</version>
         <configuration>
           <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
           <checkinComment>Generating site for ${project.version}</checkinComment>
@@ -550,7 +565,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
+        <version>1.6.8</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
@@ -560,7 +575,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>sisu-maven-plugin</artifactId>
-        <version>1.1</version>
+        <version>1.4</version>
         <executions>
           <execution>
             <id>generate-index</id>
@@ -581,7 +596,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
-        <version>3.4</version>
+        <version>3.6.0</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -593,7 +608,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <version>2.9</version>
+        <version>3.0.0</version>
         <reportSets>
           <reportSet>
             <reports>
@@ -614,7 +629,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-changes-plugin</artifactId>
-        <version>2.12</version>
+        <version>2.12.1</version>
         <configuration>
           <columnNames>Id,Summary,Reporter,Assignee,Status,Type,Created,Fix Version</columnNames>
         </configuration>
@@ -629,12 +644,12 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jxr-plugin</artifactId>
-        <version>2.5</version>
+        <version>3.0.0</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-report-plugin</artifactId>
-        <version>2.19.1</version>
+        <version>2.22.2</version>
       </plugin>
       <plugin>
         <groupId>org.jacoco</groupId>
@@ -643,7 +658,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-pmd-plugin</artifactId>
-        <version>3.6</version>
+        <version>3.13.0</version>
         <configuration>
           <rulesets>
             <ruleset>/rulesets/java/basic.xml</ruleset>

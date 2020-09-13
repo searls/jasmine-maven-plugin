@@ -1,6 +1,10 @@
 
-When /^I run "([^"]*)" in a new process$/ do |command|
-  @process = ChildProcess.send(:build,*command.split(' '))
+When /^I run "([^"\s]*)\s+([^"]*)" in a new process$/ do |command, args|
+  if command == 'mvn'
+    command = '../../../../mvnw'
+  end
+  args.prepend (command + ' ')
+  @process = ChildProcess.send(:build,*args.split(' '))
   @process.start
   sleep 10
 end
