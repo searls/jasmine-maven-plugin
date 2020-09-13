@@ -144,7 +144,7 @@
     <jetty.version>9.4.8.v20171121</jetty.version>
     <selenium.version>3.8.1</selenium.version>
     <jasmine.version>2.6.0</jasmine.version>
-    <htmlunit.version>2.29</htmlunit.version>
+    <htmlunit.version>2.37.0</htmlunit.version>
     <mockito.version>3.5.10</mockito.version>
     <webdrivermanager.version>4.2.0</webdrivermanager.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
