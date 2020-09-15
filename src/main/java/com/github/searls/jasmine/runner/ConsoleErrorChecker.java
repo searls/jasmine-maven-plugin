@@ -51,5 +51,6 @@ class ConsoleErrorChecker {
       "return window.getConsoleErrors ? window.getConsoleErrors() : [];"
     );
 
-    return errorMessages != null ? errorMessages : Collections.emptyList();  }
+    return errorMessages != null ? errorMessages : Collections.emptyList();
+  }
 }
