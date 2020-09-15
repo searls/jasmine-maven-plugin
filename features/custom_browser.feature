@@ -8,6 +8,6 @@ Feature: setting a custom browser
     Given I am currently in the "jasmine-webapp-custom-browser" project
     When I run "mvn clean test"
     Then the build should succeed
-    And I should see "has Firefox/45.0 in its user agent string"
+    And I should see "has Firefox in its user agent string"
 
 
