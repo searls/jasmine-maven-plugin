@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Value.Immutable
-@Value.Style(jdkOnly = true)
+@Value.Style(jdkOnly = true, get = {"get*", "is*"})
 public abstract class JasmineConfiguration {
 
   public abstract File getBasedir();
@@ -103,4 +103,6 @@ public abstract class JasmineConfiguration {
   public ClassLoader getProjectClassLoader() {
     return this.getClass().getClassLoader();
   }
+
+  public abstract boolean isDebug();
 }

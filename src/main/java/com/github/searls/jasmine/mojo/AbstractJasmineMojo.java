@@ -335,6 +335,14 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   @Parameter
   private List<Context> additionalContexts = Collections.emptyList();
 
+  /**
+   * True to increase logging output.
+   *
+   * @since 1.1.0
+   */
+  @Parameter(defaultValue = "false")
+  private boolean debug = false;
+
   private final MavenProject mavenProject;
   private final ReporterType reporterType;
   private final ResourceRetriever resourceRetriever;
@@ -353,6 +361,12 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
   @Override
   public void execute() throws MojoExecutionException, MojoFailureException {
     try {
+      if (!debug) {
+        // quiet the logging from Jetty, WebDriverManager, and ChromeDriver
+        System.setProperty("org.slf4j.simpleLogger.log.org.eclipse.jetty", "warn");
+        System.setProperty("org.slf4j.simpleLogger.log.io.github.bonigarcia.wdm", "warn");
+        System.setProperty("webdriver.chrome.silentOutput", "true");
+      }
       this.run(getServerConfiguration(), getJasmineConfiguration());
     } catch (MojoFailureException e) {
       throw e;
@@ -397,6 +411,7 @@ public abstract class AbstractJasmineMojo extends AbstractMojo {
       .reporterType(this.reporterType)
       .jasmineTargetDir(this.jasmineTargetDir)
       .sourceEncoding(this.sourceEncoding)
+      .debug(this.debug)
       .build();
   }
 

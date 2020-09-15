@@ -26,7 +26,6 @@ import java.util.List;
 
 @Value.Immutable
 public interface WebDriverConfiguration {
-  boolean isDebug();
   String getWebDriverClassName();
   List<Capability> getWebDriverCapabilities();
 }

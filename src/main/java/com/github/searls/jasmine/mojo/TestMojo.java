@@ -148,14 +148,6 @@ public class TestMojo extends AbstractJasmineMojo {
   private boolean haltOnFailure = true;
 
   /**
-   * True to increase HtmlUnit output and attempt reporting on specs even if a timeout occurred.
-   *
-   * @since 1.1.0
-   */
-  @Parameter(defaultValue = "false")
-  private boolean debug = false;
-
-  /**
    * Skip execution of tests.
    *
    * @see <a href="http://maven.apache.org/general.html#skip-test">http://maven.apache.org/general.html#skip-test</a>
@@ -219,12 +211,6 @@ public class TestMojo extends AbstractJasmineMojo {
   @Override
   public void run(ServerConfiguration serverConfiguration,
                   JasmineConfiguration configuration) throws Exception {
-    if (!debug) {
-      // quiet the logging from Jetty, WebDriverManager, and ChromeDriver
-      System.setProperty("org.slf4j.simpleLogger.log.org.eclipse.jetty", "warn");
-      System.setProperty("org.slf4j.simpleLogger.log.io.github.bonigarcia.wdm", "warn");
-      System.setProperty("webdriver.chrome.silentOutput", "true");
-    }
     ServerManager serverManager = ServerManager.newInstance();
     try {
       int port = serverManager.start(resourceHandlerConfigurator.createHandler(configuration));
@@ -254,7 +240,7 @@ public class TestMojo extends AbstractJasmineMojo {
       serverConfiguration.getServerURL(),
       driver,
       this.timeout,
-      this.debug,
+      configuration.isDebug(),
       this.format,
       configuration.getReporters(),
       configuration.getFileSystemReporters()
@@ -277,7 +263,6 @@ public class TestMojo extends AbstractJasmineMojo {
 
   private WebDriverConfiguration getWebDriverConfiguration() {
     return ImmutableWebDriverConfiguration.builder()
-      .debug(this.debug)
       .webDriverCapabilities(webDriverCapabilities)
       .webDriverClassName(webDriverClassName)
       .build();
