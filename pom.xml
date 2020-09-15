@@ -7,7 +7,7 @@
   <packaging>maven-plugin</packaging>
 
   <name>jasmine-maven-plugin</name>
-  <description>A JavaScript unit test plugin that processes JavaScript sources and Jasmine specs, prepares test runner HTML files, executes Jasmine specs headlessly with HtmlUnit, and produces JUnit XML reports</description>
+  <description>A JavaScript unit test plugin that processes JavaScript sources and Jasmine specs, prepares test runner HTML files, executes Jasmine specs headlessly with Chrome, and produces JUnit XML reports</description>
   <url>https://github.com/searls/jasmine-maven-plugin</url>
   <licenses>
     <license>
