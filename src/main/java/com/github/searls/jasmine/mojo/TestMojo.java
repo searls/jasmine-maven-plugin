@@ -219,6 +219,12 @@ public class TestMojo extends AbstractJasmineMojo {
   @Override
   public void run(ServerConfiguration serverConfiguration,
                   JasmineConfiguration configuration) throws Exception {
+    if (!debug) {
+      // quiet the logging from Jetty, WebDriverManager, and ChromeDriver
+      System.setProperty("org.slf4j.simpleLogger.log.org.eclipse.jetty", "warn");
+      System.setProperty("org.slf4j.simpleLogger.log.io.github.bonigarcia.wdm", "warn");
+      System.setProperty("webdriver.chrome.silentOutput", "true");
+    }
     ServerManager serverManager = ServerManager.newInstance();
     try {
       int port = serverManager.start(resourceHandlerConfigurator.createHandler(configuration));
