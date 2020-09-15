@@ -51,7 +51,7 @@ public class FormatsScriptTagsTest {
   }
 
   private String expectedScriptTagFormat(String scriptName) {
-    return expectedScriptTagFormat(scriptName, "text/javascript");
+    return expectedScriptTagFormat(scriptName, "application/javascript");
   }
 
   private String expectedScriptTagFormat(String scriptName, String scriptType) {

@@ -66,7 +66,7 @@ public abstract class AbstractThirdPartyLibsResourceHandler extends ResourceHand
     if (resourcePath.endsWith(".css")) {
       response.setContentType("text/css");
     } else {
-      response.setContentType("text/javascript");
+      response.setContentType("application/javascript");
     }
     response.addDateHeader("EXPIRES", 0L);
     response.setDateHeader(HttpHeader.LAST_MODIFIED.asString(), new Date().getTime());

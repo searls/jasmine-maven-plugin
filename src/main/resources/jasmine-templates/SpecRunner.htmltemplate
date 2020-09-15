@@ -6,7 +6,7 @@
   <meta http-equiv="refresh" content="$autoRefreshInterval$">
   $endif$
   <title>Jasmine Spec Runner</title>
-  <script type="text/javascript">
+  <script type="application/javascript">
     window.onerror = function(msg,url,line) {
       if (document.head) {
         var jserror = document.head.getAttribute('jmp_jserror') || '';
@@ -20,13 +20,13 @@
   </script>
   $cssDependencies$
   $javascriptDependencies$
-  <script type="text/javascript">
+  <script type="application/javascript">
     window.onload = jasmine.boot;
   </script>
   $allScriptTags$
 </head>
 <body>
-  <script type="text/javascript">
+  <script type="application/javascript">
     if(window.location.href.indexOf("SpecRunner.html") !== -1) {
       document.body.appendChild(document.createTextNode("Warning: Opening this HTML file directly from the file system is deprecated. You should instead try running `mvn jasmine:bdd` from the command line, and then visit `http://localhost:8234` in your browser. "))
     }

@@ -35,7 +35,7 @@ public class HtmlAssertions extends AbstractCharSequenceAssert<HtmlAssertions, S
 
   public HtmlAssertions containsScriptTagWithSource(String src) {
     return this
-      .contains("<script type=\"text/javascript\" src=\"" + src + "\"></script>")
+      .contains("<script type=\"application/javascript\" src=\"" + src + "\"></script>")
       .describedAs("contains <script/> tag with src='" + src + "'");
   }
 
