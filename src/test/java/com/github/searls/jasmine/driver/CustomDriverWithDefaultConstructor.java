@@ -19,12 +19,81 @@
  */
 package com.github.searls.jasmine.driver;
 
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
-/**
- */
-class CustomDriverWithDefaultConstructor extends HtmlUnitDriver {
+import java.util.List;
+import java.util.Set;
+
+class CustomDriverWithDefaultConstructor implements WebDriver {
+
   public CustomDriverWithDefaultConstructor() {
-    setJavascriptEnabled(false);
+
+  }
+
+  @Override
+  public void get(String url) {
+    throw new UnsupportedOperationException("Method not supported: get(String)");
+  }
+
+  @Override
+  public String getCurrentUrl() {
+    throw new UnsupportedOperationException("Method not supported: getCurrentUrl()");
+  }
+
+  @Override
+  public String getTitle() {
+    throw new UnsupportedOperationException("Method not supported: getTitle()");
+  }
+
+  @Override
+  public List<WebElement> findElements(By by) {
+    throw new UnsupportedOperationException("Method not supported: findElements(By)");
+  }
+
+  @Override
+  public WebElement findElement(By by) {
+    throw new UnsupportedOperationException("Method not supported: findElement(By)");
+  }
+
+  @Override
+  public String getPageSource() {
+    throw new UnsupportedOperationException("Method not supported: getPageSource()");
+  }
+
+  @Override
+  public void close() {
+    throw new UnsupportedOperationException("Method not supported: close()");
+  }
+
+  @Override
+  public void quit() {
+    throw new UnsupportedOperationException("Method not supported: quit()");
+  }
+
+  @Override
+  public Set<String> getWindowHandles() {
+    throw new UnsupportedOperationException("Method not supported: getWindowHandles()");
+  }
+
+  @Override
+  public String getWindowHandle() {
+    throw new UnsupportedOperationException("Method not supported: getWindowHandle()");
+  }
+
+  @Override
+  public TargetLocator switchTo() {
+    throw new UnsupportedOperationException("Method not supported: switchTo()");
+  }
+
+  @Override
+  public Navigation navigate() {
+    throw new UnsupportedOperationException("Method not supported: navigate()");
+  }
+
+  @Override
+  public Options manage() {
+    throw new UnsupportedOperationException("Method not supported: manage()");
   }
 }

@@ -19,15 +19,13 @@
  */
 package com.github.searls.jasmine.runner;
 
-import com.gargoylesoftware.htmlunit.MockWebConnection;
-import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlMeta;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
 import com.github.searls.jasmine.HtmlAssertions;
 import com.github.searls.jasmine.format.FormatsScriptTags;
 import com.github.searls.jasmine.io.IoUtilities;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import org.apache.commons.logging.LogFactory;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -93,25 +91,27 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     String html = this.subject.generate(generatorConfiguration);
 
     assertThat(html).contains(HTML5_DOCTYPE);
-    assertThat(this.getPage(html).getDoctype().getName()).isEqualTo("html");
+    Document document = Jsoup.parse(html);
+    assertThat(document.documentType().name()).isEqualTo("html");
   }
 
   @Test
   public void shouldAssignSpecifiedSourceEncoding() throws Exception {
     String html = this.subject.generate(generatorConfiguration);
 
-    HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
-    assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SOURCE_ENCODING);
+    Document document = Jsoup.parse(html);
+    assertThat(document.getElementsByTag("meta").attr("content"))
+      .isEqualTo("text/html; charset=" + SOURCE_ENCODING);
   }
 
   @Test
   public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(null);
-
     String html = this.subject.generate(generatorConfiguration);
 
-    HtmlMeta contentType = this.getPage(html).getFirstByXPath("//meta");
-    assertThat(contentType.getContentAttribute()).isEqualTo("text/html; charset=" + SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
+    Document document = Jsoup.parse(html);
+    assertThat(document.getElementsByTag("meta").attr("content"))
+      .isEqualTo("text/html; charset=" + SpecRunnerHtmlGenerator.DEFAULT_SOURCE_ENCODING);
   }
 
   @Test
@@ -140,14 +140,5 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
     String html = this.subject.generate(generatorConfiguration);
 
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(expected);
-  }
-
-  private HtmlPage getPage(String html) throws Exception {
-    MockWebConnection webConnection = new MockWebConnection();
-    webConnection.setDefaultResponse(html);
-    WebClient webClient = new WebClient();
-    webClient.setWebConnection(webConnection);
-    webClient.getOptions().setThrowExceptionOnScriptError(false);
-    return webClient.getPage("http://blah");
   }
 }

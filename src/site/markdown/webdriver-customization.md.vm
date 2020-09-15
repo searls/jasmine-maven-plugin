@@ -1,10 +1,15 @@
 WebDriver Customization
 =======================
-The jamine-maven-plugin ships with [HtmlUnitDriver](https://code.google.com/p/selenium/wiki/HtmlUnitDriver) by default but it is also possible to change to any other [WebDriver](http://docs.seleniumhq.org/projects/webdriver/) implementation and configure it with [Capabilities](http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/Capabilities.html).
+The jamine-maven-plugin ships with [ChromeDriver](https://chromedriver.chromium.org/home) configured to run in headless
+mode by default. It is also possible to change to any other [WebDriver](https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/WebDriver.html)
+implementation and configure it with [Capabilities](https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/Capabilities.html).
 
 Changing the implementation
 ---------------------------
-The `webDriverClassName` parameter allows you to specify the WebDriver implementation you would like to use in place of HtmlUnitDriver. The WebDriver implementation must either have a constructor that excepts no arguments or a constructor that accepts a single [Capabilities](http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/Capabilities.html) argument.
+The `webDriverClassName` parameter allows you to specify the WebDriver implementation you would like to use in place of
+ChromeDriver. The WebDriver implementation must either have a constructor that excepts no arguments or a constructor
+that accepts a single [Capabilities](https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/Capabilities.html)
+argument.
 
 Here is an example using FirefoxDriver:
 
@@ -32,15 +37,17 @@ Here is an example using FirefoxDriver:
 
 Setting capabilities
 --------------------
-You can configure your WebDriver implementation using [Capabilities](http://selenium.googlecode.com/git/docs/api/java/org/openqa/selenium/Capabilities.html) as a simple String, List, or a Map. The capabilities are configured using the `webDriverCapabilities` parameter and you may provide multiple capabilities.
+You can configure your WebDriver implementation using [Capabilities](https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/WebDriver.html)
+as a simple String, List, or a Map. The capabilities are configured using the `webDriverCapabilities` parameter and you
+may provide multiple capabilities.
 
 * Capability as a String
 
 ``` xml
 <webDriverCapabilities>
   <capability>
-    <name>phantomjs.binary.path</name>
-    <value>/opt/phantomjs/bin/phantomjs</value>
+    <name>binary</name>
+    <value>/path/to/other/chrome/binary</value>
   </capability>
 </webDriverCapabilities>
 ```
@@ -50,10 +57,11 @@ You can configure your WebDriver implementation using [Capabilities](http://sele
 ``` xml
 <webDriverCapabilities>
   <capability>
-    <name>phantomjs.cli.args</name>
+    <name>args</name>
     <list>
-      <value>--disk-cache=true</value>
-      <value>--max-disk-cache-size=256</value>
+      <value>--headless</value>
+      <value>--start-maximized</value>
+      <value>--user-data-dir=/path/to/your/custom/profile</value>
     </list>
   </capability>
 </webDriverCapabilities>
@@ -72,41 +80,15 @@ You can configure your WebDriver implementation using [Capabilities](http://sele
 </webDriverCapabilities>
 ```
 
-You will need to consult with your WebDriver implementation to determine what capabilities are possible.  If a capability can not be provided as either a String, List, or Map then it is currently not supported.
+You will need to consult with your WebDriver implementation to determine what capabilities are possible.  If a
+capability can not be provided as either a String, List, or Map then it is currently not supported.
 
-Lastly, we do not test every possible WebDriver implementation with every possible permutation of capabilities so it is very possible that they will not work. Feel free to file a bug if you come across such a capability that you feel should be supported.
+Lastly, we do not test every possible WebDriver implementation with every possible permutation of capabilities so it
+is very possible that they will not work. Feel free to file a bug if you come across such a capability that you feel
+should be supported.
 
-Examples
---------
-
-Configuring the default HtmlUnitDriver to use a proxy:
-
-```xml
-<plugin>
-  <groupId>${project.groupId}</groupId>
-  <artifactId>${project.artifactId}</artifactId>
-  <version>${currentStableVersion}<version>
-  <executions>
-    <execution>
-      <goals>
-        <goal>test</goal>
-      </goals>
-    </execution>
-  </executions>
-  <configuration>
-    <webDriverCapabilities>
-      <capability>
-        <name>proxy</name>
-        <map>
-          <httpProxy>myproxyserver.com:8000</httpProxy>
-        </map>
-      </capability>
-    </webDriverCapabilities>
-  </configuration>
-</plugin>
-```
-
-Configuring PhantomJSDriver with custom binary path and caching settings:
+The default driver used to be HtmlUnit many versions ago.  As of version `3.0`, we no longer include HtmlUnit with the
+plugin. If you still need HtmlUnit then you can use it by configuring your build like this:
 
 ```xml
 <plugin>
@@ -121,20 +103,24 @@ Configuring PhantomJSDriver with custom binary path and caching settings:
     </execution>
   </executions>
   <configuration>
-    <webDriverClassName>org.openqa.selenium.phantomjs.PhantomJSDriver</webDriverClassName>
+    <webDriverClassName>org.openqa.selenium.htmlunit.HtmlUnitDriver</webDriverClassName>
     <webDriverCapabilities>
       <capability>
-        <name>phantomjs.binary.path</name>
-        <value>/opt/phantomjs/bin/phantomjs</value>
+        <name>browserName</name>
+        <value>htmlunit</value>
       </capability>
       <capability>
-        <name>phantomjs.cli.args</name>
-        <list>
-          <value>--disk-cache=true</value>
-          <value>--max-disk-cache-size=256</value>
-        </list>
+        <name>browserVersion</name>
+        <value>firefox</value>
       </capability>
     </webDriverCapabilities>
   </configuration>
+  <dependencies>
+    <dependency>
+      <groupId>org.seleniumhq.selenium</groupId>
+      <artifactId>htmlunit-driver</artifactId>
+      <version>2.43.1</version>
+    </dependency>
+  </dependencies>
 </plugin>
 ```

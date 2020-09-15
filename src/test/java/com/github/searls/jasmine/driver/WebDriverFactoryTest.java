@@ -29,7 +29,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -50,17 +49,10 @@ public class WebDriverFactoryTest {
   }
 
   @Test
-  public void createsQuietHtmlUnitDriver() throws Exception {
-    when(config.getWebDriverClassName()).thenReturn(HtmlUnitDriver.class.getName());
-    assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(QuietHtmlUnitDriver.class);
-  }
-
-  @Test
   public void customDriverIsCreatedWithDefaultConstructorIfNoCapabilitiesConstructorExists() throws Exception {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithDefaultConstructor.class.getName());
     assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(CustomDriverWithDefaultConstructor.class);
   }
-
 
   @Test
   public void customDriverIsCreatedWithCapabilitiesIfConstructorExists() throws Exception {
