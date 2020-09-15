@@ -70,7 +70,7 @@ public class CreatesRunner {
     if (this.newRunnerDiffersFromOldRunner(runnerDestination, newRunnerHtml)) {
       this.saveRunner(runnerDestination, newRunnerHtml, config.getSourceEncoding());
     } else {
-      LOGGER.info("Skipping spec runner generation, because an identical spec runner already exists.");
+      LOGGER.debug("Skipping spec runner generation, because an identical spec runner already exists.");
     }
   }
 
