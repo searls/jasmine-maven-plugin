@@ -30,6 +30,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import javax.inject.Named;
 import java.lang.reflect.Constructor;
@@ -47,6 +48,7 @@ public class WebDriverFactory {
   private static final Map<String, Function<WebDriverConfiguration, WebDriver>> SUPPORTED_DRIVERS =
     ImmutableMap.<String, Function<WebDriverConfiguration, WebDriver>>builder()
       .put(ChromeDriver.class.getName(), WebDriverFactory::createChromeDriver)
+      .put(RemoteWebDriver.class.getName(), WebDriverFactory::createRemoteWebDriver)
       .build();
 
   public WebDriver createWebDriver(WebDriverConfiguration config) {
@@ -156,5 +158,9 @@ public class WebDriverFactory {
         .addArguments("--disable-dev-shm-usage"),
       config
     ));
+  }
+
+  private static WebDriver createRemoteWebDriver(WebDriverConfiguration config) {
+    return new RemoteWebDriver(config.getRemoteWebDriverUrl(), getCapabilities(config.getWebDriverCapabilities()));
   }
 }

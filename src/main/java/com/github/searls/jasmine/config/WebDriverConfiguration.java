@@ -22,10 +22,12 @@ package com.github.searls.jasmine.config;
 import com.github.searls.jasmine.mojo.Capability;
 import org.immutables.value.Value;
 
+import java.net.URL;
 import java.util.List;
 
 @Value.Immutable
 public interface WebDriverConfiguration {
   String getWebDriverClassName();
   List<Capability> getWebDriverCapabilities();
+  URL getRemoteWebDriverUrl();
 }
