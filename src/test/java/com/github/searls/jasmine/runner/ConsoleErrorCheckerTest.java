@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,18 +19,19 @@
  */
 package com.github.searls.jasmine.runner;
 
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
+import java.util.Collections;
+
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,43 +39,33 @@ public class ConsoleErrorCheckerTest {
 
   private static final String ERROR = "Bad to the Bone!";
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
-
   @Mock
-  private WebDriver webDriver;
-
-
-  @Mock
-  private WebElement headWithErrors;
-
-
-  @Mock
-  private WebElement headWithoutErrors;
+  private MockWebDriver webDriver;
 
   @InjectMocks
   private ConsoleErrorChecker subject;
 
   @Before
-  public void setUp() throws Exception {
+  public void setUp() {
     subject = new ConsoleErrorChecker();
-    when(headWithErrors.getAttribute("jmp_jserror")).thenReturn(ERROR);
   }
 
   @Test
-  public void shouldPassWhenNoErrors() throws Exception {
-    when(webDriver.findElement(By.tagName("head"))).thenReturn(headWithoutErrors);
-
+  public void shouldPassWhenNoErrors() {
+    when(webDriver.executeScript(anyString())).thenReturn(Collections.emptyList());
     subject.checkForConsoleErrors(webDriver);
   }
 
   @Test
-  public void shouldThrowWhenErrors() throws Exception {
-    expectedException.expect(RuntimeException.class);
-    expectedException.expectMessage("There were javascript console errors.");
+  public void shouldThrowWhenErrors() {
+    when(webDriver.executeScript(anyString())).thenReturn(Collections.singletonList(ERROR));
 
-    when(webDriver.findElement(By.tagName("head"))).thenReturn(headWithErrors);
+    Assertions.assertThatExceptionOfType(RuntimeException.class)
+      .isThrownBy(() -> subject.checkForConsoleErrors(webDriver))
+      .withMessageContaining("There were javascript console errors.");
+  }
 
-    subject.checkForConsoleErrors(webDriver);
+  interface MockWebDriver extends WebDriver, JavascriptExecutor {
+
   }
 }

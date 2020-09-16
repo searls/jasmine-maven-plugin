@@ -7,16 +7,22 @@
   $endif$
   <title>Jasmine Spec Runner</title>
   <script type="application/javascript">
-    window.onerror = function(msg,url,line) {
-      if (document.head) {
-        var jserror = document.head.getAttribute('jmp_jserror') || '';
-        if (jserror) {
-          jserror += ':!:';
-        }
-        jserror += msg;
-        document.head.setAttribute('jmp_jserror',jserror);
-      }
+    window.onerror = function(msg, url, line) {
+      var errors = window.consoleErrors = window.consoleErrors || [];
+      errors.push(msg);
     };
+
+    function getConsoleErrors() {
+      var errors = [];
+      if (jsApiReporter && jsApiReporter.runDetails && jsApiReporter.runDetails.failedExpectations) {
+        errors = jsApiReporter.runDetails.failedExpectations.map((error) => error.message);
+      }
+
+      if (errors.length === 0) {
+        errors = window.consoleErrors;
+      }
+      return errors;
+    }
   </script>
   $cssDependencies$
   $javascriptDependencies$
