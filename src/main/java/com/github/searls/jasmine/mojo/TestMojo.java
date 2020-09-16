@@ -46,6 +46,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,13 +68,14 @@ public class TestMojo extends AbstractJasmineMojo {
    * <li>org.openqa.selenium.htmlunit.HtmlUnitDriver</li>
    * <li>org.openqa.selenium.firefox.FirefoxDriver</li>
    * <li>org.openqa.selenium.ie.InternetExplorerDriver</li>
+   * <li>org.openqa.selenium.remote.RemoteWebDriver</li>
    * </ul>
    * <br>
    * See the webDriverCapabilities property for configuring driver specific properties.
    *
    * @since 1.1.0
    */
-  @Parameter(defaultValue = "org.openqa.selenium.chrome.ChromeDriver")
+  @Parameter(property = "jasmine.webDriverClassName", defaultValue = "org.openqa.selenium.chrome.ChromeDriver")
   private String webDriverClassName = ChromeDriver.class.getName();
 
   /**
@@ -108,6 +110,14 @@ public class TestMojo extends AbstractJasmineMojo {
    */
   @Parameter
   private List<Capability> webDriverCapabilities = Collections.emptyList();
+
+  /**
+   * <p>The URL to your RemoteWebDriver server. This is only relevant if you are using the RemoteWebDriver.</p>
+   *
+   * @since 3.0
+   */
+  @Parameter(property = "jasmine.remoteWebDriverUrl", defaultValue = "http://localhost:4444/wd/hub")
+  private URL remoteWebDriverUrl = null;
 
   /**
    * <p>Determines the format that jasmine:test will print to console.</p>
@@ -265,6 +275,7 @@ public class TestMojo extends AbstractJasmineMojo {
     return ImmutableWebDriverConfiguration.builder()
       .webDriverCapabilities(webDriverCapabilities)
       .webDriverClassName(webDriverClassName)
+      .remoteWebDriverUrl(remoteWebDriverUrl)
       .build();
   }
 
