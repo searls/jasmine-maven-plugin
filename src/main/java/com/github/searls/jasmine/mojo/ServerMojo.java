@@ -19,6 +19,7 @@
  */
 package com.github.searls.jasmine.mojo;
 
+import com.github.searls.jasmine.config.ImmutableServerConfiguration;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.config.ServerConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
@@ -84,10 +85,19 @@ public class ServerMojo extends AbstractJasmineMojo {
   }
 
   @Override
-  public void run(ServerConfiguration serverConfiguration,
+  public void run(ServerConfiguration requestedServerConfiguration,
                   JasmineConfiguration jasmineConfiguration) throws Exception {
     ServerManager serverManager = serverManagerFactory.create();
-    serverManager.start(serverConfiguration.getServerPort(), resourceHandlerConfigurator.createHandler(jasmineConfiguration));
+    int assignedPort = serverManager.start(
+      requestedServerConfiguration.getServerPort(),
+      resourceHandlerConfigurator.createHandler(jasmineConfiguration)
+    );
+
+    ServerConfiguration serverConfiguration = ImmutableServerConfiguration.builder()
+      .from(requestedServerConfiguration)
+      .serverPort(assignedPort)
+      .build();
+
     LOGGER.info(this.buildServerInstructions(serverConfiguration, jasmineConfiguration));
     openBrowser(serverConfiguration);
     serverManager.join();

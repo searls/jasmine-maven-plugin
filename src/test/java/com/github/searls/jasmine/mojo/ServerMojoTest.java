@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,6 +19,7 @@
  */
 package com.github.searls.jasmine.mojo;
 
+import com.github.searls.jasmine.config.ImmutableServerConfiguration;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.config.ServerConfiguration;
 import com.github.searls.jasmine.io.RelativizesFilePaths;
@@ -28,7 +29,6 @@ import com.github.searls.jasmine.server.ServerManager;
 import com.github.searls.jasmine.server.ServerManagerFactory;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.jetty.server.Handler;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -49,19 +49,10 @@ public class ServerMojoTest {
   private MavenProject mavenProject;
 
   @Mock
-  private ServerConfiguration serverConfiguration;
-
-  @Mock
   private JasmineConfiguration jasmineConfiguration;
 
   @Mock
   private RelativizesFilePaths relativizesFilePaths;
-
-  @Mock
-  private File baseDir;
-
-  @Mock
-  private File targetDir;
 
   @Mock
   private File sourceDir;
@@ -90,9 +81,8 @@ public class ServerMojoTest {
   @InjectMocks
   private ServerMojo subject;
 
-  @Before
-  public void before() throws Exception {
-    when(serverConfiguration.getServerPort()).thenReturn(PORT);
+  @Test
+  public void testRunMojo() throws Exception {
 
     when(jasmineConfiguration.getSources()).thenReturn(sources);
     when(jasmineConfiguration.getSpecs()).thenReturn(specs);
@@ -101,18 +91,17 @@ public class ServerMojoTest {
     when(specs.getDirectory()).thenReturn(specDir);
     when(serverManagerFactory.create()).thenReturn(serverManager);
     when(configurator.createHandler(jasmineConfiguration)).thenReturn(handler);
+    when(serverManager.start(PORT, handler)).thenReturn(PORT);
 
+    ServerConfiguration serverConfiguration = ImmutableServerConfiguration.builder()
+      .uriScheme("http")
+      .serverHostname("localhost")
+      .serverPort(PORT)
+      .build();
 
     subject.run(serverConfiguration, jasmineConfiguration);
-  }
 
-  @Test
-  public void startsTheServer() throws Exception {
     verify(serverManager).start(PORT, handler);
-  }
-
-  @Test
-  public void joinsTheServer() throws Exception {
     verify(serverManager).join();
   }
 }

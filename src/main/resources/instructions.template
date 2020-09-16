@@ -3,7 +3,7 @@
 Jasmine testing environment started! You can run your specs as you develop by visiting
 this URL in a web browser:
 
- %s
+  %s
 
 The server will monitor these two directories for scripts that you add, remove, and change:
 
