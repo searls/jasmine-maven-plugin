@@ -6,9 +6,9 @@
     <artifactId>jasmine-example-superpom</artifactId>
     <version>%{project.version}</version>
   </parent>
-  <artifactId>jasmine-webapp-custom-browser</artifactId>
+  <artifactId>jasmine-webapp-htmlunit</artifactId>
   <packaging>war</packaging>
-  <name>Example Webapp using Jasmine Maven Plugin that uses a custom browser (IE6)</name>
+  <name>Example webapp using Jasmine Maven Plugin with HtmlUnit</name>
 
   <build>
     <plugins>

@@ -40,6 +40,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
@@ -77,6 +78,41 @@ public class TestMojo extends AbstractJasmineMojo {
    */
   @Parameter(property = "jasmine.webDriverClassName", defaultValue = "org.openqa.selenium.chrome.ChromeDriver")
   private String webDriverClassName = ChromeDriver.class.getName();
+
+  /**
+   * <p>Web driver specific options. Specify the implementation using an implementation hint as shown in examples.</p>
+   * <br>
+   * <p>Example of ChromeOptions:</p>
+   * <pre>
+   * &lt;webDriverOptions implementation="org.openqa.selenium.chrome.ChromeOptions"&gt;
+   *   &lt;binary&gt;/usr/bin/chrome&lt;/binary&gt;
+   *   &lt;headless&gt;false&lt;/headless&gt;
+   * &lt;/webDriverOptions&gt;
+   * <br>
+   * <p>Example of FirefoxOptions:</p>
+   * <pre>
+   * &lt;webDriverOptions implementation="org.openqa.selenium.firefox.FirefoxOptions"&gt;
+   *   &lt;binary&gt;/usr/bin/firefox&lt;/binary&gt;
+   *   &lt;headless&gt;true&lt;/headless&gt;
+   *   &lt;arguments&gt;
+   *     &lt;arg&gt;-p /path/to/my/profile&lt;/arg&gt;
+   *   &lt;/arguments&gt;
+   * &lt;/webDriverOptions&gt;
+   * </pre>
+   * <br>
+   * <p>All possible option implementations:</p>
+   * <li>
+   *   <ul>org.openqa.selenium.chrome.ChromeOptions</ul>
+   *   <ul>org.openqa.selenium.edge.EdgeOptions</ul>
+   *   <ul>org.openqa.selenium.firefox.FirefoxOptions</ul>
+   *   <ul>org.openqa.selenium.opera.OperaOptions</ul>
+   *   <ul>org.openqa.selenium.safari.SafariOptions</ul>
+   * </li>
+   *
+   * @since 3.0
+   */
+  @Parameter
+  private MutableCapabilities webDriverOptions = null;
 
   /**
    * <p>Web driver capabilities used to initialize a DesiredCapabilities instance when creating a web driver.</p>
@@ -274,6 +310,7 @@ public class TestMojo extends AbstractJasmineMojo {
   private WebDriverConfiguration getWebDriverConfiguration() {
     return ImmutableWebDriverConfiguration.builder()
       .webDriverCapabilities(webDriverCapabilities)
+      .webDriverOptions(webDriverOptions)
       .webDriverClassName(webDriverClassName)
       .remoteWebDriverUrl(remoteWebDriverUrl)
       .build();
