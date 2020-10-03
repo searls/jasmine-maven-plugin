@@ -49,7 +49,7 @@ public class IoUtilities {
   }
 
   public String toString(InputStream inputStream) throws IOException {
-    return IOUtils.toString(inputStream);
+    return IOUtils.toString(inputStream, StandardCharsets.UTF_8);
   }
 
   public String resourceToString(String name) throws IOException {

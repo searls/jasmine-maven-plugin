@@ -27,9 +27,7 @@ import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -65,9 +63,6 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   @Mock
   private HtmlGeneratorConfiguration generatorConfiguration;
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
-
   @Before
   public void setupGeneratorConfiguration() throws IOException {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
@@ -87,7 +82,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   }
 
   @Test
-  public void shouldPutInADocTypeWhenNoDependenciesAreProvided() throws Exception {
+  public void shouldPutInADocTypeWhenNoDependenciesAreProvided() {
     String html = this.subject.generate(generatorConfiguration);
 
     assertThat(html).contains(HTML5_DOCTYPE);
@@ -96,7 +91,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   }
 
   @Test
-  public void shouldAssignSpecifiedSourceEncoding() throws Exception {
+  public void shouldAssignSpecifiedSourceEncoding() {
     String html = this.subject.generate(generatorConfiguration);
 
     Document document = Jsoup.parse(html);
@@ -105,7 +100,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   }
 
   @Test
-  public void shouldDefaultSourceEncodingWhenUnspecified() throws Exception {
+  public void shouldDefaultSourceEncodingWhenUnspecified() {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(null);
     String html = this.subject.generate(generatorConfiguration);
 
@@ -115,19 +110,19 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   }
 
   @Test
-  public void populatesJasmineSource() throws Exception {
+  public void populatesJasmineSource() {
     String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_JS);
   }
 
   @Test
-  public void populatesJasmineHtmlSource() throws Exception {
+  public void populatesJasmineHtmlSource() {
     String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsScriptTagWithSource(JASMINE_HTML_JS);
   }
 
   @Test
-  public void shouldPopulateCSSIntoHtmlWhenProvided() throws Exception {
+  public void shouldPopulateCSSIntoHtmlWhenProvided() {
     String html = this.subject.generate(generatorConfiguration);
     HtmlAssertions.assertThat(html).containsLinkTagWithSource(JASMINE_CSS);
   }

@@ -7,9 +7,9 @@
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -19,24 +19,20 @@
  */
 package com.github.searls.jasmine.runner;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WebDriverWaiterTest {
 
   private static final int TIMEOUT = 2;
-
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
 
   @Mock
   private RemoteWebDriver webDriver;
@@ -45,7 +41,7 @@ public class WebDriverWaiterTest {
   private WebDriverWaiter subject;
 
   @Test
-  public void itShouldWait() throws Exception {
+  public void itShouldWait() {
     boolean debug = false;
     when(webDriver.executeScript(WebDriverWaiter.EXECUTION_FINISHED_SCRIPT)).thenReturn(true);
 
@@ -53,21 +49,18 @@ public class WebDriverWaiterTest {
   }
 
   @Test
-  public void itShouldThrowWhenTimesOut() throws Exception {
-    expectedException.expect(IllegalStateException.class);
-    expectedException.expectMessage("Timeout occurred.");
-
-    boolean debug = false;
+  public void itShouldThrowWhenTimesOut() {
     when(webDriver.executeScript(WebDriverWaiter.EXECUTION_FINISHED_SCRIPT)).thenReturn(false);
 
-    subject.waitForRunnerToFinish(webDriver, TIMEOUT, debug);
+    assertThatExceptionOfType(IllegalStateException.class)
+      .isThrownBy(() -> subject.waitForRunnerToFinish(webDriver, TIMEOUT, false))
+      .withMessageContaining("Timeout occurred.");
   }
 
   @Test
-  public void itShouldLogWhenTimesOutDebugging() throws Exception {
-    boolean debug = true;
+  public void itShouldLogWhenTimesOutDebugging() {
     when(webDriver.executeScript(WebDriverWaiter.EXECUTION_FINISHED_SCRIPT)).thenReturn(false);
 
-    subject.waitForRunnerToFinish(webDriver, TIMEOUT, debug);
+    subject.waitForRunnerToFinish(webDriver, TIMEOUT, true);
   }
 }

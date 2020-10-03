@@ -73,9 +73,12 @@ public class ResourceHandlerConfigurator {
   }
 
   private void addContext(ContextHandlerCollection contexts, String contextPath, Handler handler) {
-    ContextHandler contextHandler = contexts.addContext(contextPath, "");
+    ContextHandler contextHandler = new ContextHandler();
+    contextHandler.setContextPath(contextPath);
+    contextHandler.setResourceBase("");
     contextHandler.setHandler(handler);
     contextHandler.addAliasCheck(new AllowSymLinkAliasChecker());
+    contexts.addHandler(contextHandler);
   }
 
   private ResourceHandler createResourceHandler(JasmineConfiguration configuration,

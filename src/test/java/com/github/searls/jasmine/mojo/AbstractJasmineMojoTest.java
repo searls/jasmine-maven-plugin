@@ -28,12 +28,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.assertj.core.api.Assertions;
-import org.codehaus.plexus.resource.loader.FileResourceCreationException;
-import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -48,9 +44,9 @@ import java.util.Optional;
 import static com.github.searls.jasmine.mojo.AbstractJasmineMojo.CUSTOM_RUNNER_CONFIGURATION_PARAM;
 import static com.github.searls.jasmine.mojo.AbstractJasmineMojo.CUSTOM_RUNNER_TEMPLATE_PARAM;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.isNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -62,9 +58,6 @@ public class AbstractJasmineMojoTest {
   private static final String CUSTOM_RUNNER_TEMPLATE = "/my/super/sweet/template";
   private static final String CUSTOM_RUNNER_CONFIGURATION = "/my/fancy/pants/config";
 
-  @Rule
-  public ExpectedException expectedException = ExpectedException.none();
-
   @Mock
   private File baseDir;
 
@@ -72,19 +65,10 @@ public class AbstractJasmineMojoTest {
   private File targetDir;
 
   @Mock
-  private File projectFile;
-
-  @Mock
-  private File parentProjectFile;
-
-  @Mock
   private File sourceDirectory;
 
   @Mock
   private File specDirectory;
-
-  @Mock
-  private File customRunnerConfiguration;
 
   @Mock
   private MavenProject mavenProject;
@@ -112,21 +96,22 @@ public class AbstractJasmineMojoTest {
   }
 
   @Test
-  public void rethrowsMojoFailureExceptions() throws Exception {
+  public void rethrowsMojoFailureExceptions() {
     MojoFailureException mojoException = new MojoFailureException("mock exception");
     mojo.setExceptionToThrow(mojoException);
-    this.expectedException.expect(equalTo(mojoException));
-    mojo.execute();
+    assertThatExceptionOfType(MojoFailureException.class)
+      .isThrownBy(() -> mojo.execute())
+      .isSameAs(mojoException);
   }
 
   @Test
-  public void wrapsNonMojoFailureExceptions() throws Exception {
+  public void wrapsNonMojoFailureExceptions() {
     IOException ioException = new IOException("mock exception");
     mojo.setExceptionToThrow(ioException);
-    this.expectedException.expect(MojoExecutionException.class);
-    this.expectedException.expectMessage("The jasmine-maven-plugin encountered an exception:");
-    this.expectedException.expectCause(equalTo(ioException));
-    mojo.execute();
+    assertThatExceptionOfType(MojoExecutionException.class)
+      .isThrownBy(() -> mojo.execute())
+      .withMessage("The jasmine-maven-plugin encountered an exception:")
+      .withCause(ioException);
   }
 
   @Test
@@ -160,11 +145,7 @@ public class AbstractJasmineMojoTest {
   }
 
   @Test
-  public void testGetCustomRunnerConfiguration() throws
-                                                 ResourceNotFoundException,
-                                                 MojoExecutionException,
-                                                 MojoFailureException,
-                                                 FileResourceCreationException {
+  public void testGetCustomRunnerConfiguration() throws MojoExecutionException, MojoFailureException {
     File configFile = mock(File.class);
 
     mojo.setCustomRunnerConfiguration(CUSTOM_RUNNER_CONFIGURATION);
@@ -199,11 +180,7 @@ public class AbstractJasmineMojoTest {
   }
 
   @Test
-  public void testGetReporters() throws
-                                 ResourceNotFoundException,
-                                 MojoExecutionException,
-                                 MojoFailureException,
-                                 FileResourceCreationException {
+  public void testGetReporters() throws MojoExecutionException, MojoFailureException {
     List<Reporter> reporters = Collections.singletonList(mock(Reporter.class));
     mojo.setReporters(reporters);
     when(reporterRetriever.retrieveReporters(reporters, mavenProject)).thenReturn(reporters);
@@ -214,11 +191,7 @@ public class AbstractJasmineMojoTest {
   }
 
   @Test
-  public void testGetFileSystemReporters() throws
-                                           ResourceNotFoundException,
-                                           MojoExecutionException,
-                                           MojoFailureException,
-                                           FileResourceCreationException {
+  public void testGetFileSystemReporters() throws MojoExecutionException, MojoFailureException {
     List<FileSystemReporter> fsReporters = Collections.singletonList(mock(FileSystemReporter.class));
     mojo.setFileSystemReporters(fsReporters);
 
@@ -254,7 +227,6 @@ public class AbstractJasmineMojoTest {
 
   static class MockJasmineMojo extends AbstractJasmineMojo {
 
-    private ServerConfiguration serverConfiguration;
     private JasmineConfiguration jasmineConfiguration;
     private Exception exceptionToThrow;
 
@@ -267,7 +239,6 @@ public class AbstractJasmineMojoTest {
     @Override
     public void run(ServerConfiguration serverConfiguration,
                     JasmineConfiguration jasmineConfiguration) throws Exception {
-      this.serverConfiguration = serverConfiguration;
       this.jasmineConfiguration = jasmineConfiguration;
       if (this.exceptionToThrow != null) {
         throw this.exceptionToThrow;
@@ -276,10 +247,6 @@ public class AbstractJasmineMojoTest {
 
     public MavenProject getProject() {
       return this.getMavenProject();
-    }
-
-    public ServerConfiguration getServerConfiguration() {
-      return serverConfiguration;
     }
 
     public JasmineConfiguration getJasmineConfiguration() {
