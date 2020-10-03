@@ -25,12 +25,12 @@ import com.github.searls.jasmine.io.scripts.FindsScriptLocationsInDirectory;
 import com.github.searls.jasmine.io.scripts.ResolvesLocationOfPreloadSources;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import com.github.searls.jasmine.model.ScriptSearch;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,7 +41,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class CreatesRunnerTest {
 
   private static final String SOURCE_ENCODING = "UTF-Pandaz";
@@ -89,28 +89,27 @@ public class CreatesRunnerTest {
   @InjectMocks
   private CreatesRunner subject;
 
-  @Before
+  @BeforeEach
   public void before() {
     when(this.config.getSources()).thenReturn(this.sources);
     when(this.config.getSpecs()).thenReturn(this.specs);
-    when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.config.getJasmineTargetDir()).thenReturn(this.jasmineTargetDir);
     when(this.config.getSpecRunnerHtmlFileName()).thenReturn(MANUAL_RUNNER_NAME);
   }
 
-  @Before
+  @BeforeEach
   public void fakeOutDirectories() {
     when(this.sources.getDirectory()).thenReturn(this.sourceDirectory);
     when(this.specs.getDirectory()).thenReturn(this.specDirectory);
   }
 
-  @Before
-  public void stubConstructionOfExistingRunnerFile() throws Exception {
+  @BeforeEach
+  public void stubConstructionOfExistingRunnerFile() {
     when(ioUtilities.createFile(this.jasmineTargetDir, MANUAL_RUNNER_NAME))
       .thenReturn(this.runnerDestination);
   }
 
-  @Before
+  @BeforeEach
   public void stubConstructionOfHtmlGenerator() throws Exception {
     when(htmlGeneratorConfigurationFactory.create(
       any(JasmineConfiguration.class),
@@ -121,6 +120,7 @@ public class CreatesRunnerTest {
   @Test
   public void whenRunnerDoesNotExistThenCreateNewRunner() throws Exception {
     String expected = "I'm a new spec runner yay!";
+    when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.runnerDestination.exists()).thenReturn(false);
     when(this.specRunnerHtmlGenerator.generate(htmlGeneratorConfiguration)).thenReturn(expected);
 
@@ -132,6 +132,7 @@ public class CreatesRunnerTest {
   @Test
   public void whenRunnerExistsAndDiffersThenWriteNewOne() throws IOException {
     String expected = "HTRML!!!!111!111oneoneone";
+    when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.runnerDestination.exists()).thenReturn(true);
     when(ioUtilities.readFileToString(this.runnerDestination)).thenReturn("old and crusty runner");
     when(this.specRunnerHtmlGenerator.generate(htmlGeneratorConfiguration)).thenReturn(expected);
@@ -156,6 +157,7 @@ public class CreatesRunnerTest {
   @Test
   public void whenExistingRunnerFailsToLoadThenWriteNewOne() throws IOException {
     String expected = "HTRML!!!!111!111oneoneone";
+    when(this.config.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.runnerDestination.exists()).thenReturn(true);
     when(ioUtilities.readFileToString(this.runnerDestination)).thenThrow(new IOException());
     when(this.specRunnerHtmlGenerator.generate(htmlGeneratorConfiguration)).thenReturn(expected);

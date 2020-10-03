@@ -22,12 +22,11 @@ package com.github.searls.jasmine.runner;
 import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.io.IoUtilities;
 import com.github.searls.jasmine.io.scripts.ScriptResolver;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,7 +36,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class HtmlGeneratorConfigurationFactoryTest {
 
   private static final String CUSTOM_TEMPLATE_STRING = "custom-template";
@@ -64,17 +63,19 @@ public class HtmlGeneratorConfigurationFactoryTest {
   @InjectMocks
   private HtmlGeneratorConfigurationFactory generatorConfigurationFactory;
 
-  @Before
-  public void before() throws IOException {
-    when(ioUtilities.readFileToString(customTemplateFile)).thenReturn(CUSTOM_TEMPLATE_STRING);
-    when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
-    when(ioUtilities.resourceToString(SpecRunnerTemplate.DEFAULT.getTemplate())).thenReturn(RUNNER_TEMPLATE_STRING);
-    when(ioUtilities.resourceToString(SpecRunnerTemplate.REQUIRE_JS.getTemplate())).thenReturn(CUSTOM_TEMPLATE_STRING);
-  }
+//  @BeforeEach
+//  public void before() throws IOException {
+//    when(ioUtilities.readFileToString(customTemplateFile)).thenReturn(CUSTOM_TEMPLATE_STRING);
+//    when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
+//    when(ioUtilities.resourceToString(SpecRunnerTemplate.DEFAULT.getTemplate())).thenReturn(RUNNER_TEMPLATE_STRING);
+//    when(ioUtilities.resourceToString(SpecRunnerTemplate.REQUIRE_JS.getTemplate())).thenReturn(CUSTOM_TEMPLATE_STRING);
+//  }
 
   @Test
   public void shouldReadCustomTemplateWhenOneIsProvided() throws IOException {
     this.whenConfiguredWith(SpecRunnerTemplate.DEFAULT, customTemplateFile);
+    when(ioUtilities.readFileToString(customTemplateFile)).thenReturn(CUSTOM_TEMPLATE_STRING);
+    when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
 
     HtmlGeneratorConfiguration htmlGeneratorConfiguration = this.generatorConfigurationFactory.create(
       jasmineConfiguration,
@@ -90,6 +91,9 @@ public class HtmlGeneratorConfigurationFactoryTest {
   public void shouldReadSpecRunnerTemplateWhenOneIsProvided() throws IOException {
     this.whenConfiguredWith(SpecRunnerTemplate.REQUIRE_JS, null);
 
+    when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
+    when(ioUtilities.resourceToString(SpecRunnerTemplate.REQUIRE_JS.getTemplate())).thenReturn(CUSTOM_TEMPLATE_STRING);
+
     HtmlGeneratorConfiguration htmlGeneratorConfiguration = this.generatorConfigurationFactory.create(
       jasmineConfiguration,
       scriptResolver
@@ -101,6 +105,8 @@ public class HtmlGeneratorConfigurationFactoryTest {
   @Test
   public void shouldReadDefaultSpecRunnerTemplateWhenNoneIsProvided() throws IOException {
     this.whenConfiguredWith(SpecRunnerTemplate.DEFAULT, null);
+    when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
+    when(ioUtilities.resourceToString(SpecRunnerTemplate.DEFAULT.getTemplate())).thenReturn(RUNNER_TEMPLATE_STRING);
 
     HtmlGeneratorConfiguration htmlGeneratorConfiguration = this.generatorConfigurationFactory.create(
       jasmineConfiguration,
@@ -113,6 +119,8 @@ public class HtmlGeneratorConfigurationFactoryTest {
   @Test
   public void shouldHaveCorrectReporterType() throws IOException {
     this.whenConfiguredWith(SpecRunnerTemplate.DEFAULT, null);
+    when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
+    when(ioUtilities.resourceToString(SpecRunnerTemplate.DEFAULT.getTemplate())).thenReturn(RUNNER_TEMPLATE_STRING);
 
     HtmlGeneratorConfiguration htmlGeneratorConfiguration = this.generatorConfigurationFactory.create(
       jasmineConfiguration,
@@ -125,6 +133,8 @@ public class HtmlGeneratorConfigurationFactoryTest {
   @Test
   public void shouldHaveCorrectSpecRunnerTemplate() throws IOException {
     this.whenConfiguredWith(SpecRunnerTemplate.REQUIRE_JS, null);
+    when(ioUtilities.readFileToString(customRunnerConfiguration)).thenReturn(CUSTOM_CONFIG_STRING);
+    when(ioUtilities.resourceToString(SpecRunnerTemplate.REQUIRE_JS.getTemplate())).thenReturn(CUSTOM_TEMPLATE_STRING);
 
     HtmlGeneratorConfiguration htmlGeneratorConfiguration = this.generatorConfigurationFactory.create(
       jasmineConfiguration,
@@ -135,7 +145,7 @@ public class HtmlGeneratorConfigurationFactoryTest {
   }
 
   private void whenConfiguredWith(SpecRunnerTemplate template,
-                                  File customTemplate) throws IOException {
+                                  File customTemplate) {
     when(jasmineConfiguration.getSourceEncoding()).thenReturn(ENCODING);
     when(jasmineConfiguration.getSpecRunnerTemplate()).thenReturn(template);
     when(jasmineConfiguration.getReporterType()).thenReturn(ReporterType.JsApiReporter);

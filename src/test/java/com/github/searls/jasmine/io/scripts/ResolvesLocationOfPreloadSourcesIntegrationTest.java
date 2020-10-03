@@ -20,8 +20,8 @@
 package com.github.searls.jasmine.io.scripts;
 
 import com.github.searls.jasmine.io.CreatesTempDirectories;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +45,7 @@ public class ResolvesLocationOfPreloadSourcesIntegrationTest {
   private File specDir = createsTempDirectories.create(SPEC);
   private File separatedDir = createsTempDirectories.create(SEPARATED_DIR);
 
-  @After
+  @AfterEach
   public void deleteTempDirs() {
     sourceDir.delete();
     specDir.delete();

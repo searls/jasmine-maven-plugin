@@ -29,18 +29,18 @@ import com.github.searls.jasmine.server.ServerManager;
 import com.github.searls.jasmine.server.ServerManagerFactory;
 import org.apache.maven.project.MavenProject;
 import org.eclipse.jetty.server.Handler;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ServerMojoTest {
 
   private static final int PORT = 8923;

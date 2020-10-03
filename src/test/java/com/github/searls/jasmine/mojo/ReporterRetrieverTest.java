@@ -22,11 +22,11 @@ package com.github.searls.jasmine.mojo;
 import com.github.searls.jasmine.model.FileSystemReporter;
 import com.github.searls.jasmine.model.Reporter;
 import org.apache.maven.project.MavenProject;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ReporterRetrieverTest {
 
   @Mock
@@ -57,24 +57,19 @@ public class ReporterRetrieverTest {
 
   private ReporterRetriever subject;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  public void beforeEach() {
     subject = new ReporterRetriever(resourceRetriever);
-
-    when(resourceRetriever.getResourceAsFile("reporter", ReporterRetriever.STANDARD_REPORTER, mavenProject))
-      .thenReturn(Optional.of(standardReporter));
-    when(resourceRetriever.getResourceAsFile(
-      "reporter",
-      ReporterRetriever.JUNIT_XML_REPORTER,
-      mavenProject
-    )).thenReturn(Optional.of(junitXmlReporter));
   }
 
   @Test
   public void itShouldRetrieveReporters() throws Exception {
     String customReporterPath = "/foo/bar";
     File customReporter = mock(File.class);
-    when(resourceRetriever.getResourceAsFile("reporter", customReporterPath, mavenProject)).thenReturn(Optional.of(customReporter));
+    when(resourceRetriever.getResourceAsFile("reporter", customReporterPath, mavenProject))
+      .thenReturn(Optional.of(customReporter));
+    when(resourceRetriever.getResourceAsFile("reporter", ReporterRetriever.STANDARD_REPORTER, mavenProject))
+      .thenReturn(Optional.of(standardReporter));
     List<Reporter> incomingReporters = Arrays.asList(new Reporter("STANDARD"), new Reporter(customReporterPath));
 
     List<Reporter> reporters = subject.retrieveReporters(incomingReporters, mavenProject);
@@ -86,6 +81,9 @@ public class ReporterRetrieverTest {
 
   @Test
   public void itShouldRetrieveStandardReporterAsDefault() throws Exception {
+    when(resourceRetriever.getResourceAsFile("reporter", ReporterRetriever.STANDARD_REPORTER, mavenProject))
+      .thenReturn(Optional.of(standardReporter));
+
     List<Reporter> reporters = subject.retrieveReporters(new ArrayList<>(), mavenProject);
 
     assertThat(reporters).hasSize(1);
@@ -98,6 +96,8 @@ public class ReporterRetrieverTest {
     File customReporter = mock(File.class);
     when(resourceRetriever.getResourceAsFile("reporter", customReporterPath, mavenProject))
       .thenReturn(Optional.of(customReporter));
+    when(resourceRetriever.getResourceAsFile("reporter", ReporterRetriever.JUNIT_XML_REPORTER, mavenProject))
+      .thenReturn(Optional.of(junitXmlReporter));
     List<FileSystemReporter> incomingReporters = Arrays.asList(
       new FileSystemReporter("TEST-file.xml", "JUNIT_XML"),
       new FileSystemReporter("TEST-custom.file", customReporterPath)
@@ -118,6 +118,8 @@ public class ReporterRetrieverTest {
 
   @Test
   public void itShouldRetrieveJUnitFileReporterAsDefault() throws Exception {
+    when(resourceRetriever.getResourceAsFile("reporter", ReporterRetriever.JUNIT_XML_REPORTER, mavenProject))
+      .thenReturn(Optional.of(junitXmlReporter));
     List<FileSystemReporter> reporters = subject.retrieveFileSystemReporters(
       new ArrayList<>(),
       targetDir,

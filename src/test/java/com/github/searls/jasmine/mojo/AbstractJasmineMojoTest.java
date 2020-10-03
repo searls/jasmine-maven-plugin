@@ -28,12 +28,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,10 +48,11 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.isNull;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AbstractJasmineMojoTest {
 
   private static final String ENCODING = "UTF-8";
@@ -82,16 +83,16 @@ public class AbstractJasmineMojoTest {
   @InjectMocks
   private MockJasmineMojo mojo;
 
-  @Before
+  @BeforeEach
   public void before() throws MojoExecutionException {
     mojo.setJsSrcDir(sourceDirectory);
     mojo.setJsTestSrcDir(specDirectory);
     mojo.setJasmineTargetDir(targetDir);
     mojo.setSourceEncoding(ENCODING);
 
-    when(mavenProject.getBasedir()).thenReturn(baseDir);
+    lenient().when(mavenProject.getBasedir()).thenReturn(baseDir);
 
-    when(resourceRetriever.getResourceAsFile(anyString(), isNull(), eq(mavenProject)))
+    lenient().when(resourceRetriever.getResourceAsFile(anyString(), isNull(), eq(mavenProject)))
       .thenReturn(Optional.empty());
   }
 

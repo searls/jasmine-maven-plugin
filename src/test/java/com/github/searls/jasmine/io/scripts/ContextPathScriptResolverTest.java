@@ -19,11 +19,11 @@
  */
 package com.github.searls.jasmine.io.scripts;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -31,7 +31,7 @@ import java.util.Set;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ContextPathScriptResolverTest {
 
   private static final String ROOT_CONTEXT_PATH = "";
@@ -47,7 +47,7 @@ public class ContextPathScriptResolverTest {
 
   private ScriptResolver contextPathScriptResolver;
 
-  @Before
+  @BeforeEach
   public void before() {
     this.contextPathScriptResolver = new ContextPathScriptResolver(
       scriptResolver,

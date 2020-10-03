@@ -31,12 +31,15 @@ public class Server {
   public void addConnector(Connector connector) {
   }
 
+  @SuppressWarnings("RedundantThrows")
   public void start() throws Exception {
   }
 
+  @SuppressWarnings("RedundantThrows")
   public void stop() throws Exception {
   }
 
+  @SuppressWarnings("RedundantThrows")
   public void join() throws Exception {
   }
 

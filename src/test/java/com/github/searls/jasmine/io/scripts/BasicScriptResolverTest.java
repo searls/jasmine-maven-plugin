@@ -20,11 +20,11 @@
 package com.github.searls.jasmine.io.scripts;
 
 import com.github.searls.jasmine.model.ScriptSearch;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.net.URI;
@@ -35,7 +35,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BasicScriptResolverTest {
 
   private static final String SOURCE_DIRECTORY = "/project/source/directory";
@@ -70,7 +70,7 @@ public class BasicScriptResolverTest {
 
   private BasicScriptResolver resolver;
 
-  @Before
+  @BeforeEach
   public void before() throws URISyntaxException {
     this.sourceURI = new URI(SOURCE_DIRECTORY);
     this.specURI = new URI(SPEC_DIRECTORY);

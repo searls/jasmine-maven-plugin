@@ -20,11 +20,11 @@
 package com.github.searls.jasmine.thirdpartylibs;
 
 import org.eclipse.jetty.server.Request;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class WebJarResourceHandlerTest {
   @Mock
   private Request baseRequest;
@@ -50,7 +50,7 @@ public class WebJarResourceHandlerTest {
 
   private WebJarResourceHandler subject;
 
-  @Before
+  @BeforeEach
   public void before() {
     String jquery = "src/test/resources/webjars/jquery-1.10.2.jar";
     subject = new WebJarResourceHandler(projectClassLoaderOf(jquery));

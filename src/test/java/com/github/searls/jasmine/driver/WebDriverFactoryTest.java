@@ -22,19 +22,19 @@ package com.github.searls.jasmine.driver;
 import com.github.searls.jasmine.config.WebDriverConfiguration;
 import com.github.searls.jasmine.mojo.Capability;
 import com.google.common.collect.ImmutableList;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.Capabilities;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static org.openqa.selenium.remote.CapabilityType.SUPPORTS_JAVASCRIPT;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class WebDriverFactoryTest {
 
   @Mock
@@ -43,19 +43,19 @@ public class WebDriverFactoryTest {
   @InjectMocks
   private WebDriverFactory factory;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  public void beforeEach() {
     factory = new WebDriverFactory();
   }
 
   @Test
-  public void customDriverIsCreatedWithDefaultConstructorIfNoCapabilitiesConstructorExists() throws Exception {
+  public void customDriverIsCreatedWithDefaultConstructorIfNoCapabilitiesConstructorExists() {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithDefaultConstructor.class.getName());
     assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(CustomDriverWithDefaultConstructor.class);
   }
 
   @Test
-  public void customDriverIsCreatedWithCapabilitiesIfConstructorExists() throws Exception {
+  public void customDriverIsCreatedWithCapabilitiesIfConstructorExists() {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithCapabilities.class.getName());
     assertThat(factory.createWebDriver(config)).isExactlyInstanceOf(CustomDriverWithCapabilities.class);
   }
@@ -76,7 +76,7 @@ public class WebDriverFactoryTest {
     assertThat(createWebDriverAndReturnCapabilities().getCapability("foo")).isEqualTo("bar");
   }
 
-  private Capabilities createWebDriverAndReturnCapabilities() throws Exception {
+  private Capabilities createWebDriverAndReturnCapabilities() {
     when(config.getWebDriverClassName()).thenReturn(CustomDriverWithCapabilities.class.getName());
     CustomDriverWithCapabilities driver = (CustomDriverWithCapabilities) factory.createWebDriver(config);
     return driver.getCapabilities();

@@ -23,11 +23,11 @@ import com.github.searls.jasmine.io.IoUtilities;
 import com.github.searls.jasmine.model.FileSystemReporter;
 import com.github.searls.jasmine.model.JasmineResult;
 import com.github.searls.jasmine.model.Reporter;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.io.File;
@@ -39,7 +39,7 @@ import static org.mockito.ArgumentMatchers.contains;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SpecRunnerExecutorTest {
 
   private static final int TIMEOUT = 2;
@@ -72,8 +72,8 @@ public class SpecRunnerExecutorTest {
 
   private SpecRunnerExecutor subject;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  public void beforeEach() throws Exception {
     subject = new SpecRunnerExecutor(ioUtilities, webDriverWaiter, consoleErrorChecker);
 
     runnerUrl = this.getClass().getResource("/ioUtils.txt");

@@ -20,26 +20,26 @@
 package com.github.searls.jasmine.mojo;
 
 import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.resource.ResourceManager;
 import org.codehaus.plexus.resource.loader.FileResourceCreationException;
 import org.codehaus.plexus.resource.loader.ResourceNotFoundException;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ResourceRetrieverTest {
 
   @Mock
@@ -51,8 +51,8 @@ public class ResourceRetrieverTest {
   @InjectMocks
   private ResourceRetriever subject;
 
-  @Before
-  public void setUp() throws Exception {
+  @BeforeEach
+  public void beforeEach() {
     File mavenFile = mock(File.class);
     when(mavenProject.getFile()).thenReturn(mavenFile);
     File mavenDir = mock(File.class);
@@ -61,7 +61,7 @@ public class ResourceRetrieverTest {
   }
 
   @Test
-  public void testGetResource() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+  public void testGetResource() throws ResourceNotFoundException, MojoExecutionException, FileResourceCreationException {
     File expectedFile = mock(File.class);
     String resourceLocation = "/foo/bar";
     when(locator.getResourceAsFile(resourceLocation)).thenReturn(expectedFile);
@@ -73,11 +73,12 @@ public class ResourceRetrieverTest {
       .contains(expectedFile);
   }
 
-  @Test(expected = MojoExecutionException.class)
-  public void testResourceNotFound() throws ResourceNotFoundException, MojoExecutionException, MojoFailureException, FileResourceCreationException {
+  @Test
+  public void testResourceNotFound() throws ResourceNotFoundException, FileResourceCreationException {
     String resourceLocation = "/foo/bar";
     when(locator.getResourceAsFile(resourceLocation)).thenThrow(new FileResourceCreationException("Bad Things Happen"));
 
-    subject.getResourceAsFile("param", resourceLocation, mavenProject);
+    assertThatExceptionOfType(MojoExecutionException.class)
+      .isThrownBy(() -> subject.getResourceAsFile("param", resourceLocation, mavenProject));
   }
 }

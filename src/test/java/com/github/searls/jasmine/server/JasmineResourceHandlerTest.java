@@ -23,11 +23,11 @@ import com.github.searls.jasmine.config.JasmineConfiguration;
 import com.github.searls.jasmine.runner.CreatesRunner;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.resource.Resource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +37,7 @@ import java.io.IOException;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JasmineResourceHandlerTest {
 
 
@@ -61,7 +61,7 @@ public class JasmineResourceHandlerTest {
 
   private JasmineResourceHandler subject;
 
-  @Before
+  @BeforeEach
   public void before() {
     subject = new JasmineResourceHandler(createsRunner, configuration) {
       @Override

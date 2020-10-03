@@ -20,12 +20,12 @@
 package com.github.searls.jasmine.runner;
 
 import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 
@@ -34,7 +34,7 @@ import java.util.Collections;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ConsoleErrorCheckerTest {
 
   private static final String ERROR = "Bad to the Bone!";
@@ -45,8 +45,8 @@ public class ConsoleErrorCheckerTest {
   @InjectMocks
   private ConsoleErrorChecker subject;
 
-  @Before
-  public void setUp() {
+  @BeforeEach
+  public void beforeEach() {
     subject = new ConsoleErrorChecker();
   }
 

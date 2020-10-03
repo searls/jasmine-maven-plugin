@@ -35,20 +35,22 @@ import com.github.searls.jasmine.server.ServerManagerFactory;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
 import java.util.Collections;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class ServerMojoHarness {
 
   @Mock
@@ -61,7 +63,7 @@ public class ServerMojoHarness {
   private ReporterRetriever reporterRetriever;
 
   @Test
-  @Ignore
+  @Disabled
   public void testServer() throws MojoFailureException, MojoExecutionException {
     String baseDir = "/Volumes/sandbox/jasmine-maven-plugin/target/test-classes/examples/jasmine-webapp-passing";
 

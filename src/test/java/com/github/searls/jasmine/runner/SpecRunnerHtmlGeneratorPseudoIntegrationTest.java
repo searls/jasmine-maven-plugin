@@ -26,11 +26,11 @@ import com.github.searls.jasmine.io.scripts.ScriptResolver;
 import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -43,7 +43,7 @@ import static com.github.searls.jasmine.runner.SpecRunnerHtmlGenerator.JASMINE_J
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
 
   private static final String HTML5_DOCTYPE = "<!DOCTYPE html>";
@@ -63,7 +63,7 @@ public class SpecRunnerHtmlGeneratorPseudoIntegrationTest {
   @Mock
   private HtmlGeneratorConfiguration generatorConfiguration;
 
-  @Before
+  @BeforeEach
   public void setupGeneratorConfiguration() throws IOException {
     when(this.generatorConfiguration.getSourceEncoding()).thenReturn(SOURCE_ENCODING);
     when(this.generatorConfiguration.getReporterType()).thenReturn(ReporterType.HtmlReporter);
