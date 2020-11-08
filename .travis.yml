@@ -4,6 +4,11 @@ language: bash
 
 services:
   - docker
+
+branches:
+  only:
+  - master
+
 addons:
   sonarcloud:
     organization: "klieber-github"
