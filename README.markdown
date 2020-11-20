@@ -1,7 +1,9 @@
 jasmine-maven-plugin
 ====================
 
-[![Build Status](https://secure.travis-ci.org/searls/jasmine-maven-plugin.svg?branch=master)](https://travis-ci.org/searls/jasmine-maven-plugin?branch=master) [![Coverage Status](https://coveralls.io/repos/searls/jasmine-maven-plugin/badge.png?branch=master)](https://coveralls.io/r/searls/jasmine-maven-plugin?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin)
+[![Build Status](https://github.com/searls/jasmine-maven-plugin/workflows/CI/badge.svg?branch=master&event=push)](https://github.com/searls/jasmine-maven-plugin/actions?query=branch%3Amaster+workflow%3ACI)
+[![Coverage Status](https://coveralls.io/repos/searls/jasmine-maven-plugin/badge.png?branch=master)](https://coveralls.io/r/searls/jasmine-maven-plugin?branch=master)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin)
 
 For information on how to use the jasmine-maven-plugin, check out its [documentation page](http://searls.github.com/jasmine-maven-plugin/).
 
@@ -26,4 +28,3 @@ Pull requests are, of course, very welcome! Please read our [contributing to the
 * Thanks to Pivotal Labs for authoring and publishing [Jasmine](http://github.com/pivotal/jasmine)
 * Thanks to christian.nelson and sivoh1, owners of the [javascript-test-maven-plugin](http://code.google.com/p/javascript-test-maven-plugin/) project, which provided a similar implementation from which to glean several valuable lessons.
 * Thanks to all who have contributed with pull requests, issues, suggestions.
-
