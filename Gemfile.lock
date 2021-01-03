@@ -93,7 +93,7 @@ GEM
     rack (2.2.3)
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
-    rake (13.0.1)
+    rake (13.0.3)
     regexp_parser (1.8.2)
     relish (0.7.1)
       archive-tar-minitar (>= 0.5.2)
