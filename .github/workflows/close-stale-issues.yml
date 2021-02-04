@@ -17,3 +17,5 @@ jobs:
           exempt-issue-labels: 'work-in-progress'
           exempt-pr-labels: 'work-in-progress,dependencies'
           only-labels: 'awaiting-feedback,awaiting-answers,more_info_requested'
+          stale-issue-label: stale
+          stale-pr-label: stale
