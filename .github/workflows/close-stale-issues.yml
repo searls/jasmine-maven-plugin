@@ -16,6 +16,5 @@ jobs:
           close-pr-message: 'This pull request was closed because it has been stalled for 7 days with no updates.'
           exempt-issue-labels: 'work-in-progress'
           exempt-pr-labels: 'work-in-progress,dependencies'
-          only-labels: 'more_info_requested'
           stale-issue-label: stale
           stale-pr-label: stale
