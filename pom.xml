@@ -162,7 +162,7 @@
       <dependency>
         <groupId>net.bytebuddy</groupId>
         <artifactId>byte-buddy</artifactId>
-        <version>1.10.20</version>
+        <version>1.10.22</version>
       </dependency>
       <dependency>
         <groupId>org.junit</groupId>
