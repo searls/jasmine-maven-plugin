@@ -144,7 +144,7 @@
     <jetty.version>9.4.35.v20201120</jetty.version>
     <selenium.version>3.141.59</selenium.version>
     <jasmine.version>3.7.0</jasmine.version>
-    <mockito.version>3.10.0</mockito.version>
+    <mockito.version>3.11.1</mockito.version>
     <webdrivermanager.version>4.4.3</webdrivermanager.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -268,7 +268,7 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>webjars-locator</artifactId>
-      <version>0.40</version>
+      <version>0.41</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
