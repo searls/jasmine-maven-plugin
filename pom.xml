@@ -141,7 +141,7 @@
     <url>https://travis-ci.org/searls/jasmine-maven-plugin</url>
   </ciManagement>
   <properties>
-    <jetty.version>9.4.35.v20201120</jetty.version>
+    <jetty.version>9.4.41.v20210516</jetty.version>
     <selenium.version>3.141.59</selenium.version>
     <jasmine.version>3.7.0</jasmine.version>
     <mockito.version>3.10.0</mockito.version>
