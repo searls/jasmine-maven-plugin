@@ -21,7 +21,9 @@ package com.github.searls.jasmine.config;
 
 import com.github.searls.jasmine.mojo.Capability;
 import org.immutables.value.Value;
+import org.openqa.selenium.MutableCapabilities;
 
+import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.List;
 
@@ -29,5 +31,7 @@ import java.util.List;
 public interface WebDriverConfiguration {
   String getWebDriverClassName();
   List<Capability> getWebDriverCapabilities();
+  @Nullable
+  MutableCapabilities getWebDriverOptions();
   URL getRemoteWebDriverUrl();
 }

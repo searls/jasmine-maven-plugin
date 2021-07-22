@@ -67,15 +67,26 @@ public class WebDriverFactory {
   }
 
   private static Constructor<? extends WebDriver> getWebDriverConstructor(Class<? extends WebDriver> webDriverClass,
+                                                                          Capabilities options,
                                                                           List<Capability> capabilities) {
 
     WebDriverManager.getInstance(webDriverClass).setup();
 
-    boolean hasCapabilities = !capabilities.isEmpty();
-    if (hasCapabilities) {
+    if (options != null) {
+      return getConstructorWithOptions(webDriverClass, options.getClass());
+    } else if (!capabilities.isEmpty()) {
       return getConstructorWithCapabilities(webDriverClass);
     } else {
       return getConstructorWithoutCapabilities(webDriverClass);
+    }
+  }
+
+  private static <E extends WebDriver, T extends Capabilities> Constructor<E> getConstructorWithOptions(Class<E> webDriverClass,
+                                                                                                        Class<T> optionsType) {
+    try {
+      return webDriverClass.getConstructor(optionsType);
+    } catch (NoSuchMethodException originalException) {
+      return getConstructorWithCapabilities(webDriverClass);
     }
   }
 
@@ -106,28 +117,32 @@ public class WebDriverFactory {
 
   private static WebDriver createCustomWebDriver(WebDriverConfiguration config) {
     Class<? extends WebDriver> webDriverClass = getWebDriverClass(config.getWebDriverClassName());
-    return createCustomWebDriver(webDriverClass, config.getWebDriverCapabilities());
+    return createCustomWebDriver(webDriverClass, config.getWebDriverOptions(), config.getWebDriverCapabilities());
   }
 
-  private static WebDriver createCustomWebDriver(Class<? extends WebDriver> webDriverClass, List<Capability> capabilities) {
-    Constructor<? extends WebDriver> constructor = getWebDriverConstructor(webDriverClass, capabilities);
+  private static WebDriver createCustomWebDriver(Class<? extends WebDriver> webDriverClass,
+                                                 MutableCapabilities options,
+                                                 List<Capability> capabilities) {
+    Constructor<? extends WebDriver> constructor = getWebDriverConstructor(webDriverClass, options, capabilities);
     try {
-      return constructor.newInstance(getWebDriverConstructorArguments(constructor, capabilities));
+      return constructor.newInstance(getWebDriverConstructorArguments(constructor, options, capabilities));
     } catch (InstantiationException | InvocationTargetException | IllegalAccessException e) {
       throw new WebDriverFactoryException(e);
     }
   }
 
   private static Object[] getWebDriverConstructorArguments(Constructor<? extends WebDriver> constructor,
+                                                           MutableCapabilities options,
                                                            List<Capability> customCapabilities) {
     if (constructor.getParameterTypes().length == 0) {
       return new Object[0];
     }
-    return new Object[]{getCapabilities(customCapabilities)};
+
+    return new Object[]{getCapabilities(options, customCapabilities)};
   }
 
-  private static DesiredCapabilities getCapabilities(List<Capability> customCapabilities) {
-    return customizeCapabilities(new DesiredCapabilities(), customCapabilities);
+  private static MutableCapabilities getCapabilities(MutableCapabilities options, List<Capability> customCapabilities) {
+    return customizeCapabilities(options != null ? options : new DesiredCapabilities(), customCapabilities);
   }
 
   private static <E extends MutableCapabilities> E customizeCapabilities(E capabilities, WebDriverConfiguration config) {
@@ -151,16 +166,28 @@ public class WebDriverFactory {
 
   private static WebDriver createChromeDriver(WebDriverConfiguration config) {
     WebDriverManager.getInstance(ChromeDriver.class).setup();
-    return new ChromeDriver(customizeCapabilities(
-      new ChromeOptions()
+
+    MutableCapabilities options = config.getWebDriverOptions();
+
+    ChromeOptions chromeOptions;
+    if (options instanceof ChromeOptions) {
+      chromeOptions = (ChromeOptions) options;
+    } else if (options != null) {
+      chromeOptions = new ChromeOptions().merge(options);
+    } else {
+      chromeOptions = new ChromeOptions()
         .setHeadless(true)
         .addArguments("--no-sandbox")
-        .addArguments("--disable-dev-shm-usage"),
-      config
-    ));
+        .addArguments("--disable-dev-shm-usage");
+    }
+
+    return new ChromeDriver(customizeCapabilities(chromeOptions, config));
   }
 
   private static WebDriver createRemoteWebDriver(WebDriverConfiguration config) {
-    return new RemoteWebDriver(config.getRemoteWebDriverUrl(), getCapabilities(config.getWebDriverCapabilities()));
+    return new RemoteWebDriver(
+      config.getRemoteWebDriverUrl(),
+      getCapabilities(config.getWebDriverOptions(), config.getWebDriverCapabilities())
+    );
   }
 }
