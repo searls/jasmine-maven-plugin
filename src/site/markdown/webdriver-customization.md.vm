@@ -1,6 +1,6 @@
 WebDriver Customization
 =======================
-The jamine-maven-plugin ships with [ChromeDriver](https://chromedriver.chromium.org/home) configured to run in headless
+The jasmine-maven-plugin ships with [ChromeDriver](https://chromedriver.chromium.org/home) configured to run in headless
 mode by default. It is also possible to change to any other [WebDriver](https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/WebDriver.html)
 implementation and configure it with [Capabilities](https://www.selenium.dev/selenium/docs/api/java/org/openqa/selenium/Capabilities.html).
 
