@@ -5,7 +5,7 @@ jasmine-maven-plugin
 [![Coverage Status](https://coveralls.io/repos/searls/jasmine-maven-plugin/badge.png?branch=master)](https://coveralls.io/r/searls/jasmine-maven-plugin?branch=master)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.github.searls/jasmine-maven-plugin)
 
-For information on how to use the jasmine-maven-plugin, check out its [documentation page](http://searls.github.com/jasmine-maven-plugin/).
+For information on how to use the jasmine-maven-plugin, check out its [documentation page](http://searls.github.io/jasmine-maven-plugin/).
 
 ## Current Version Info
 
