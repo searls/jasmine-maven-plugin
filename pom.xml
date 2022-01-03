@@ -634,11 +634,11 @@
             <reports>
               <report>index</report>
               <report>summary</report>
-              <report>project-team</report>
-              <report>license</report>
-              <report>issue-tracking</report>
+              <report>team</report>
+              <report>licenses</report>
+              <report>issue-management</report>
               <report>scm</report>
-              <report>cim</report>
+              <report>ci-management</report>
               <report>distribution-management</report>
               <report>dependencies</report>
               <report>plugins</report>
