@@ -21,14 +21,13 @@ package com.github.searls.jasmine.io;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 public class CreatesTempDirectories {
 
   public File create(String name) {
     try {
-      File temp = File.createTempFile(name, "");
-      temp.delete();
-      temp.mkdir();
+      File temp = Files.createTempDirectory(name).toFile();
       return temp;
     } catch (IOException e) {
       throw new RuntimeException(e);
