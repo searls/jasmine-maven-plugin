@@ -23,9 +23,9 @@ import com.github.searls.jasmine.io.ScansDirectory;
 import com.github.searls.jasmine.model.ImmutableScriptSearch;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.File;
@@ -48,8 +48,8 @@ public class FindsScriptLocationsInDirectoryTest {
   @Mock
   private ConvertsFileToUriString convertsFileToUriString;
 
-  @Spy
-  private File directory = new File("Not quite a real directory");
+  @TempDir
+  private File directory;
 
   @InjectMocks
   private FindsScriptLocationsInDirectory subject;
@@ -66,7 +66,6 @@ public class FindsScriptLocationsInDirectoryTest {
   @Test
   public void addsScriptLocationScannerFinds() {
     String expected = "full blown file";
-    when(directory.canRead()).thenReturn(true);
     when(scansDirectory.scan(directory, INCLUDES, EXCLUDES)).thenReturn(Collections.singletonList(FILE_LOCATION));
     when(convertsFileToUriString.convert(new File(directory, FILE_LOCATION))).thenReturn(expected);
 

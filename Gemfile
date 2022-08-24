@@ -8,5 +8,7 @@ gem 'capybara'
 gem 'rake'
 gem 'selenium-webdriver'
 gem 'webdrivers', '~> 4.6'
+gem 'rexml'
+gem 'webrick'
 #gem 'ruby-debug19'
 

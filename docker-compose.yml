@@ -1,7 +1,7 @@
 version: "3"
 services:
   test-suite:
-    image: klieber/jmp-build
+    image: ghcr.io/klieber/jmp-build:1.0
     command: ./build.sh
     working_dir: /project
     volumes:
