@@ -268,7 +268,7 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>webjars-locator</artifactId>
-      <version>0.42</version>
+      <version>0.45</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
