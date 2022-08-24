@@ -141,7 +141,7 @@
     <url>https://travis-ci.org/searls/jasmine-maven-plugin</url>
   </ciManagement>
   <properties>
-    <jetty.version>9.4.43.v20210629</jetty.version>
+    <jetty.version>9.4.48.v20220622</jetty.version>
     <selenium.version>3.141.59</selenium.version>
     <jasmine.version>3.8.0</jasmine.version>
     <mockito.version>4.0.0</mockito.version>
@@ -248,7 +248,7 @@
     <dependency>
       <groupId>org.antlr</groupId>
       <artifactId>ST4</artifactId>
-      <version>4.3.1</version>
+      <version>4.3.3</version>
     </dependency>
     <dependency>
       <groupId>org.eclipse.jetty</groupId>
@@ -268,7 +268,7 @@
     <dependency>
       <groupId>org.webjars</groupId>
       <artifactId>webjars-locator</artifactId>
-      <version>0.42</version>
+      <version>0.45</version>
     </dependency>
     <dependency>
       <groupId>org.webjars.npm</groupId>
@@ -342,7 +342,7 @@
     <dependency>
       <groupId>org.jsoup</groupId>
       <artifactId>jsoup</artifactId>
-      <version>1.14.2</version>
+      <version>1.15.3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
