@@ -319,7 +319,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-guava</artifactId>
-      <version>3.4.0</version>
+      <version>3.5.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -434,7 +434,7 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.4.1</version>
         </plugin>
         <plugin>
           <groupId>org.jacoco</groupId>
