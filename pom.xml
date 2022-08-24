@@ -144,7 +144,7 @@
     <jetty.version>9.4.48.v20220622</jetty.version>
     <selenium.version>3.141.59</selenium.version>
     <jasmine.version>3.8.0</jasmine.version>
-    <mockito.version>4.0.0</mockito.version>
+    <mockito.version>4.7.0</mockito.version>
     <webdrivermanager.version>5.3.0</webdrivermanager.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
